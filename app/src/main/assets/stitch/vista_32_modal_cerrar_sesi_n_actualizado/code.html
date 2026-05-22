@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3e4c0a",
+                        "on-primary-fixed": "#171e00",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "primary": "#53621f",
+                        "on-secondary-fixed-variant": "#802635",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#5b5c5a",
+                        "outline": "#76786a",
+                        "on-background": "#1a1d13",
+                        "surface-tint": "#556421",
+                        "surface-container-highest": "#e2e4d3",
+                        "inverse-primary": "#bccf7f",
+                        "secondary-container": "#ff8795",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-secondary-container": "#771e2f",
+                        "secondary": "#9f3d4c",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f5e4",
+                        "on-tertiary-fixed-variant": "#454745",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#edefdf",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f9fbea",
+                        "on-secondary-fixed": "#40000f",
+                        "primary-fixed-dim": "#bccf7f",
+                        "primary-container": "#6b7b36",
+                        "tertiary-container": "#737573",
+                        "outline-variant": "#c6c8b7",
+                        "surface-dim": "#d9dbcb",
+                        "background": "#f9fbea",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1d13",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fdfdfa",
+                        "on-primary-container": "#fbffe3",
+                        "secondary-fixed": "#ffdadb",
+                        "primary-fixed": "#d8eb98",
+                        "tertiary-fixed": "#e2e3e0",
+                        "on-surface-variant": "#46483b",
+                        "inverse-surface": "#2f3227",
+                        "inverse-on-surface": "#f0f2e1",
+                        "surface-variant": "#e2e4d3",
+                        "surface-container-high": "#e8ead9",
+                        "surface": "#f9fbea",
+                        "tertiary-fixed-dim": "#c6c7c4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Work Sans"],
+                        "body-md": ["Work Sans"],
+                        "label-md": ["Work Sans"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "headline-sm": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "label-sm": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .backdrop-blur-custom {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Screen Content (Profile Vista 5 Blurred Background) -->
+<div aria-hidden="true" class="fixed inset-0 overflow-hidden">
+<!-- Top App Bar Mock -->
+<header class="fixed top-0 left-0 w-full z-10 flex justify-between items-center px-container-padding h-16 bg-surface border-b-2 border-secondary">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">Sancarlina</span>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="Profile" data-alt="A professional studio headshot of a smiling person with a warm and approachable expression. The lighting is soft and natural, emphasizing clean textures and a bright, sophisticated atmosphere. The background is a minimalist, neutral bone-white that aligns with a high-end service professional aesthetic. The image is crisp and centers the subject perfectly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7jB6FDJ54OkwUIiH26ESspp8k3xEBBcnv5nYPXSb-5_bmLMNhk5tziGqX_IoyX5qrdbjXaVz5Eb6HhjGM76t2V35UP3fpj3fmbyNSilohknUbBorIqdfOA_eINq55-VIHBTLMbD4ro59A_k81vIEadfQ1VgiATawMuha0fWjVMom8RcVW9Uh5m4Sf4KBGxf6DI1ws8lRwaBg2F9vgT0RzZ17VBfmselaSsqPfTFKT1XeeGi8CPo8Z8GIntBXtXHmCt9-K9kOTFso"/>
+</div>
+</header>
+<!-- Profile Content Mock -->
+<main class="pt-24 px-container-padding pb-32">
+<div class="flex flex-col items-center mb-8">
+<div class="w-24 h-24 rounded-full border-4 border-surface shadow-md mb-4 overflow-hidden">
+<img alt="Avatar" data-alt="Close-up portrait of a Mediterranean person smiling warmly, reflecting an artisanal and premium brand identity. The photo is taken in a well-lit studio with high-key lighting that creates a bright and airy feel. The overall mood is welcoming and professional, using a soft matte finish that avoids digital gloss. The background is a clean, solid bone-white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk6WJdHZrxtc46kKYIM4L3VjkDI73TSpu92-J1Krl3beMUpbKkRoVg1ZKA5qavoUpEir4esbV4g9D8k8NEEEUO995kxFKZZAUx_BwfvfJLJ7ZhLYgMoAgNNAA56qhE-MMpCr7VUQmaN4f-Bkf20Mv1_POUmyxAIRma9epcZI0EOzWtuqP7oFvOjLJWHlLV6galsBL8-qi0TD10It0qiFeHHX0uC6KlX8VwDdpwNElELPhhnwGwL3bvoPmuDdxZbWjfod8WwUrDOII"/>
+</div>
+<h1 class="font-headline-md text-headline-md">Sancarlina Member</h1>
+<p class="font-body-md text-on-surface-variant">Premium Account</p>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">person</span>
+<span class="font-label-md text-label-md">My Profile</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-label-md text-label-md">Service History</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span class="font-label-md text-label-md">Saved Addresses</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary">logout</span>
+<span class="font-label-md text-label-md text-secondary">Logout</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Mock -->
+<nav class="fixed bottom-0 left-0 w-full z-10 flex justify-around items-center bg-surface px-2 py-3 pb-safe border-t border-surface-container-high">
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined">sync_alt</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-sm text-label-sm">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-semibold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center px-container-padding bg-black/60 backdrop-blur-sm transition-opacity duration-300" id="logout-modal">
+<!-- Central Card Container -->
+<div class="w-full max-w-sm bg-surface-container-lowest rounded-[16px] p-stack-lg shadow-xl animate-in fade-in zoom-in duration-300">
+<!-- Content Header -->
+<div class="mb-gutter">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2">¿Cerrar sesión?</h2>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                    ¿Estás seguro de que querés salir de tu cuenta en este dispositivo?
+                </p>
+</div>
+<!-- Balanced Button Row -->
+<div class="flex items-center gap-gutter">
+<!-- Back Button (Left) -->
+<button class="flex-1 h-[48px] px-6 rounded-full border-2 border-primary text-primary font-label-md text-label-md hover:bg-surface-container-low active:scale-95 transition-all duration-150" onclick="document.getElementById('logout-modal').classList.add('hidden')">
+                    Volver
+                </button>
+<!-- Exit Button (Right) -->
+<button class="flex-1 h-[48px] px-6 rounded-full bg-secondary text-on-secondary font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all duration-150">
+                    SALIR
+                </button>
+</div>
+</div>
+</div>
+<script>
+        // Simple logic to show how modal interacts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('logout-modal').classList.add('hidden');
+            }
+        });
+        
+        // Prevent clicking through the card to close the modal (optional UX choice)
+        const modalContent = document.querySelector('#logout-modal > div');
+        modalContent.addEventListener('click', (e) => e.stopPropagation());
+    </script>
+</body></html>

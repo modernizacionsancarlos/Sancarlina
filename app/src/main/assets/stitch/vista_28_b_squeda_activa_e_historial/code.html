@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Búsqueda Activa - Sancarlina</title>
+<!-- Google Fonts: Work Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f9fbea",
+                        "inverse-on-surface": "#f0f2e1",
+                        "tertiary": "#5b5c5a",
+                        "primary-fixed-dim": "#bccf7f",
+                        "on-surface-variant": "#46483b",
+                        "primary-container": "#6b7b36",
+                        "background": "#f9fbea",
+                        "surface-container-high": "#e8ead9",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#771e2f",
+                        "surface-container-low": "#f3f5e4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-surface": "#1a1d13",
+                        "secondary": "#9f3d4c",
+                        "tertiary-fixed": "#e2e3e0",
+                        "secondary-container": "#ff8795",
+                        "primary-fixed": "#d8eb98",
+                        "on-background": "#1a1d13",
+                        "surface-variant": "#e2e4d3",
+                        "outline": "#76786a",
+                        "surface-tint": "#556421",
+                        "secondary-fixed": "#ffdadb",
+                        "on-primary-fixed-variant": "#3e4c0a",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#fbffe3",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d9dbcb",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e2e4d3",
+                        "primary": "#53621f",
+                        "on-tertiary-container": "#fdfdfa",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "on-secondary-fixed-variant": "#802635",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#454745",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#171e00",
+                        "surface": "#f9fbea",
+                        "inverse-surface": "#2f3227",
+                        "tertiary-container": "#737573",
+                        "error": "#ba1a1a",
+                        "surface-container": "#edefdf",
+                        "outline-variant": "#c6c8b7",
+                        "inverse-primary": "#bccf7f",
+                        "on-secondary-fixed": "#40000f",
+                        "tertiary-fixed-dim": "#c6c7c4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "base": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Work Sans", "sans-serif"],
+                        "headline-lg": ["Work Sans", "sans-serif"],
+                        "label-sm": ["Work Sans", "sans-serif"],
+                        "headline-md": ["Work Sans", "sans-serif"],
+                        "body-lg": ["Work Sans", "sans-serif"],
+                        "body-md": ["Work Sans", "sans-serif"],
+                        "headline-sm": ["Work Sans", "sans-serif"],
+                        "headline-lg-mobile": ["Work Sans", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom styles to hide standard scrollbar for cleaner UI */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        /* Simulated cursor blinking animation */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .animate-cursor {
+            animation: blink 1s step-end infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface h-screen w-full flex flex-col font-body-md text-body-md text-on-surface antialiased overflow-hidden relative">
+<!-- Active Search Header Overlay (Olive Green) -->
+<header class="bg-primary-container px-container-padding pt-4 pb-4 shadow-md z-50 flex-shrink-0">
+<div class="flex items-center gap-gutter h-14 max-w-4xl mx-auto w-full">
+<!-- Back Action -->
+<button aria-label="Volver" class="text-on-primary-container hover:bg-black/5 p-2 rounded-full transition-colors flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<!-- Search Input Field (Active State) -->
+<div class="flex-1 flex items-center bg-surface-container-lowest rounded-xl px-4 h-12 shadow-[0_4px_12px_rgba(83,98,33,0.08)] border border-transparent focus-within:border-primary-fixed-dim transition-all">
+<span class="material-symbols-outlined text-outline mr-2 text-[20px]">search</span>
+<div class="flex-1 flex items-center relative h-full">
+<input autofocus="" class="w-full bg-transparent border-none outline-none text-on-surface font-body-md text-body-md p-0 m-0 focus:ring-0 placeholder:text-outline-variant" placeholder="Buscar..." type="text" value="Vinos"/>
+<!-- Simulated cursor next to text -->
+<div class="absolute left-[45px] top-1/2 -translate-y-1/2 w-[2px] h-[20px] bg-primary animate-cursor"></div>
+</div>
+<!-- Clear Button -->
+<button aria-label="Borrar búsqueda" class="text-outline hover:text-on-surface p-1 rounded-full flex items-center justify-center transition-colors ml-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Overlay (Semi-transparent gradient over implied home) -->
+<main class="flex-1 w-full bg-gradient-to-b from-surface/95 to-surface/80 backdrop-blur-sm z-40 overflow-y-auto">
+<div class="max-w-4xl mx-auto w-full h-full flex flex-col pb-safe">
+<!-- Búsquedas Recientes -->
+<section class="px-container-padding py-stack-lg border-b border-surface-variant/50">
+<h2 class="font-label-md text-label-md text-outline mb-stack-md uppercase tracking-wider">Búsquedas Recientes</h2>
+<ul class="flex flex-col gap-1">
+<!-- History Item 1 -->
+<li class="flex items-center justify-between py-3 group cursor-pointer hover:bg-surface-container-low rounded-xl px-2 -mx-2 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-[20px]">history</span>
+<span class="font-body-md text-body-md text-on-surface">Bodegas Familiares</span>
+</div>
+<button aria-label="Eliminar del historial" class="text-outline-variant hover:text-error p-2 -m-2 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+<!-- History Item 2 -->
+<li class="flex items-center justify-between py-3 group cursor-pointer hover:bg-surface-container-low rounded-xl px-2 -mx-2 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-[20px]">history</span>
+<span class="font-body-md text-body-md text-on-surface">Miel Orgánica</span>
+</div>
+<button aria-label="Eliminar del historial" class="text-outline-variant hover:text-error p-2 -m-2 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+<!-- History Item 3 -->
+<li class="flex items-center justify-between py-3 group cursor-pointer hover:bg-surface-container-low rounded-xl px-2 -mx-2 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-[20px]">history</span>
+<span class="font-body-md text-body-md text-on-surface">Cerámica Artesanal</span>
+</div>
+<button aria-label="Eliminar del historial" class="text-outline-variant hover:text-error p-2 -m-2 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</li>
+</ul>
+</section>
+<!-- Categorías Sugeridas -->
+<section class="px-container-padding py-stack-lg">
+<h2 class="font-label-md text-label-md text-outline mb-stack-md uppercase tracking-wider">Categorías Sugeridas</h2>
+<div class="flex flex-wrap gap-stack-sm">
+<!-- Chips -->
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-4 py-2 rounded-full border border-transparent hover:border-outline-variant transition-all flex items-center gap-2">
+                        Malbec
+                    </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-4 py-2 rounded-full border border-transparent hover:border-outline-variant transition-all flex items-center gap-2">
+                        Nueces
+                    </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-4 py-2 rounded-full border border-transparent hover:border-outline-variant transition-all flex items-center gap-2">
+                        Artesanías
+                    </button>
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-4 py-2 rounded-full border border-transparent hover:border-outline-variant transition-all flex items-center gap-2">
+                        Restaurantes
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<!-- Simulated background content to demonstrate the overlay effect -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none flex flex-col pt-24 px-container-padding gap-4">
+<div class="h-40 w-full bg-surface-container rounded-xl"></div>
+<div class="h-24 w-full bg-surface-container rounded-xl"></div>
+<div class="h-24 w-full bg-surface-container rounded-xl"></div>
+</div>
+</body></html>

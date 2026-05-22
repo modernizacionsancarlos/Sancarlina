@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Bodega Familiar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "surface-container-lowest": "#ffffff",
+                            "secondary-fixed-dim": "#ffb2b9",
+                            "on-primary-container": "#fbffe3",
+                            "surface-container-low": "#f3f5e4",
+                            "surface": "#f9fbea",
+                            "primary": "#53621f",
+                            "on-tertiary": "#ffffff",
+                            "surface-container": "#edefdf",
+                            "secondary": "#9f3d4c",
+                            "on-secondary-fixed-variant": "#802635",
+                            "inverse-primary": "#bccf7f",
+                            "outline": "#76786a",
+                            "on-surface": "#1a1d13",
+                            "inverse-surface": "#2f3227",
+                            "tertiary": "#5b5c5a",
+                            "on-error-container": "#93000a",
+                            "inverse-on-surface": "#f0f2e1",
+                            "error": "#ba1a1a",
+                            "primary-fixed": "#d8eb98",
+                            "on-tertiary-fixed": "#1a1c1b",
+                            "surface-dim": "#d9dbcb",
+                            "on-background": "#1a1d13",
+                            "surface-variant": "#e2e4d3",
+                            "tertiary-fixed-dim": "#c6c7c4",
+                            "background": "#f9fbea",
+                            "on-primary-fixed-variant": "#3e4c0a",
+                            "on-error": "#ffffff",
+                            "primary-fixed-dim": "#bccf7f",
+                            "surface-bright": "#f9fbea",
+                            "surface-container-highest": "#e2e4d3",
+                            "surface-container-high": "#e8ead9",
+                            "on-tertiary-fixed-variant": "#454745",
+                            "primary-container": "#6b7b36",
+                            "surface-tint": "#556421",
+                            "on-primary-fixed": "#171e00",
+                            "on-surface-variant": "#46483b",
+                            "on-primary": "#ffffff",
+                            "secondary-container": "#ff8795",
+                            "tertiary-fixed": "#e2e3e0",
+                            "error-container": "#ffdad6",
+                            "secondary-fixed": "#ffdadb",
+                            "on-secondary-container": "#771e2f",
+                            "outline-variant": "#c6c8b7",
+                            "on-tertiary-container": "#fdfdfa",
+                            "on-secondary-fixed": "#40000f",
+                            "tertiary-container": "#737573",
+                            "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "container-padding": "20px",
+                            "base": "8px",
+                            "stack-md": "16px",
+                            "stack-sm": "8px",
+                            "stack-lg": "24px",
+                            "gutter": "16px"
+                    },
+                    "fontFamily": {
+                            "headline-lg-mobile": [
+                                    "Work Sans"
+                            ],
+                            "body-md": [
+                                    "Work Sans"
+                            ],
+                            "label-md": [
+                                    "Work Sans"
+                            ],
+                            "headline-lg": [
+                                    "Work Sans"
+                            ],
+                            "label-sm": [
+                                    "Work Sans"
+                            ],
+                            "headline-sm": [
+                                    "Work Sans"
+                            ],
+                            "headline-md": [
+                                    "Work Sans"
+                            ],
+                            "body-lg": [
+                                    "Work Sans"
+                            ]
+                    },
+                    "fontSize": {
+                            "headline-lg-mobile": [
+                                    "28px",
+                                    {
+                                            "lineHeight": "36px",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "body-md": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "24px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "label-md": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "20px",
+                                            "letterSpacing": "0.01em",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "headline-lg": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "40px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "label-sm": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.02em",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "headline-sm": [
+                                    "20px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "32px",
+                                            "letterSpacing": "-0.01em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "18px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "400"
+                                    }
+                            ]
+                    }
+            },
+                },
+            }
+    </script>
+<style>
+        body {
+            background-color: #F9F9F6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(83, 98, 31, 0.05);
+            box-shadow: 0 4px 12px rgba(83, 98, 31, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen text-on-surface antialiased font-body-md pb-24 md:pb-0">
+<!-- Top Navigation (Hidden on Mobile) -->
+<header class="hidden md:flex justify-between items-center w-full px-gutter h-16 bg-primary dark:bg-primary-container shadow-sm fixed top-0 z-50">
+<button aria-label="Menu" class="text-on-primary dark:text-on-primary-container hover:bg-primary-container/20 transition-colors rounded-full p-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">Sancarlina</h1>
+<button aria-label="User profile avatar" class="w-8 h-8 rounded-full overflow-hidden border-2 border-on-primary hover:bg-primary-container/20 transition-colors active:scale-95 transition-transform">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMHzrR4_Lxct-eq1OOod-4PPpM-OPdxQwb71NRyJz8E1I00JsK4Gyv04VlvVsVotc37eJt7QxXwZm2WoVxmpbn9cTR5VV-mWdxuMDLhCVmkyFjS_3h6sdiQF6lGCnK4VCnQdk2850OhHuWSnYqGWx7g1hqu03kxyYw74_E9lDrE6g_lrCPrEdnvunSQWFh6bBXSCxuEhlkM1Tg249gzGtlExXvwBuf5zlm6Kme9Yb9F-qzPRd_HZtym4KksIDYKUKMp9B5sgC1_AE"/>
+</button>
+</header>
+<main class="md:pt-16 max-w-4xl mx-auto">
+<!-- Hero Section -->
+<section class="relative h-72 md:h-96 w-full">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A sweeping, sun-drenched view of a lush vineyard estate in the late afternoon. Rows of healthy, green grapevines stretch towards a rustic, beautifully weathered stone winery building in the background. The lighting is warm and inviting, casting long shadows that highlight the artisanal, grounded aesthetic. The color palette emphasizes rich olive greens and warm earthy tones, perfectly matching a premium, regional professional style. The atmosphere is peaceful, authentic, and steeped in tradition." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAZ2EmueAlUx5o1WTJsL6du3n5Bx1b6T2qkHGGaV2v6gFxNjbIt6WDD0F5PAEGM-zqbJRfcQ5s4AIjGIVZcJBa2nv-3mS_zbbbqoBpsBsM69ZTG5nUOTGImKIRfX3XytI3jorv2ovZyPRZvrGj0NR54m8A-v3WlJeYDehv9Dv6Q02b_J7tYEAD4NsqDOCqZ18QjNK9lR_FYhrfh_z8UGyUQp41LZHMyiZ7vJ5whZZAZPGMy2jPRID2kIPyMYqnHEqqPERpj3f1068k');">
+<div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background/90"></div>
+</div>
+<!-- Mobile Navigation Overlay -->
+<div class="absolute top-0 left-0 w-full p-container-padding flex justify-between items-start z-10 md:hidden">
+<button aria-label="Volver" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-primary shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button aria-label="Favorito" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-secondary shadow-sm active:scale-95 transition-transform group">
+<span class="material-symbols-outlined group-hover:fill-current" data-weight="fill" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+</div>
+<!-- Desktop Action Buttons -->
+<div class="absolute top-4 right-4 hidden md:flex gap-4 z-10">
+<button aria-label="Favorito" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center text-secondary shadow-sm hover:bg-surface transition-colors active:scale-95 group">
+<span class="material-symbols-outlined group-hover:fill-current" data-weight="fill" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+</div>
+</section>
+<!-- Profile Details Card -->
+<section class="relative -mt-16 px-container-padding z-20">
+<div class="glass-card rounded-xl p-stack-md flex flex-col gap-stack-sm md:gap-stack-md relative">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary font-bold">Bodega Familiar</h2>
+<p class="font-body-md text-body-md text-tertiary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                            Ruta Provincial 40, Km 15, San Carlos
+                        </p>
+</div>
+<div class="bg-primary-container/20 text-primary-fixed-variant font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Abierto
+                    </div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                    Tradición vitivinícola desde 1920. Elaboramos vinos de autor y conservas artesanales con los mejores frutos de nuestra tierra, respetando los procesos naturales.
+                </p>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded-full">Vinos de Autor</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded-full">Conservas</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded-full">Visitas Guiadas</span>
+</div>
+<!-- Floating Action Button - GPS -->
+<button aria-label="Cómo llegar" class="absolute -bottom-6 right-6 md:right-8 bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary shadow-lg rounded-full h-14 w-14 flex items-center justify-center active:scale-95 transition-all z-30">
+<span class="material-symbols-outlined text-2xl">directions_car</span>
+</button>
+</div>
+</section>
+<!-- Products Section -->
+<section class="px-container-padding py-stack-lg mt-stack-md">
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-headline-sm text-headline-sm text-primary font-semibold">Nuestros Productos</h3>
+<button class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                    Ver todos
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Bento Grid / Cards -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-gutter">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]">
+<div class="h-40 w-full bg-surface-variant relative">
+<img alt="Vino Malbec Reserva" class="w-full h-full object-cover" data-alt="A meticulously styled close-up shot of an elegant bottle of red wine, specifically a Malbec Reserve, sitting on a rustic wooden barrel. The lighting is soft and directional, highlighting the rich, deep ruby color of the wine visible through the dark glass and the textured, artisanal paper label. The background is slightly blurred, showing hints of an old stone wine cellar. The aesthetic is premium, moody, and deeply rooted in the regional professional style with hints of wine and olive colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMTkp_qerwqnEsD9g4aTpgioe9NZ8Z5F42RvWlhK45oIxQkld6oybLPaBeKgBBtwP9FfhsCtbdboZlF85zuJj6nDRtPZUaBX0mbhQEiAjxUZXSWnwI-RzMjP8TBAWQ39gu-dGdjYUPJjV7x5Oa5zaXWEEwpQzu1k0uhGfvoCDhp7VrsxwvxxJBh7FbkpMKZpDgFDFOLn5KW-CmeVF0hSuZKgoh57QwpVzn3Iyf7qjF8LPXrVsNKKi8xBGL7tDWsf2VDLo-K3mpF7I"/>
+</div>
+<div class="p-stack-sm flex flex-col flex-grow justify-between">
+<div>
+<h4 class="font-label-md text-label-md font-semibold text-on-surface line-clamp-1">Malbec Reserva 2019</h4>
+<p class="font-label-sm text-label-sm text-tertiary mt-0.5">Vino Tinto</p>
+</div>
+<p class="font-label-md text-label-md text-secondary font-bold mt-2">$8.500</p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]">
+<div class="h-40 w-full bg-surface-variant relative">
+<img alt="Mermelada de Durazno" class="w-full h-full object-cover" data-alt="A bright, inviting close-up of a rustic glass jar filled with golden, homemade peach jam resting on a clean, light-colored wooden table. Sunlight streams in from a nearby window, illuminating the translucent, rich yellow-orange texture of the preserve. The jar is sealed with a simple, artisanal cloth cover tied with twine. The setting evokes a sense of wholesome, traditional craftsmanship within a bright, airy environment, reflecting a premium, tactile minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASvc3wuOI4xoyTjdDUwtXVrmr3pLXoyJ941kjIJknoCnUJB8CWpJb171hwu6EbLyfINNYd70puwjwhs0bzN0PerwBKX1_pVbWZnP9uTjb-WKilIm_vk2pB_H-oyEP_ryx-8LtscOJz10R7L_xFyJ9R42VtY8egSACKtnlw7GSUTGpKvgPo0BtiEbbhM0BI-OMGkXJCEQ0vdea9kU9EuAydSTGL0vHlrFqEO6ap8ftWa5EciAJSGQ5jhXTMyVY-GUZS8awC-f9pfMU"/>
+</div>
+<div class="p-stack-sm flex flex-col flex-grow justify-between">
+<div>
+<h4 class="font-label-md text-label-md font-semibold text-on-surface line-clamp-1">Mermelada de Durazno</h4>
+<p class="font-label-sm text-label-sm text-tertiary mt-0.5">Conservas</p>
+</div>
+<p class="font-label-md text-label-md text-secondary font-bold mt-2">$2.800</p>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]">
+<div class="h-40 w-full bg-surface-variant relative">
+<img alt="Vino Cabernet Sauvignon" class="w-full h-full object-cover" data-alt="An elegant, dimly lit product shot of a Cabernet Sauvignon wine bottle standing alongside a half-filled crystal glass. The setting is a polished dark wood table, with subtle reflections catching the deep crimson hues of the wine. The background is a soft, warm blur, suggesting a sophisticated, upscale tasting room or cellar. The overall mood is luxurious yet grounded, perfectly aligning with a regional professional aesthetic emphasizing deep wine colors and subtle olive shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8NucgscSfUVuctn1rahhU9TOg7UNXcz930zhxapPvetryY2uvL0x4Vs2GmsMDLPjcLSwh5zGPJun-oL3cRGIra3z6UbfTpU7ri5NFE9wY-H9DqSeszWJs8XMAPFHkO_T5uC9UXWEUJf7-Hk-4dlcsy0q_1UYMFtu15KMW3i7-5QF2GDjjzB9VcOmpK1UeYEaQ7H5yz166_1eOrtYFedgYEdCdM_8PSZLeYKk_JyvNGrvIQsypRjEFKBjwBVoa3-IglcSGQyN2_GM"/>
+</div>
+<div class="p-stack-sm flex flex-col flex-grow justify-between">
+<div>
+<h4 class="font-label-md text-label-md font-semibold text-on-surface line-clamp-1">Cabernet Orgánico</h4>
+<p class="font-label-sm text-label-sm text-tertiary mt-0.5">Vino Tinto</p>
+</div>
+<p class="font-label-md text-label-md text-secondary font-bold mt-2">$9.200</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]">
+<div class="h-40 w-full bg-surface-variant relative">
+<img alt="Aceite de Oliva Extra Virgen" class="w-full h-full object-cover" data-alt="A pristine, high-end photograph of a slender, dark glass bottle of extra virgin olive oil standing next to a small white ceramic dish filled with golden-green oil and a few fresh olives. The composition is set against a clean, bone-white background, providing strong contrast. The lighting is crisp and natural, highlighting the premium quality of the artisanal product. The aesthetic is tactile, minimalist, and perfectly aligned with the regional professional style guide emphasizing olive greens and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC35aJtM1yD-WRMDFX4I6KZdvNKkfpd8vbZ4Qz2mjHHxGZ_aR5vy2wyDitpHXUbq2pZAZiOsD1OUBp-u_BHUdVWDEemK2DIfk4p2XMkfSlMwj26CzYG-WoM5-6N0AFWlmYjHYnOHIo9NCG_NVUDalNcjIxkN3YuQ_fWXvm3hgZaD7_j2Cjyut3BE-KoTcbNZOuZJ73uSrJjCuVD45-nplnyeEwke1vHGvpyAaMRaSIAxG3oQIYb7NRrKo5JZLPyj6yhEc9m-o-zfnE"/>
+</div>
+<div class="p-stack-sm flex flex-col flex-grow justify-between">
+<div>
+<h4 class="font-label-md text-label-md font-semibold text-on-surface line-clamp-1">Aceite de Oliva Extra</h4>
+<p class="font-label-sm text-label-sm text-tertiary mt-0.5">Aceites</p>
+</div>
+<p class="font-label-md text-label-md text-secondary font-bold mt-2">$6.500</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface border-t-2 border-secondary shadow-[0_-4px_12px_rgba(83,98,31,0.04)] rounded-t-xl pb-6 pt-2">
+<!-- Inactive: Inicio -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-secondary-fixed/30 rounded-full p-2 active:scale-90 transition-all duration-200 w-16" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<!-- Active: Comercios -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold hover:bg-secondary-fixed/30 rounded-full p-2 active:scale-90 transition-all duration-200 w-16" href="#">
+<div class="bg-secondary-fixed/50 rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+</div>
+<span class="font-label-sm text-label-sm">Comercios</span>
+</a>
+<!-- Inactive: Turismo -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-secondary-fixed/30 rounded-full p-2 active:scale-90 transition-all duration-200 w-16" href="#">
+<span class="material-symbols-outlined mb-1">landscape</span>
+<span class="font-label-sm text-label-sm">Turismo</span>
+</a>
+<!-- Inactive: Perfil -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-secondary-fixed/30 rounded-full p-2 active:scale-90 transition-all duration-200 w-16" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-label-sm">Perfil</span>
+</a>
+</nav>
+</body></html>

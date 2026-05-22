@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Mis Favoritos</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#454745",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e8ead9",
+                    "secondary": "#9f3d4c",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#d9dbcb",
+                    "on-secondary-container": "#771e2f",
+                    "on-tertiary-fixed": "#1a1c1b",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#737573",
+                    "surface-container-highest": "#e2e4d3",
+                    "surface": "#f9fbea",
+                    "outline-variant": "#c6c8b7",
+                    "primary-container": "#6b7b36",
+                    "secondary-fixed-dim": "#ffb2b9",
+                    "tertiary": "#5b5c5a",
+                    "surface-bright": "#f9fbea",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#53621f",
+                    "outline": "#76786a",
+                    "surface-variant": "#e2e4d3",
+                    "on-background": "#1a1d13",
+                    "tertiary-fixed-dim": "#c6c7c4",
+                    "surface-container": "#edefdf",
+                    "surface-container-low": "#f3f5e4",
+                    "on-primary-container": "#fbffe3",
+                    "tertiary-fixed": "#e2e3e0",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#171e00",
+                    "background": "#f9fbea",
+                    "primary-fixed": "#d8eb98",
+                    "on-surface-variant": "#46483b",
+                    "secondary-fixed": "#ffdadb",
+                    "inverse-surface": "#2f3227",
+                    "inverse-on-surface": "#f0f2e1",
+                    "primary-fixed-dim": "#bccf7f",
+                    "on-secondary-fixed": "#40000f",
+                    "on-tertiary-container": "#fdfdfa",
+                    "on-secondary-fixed-variant": "#802635",
+                    "surface-tint": "#556421",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#bccf7f",
+                    "on-primary-fixed-variant": "#3e4c0a",
+                    "on-surface": "#1a1d13",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#ff8795"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-lg": "24px",
+                    "container-padding": "20px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": [
+                            "Work Sans"
+                    ],
+                    "label-md": [
+                            "Work Sans"
+                    ],
+                    "headline-sm": [
+                            "Work Sans"
+                    ],
+                    "headline-lg": [
+                            "Work Sans"
+                    ],
+                    "body-md": [
+                            "Work Sans"
+                    ],
+                    "headline-lg-mobile": [
+                            "Work Sans"
+                    ],
+                    "label-sm": [
+                            "Work Sans"
+                    ],
+                    "body-lg": [
+                            "Work Sans"
+                    ]
+            },
+            "fontSize": {
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-sm": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar (Task-Focused: Favoritos) -->
+<header class="bg-primary text-on-primary fixed top-0 w-full z-40 shadow-sm flex items-center justify-between px-4 h-16 transition-transform duration-300">
+<button aria-label="Volver" class="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm tracking-wide uppercase">MIS FAVORITOS</h1>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 px-container-padding max-w-2xl mx-auto flex flex-col gap-stack-lg">
+<!-- List Container -->
+<div class="flex flex-col gap-stack-md">
+<!-- Favorite Card 1 -->
+<article class="bg-surface-container-lowest rounded-[16px] shadow-[0_4px_12px_rgba(83,98,31,0.04)] border border-outline-variant/20 overflow-hidden flex flex-col p-4 gap-4 transition-transform hover:-translate-y-1 duration-300">
+<div class="flex gap-4 relative">
+<!-- Heart Icon -->
+<button class="absolute -top-1 -right-1 p-2 text-secondary z-10 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<!-- Image -->
+<div class="w-[88px] h-[88px] shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Tarro de miel artesanal" class="w-full h-full object-cover" data-alt="A close-up view of a beautifully packaged jar of raw, artisanal honey resting on a rustic wooden table. The warm, golden hues of the honey glow under soft, natural sunlight streaming through a nearby window. The setting evokes a sense of local craftsmanship and grounded authenticity, perfectly aligned with a premium regional aesthetic. Subtle olive-toned foliage is blurred in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbZcOe6LGPf9IHIetVYbYlIe851D3RrdefjH21VFJkBXyTwU9dm4YT45ezEmJOHJ-9L_Hk6vP2zM2eXdAtUI64J49VoGaD2EEW17uL1DhFRiZx3hDfMiUv2HG0g-V-OItP2fug0og4qXTJqbJ7mV678SzHfwQwRP4JxLjXQMMtNfheP8h7OZJd0R31v6_VYKzMi5_biHRHMFWMGPfWjrUelbz7C2j-LOJOhc3Fy6ekoBNsZxQS4xlfXEi_kSJe5t5XJ7TwWzW8N50"/>
+</div>
+<!-- Content -->
+<div class="flex flex-col justify-center pr-8">
+<h2 class="text-headline-sm font-headline-sm text-on-surface line-clamp-1">Miel Pura San Carlos</h2>
+<p class="text-body-md font-body-md text-outline mt-1">Apicultura Local</p>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[48px] bg-secondary hover:bg-on-secondary-container text-on-secondary rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Contacto Directo por WhatsApp</span>
+</button>
+</article>
+<!-- Favorite Card 2 -->
+<article class="bg-surface-container-lowest rounded-[16px] shadow-[0_4px_12px_rgba(83,98,31,0.04)] border border-outline-variant/20 overflow-hidden flex flex-col p-4 gap-4 transition-transform hover:-translate-y-1 duration-300">
+<div class="flex gap-4 relative">
+<!-- Heart Icon -->
+<button class="absolute -top-1 -right-1 p-2 text-secondary z-10 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<!-- Image -->
+<div class="w-[88px] h-[88px] shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Quesos artesanales" class="w-full h-full object-cover" data-alt="A refined, tactile composition featuring an assortment of aged artisan cheeses arranged on a slate board. The scene is lit softly from the side, emphasizing the textures of the cheese rinds. Accents of deep red wine and olive branches are subtly visible, creating a sophisticated yet grounded culinary atmosphere. The overall style is clean, premium, and focused on high-quality regional produce." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRgK4lK09RMkh88UpNMZdpxSTy2F0zWF8qReq_WQE8t8oyqEk1C4nWDNUpTbAof3NIsgZ3vt5dFxlKwBh-k9qfVrgbbK4fwySdd4k9EvkU3WGa5K4R9W2UFB9tD7yHro9ovGR_cVaYLPKTJWwr8th_I4wwDBaJXFWSsSb43pbCcbtgYWwEwx5pBEq99NAGcbDu5SjesQmJwLeV5_tvp5efTW7Dh6FJ_3E4sruaUC3yrHJsKXcrmWPFBhEAlPXT56zFVcQVCyaJdWE"/>
+</div>
+<!-- Content -->
+<div class="flex flex-col justify-center pr-8">
+<h2 class="text-headline-sm font-headline-sm text-on-surface line-clamp-1">Lácteos La Esperanza</h2>
+<p class="text-body-md font-body-md text-outline mt-1">Quesos de Autor</p>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[48px] bg-secondary hover:bg-on-secondary-container text-on-secondary rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Contacto Directo por WhatsApp</span>
+</button>
+</article>
+<!-- Favorite Card 3 -->
+<article class="bg-surface-container-lowest rounded-[16px] shadow-[0_4px_12px_rgba(83,98,31,0.04)] border border-outline-variant/20 overflow-hidden flex flex-col p-4 gap-4 transition-transform hover:-translate-y-1 duration-300">
+<div class="flex gap-4 relative">
+<!-- Heart Icon -->
+<button class="absolute -top-1 -right-1 p-2 text-secondary z-10 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<!-- Image -->
+<div class="w-[88px] h-[88px] shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Vinos de la región" class="w-full h-full object-cover" data-alt="A sophisticated shot of a dark red wine pouring into an elegant glass, set against a softly blurred, matte neutral background. The lighting highlights the rich, deep ruby tones of the liquid, evoking a sense of matured elegance and premium quality. The composition is minimalist and structured, avoiding high-tech gloss in favor of an organic, welcoming warmth that represents the region's best." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzUcWDFE8fISdffVNZRa_9ByGxTrM9hIcw9FBi6XjAzQOIO0X171Ugo7xJx61_CvHlJAgMOTAM_UVQqPfLvAVUCfBTKwGD-7kRmOCdNEVJGIiWyUGuUqtLCdw0Tx21fZkXiytVoOcfIlQF3BgI2KqHKWw3Evq-R_rSMWwFfpG1dhFhsq5pMh-UzZPsNXF8Q5SzGuq38Y-YZyy7qTVYIJzj43bWnCz51M3N-kGZFHQVFgMWdHCBI_iG_XGxIkulYaJ5yppPvTLhfd8"/>
+</div>
+<!-- Content -->
+<div class="flex flex-col justify-center pr-8">
+<h2 class="text-headline-sm font-headline-sm text-on-surface line-clamp-1">Bodega El Terruño</h2>
+<p class="text-body-md font-body-md text-outline mt-1">Vinos Regionales</p>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[48px] bg-secondary hover:bg-on-secondary-container text-on-secondary rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Contacto Directo por WhatsApp</span>
+</button>
+</article>
+</div>
+</main>
+<!-- Script for subtle scroll effect on header -->
+<script>
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

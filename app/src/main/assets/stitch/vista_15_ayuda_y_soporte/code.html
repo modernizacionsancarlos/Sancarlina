@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Ayuda y Soporte</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed": "#40000f",
+                      "error": "#ba1a1a",
+                      "outline-variant": "#c6c8b7",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed": "#1a1c1b",
+                      "on-error": "#ffffff",
+                      "surface-container": "#edefdf",
+                      "surface": "#f9fbea",
+                      "surface-container-high": "#e8ead9",
+                      "surface-bright": "#f9fbea",
+                      "secondary-container": "#ff8795",
+                      "on-surface": "#1a1d13",
+                      "inverse-surface": "#2f3227",
+                      "tertiary-fixed": "#e2e3e0",
+                      "surface-container-low": "#f3f5e4",
+                      "on-error-container": "#93000a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "surface-dim": "#d9dbcb",
+                      "on-tertiary-fixed-variant": "#454745",
+                      "on-secondary-container": "#771e2f",
+                      "inverse-on-surface": "#f0f2e1",
+                      "tertiary-fixed-dim": "#c6c7c4",
+                      "primary-container": "#6b7b36",
+                      "background": "#f9fbea",
+                      "secondary": "#9f3d4c",
+                      "primary": "#53621f",
+                      "on-secondary-fixed-variant": "#802635",
+                      "surface-tint": "#556421",
+                      "outline": "#76786a",
+                      "on-tertiary-container": "#fdfdfa",
+                      "on-background": "#1a1d13",
+                      "secondary-fixed": "#ffdadb",
+                      "primary-fixed": "#d8eb98",
+                      "on-primary-fixed-variant": "#3e4c0a",
+                      "on-primary-fixed": "#171e00",
+                      "tertiary": "#5b5c5a",
+                      "inverse-primary": "#bccf7f",
+                      "primary-fixed-dim": "#bccf7f",
+                      "surface-container-highest": "#e2e4d3",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#fbffe3",
+                      "secondary-fixed-dim": "#ffb2b9",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#e2e4d3",
+                      "on-surface-variant": "#46483b",
+                      "tertiary-container": "#737573"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "stack-md": "16px",
+                      "container-padding": "20px",
+                      "stack-lg": "24px",
+                      "base": "8px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Work Sans"],
+                      "body-md": ["Work Sans"],
+                      "label-md": ["Work Sans"],
+                      "headline-sm": ["Work Sans"],
+                      "headline-lg-mobile": ["Work Sans"],
+                      "body-lg": ["Work Sans"],
+                      "label-sm": ["Work Sans"],
+                      "headline-lg": ["Work Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            /* Applying global background */
+            background-color: #f9fbea; /* Using surface color */
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f9fbea; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d9dbcb; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c6c8b7; 
+        }
+        
+        .accordion-content {
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+        }
+        .accordion-content.active {
+            max-height: 200px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+            opacity: 1;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.active {
+            transform: rotate(180deg);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased pb-24 md:pb-0 pt-16 font-body-md text-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-primary text-on-primary shadow-sm border-b-2 border-secondary">
+<button aria-label="Menu" class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-black/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md tracking-tight text-on-primary uppercase">Ayuda y Soporte</h1>
+<button aria-label="User profile" class="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:bg-black/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="max-w-screen-xl mx-auto px-container-padding py-stack-lg min-h-screen">
+<!-- Search Bar Section -->
+<section class="mb-stack-lg max-w-2xl mx-auto">
+<div class="relative flex items-center w-full h-12 rounded-full bg-surface-container-lowest border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-[0_4px_12px_rgba(83,98,33,0.04)] overflow-hidden">
+<span class="material-symbols-outlined absolute left-4 text-outline" data-icon="search">search</span>
+<input class="w-full h-full pl-12 pr-4 bg-transparent border-none focus:outline-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-outline-variant" placeholder="Buscar en ayuda..." type="text"/>
+</div>
+</section>
+<!-- FAQs Section (Bento-ish layout for larger screens) -->
+<section class="mb-stack-lg max-w-3xl mx-auto">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Preguntas Frecuentes</h2>
+<div class="flex flex-col gap-stack-sm">
+<!-- FAQ Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(83,98,33,0.04)] overflow-hidden border border-surface-container">
+<button class="w-full px-container-padding py-4 flex justify-between items-center text-left hover:bg-surface-container-low transition-colors accordion-toggle">
+<span class="font-label-md text-label-md text-on-surface pr-4">¿Cómo funciona el sistema de puntos?</span>
+<span class="material-symbols-outlined text-outline accordion-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content px-container-padding bg-surface-container-low border-t border-surface-container-high">
+<p class="font-body-md text-body-md text-on-surface-variant">El sistema de puntos de Sancarlina te recompensa por cada compra directa a productores locales. Acumulás 1 punto por cada $100 de compra, que luego podés canjear por descuentos en futuros pedidos o productos exclusivos del catálogo de origen.</p>
+</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(83,98,33,0.04)] overflow-hidden border border-surface-container">
+<button class="w-full px-container-padding py-4 flex justify-between items-center text-left hover:bg-surface-container-low transition-colors accordion-toggle">
+<span class="font-label-md text-label-md text-on-surface pr-4">¿Cómo me contacto con un productor?</span>
+<span class="material-symbols-outlined text-outline accordion-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content px-container-padding bg-surface-container-low border-t border-surface-container-high">
+<p class="font-body-md text-body-md text-on-surface-variant">Para contactar a un productor, ingresá al perfil del mismo desde el catálogo y seleccioná el botón "Mensaje". También podés dejar consultas públicas en la sección de reseñas de cada producto para que la comunidad y el productor puedan responder.</p>
+</div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(83,98,33,0.04)] overflow-hidden border border-surface-container">
+<button class="w-full px-container-padding py-4 flex justify-between items-center text-left hover:bg-surface-container-low transition-colors accordion-toggle">
+<span class="font-label-md text-label-md text-on-surface pr-4">¿Qué requisitos necesito para el Sello de Origen?</span>
+<span class="material-symbols-outlined text-outline accordion-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content px-container-padding bg-surface-container-low border-t border-surface-container-high">
+<p class="font-body-md text-body-md text-on-surface-variant">El Sello de Origen requiere que al menos el 80% de la materia prima sea de la región de San Carlos, certificar prácticas sostenibles de cultivo o producción, y estar registrado formalmente como productor local en nuestra plataforma tras una verificación en terreno.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Support Card (Highlighted) -->
+<section class="max-w-3xl mx-auto">
+<div class="bg-surface-container-low border border-primary/20 rounded-xl p-container-padding flex flex-col md:flex-row items-center justify-between gap-stack-md shadow-[0_4px_12px_rgba(83,98,33,0.08)] relative overflow-hidden">
+<!-- Decorative background blob -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-container opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex-1 text-center md:text-left z-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">¿Todavía tenés dudas?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Nuestro equipo de soporte técnico está disponible de lunes a viernes de 9 a 18hs para ayudarte con cualquier inconveniente.</p>
+</div>
+<div class="z-10 w-full md:w-auto shrink-0">
+<button class="w-full md:w-auto h-12 px-6 bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary font-label-md text-label-md rounded-full flex items-center justify-center gap-2 transition-colors shadow-md active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                        CHATEAR CON SOPORTE TÉCNICO
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface px-2 py-3 pb-safe border-t border-surface-container-high rounded-t-xl shadow-[0_-4px_12px_rgba(83,98,33,0.04)]">
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high rounded-full p-2 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm-mobile">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high rounded-full p-2 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="sync_alt">sync_alt</span>
+<span class="font-label-sm text-label-sm-mobile">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container-high rounded-full p-2 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-sm text-label-sm-mobile">Alerts</span>
+</button>
+<!-- Active Tab: Support -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-semibold hover:bg-surface-container-low dark:hover:bg-surface-container-high rounded-full p-2 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="help_center" data-weight="fill">help_center</span>
+<span class="font-label-sm text-label-sm-mobile">Support</span>
+<!-- Active Indicator dot -->
+<div class="w-1.5 h-1.5 rounded-full bg-secondary mt-0.5"></div>
+</button>
+</nav>
+<script>
+        // Simple accordion logic
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('.accordion-icon');
+                
+                // Toggle active classes
+                content.classList.toggle('active');
+                icon.classList.toggle('active');
+            });
+        });
+    </script>
+</body></html>

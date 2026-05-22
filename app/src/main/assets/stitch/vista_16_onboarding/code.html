@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Sancarlina</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#454745",
+                      "inverse-on-surface": "#f0f2e1",
+                      "on-tertiary-container": "#fdfdfa",
+                      "on-secondary-fixed": "#40000f",
+                      "on-secondary-container": "#771e2f",
+                      "secondary": "#9f3d4c",
+                      "primary-fixed-dim": "#bccf7f",
+                      "surface-container-high": "#e8ead9",
+                      "outline-variant": "#c6c8b7",
+                      "surface-container-low": "#f3f5e4",
+                      "primary-container": "#6b7b36",
+                      "surface-dim": "#d9dbcb",
+                      "on-secondary": "#ffffff",
+                      "primary": "#53621f",
+                      "outline": "#76786a",
+                      "on-primary-container": "#fbffe3",
+                      "secondary-fixed-dim": "#ffb2b9",
+                      "on-primary-fixed": "#171e00",
+                      "surface-variant": "#e2e4d3",
+                      "primary-fixed": "#d8eb98",
+                      "tertiary-fixed": "#e2e3e0",
+                      "on-surface": "#1a1d13",
+                      "tertiary": "#5b5c5a",
+                      "surface-bright": "#f9fbea",
+                      "secondary-container": "#ff8795",
+                      "on-background": "#1a1d13",
+                      "surface-container": "#edefdf",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e2e4d3",
+                      "surface": "#f9fbea",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#bccf7f",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#1a1c1b",
+                      "tertiary-container": "#737573",
+                      "surface-container-lowest": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#46483b",
+                      "on-secondary-fixed-variant": "#802635",
+                      "on-primary-fixed-variant": "#3e4c0a",
+                      "error": "#ba1a1a",
+                      "secondary-fixed": "#ffdadb",
+                      "inverse-surface": "#2f3227",
+                      "background": "#f9fbea",
+                      "tertiary-fixed-dim": "#c6c7c4",
+                      "surface-tint": "#556421"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "24px",
+                      "gutter": "16px",
+                      "stack-sm": "8px",
+                      "base": "8px",
+                      "stack-md": "16px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Work Sans"],
+                      "label-sm": ["Work Sans"],
+                      "label-md": ["Work Sans"],
+                      "headline-lg": ["Work Sans"],
+                      "body-lg": ["Work Sans"],
+                      "headline-sm": ["Work Sans"],
+                      "headline-md": ["Work Sans"],
+                      "body-md": ["Work Sans"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                      "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-sans antialiased overflow-hidden selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Action Area -->
+<header class="w-full px-container-padding py-stack-md flex justify-end items-center z-10 relative">
+<button class="text-primary font-label-md text-label-md hover:bg-surface-container-low px-4 py-2 rounded-full transition-colors duration-200">
+            Saltar
+        </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col justify-center items-center px-container-padding relative z-10 max-w-md mx-auto w-full">
+<!-- Illustration Placeholder -->
+<div class="w-full aspect-square max-w-[320px] mb-stack-lg relative flex items-center justify-center">
+<!-- Decorative Background Element -->
+<div class="absolute inset-0 bg-primary/5 rounded-full filter blur-3xl transform scale-110"></div>
+<img alt="Illustration of vineyards and mountains" class="w-full h-full object-cover rounded-full shadow-[0_8px_30px_rgba(83,98,33,0.12)] border-4 border-surface" data-alt="A stylized, modern, monolinear illustration of a vineyard landscape with the Andes mountains in the background. The artwork uses a sophisticated olive green monochromatic palette against a bone white background. The style is minimalist, clean, and elegant, evoking a premium artisanal brand. The lighting is bright and flat, emphasizing the vector-like quality of the image." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtLcg7SyD-QFUU3htNn0sVyChcyJ5VeT_iNMJTlEs7UDgPyC_54NeOYYcCZbQuRZZJJ84xRdfca1YPjfTkypB3sDgCv_m34ZGbWiyvMWPiQxveK0ITEii3-eYnx2ZapcE-U2uq6Z9gW0dr3p9oQRkzz_jtmoAtBLZacQ7mMk-8SbtUsyjz2qUssyHYof2E3GmaoGIpVmPzTYpvEBWsXMPn9bSmY66tvwAt6SKpUs61AruHQcn9v77hJswOPVDdrsfGLUL_8E3PFiY"/>
+</div>
+<!-- Typography -->
+<div class="text-center w-full mb-stack-lg">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-stack-sm tracking-tight">
+                Descubrí el Valle de Uco
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px] mx-auto">
+                Encontrá productores locales, artesanos y comercios de San Carlos en un solo mapa interactivo.
+            </p>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<footer class="w-full px-container-padding pb-stack-lg pt-stack-md flex flex-col items-center gap-stack-lg mt-auto bg-gradient-to-t from-background via-background to-transparent relative z-10">
+<!-- Pagination Indicators -->
+<div class="flex items-center gap-2">
+<div class="w-8 h-2 rounded-full bg-secondary transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant transition-all duration-300"></div>
+</div>
+<!-- Next Button -->
+<button class="w-full max-w-md h-12 bg-secondary text-on-secondary font-label-md text-label-md rounded-full shadow-lg shadow-secondary/20 hover:bg-on-secondary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center tracking-wide">
+            SIGUIENTE
+        </button>
+</footer>
+<!-- Subtle Background Texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.02] mix-blend-multiply" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%2353621f\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+</body></html>

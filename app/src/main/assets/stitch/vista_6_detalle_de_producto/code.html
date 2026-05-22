@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Detalle de Producto</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed": "#40000f",
+                      "surface-container": "#edefdf",
+                      "on-surface": "#1a1d13",
+                      "primary-fixed": "#d8eb98",
+                      "on-tertiary-container": "#fdfdfa",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#2f3227",
+                      "background": "#f9fbea",
+                      "tertiary-container": "#737573",
+                      "secondary-fixed-dim": "#ffb2b9",
+                      "on-background": "#1a1d13",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#3e4c0a",
+                      "surface-dim": "#d9dbcb",
+                      "on-tertiary-fixed-variant": "#454745",
+                      "surface-tint": "#556421",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#5b5c5a",
+                      "tertiary-fixed": "#e2e3e0",
+                      "on-surface-variant": "#46483b",
+                      "on-primary-fixed": "#171e00",
+                      "on-tertiary-fixed": "#1a1c1b",
+                      "surface-bright": "#f9fbea",
+                      "surface-variant": "#e2e4d3",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#c6c7c4",
+                      "secondary-fixed": "#ffdadb",
+                      "secondary-container": "#ff8795",
+                      "surface-container-highest": "#e2e4d3",
+                      "surface-container-high": "#e8ead9",
+                      "on-primary-container": "#fbffe3",
+                      "secondary": "#9f3d4c",
+                      "primary-container": "#6b7b36",
+                      "surface-container-low": "#f3f5e4",
+                      "surface": "#f9fbea",
+                      "on-primary": "#ffffff",
+                      "inverse-on-surface": "#f0f2e1",
+                      "primary-fixed-dim": "#bccf7f",
+                      "on-error-container": "#93000a",
+                      "inverse-primary": "#bccf7f",
+                      "outline-variant": "#c6c8b7",
+                      "on-secondary-container": "#771e2f",
+                      "outline": "#76786a",
+                      "primary": "#53621f",
+                      "on-secondary-fixed-variant": "#802635",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "16px",
+                      "base": "8px",
+                      "gutter": "16px",
+                      "stack-sm": "8px",
+                      "stack-lg": "24px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Work Sans"],
+                      "label-md": ["Work Sans"],
+                      "headline-lg": ["Work Sans"],
+                      "label-sm": ["Work Sans"],
+                      "headline-md": ["Work Sans"],
+                      "headline-sm": ["Work Sans"],
+                      "body-md": ["Work Sans"],
+                      "body-lg": ["Work Sans"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for gallery but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased relative min-h-screen pb-24">
+<!-- TopAppBar (Shared Component adapted as requested by JSON, but contextually aware it's a detail page) -->
+<!-- Note: Leading icon is 'menu' in JSON, but standard UX for detail is back. Sticking to JSON literal string per instructions, but using back action visually if possible, actually wait, "PROHIBITION (Content):... strictly forbidden from altering... icon names". So I must use "menu". -->
+<header class="bg-primary dark:bg-primary-container docked full-width top-0 rounded-b-none flex flex-col items-center pt-8 pb-4 px-container-padding w-full z-50 sticky top-0">
+<div class="flex w-full justify-between items-center">
+<button class="text-on-primary dark:text-on-primary-container hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile font-bold text-on-primary dark:text-on-primary-container uppercase tracking-wider">
+                SANCARLINA
+            </h1>
+<button class="text-on-primary dark:text-on-primary-container hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="w-full max-w-md mx-auto md:max-w-2xl">
+<!-- Hero Image -->
+<section class="w-full h-[353px] relative">
+<img alt="Miel Pura de Abeja" class="w-full h-full object-cover" data-alt="A close-up, high-quality photograph of a rustic glass jar filled with golden, pure artisanal honey. The jar is placed on a rough wooden table outdoors, with soft, natural sunlight filtering through green leaves, creating a warm, inviting 'Regional Professional' atmosphere. The aesthetic highlights organic textures, earthy tones, and a deep sense of local craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR7fJTZFE8JC-jbBEEXqwKx4eQ9tKdpfStvBK4mTzoPzMk0SJns9EG6SD50Mpoz0XKOlTnz_LadQNg8nhvGMSodQbdkC-khhlnmMkF3u9kp6xdpW5HjOXWosku-khh2gMgGNb6yx_9GPoSx6beIl-Yro2pCcHCEJMlhC8lC8t-8ndz0YyOIGm3QQtk7lINPBoRkS7GdlzDmsbY9X-jeoGyk_tWogB_1aYLu-nrGO1KxCBm8HaaKV60PyGv5GuOh3RmDiS24P2qnyQ"/>
+<!-- Soft gradient overlay to blend image into the cream background -->
+<div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"></div>
+</section>
+<!-- Content Body -->
+<section class="px-container-padding -mt-6 relative z-10 space-y-stack-md">
+<!-- Header Info -->
+<div class="space-y-base">
+<div class="flex items-start justify-between">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Miel Pura de Abeja</h2>
+<button class="p-2 rounded-full bg-surface-container-highest text-primary hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center text-on-surface-variant gap-2">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="text-label-md font-label-md">Eugenio Bustos, San Carlos</span>
+</div>
+<div class="flex gap-2 pt-2">
+<span class="bg-primary-fixed-dim/30 text-on-primary-fixed-variant px-3 py-1 rounded-full text-label-sm font-label-sm">Artesanal</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-label-sm font-label-sm">Productor Local</span>
+</div>
+</div>
+<hr class="border-outline-variant/30"/>
+<!-- Description -->
+<div class="space-y-base">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Origen y Elaboración</h3>
+<p class="text-body-md font-body-md text-on-surface-variant leading-relaxed">
+                    Nuestra miel es recolectada de forma 100% artesanal en las fincas de Eugenio Bustos. Extraída en frío para conservar todas sus propiedades naturales, vitaminas y sabor auténtico del Valle de Uco. Un producto directo de la colmena a tu mesa, sin conservantes ni aditivos.
+                </p>
+</div>
+<!-- Gallery -->
+<div class="space-y-base pt-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Galería</h3>
+<div class="flex overflow-x-auto gap-gutter hide-scrollbar pb-2">
+<img alt="Galería 1" class="w-28 h-28 flex-none rounded-lg object-cover shadow-[0_4px_12px_rgba(112,25,42,0.04)]" data-alt="A macro shot of a wooden honey dipper dripping with thick, golden honey. The background is a soft, out-of-focus natural setting. The lighting is warm and natural, emphasizing the rich texture and clarity of the pure artisanal honey, fitting the tactile and regional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDskGhaHii9PH9sY5bjkC4-T66SVNhSYiT4yxb60L7qIBeBYjFp14RfXHZkiFTpnRtg18PzuIpBIvevcyeZNnOUh5ZUmfPWRT511xLs0kNTrPqRLQyYgncm8m1OtdjWqO-yie4C4WDZ6G9tN84ZNIHALKnjkAY7zDoWiIlInh6eVITmN6Tlpt_EmayyH5u4gK9vdrotuzbPLaqOcTNGDEpE93glq25DwvdbI8sMWJahyBfcXMMmKt20H5ZzJzpgRbjf0r5GdtYsK_I"/>
+<img alt="Galería 2" class="w-28 h-28 flex-none rounded-lg object-cover shadow-[0_4px_12px_rgba(112,25,42,0.04)]" data-alt="Rows of beautifully packaged glass jars filled with honey, lined up on a rustic wooden shelf in a local artisanal market. The labels are minimal and elegant. The lighting is soft and natural, showcasing the deep golden hue of the product and conveying a premium, handcrafted quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDefgbIoWvW2yP8Nl4Pbmi7WqduDLvWwVpwB_RYQCy5rjG-xhflomQbXEUsFQ0CDHKOTKZhICXYkUxi1_hVEUX31ye_oBpSmOkjyPWWMgCHe9Q7R4Fa0qG1tUuKVDnX-MdiBQdxPG3chfgJqz1bLIM4SJGNR_4oaSvPf2l2v1cNGhbGaNQKDQYDuC49sTLPyWhjmW7k8q1tfIRb3XH6DRGPqAlg4QOiWu3H52mvGw-JCS4igfeDI5thecCKQxAAvTMnJhrsdxJ6Zc4"/>
+<img alt="Galería 3" class="w-28 h-28 flex-none rounded-lg object-cover shadow-[0_4px_12px_rgba(112,25,42,0.04)]" data-alt="A close-up view of a natural honeycomb, rich with fresh honey. The texture is intricate and organic. The lighting is bright and warm, highlighting the waxy cells and the glistening liquid, perfectly capturing the natural origin of the product in a sophisticated manner." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnivKSWjzI07sZ4rWyR3_m1joPIwRBGUB-XBnoHZFQIapZbhrZBOhNmkgXZlv7eFdR23VeB9uCVnZmtEEt3TJDiDUjt24h9FF92RTgiKMZytCAWHuS9mL0FM5NC7h-UztEACVEZ7TDitHbNIrNAjtxky53NWg52vevxy-lYgI49Y7IujZe-mWxOTCbPygSbRv-_qDZqa8ojwaQns98xRLXO_gSoEaD2eK1TAIVS8E2kzPjVhKkwFgF4KASthLJtrkyFxahTQrNCPs"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Action -->
+<div class="fixed bottom-0 left-0 w-full bg-surface dark:bg-surface-dim p-container-padding shadow-[0_-4px_12px_rgba(112,25,42,0.08)] z-50 border-t-2 border-secondary/10 flex justify-center">
+<button class="w-full max-w-md bg-secondary text-on-secondary rounded-lg h-12 flex items-center justify-center gap-2 hover:bg-on-secondary-container transition-colors shadow-sm active:scale-95 duration-200">
+<span class="material-symbols-outlined icon-filled">chat</span>
+<span class="text-label-md font-label-md uppercase tracking-wider font-bold">Contacto Directo por WhatsApp</span>
+</button>
+</div>
+</body></html>

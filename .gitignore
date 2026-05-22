@@ -1,0 +1,43 @@
+# Gradle files
+.gradle/
+build/
+/*/build/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/dictionaries
+.idea/libraries/
+.idea/caches/
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/modules.xml
+
+# Local properties (sensitive info like SDK paths)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio captures
+captures/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Built-in Android Studio stuff
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/

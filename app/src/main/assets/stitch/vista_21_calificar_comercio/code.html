@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dejar Calificación - Sancarlina</title>
+<!-- Google Fonts: Work Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config from Design System -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c7c4",
+                    "on-tertiary-container": "#fdfdfa",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#ff8795",
+                    "surface-tint": "#556421",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2f3227",
+                    "secondary-fixed-dim": "#ffb2b9",
+                    "outline": "#76786a",
+                    "on-surface": "#1a1d13",
+                    "outline-variant": "#c6c8b7",
+                    "on-primary-fixed-variant": "#3e4c0a",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f9fbea",
+                    "on-tertiary-fixed-variant": "#454745",
+                    "secondary-fixed": "#ffdadb",
+                    "surface-container-highest": "#e2e4d3",
+                    "surface-bright": "#f9fbea",
+                    "primary-fixed-dim": "#bccf7f",
+                    "primary-fixed": "#d8eb98",
+                    "primary-container": "#6b7b36",
+                    "surface-container-low": "#f3f5e4",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1a1d13",
+                    "tertiary-container": "#737573",
+                    "on-secondary-fixed-variant": "#802635",
+                    "secondary": "#9f3d4c",
+                    "primary": "#53621f",
+                    "inverse-on-surface": "#f0f2e1",
+                    "on-tertiary-fixed": "#1a1c1b",
+                    "on-surface-variant": "#46483b",
+                    "background": "#f9fbea",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed": "#e2e3e0",
+                    "surface-container-high": "#e8ead9",
+                    "surface-dim": "#d9dbcb",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#40000f",
+                    "on-primary-container": "#fbffe3",
+                    "tertiary": "#5b5c5a",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#edefdf",
+                    "on-secondary-container": "#771e2f",
+                    "on-primary-fixed": "#171e00",
+                    "inverse-primary": "#bccf7f",
+                    "surface-variant": "#e2e4d3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "16px",
+                    "stack-lg": "24px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-sm": "8px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Work Sans"],
+                    "headline-lg-mobile": ["Work Sans"],
+                    "body-md": ["Work Sans"],
+                    "body-lg": ["Work Sans"],
+                    "label-sm": ["Work Sans"],
+                    "headline-lg": ["Work Sans"],
+                    "headline-sm": ["Work Sans"],
+                    "label-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Hide scrollbar for clean mobile look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased md:max-w-md md:mx-auto md:border-x md:border-surface-variant relative shadow-lg">
+<!-- Top Navigation (Task-Focused Variant based on TopAppBar JSON) -->
+<!-- Suppressing standard TopAppBar actions/menu, applying strict styling keys -->
+<header class="bg-primary text-on-primary docked full-width top-0 shadow-sm flex justify-between items-center w-full px-gutter h-16 sticky z-50">
+<!-- Leading Action: Back -->
+<button aria-label="Volver" class="text-on-primary hover:bg-primary-container/20 transition-colors active:scale-95 transition-transform w-10 h-10 flex items-center justify-center rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Headline -->
+<h1 class="font-headline-md text-headline-md text-on-primary absolute left-1/2 -translate-x-1/2">
+            CALIFICAR COMERCIO
+        </h1>
+<!-- Trailing Action: Empty for balance -->
+<div class="w-10 h-10"></div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col items-center px-container-padding py-stack-lg w-full">
+<!-- Entity Profile Header -->
+<div class="flex flex-col items-center w-full mb-stack-lg">
+<div class="relative mb-stack-md">
+<img alt="Apicultura San Carlos Logo" class="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-[0_4px_12px_rgba(83,98,31,0.08)] bg-surface-container-highest" data-alt="A macro photograph of raw, golden honey dripping from a wooden dipper into a rustic clay bowl. The scene is brightly lit with natural, warm sunlight creating a soft, organic aesthetic. The color palette focuses on rich ambers, deep yellows, and natural wood tones, set against a soft, creamy background. The mood is artisanal, pure, and inviting, reflecting a high-quality local producer." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKpoqLmjcaawbHfFiiKYWaLiA3JabMjfVqiMgEtoCgUP4aPnp5g7gIfInWgvgWK2uk-NmdVo8bRUlYqbgk6PPt3wn47CPRX364-EHYKQf-gkmxhs8Hq8NW4oufRUuFfTcKrpJqL90AArzq6xbVYM7HQoByekg-9WOaxYYSUh9qjxN9NrI45dN4zyztI_W2VZ1-wMmXly3pzIU82QFJRLY6RGTasdd7vKwSlOI2_1bUT_zhNciLcPFlnqegQmfnSHiqgIx78f-ze6U"/>
+<!-- Decorative Badge -->
+<div class="absolute bottom-0 right-0 bg-secondary text-on-secondary rounded-full w-8 h-8 flex items-center justify-center border-2 border-surface shadow-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-secondary-container text-center">
+                Apicultura San Carlos
+            </h2>
+<p class="font-label-md text-label-md text-outline mt-1">
+                Productor Local
+            </p>
+</div>
+<!-- Rating Stars Interaction Zone -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0_4px_12px_rgba(83,98,31,0.04)] mb-stack-lg flex flex-col items-center">
+<p class="font-label-md text-label-md text-on-surface-variant mb-stack-md text-center">
+                ¿Cómo calificarías los productos?
+            </p>
+<div class="flex justify-center gap-2" id="star-rating-container">
+<!-- Star 1 (Filled) -->
+<button aria-label="1 estrella" class="focus:outline-none transition-transform active:scale-90">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<!-- Star 2 (Filled) -->
+<button aria-label="2 estrellas" class="focus:outline-none transition-transform active:scale-90">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<!-- Star 3 (Filled) -->
+<button aria-label="3 estrellas" class="focus:outline-none transition-transform active:scale-90">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<!-- Star 4 (Filled) -->
+<button aria-label="4 estrellas" class="focus:outline-none transition-transform active:scale-90">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<!-- Star 5 (Empty/Outline) -->
+<button aria-label="5 estrellas" class="focus:outline-none transition-transform active:scale-90">
+<span class="material-symbols-outlined text-4xl text-outline-variant" data-icon="star">star</span>
+</button>
+</div>
+</div>
+<!-- Text Review Input -->
+<div class="w-full flex-1 flex flex-col mb-stack-lg">
+<label class="sr-only" for="review-text">Tu reseña</label>
+<textarea class="w-full flex-1 min-h-[160px] bg-surface-container-lowest border border-outline-variant rounded-xl p-4 font-body-md text-on-surface placeholder:text-outline/60 focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none shadow-sm" id="review-text" placeholder="Contanos tu experiencia con este productor local (opcional)..."></textarea>
+</div>
+</main>
+<!-- Bottom Action Area (Fixed for mobile task completion) -->
+<div class="px-container-padding py-stack-md bg-surface shadow-[0_-4px_12px_rgba(83,98,31,0.04)] border-t border-surface-variant sticky bottom-0 z-40">
+<button class="w-full h-12 bg-secondary text-on-secondary rounded-full font-label-md text-label-md font-bold tracking-wide flex justify-center items-center active:scale-95 transition-transform shadow-md">
+            PUBLICAR RESEÑA
+        </button>
+</div>
+<!-- Navigation Suppressed: Task-focused flow (Dejar Calificación) -> BottomNavBar intentionally omitted as per Shared Components Logic -->
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('#star-rating-container button');
+            
+            stars.forEach((starBtn, index) => {
+                starBtn.addEventListener('click', () => {
+                    // Simple logic to fill stars up to clicked index
+                    stars.forEach((s, i) => {
+                        const iconSpan = s.querySelector('span');
+                        if (i <= index) {
+                            iconSpan.style.fontVariationSettings = "'FILL' 1";
+                            iconSpan.classList.remove('text-outline-variant');
+                            iconSpan.classList.add('text-primary');
+                        } else {
+                            iconSpan.style.fontVariationSettings = "'FILL' 0";
+                            iconSpan.classList.remove('text-primary');
+                            iconSpan.classList.add('text-outline-variant');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body></html>

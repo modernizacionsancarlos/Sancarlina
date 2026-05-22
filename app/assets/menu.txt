@@ -1,0 +1,72 @@
+========================================================================
+                      SANCARLINA - APP ARCHITECTURE MENU
+========================================================================
+Este archivo contiene el mapeo completo de las 33 vistas y estados logiciales 
+desarrollados para el ecosistema móvil de San Carlos, Valle de Uco, Mendoza.
+Organizado jerárquicamente por paquetes/módulos para su integración en Android Studio.
+
+[MÓDULO 1: CORE & INITIAL FLOW (Soporte de Arranque)]
+├── Vista 09: Splash Screen (Pantalla de carga con isotipo municipal y eslogan)
+├── Vista 16: Onboarding / Introducción (Carrusel explicativo para nuevos usuarios)
+└── Vista 27: Error de Conexión / Offline (Pantalla de contingencia sin señal de red)
+
+[MÓDULO 2: AUTHENTICATION & PRIVACY (Gestión de Accesos y Cuentas)]
+├── Vista 17: Iniciar Sesión / Login Principal (Acceso con Google o Correo)
+├── Vista 25: Registro de Usuario / Sign Up (Formulario de alta con validación)
+├── Vista 22: Recuperar Contraseña (Flujo de restablecimiento vía Email)
+├── Vista 24: Términos, Condiciones y Privacidad (Requisito legal para Stores)
+└── Vista 32: [MODAL] Confirmación de Cierre de Sesión (Ventana emergente de salida)
+
+[MÓDULO 3: MAIN NAVIGATION & EXPLORATION (Eje de Descubrimiento Territorial)]
+├── Vista 01: Home Principal (Dashboard con carrusel de ofertas y cuadrícula de categorías)
+├── Vista 28: Búsqueda Activa e Historial (Historial predictivo y sugerencias en foco)
+├── Vista 07: Listado de Categoría (Filtro vertical con chips de localidades y favoritos)
+├── Vista 23: Estado Vacío / Sin Resultados (Mensaje de rescate ante búsquedas nulas)
+└── Vista 03: Pestaña Servicios y Sello de Origen (Filtro especializado por procedencia)
+
+[MÓDULO 4: GEOLOCATION & MAPS (Mapeo de Productores Valle de Uco)]
+├── Vista 02: Mapa de Cercanía (Pines georreferenciados: San Carlos, Eugenio Bustos, La Consulta)
+├── Vista 19: Panel de Filtros Avanzados (Filtro múltiple por localidad, rubro e indicador Sello)
+└── Vista 18: Detalle Corto / Bottom Sheet (Ficha emergente interactiva desde pin de mapa)
+
+[MÓDULO 5: COMMERCIAL PROFILES (Vitrinas de Productores Locales)]
+├── Vista 26: Perfil de Comercio / Bodega / Storefront (Catálogo interno completo y horarios)
+└── Vista 06: Detalle de Producto / Ficha Individual (Miel Sancarlina - Botón directo a WhatsApp)
+
+[MÓDULO 6: LOYALTY & REWARDS (Sistema de Puntos y Fidelización de Compra Local)]
+├── Vista 04: Panel de Puntos (Visualización de estrellas y listado de cupones de canje)
+├── Vista 08: Pantalla de Código QR (Código dinámico con cuenta regresiva de expiración)
+├── Vista 20: Historial de Puntos y Canjes (Registro contable de sumas/restas de puntaje)
+└── Vista 33: [MODAL] Éxito de Canje de Puntos (Confirmación tras escaneo en caja)
+
+[MÓDULO 7: PROFILE MANAGEMENT & COMMUNITY (Administración del Ecosistema)]
+├── Vista 05: Perfil del Usuario / Panel de Configuración (Menú de opciones de usuario)
+├── Vista 11: Editar Perfil / Datos Personales (Formulario de actualización de residencia)
+├── Vista 10: Mis Favoritos (Acceso rápido a comercios guardados con corazones activos)
+├── Vista 12: Sumá tu Emprendimiento (Formulario de registro para productores y artesanos)
+├── Vista 14: Pantalla de Éxito / Confirmación (Feedback tras enviar postulación comercial)
+└── Vista 31: [MODAL] Eliminación de Cuenta (Flujo de borrado permanente bajo norma GDPR)
+
+[MÓDULO 8: COMMUNICATIONS & ENGAGEMENT (Centro de Mensajería y Alertas)]
+├── Vista 13: Centro de Notificaciones (Historial clasificado entre alertas Leídas / No leídas)
+├── Vista 29: Configuración de Notificaciones (Ajustes finos mediante interruptores/Toggles)
+├── Vista 30: Detalle de Anuncio / Evento Regional (Ficha extendida de ferias municipales o novedades)
+├── Vista 15: Ayuda, Soporte y FAQs (Preguntas frecuentes estructuradas en acordión)
+├── Vista 21: Dejar Calificación / Reseña (Feedback con estrellas para el comercio)
+└── Vista 29b: Chat de Soporte en Vivo (Canal conversacional directo con la administración)
+
+========================================================================
+NOTAS DE ARQUITECTURA PARA FRONTEND (ANDROID STUDIO / FLUTTER / NATIVE)
+========================================================================
+1. Paleta de Colores de Referencia:
+   - Primary Header: Verde Oliva (#7E8F47)
+   - Accent Action: Guinda / Vino (#70192A)
+   - Canvas/Scaffold Background: Crema Claro (#F9F9F6)
+   - Card Background: Blanco Puro (#FFFFFF)
+
+2. Tipografía Base: Work Sans (Títulos y Botones) / DM Sans (Cuerpo de texto).
+3. Radios de Curvatura Estándar: Containers y inputs = 12px a 16px; Modals = 24px.
+4. Navegación Flujo Principal: BottomNavigationBar fijado en Vista 01, 02, 04, 05.
+
+Archivo autogenerado de forma ordenada para sincronización de código y diseño.
+========================================================================

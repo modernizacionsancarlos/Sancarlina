@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Canje Exitoso</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3e4c0a",
+                        "on-primary-fixed": "#171e00",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "primary": "#53621f",
+                        "on-secondary-fixed-variant": "#802635",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#5b5c5a",
+                        "outline": "#76786a",
+                        "on-background": "#1a1d13",
+                        "surface-tint": "#556421",
+                        "surface-container-highest": "#e2e4d3",
+                        "inverse-primary": "#bccf7f",
+                        "secondary-container": "#ff8795",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-secondary-container": "#771e2f",
+                        "secondary": "#9f3d4c",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f5e4",
+                        "on-tertiary-fixed-variant": "#454745",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#edefdf",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f9fbea",
+                        "on-secondary-fixed": "#40000f",
+                        "primary-fixed-dim": "#bccf7f",
+                        "primary-container": "#6b7b36",
+                        "tertiary-container": "#737573",
+                        "outline-variant": "#c6c8b7",
+                        "surface-dim": "#d9dbcb",
+                        "background": "#f9fbea",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1d13",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fdfdfa",
+                        "on-primary-container": "#fbffe3",
+                        "secondary-fixed": "#ffdadb",
+                        "primary-fixed": "#d8eb98",
+                        "tertiary-fixed": "#e2e3e0",
+                        "on-surface-variant": "#46483b",
+                        "inverse-surface": "#2f3227",
+                        "inverse-on-surface": "#f0f2e1",
+                        "surface-variant": "#e2e4d3",
+                        "surface-container-high": "#e8ead9",
+                        "surface": "#f9fbea",
+                        "tertiary-fixed-dim": "#c6c7c4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Work Sans"],
+                        "body-md": ["Work Sans"],
+                        "label-md": ["Work Sans"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "headline-sm": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "label-sm": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .modal-shadow {
+            box-shadow: 0 12px 32px rgba(83, 98, 33, 0.12);
+        }
+        .qr-gradient {
+            background: linear-gradient(135deg, #f9fbea 0%, #edefdf 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-hidden">
+<!-- Background QR Screen (Context) -->
+<main class="relative h-screen w-full flex flex-col px-container-padding pt-20">
+<div class="flex flex-col items-center gap-stack-lg">
+<h1 class="font-headline-md text-headline-md text-primary text-center">Escanea en Caja</h1>
+<!-- Dummy QR Container -->
+<div class="w-full aspect-square max-w-[320px] bg-white rounded-[24px] p-gutter border-2 border-primary-container flex items-center justify-center relative overflow-hidden">
+<img class="w-full h-full object-contain opacity-40" data-alt="A clean, high-contrast QR code centered on a pristine white background. The QR code is surrounded by subtle olive-green decorative patterns and modern geometric lines, following a regional professional aesthetic with soft matte finishes. The lighting is bright and even, emphasizing a sense of reliability and artisanal craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7gI8Rnlp2ojX2CgIXC1mj3kalnjhhgUdlyzgJw1zTvsIvLoPWYvDrEPE9FuLjedKfzdbSlo8TO6ore9BI1qFjmAsKoQzfrxvv2tCvsU8uHF7XEfcDtZq2OZFUns0GYqbrZGNaSOJBwzI9NGPLuDM27uGyFx3Tb_T02ezYWSmIwhJS-PT3JDQsFJzpy9pMXvJWMHJWYm9KqbR4K4sHXIo6VKaWCHaZSYXNLH9Qw3fDzDxhFvnFiKWM5VLmYjfGtmLtbAExrcyzGTo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent"></div>
+</div>
+<div class="w-full max-w-[320px] bg-surface-container rounded-xl p-stack-md text-center">
+<p class="font-label-md text-label-md text-on-surface-variant">Válido por: Descuento 20%</p>
+<p class="font-body-md text-body-md text-primary font-bold mt-1">Sancarlina Member</p>
+</div>
+</div>
+</main>
+<!-- Success Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center px-container-padding bg-overlay transition-opacity duration-300" id="modal-overlay">
+<!-- Modal Card -->
+<div class="bg-surface-container-lowest rounded-[24px] w-full max-w-[400px] p-[30px] modal-shadow transform transition-all duration-500 scale-100 flex flex-col items-center text-center animate-in fade-in zoom-in duration-300">
+<!-- Success Icon Animation -->
+<div class="w-20 h-20 bg-[#7E8F47] rounded-full flex items-center justify-center mb-stack-lg shadow-lg">
+<span class="material-symbols-outlined text-white text-[48px]" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+</div>
+<!-- Content -->
+<h2 class="font-headline-md text-headline-md text-[#7E8F47] mb-stack-md tracking-tight">¡CANJE EXITOSO!</h2>
+<p class="font-body-md text-body-md text-[#475569] leading-relaxed mb-stack-lg">
+                El beneficio ha sido validado correctamente en la caja del comercio. Tus puntos han sido actualizados.
+            </p>
+<!-- Action Button -->
+<button class="w-full h-12 bg-[#7E8F47] text-white font-label-md text-label-md rounded-full shadow-md active:scale-95 transition-transform duration-150 uppercase tracking-wider font-bold" onclick="closeModal()">
+                ENTENDIDO
+            </button>
+<!-- Decorative Subtle Detail -->
+<div class="mt-stack-lg flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-fixed"></div>
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div>
+<div class="w-2 h-2 rounded-full bg-primary-fixed"></div>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            
+            // Optional: Redirect or reset view
+            setTimeout(() => {
+                // For demo purposes, we just hide it
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        // Entrance effect on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const modalContent = document.querySelector('#modal-overlay > div');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        });
+    </script>
+<!-- Shell Suppression Logic: Navigation is suppressed as this is a success/confirmation view -->
+</body></html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Centro de Notificaciones - Sancarlina</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed": "#40000f",
+                      "error": "#ba1a1a",
+                      "outline-variant": "#c6c8b7",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed": "#1a1c1b",
+                      "on-error": "#ffffff",
+                      "surface-container": "#edefdf",
+                      "surface": "#f9fbea",
+                      "surface-container-high": "#e8ead9",
+                      "surface-bright": "#f9fbea",
+                      "secondary-container": "#ff8795",
+                      "on-surface": "#1a1d13",
+                      "inverse-surface": "#2f3227",
+                      "tertiary-fixed": "#e2e3e0",
+                      "surface-container-low": "#f3f5e4",
+                      "on-error-container": "#93000a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "surface-dim": "#d9dbcb",
+                      "on-tertiary-fixed-variant": "#454745",
+                      "on-secondary-container": "#771e2f",
+                      "inverse-on-surface": "#f0f2e1",
+                      "tertiary-fixed-dim": "#c6c7c4",
+                      "primary-container": "#6b7b36",
+                      "background": "#f9fbea",
+                      "secondary": "#9f3d4c",
+                      "primary": "#53621f",
+                      "on-secondary-fixed-variant": "#802635",
+                      "surface-tint": "#556421",
+                      "outline": "#76786a",
+                      "on-tertiary-container": "#fdfdfa",
+                      "on-background": "#1a1d13",
+                      "secondary-fixed": "#ffdadb",
+                      "primary-fixed": "#d8eb98",
+                      "on-primary-fixed-variant": "#3e4c0a",
+                      "on-primary-fixed": "#171e00",
+                      "tertiary": "#5b5c5a",
+                      "inverse-primary": "#bccf7f",
+                      "primary-fixed-dim": "#bccf7f",
+                      "surface-container-highest": "#e2e4d3",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#fbffe3",
+                      "secondary-fixed-dim": "#ffb2b9",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#e2e4d3",
+                      "on-surface-variant": "#46483b",
+                      "tertiary-container": "#737573"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "stack-md": "16px",
+                      "container-padding": "20px",
+                      "stack-lg": "24px",
+                      "base": "8px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Work Sans"],
+                      "body-md": ["Work Sans"],
+                      "label-md": ["Work Sans"],
+                      "headline-sm": ["Work Sans"],
+                      "headline-lg-mobile": ["Work Sans"],
+                      "body-lg": ["Work Sans"],
+                      "label-sm": ["Work Sans"],
+                      "headline-lg": ["Work Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                      "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface min-h-screen text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Specific TopAppBar for Task-Focused View -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-primary text-on-primary shadow-sm transition-colors">
+<button aria-label="Volver" class="p-2 -ml-2 rounded-full hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm tracking-tight truncate px-4 text-center flex-1">NOTIFICACIONES</h1>
+<button aria-label="Configuración" class="p-2 -mr-2 rounded-full hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</button>
+</header>
+<!-- Main Canvas (Suppressed BottomNav & Drawer due to Task-Focused Intent) -->
+<main class="pt-24 pb-safe px-container-padding max-w-2xl mx-auto flex flex-col gap-stack-lg">
+<!-- Nuevas Section -->
+<section class="flex flex-col gap-stack-md">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-1">Nuevas</h2>
+<!-- Notification Card: Unread -->
+<article class="bg-surface-container-lowest rounded-xl p-gutter shadow-[0_4px_12px_rgba(83,98,33,0.04)] border border-transparent hover:border-surface-container-high transition-colors cursor-pointer group relative overflow-hidden">
+<!-- Highlight accent for unread -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary opacity-80"></div>
+<div class="flex items-start gap-gutter">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined icon-fill">local_offer</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+<span class="font-semibold">¡Nueva oferta disponible!</span> 15% off en regionales en Eugenio Bustos.
+                        </p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm text-outline">Hace 10 min</span>
+</div>
+</div>
+<div class="flex-shrink-0 flex flex-col items-end gap-2 pt-1">
+<div aria-label="No leído" class="w-2.5 h-2.5 rounded-full bg-error shadow-sm"></div>
+</div>
+</div>
+</article>
+</section>
+<!-- Anteriores Section -->
+<section class="flex flex-col gap-stack-md mt-4">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider pl-1">Anteriores</h2>
+<!-- Notification Card: Read 1 -->
+<article class="bg-surface-container-lowest rounded-xl p-gutter shadow-[0_2px_8px_rgba(83,98,33,0.02)] border border-surface-container-low hover:bg-surface-bright transition-colors cursor-pointer">
+<div class="flex items-start gap-gutter">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface-variant leading-snug">
+                            Se ha sumado un nuevo productor de miel artesanal cerca tuyo.
+                        </p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm text-outline-variant">Ayer</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card: Read 2 -->
+<article class="bg-surface-container-lowest rounded-xl p-gutter shadow-[0_2px_8px_rgba(83,98,33,0.02)] border border-surface-container-low hover:bg-surface-bright transition-colors cursor-pointer">
+<div class="flex items-start gap-gutter">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">star</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface-variant leading-snug">
+                            ¡Tus puntos han sido acreditados con éxito!
+                        </p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm text-outline-variant">Ayer</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+</main>
+</body></html>

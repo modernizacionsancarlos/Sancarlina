@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SANCARLINA - Pantalla de Inicio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-container": "#fbffe3",
+                "on-primary": "#ffffff",
+                "background": "#f9fbea",
+                "outline-variant": "#c6c8b7",
+                "on-secondary-fixed-variant": "#802635",
+                "secondary-fixed-dim": "#ffb2b9",
+                "error": "#ba1a1a",
+                "inverse-surface": "#2f3227",
+                "tertiary-fixed-dim": "#c6c7c4",
+                "surface-container-high": "#e8ead9",
+                "inverse-primary": "#bccf7f",
+                "on-secondary-fixed": "#40000f",
+                "tertiary": "#5b5c5a",
+                "surface-container-highest": "#e2e4d3",
+                "surface-bright": "#f9fbea",
+                "surface-variant": "#e2e4d3",
+                "on-surface": "#1a1d13",
+                "surface-container-lowest": "#ffffff",
+                "inverse-on-surface": "#f0f2e1",
+                "surface-tint": "#556421",
+                "primary-fixed": "#d8eb98",
+                "on-surface-variant": "#46483b",
+                "surface": "#f9fbea",
+                "on-tertiary-fixed": "#1a1c1b",
+                "primary-container": "#6b7b36",
+                "on-background": "#1a1d13",
+                "primary-fixed-dim": "#bccf7f",
+                "on-tertiary-container": "#fdfdfa",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-error-container": "#93000a",
+                "surface-dim": "#d9dbcb",
+                "on-error": "#ffffff",
+                "on-secondary-container": "#771e2f",
+                "error-container": "#ffdad6",
+                "primary": "#53621f",
+                "on-primary-fixed": "#171e00",
+                "secondary": "#9f3d4c",
+                "surface-container": "#edefdf",
+                "on-tertiary-fixed-variant": "#454745",
+                "outline": "#76786a",
+                "surface-container-low": "#f3f5e4",
+                "on-primary-fixed-variant": "#3e4c0a",
+                "tertiary-container": "#737573",
+                "tertiary-fixed": "#e2e3e0",
+                "secondary-fixed": "#ffdadb",
+                "secondary-container": "#ff8795"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-md": "16px",
+                "container-padding": "20px",
+                "stack-sm": "8px",
+                "base": "8px",
+                "stack-lg": "24px",
+                "gutter": "16px"
+        },
+        "fontFamily": {
+                "label-md": ["Work Sans", "sans-serif"],
+                "headline-lg-mobile": ["Work Sans", "sans-serif"],
+                "headline-sm": ["Work Sans", "sans-serif"],
+                "label-sm": ["Work Sans", "sans-serif"],
+                "body-lg": ["Work Sans", "sans-serif"],
+                "headline-lg": ["Work Sans", "sans-serif"],
+                "body-md": ["Work Sans", "sans-serif"],
+                "headline-md": ["Work Sans", "sans-serif"]
+        },
+        "fontSize": {
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Custom utility classes for animations */
+  .animate-fade-in {
+    animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-500 { animation-delay: 500ms; }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes slideUp {
+    100% { opacity: 1; transform: translateY(0); }
+  }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#7E8F47] text-on-primary min-h-screen flex flex-col justify-between items-center px-container-padding overflow-hidden font-body-md selection:bg-secondary selection:text-on-secondary">
+<!-- Top Spacing -->
+<div class="flex-1"></div>
+<!-- Center Content: Logo and Illustration -->
+<main class="flex flex-col items-center justify-center w-full max-w-sm animate-slide-up">
+<!-- Brand Headline -->
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-extrabold tracking-tight mb-stack-md text-center">
+      SANCARLINA
+    </h1>
+<!-- Minimalist Line Art Illustration (Mountains, Sun, Vineyards) -->
+<div class="w-48 h-48 md:w-64 md:h-64 opacity-90 animate-fade-in delay-300">
+<svg class="w-full h-full stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Sun -->
+<circle cx="50" cy="30" r="12"></circle>
+<!-- Mountains -->
+<path d="M10 65 L35 35 L55 55 L75 25 L90 65"></path>
+<path d="M35 35 L50 65"></path>
+<path d="M75 25 L65 65"></path>
+<!-- Base line -->
+<line x1="5" x2="95" y1="65" y2="65"></line>
+<!-- Vineyard rows perspective -->
+<path d="M15 85 L40 65"></path>
+<path d="M35 85 L45 65"></path>
+<path d="M50 90 L50 65"></path>
+<path d="M65 85 L55 65"></path>
+<path d="M85 85 L60 65"></path>
+</svg>
+</div>
+</main>
+<!-- Bottom Content: Slogan and Loading Spinner -->
+<footer class="flex-1 flex flex-col justify-end items-center pb-12 w-full animate-fade-in delay-500">
+<!-- Slogan -->
+<p class="font-body-md text-body-md font-medium tracking-wide mb-stack-lg text-center opacity-90">
+      Lo nuestro, a un clic de distancia
+    </p>
+<!-- Discreet Loading Spinner -->
+<div class="relative w-8 h-8">
+<svg class="animate-spin w-full h-full text-on-primary opacity-80" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</div>
+</footer>
+<script>
+    // Optional: Simulate loading delay then redirect (demonstrative purpose)
+    // setTimeout(() => {
+    //   window.location.href = '/home'; // Navigate to main app destination
+    // }, 3000);
+  </script>
+</body></html>
