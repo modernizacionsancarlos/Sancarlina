@@ -37,6 +37,7 @@ class HomeViewModel : ViewModel() {
                 CategoryItem("EMPRENDEDORES", "storefront")
             ),
             nearbyProduct = ProductItem(
+                id = "miel-1",
                 name = "Miel Sancarlina - 1kg",
                 brand = "Producción Local",
                 price = "$ 4500",

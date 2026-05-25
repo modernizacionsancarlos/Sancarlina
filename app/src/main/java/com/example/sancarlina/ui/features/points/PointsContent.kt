@@ -1,15 +1,15 @@
 package com.example.sancarlina.ui.features.points
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,100 +30,165 @@ import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointsContent(viewModel: PointsViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(SancarlinaBackground)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp)
-    ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        
-        Text(
-            text = "Mis Puntos",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "Acumulá y disfrutá experiencias exclusivas.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Balance Card
-        BalanceCard(uiState.balance)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // QR Button
-        Button(
-            onClick = { viewModel.startQrGeneration() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-            shape = CircleShape
-        ) {
-            Icon(Icons.Default.QrCodeScanner, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("GENERAR QR DE CANJE", fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Benefits Section
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Canjear Beneficios",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "SANCARLINA",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                        color = Color.White
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { /* TODO: Menu */ }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* TODO: Search */ }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = SancarlinaPrimary
+                )
             )
-            TextButton(onClick = { }) {
-                Text("Ver todos", color = SancarlinaPrimary)
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp))
-            }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        uiState.benefits.forEach { benefit ->
-            BenefitCard(benefit)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(SancarlinaBackground)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp)
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
+            
+            Text(
+                text = "Mis Puntos",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Acumulá y disfrutá experiencias exclusivas.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Hero Points Card
+            BalanceCard(uiState.balance)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Primary Action Button
+            Button(
+                onClick = { viewModel.startQrGeneration() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                shape = RoundedCornerShape(28.dp),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+            ) {
+                Icon(Icons.Default.QrCodeScanner, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("GENERAR QR DE CANJE", fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Redeem Benefits Section
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "Canjear Beneficios",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "VER TODOS >",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SancarlinaPrimary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable { /* TODO */ }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            uiState.benefits.forEach { benefit ->
+                BenefitCard(benefit) {
+                    viewModel.onBenefitClick(benefit)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            
+            Spacer(modifier = Modifier.height(24.dp))
         }
-        
-        Spacer(modifier = Modifier.height(24.dp))
     }
 
-    // QR Dialog
+    // QR Dialog [VISTA 8]
     if (uiState.qrCodeActive) {
         QrDialog(
             timeRemaining = uiState.qrTimeRemaining,
-            onDismiss = { /* Action to close if needed */ },
-            onSimulateScan = { viewModel.simulateSuccessfulScan(500) }
+            onDismiss = { viewModel.dismissModal() },
+            onSimulateScan = { viewModel.simulateSuccessfulScan(100) }
         )
     }
 
-    // Success Modal
+    // Redemption Confirmation Dialog
+    if (uiState.selectedBenefit != null) {
+        val benefit = uiState.selectedBenefit!!
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissModal() },
+            confirmButton = {
+                Button(
+                    onClick = { viewModel.redeemBenefit() },
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                ) {
+                    Text("CANJEAR")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissModal() }) {
+                    Text("CANCELAR", color = Color.Gray)
+                }
+            },
+            title = { Text("Confirmar Canje") },
+            text = { Text("¿Deseas canjear '${benefit.title}' por ${benefit.cost} puntos?") },
+            containerColor = Color.White
+        )
+    }
+
+    // Success Modal [VISTA 14/33]
     if (uiState.showSuccessModal) {
         AlertDialog(
             onDismissRequest = { viewModel.dismissModal() },
             confirmButton = {
-                TextButton(onClick = { viewModel.dismissModal() }) {
-                    Text("ENTENDIDO", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
+                Button(
+                    onClick = { viewModel.dismissModal() },
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                ) {
+                    Text("GENIAL!")
                 }
             },
-            title = { Text("¡Canje Exitoso!", fontWeight = FontWeight.Bold) },
-            text = { Text("Tu beneficio ha sido procesado correctamente. ¡Que lo disfrutes!") },
+            title = { Text("¡Canje Exitoso!") },
+            text = { Text("Tu beneficio ha sido procesado correctamente. ¡Disfrutalo!") },
             containerColor = Color.White
         )
     }
@@ -131,47 +197,64 @@ fun PointsContent(viewModel: PointsViewModel = viewModel()) {
 @Composable
 fun BalanceCard(balance: Int) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp),
+        modifier = Modifier.fillMaxWidth(),
         color = SancarlinaPrimary,
-        shape = RoundedCornerShape(24.dp),
-        shadowElevation = 4.dp
+        shape = RoundedCornerShape(16.dp),
+        shadowElevation = 8.dp
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            // Decorative elements
+            Box(
+                modifier = Modifier
+                    .size(150.dp)
+                    .offset(x = 250.dp, y = (-50).dp)
+                    .background(Color.White.copy(alpha = 0.1f), CircleShape)
+            )
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Surface(
                     color = Color.White.copy(alpha = 0.2f),
                     shape = CircleShape,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.size(64.dp)
                 ) {
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .size(32.dp)
-                    )
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Stars, 
+                            contentDescription = null, 
+                            tint = Color(0xFFD8EB98),
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
                 }
+                
+                Spacer(modifier = Modifier.height(12.dp))
+                
                 Text(
                     text = "SALDO ACTUAL",
-                    color = Color.White.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.labelMedium,
-                    letterSpacing = 2.sp
+                    color = Color(0xFFD8EB98),
+                    letterSpacing = 2.sp,
+                    fontWeight = FontWeight.Bold
                 )
+                
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = balance.toString(),
-                        color = Color.White,
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = " pts",
+                        text = "pts",
+                        style = MaterialTheme.typography.headlineSmall,
                         color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
             }
@@ -180,65 +263,77 @@ fun BalanceCard(balance: Int) {
 }
 
 @Composable
-fun BenefitCard(benefit: BenefitItem) {
-    Card(
+fun BenefitCard(benefit: BenefitItem, onClick: () -> Unit) {
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp),
+            .clickable { onClick() },
+        color = Color.White,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shadowElevation = 2.dp,
+        border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.3f))
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 model = benefit.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(12.dp)
-                    .size(86.dp)
-                    .clip(RoundedCornerShape(12.dp)),
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 12.dp)
-            ) {
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column(modifier = Modifier.weight(1f)) {
                 Surface(
                     color = SancarlinaBackground,
-                    shape = CircleShape
+                    shape = RoundedCornerShape(4.dp)
                 ) {
                     Text(
                         text = benefit.category,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         fontWeight = FontWeight.Bold,
-                        color = Color.Gray
+                        fontSize = 10.sp
                     )
                 }
-                Spacer(modifier = Modifier.height(4.dp))
+                
                 Text(
                     text = benefit.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
+                
                 Text(
                     text = benefit.brand,
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.Gray
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Star, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp))
+                
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Stars, 
+                        contentDescription = null, 
+                        tint = SancarlinaPrimary,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "${benefit.cost} pts",
-                        color = SancarlinaPrimary,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
+                        color = SancarlinaPrimary
                     )
                 }
             }
@@ -247,51 +342,68 @@ fun BenefitCard(benefit: BenefitItem) {
 }
 
 @Composable
-fun QrDialog(timeRemaining: String, onDismiss: () -> Unit, onSimulateScan: () -> Unit) {
+fun QrDialog(
+    timeRemaining: String,
+    onDismiss: () -> Unit,
+    onSimulateScan: () -> Unit
+) {
     AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            Button(
-                onClick = onSimulateScan,
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("SIMULAR ESCANEO (PRUEBA)")
-            }
-        },
+        onDismissRequest = { onDismiss() },
+        confirmButton = {},
         title = { 
             Text(
-                "QR DE CANJE", 
+                "QR de Canje", 
                 modifier = Modifier.fillMaxWidth(), 
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             ) 
         },
         text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                // Mock QR Placeholder
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Mostrá este código al comerciante",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                // QR Placeholder
                 Surface(
-                    modifier = Modifier.size(200.dp),
-                    color = SancarlinaBackground,
-                    shape = RoundedCornerShape(16.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray)
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clickable { onSimulateScan() },
+                    color = Color.White,
+                    border = BorderStroke(1.dp, Color.LightGray),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(Icons.Default.QrCodeScanner, contentDescription = null, modifier = Modifier.size(120.dp), tint = Color.DarkGray)
+                        Icon(
+                            Icons.Default.QrCode2, 
+                            contentDescription = null, 
+                            modifier = Modifier.size(180.dp),
+                            tint = Color.Black
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
                 Text(
-                    text = "El código expira en:",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.Gray
-                )
-                Text(
-                    text = timeRemaining,
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = "Vence en: $timeRemaining",
+                    style = MaterialTheme.typography.titleMedium,
                     color = SancarlinaAccent,
                     fontWeight = FontWeight.Bold
                 )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                TextButton(onClick = { onDismiss() }) {
+                    Text("CERRAR", color = Color.Gray)
+                }
             }
         },
         containerColor = Color.White

@@ -64,8 +64,26 @@ class PointsViewModel : ViewModel() {
         }
     }
 
+    fun onBenefitClick(benefit: BenefitItem) {
+        _uiState.update { it.copy(selectedBenefit = benefit) }
+    }
+
+    fun redeemBenefit() {
+        _uiState.value.selectedBenefit?.let { benefit ->
+            if (_uiState.value.balance >= benefit.cost) {
+                _uiState.update { 
+                    it.copy(
+                        balance = it.balance - benefit.cost,
+                        selectedBenefit = null,
+                        showSuccessModal = true
+                    )
+                }
+            }
+        }
+    }
+
     fun dismissModal() {
-        _uiState.update { it.copy(showSuccessModal = false) }
+        _uiState.update { it.copy(showSuccessModal = false, selectedBenefit = null) }
     }
 
     override fun onCleared() {

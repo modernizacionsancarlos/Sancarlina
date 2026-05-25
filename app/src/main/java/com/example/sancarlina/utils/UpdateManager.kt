@@ -22,9 +22,8 @@ class UpdateManager(private val context: Context) {
     private val client = OkHttpClient()
     private val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
-    // URL de prueba: He puesto una URL de un APK de ejemplo para que veas el flujo.
-    // En el futuro, reemplázala por tu propia URL de GitHub o Servidor.
-    private val CONFIG_URL = "https://raw.githubusercontent.com/zorro-municipalidad/sancarlina-updates/main/config.json"
+    // URL real de tu repositorio de distribución
+    private val CONFIG_URL = "https://raw.githubusercontent.com/franco-valenzuela/sancarlina-distribucion/main/config.json"
 
     suspend fun checkForUpdates(onUpdateAvailable: (apkUrl: String, notes: String) -> Unit) {
         withContext(Dispatchers.IO) {

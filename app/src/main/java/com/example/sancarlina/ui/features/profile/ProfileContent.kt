@@ -30,64 +30,118 @@ import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileContent(viewModel: ProfileViewModel = viewModel()) {
+fun ProfileContent(
+    viewModel: ProfileViewModel = viewModel(),
+    onNavigateToUpdates: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(SancarlinaBackground)
-            .verticalScroll(rememberScrollState())
-    ) {
-        // Profile Header
-        ProfileHeaderSection(uiState)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Menu Section
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-        ) {
-            MenuItem(Icons.Default.Person, "Mis Datos Personales") {}
-            HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-            MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {}
-            HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-            MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {}
-            HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-            MenuItem(
-                Icons.Default.Notifications, 
-                "Notificaciones", 
-                badgeCount = uiState.notificationCount
-            ) {}
-            HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-            MenuItem(Icons.AutoMirrored.Filled.Help, "Ayuda y Soporte") {}
-            HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-            LogoutItem { viewModel.onLogoutClicked() }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "SANCARLINA",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                        color = Color.White
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { Toast.makeText(context, "Menú lateral", Toast.LENGTH_SHORT).show() }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = SancarlinaPrimary
+                )
+            )
         }
-
-        // Version Info
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(SancarlinaBackground)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "SANCARLINA",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = Color.Gray.copy(alpha = 0.5f),
-                letterSpacing = 4.sp
-            )
-            Text(
-                text = "Versión 1.0.0",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray.copy(alpha = 0.5f)
-            )
+            // Profile Header
+            ProfileHeaderSection(uiState) {
+                Toast.makeText(context, "Editar foto de perfil", Toast.LENGTH_SHORT).show()
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Menu Section
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White)
+            ) {
+                MenuItem(Icons.Default.Person, "Mis Datos Personales") {
+                    Toast.makeText(context, "Vista de Datos Personales", Toast.LENGTH_SHORT).show()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
+                    Toast.makeText(context, "Vista de Favoritos", Toast.LENGTH_SHORT).show()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
+                    Toast.makeText(context, "Historial", Toast.LENGTH_SHORT).show()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                MenuItem(
+                    Icons.Default.Notifications, 
+                    "Notificaciones", 
+                    badgeCount = uiState.notificationCount
+                ) {
+                    Toast.makeText(context, "Centro de Notificaciones", Toast.LENGTH_SHORT).show()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                MenuItem(Icons.Default.Update, "Actualizaciones") {
+                    onNavigateToUpdates()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                MenuItem(Icons.AutoMirrored.Filled.Help, "Ayuda y Soporte") {
+                    Toast.makeText(context, "Ayuda", Toast.LENGTH_SHORT).show()
+                }
+                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                LogoutItem { viewModel.onLogoutClicked() }
+            }
+
+            // Version Info
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "SANCARLINA",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray.copy(alpha = 0.5f),
+                    letterSpacing = 4.sp
+                )
+                Text(
+                    text = "Versión 2.4.1",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Gray.copy(alpha = 0.5f)
+                )
+            }
         }
     }
 
@@ -113,24 +167,27 @@ fun ProfileContent(viewModel: ProfileViewModel = viewModel()) {
 }
 
 @Composable
-fun ProfileHeaderSection(uiState: ProfileUiState) {
+fun ProfileHeaderSection(uiState: ProfileUiState, onEditClick: () -> Unit) {
     Surface(
         color = SancarlinaPrimary,
-        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp),
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
         shadowElevation = 4.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 60.dp, bottom = 32.dp),
+                .padding(bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(contentAlignment = Alignment.BottomEnd) {
+            Box(
+                contentAlignment = Alignment.BottomEnd,
+                modifier = Modifier.clickable { onEditClick() }
+            ) {
                 AsyncImage(
                     model = uiState.profileImageUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(96.dp)
                         .clip(CircleShape)
                         .background(Color.White),
                     contentScale = ContentScale.Crop
@@ -147,7 +204,7 @@ fun ProfileHeaderSection(uiState: ProfileUiState) {
                 }
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             
             Text(
                 text = uiState.userName,
@@ -157,27 +214,32 @@ fun ProfileHeaderSection(uiState: ProfileUiState) {
             )
             Text(
                 text = uiState.userEmail,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelLarge,
                 color = Color.White.copy(alpha = 0.8f)
             )
             
             Spacer(modifier = Modifier.height(20.dp))
             
             Surface(
-                color = Color.White.copy(alpha = 0.2f),
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = CircleShape
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.Star, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
+                    Icon(
+                        Icons.Default.Star, 
+                        contentDescription = null, 
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer, 
+                        modifier = Modifier.size(18.dp)
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${uiState.pointsBalance} Puntos",
-                        color = Color.White,
+                        text = "1,250 Puntos",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
@@ -199,7 +261,12 @@ fun MenuItem(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(24.dp))
+        Icon(
+            icon, 
+            contentDescription = null, 
+            tint = MaterialTheme.colorScheme.outline, 
+            modifier = Modifier.size(24.dp)
+        )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = title,
@@ -209,12 +276,12 @@ fun MenuItem(
         )
         if (badgeCount > 0) {
             Surface(
-                color = SancarlinaAccent,
+                color = MaterialTheme.colorScheme.secondary,
                 shape = CircleShape
             ) {
                 Text(
                     text = badgeCount.toString(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -222,7 +289,11 @@ fun MenuItem(
             }
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray)
+        Icon(
+            Icons.Default.ChevronRight, 
+            contentDescription = null, 
+            tint = MaterialTheme.colorScheme.outlineVariant
+        )
     }
 }
 
@@ -235,12 +306,17 @@ fun LogoutItem(onClick: () -> Unit) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, tint = SancarlinaAccent, modifier = Modifier.size(24.dp))
+        Icon(
+            Icons.AutoMirrored.Filled.Logout, 
+            contentDescription = null, 
+            tint = MaterialTheme.colorScheme.secondary, 
+            modifier = Modifier.size(24.dp)
+        )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = "Cerrar Sesión",
             style = MaterialTheme.typography.bodyMedium,
-            color = SancarlinaAccent,
+            color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Medium
         )
     }

@@ -19,6 +19,10 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Onboarding : Screen("onboarding", "Onboarding")
     object Login : Screen("login", "Login")
     object Offline : Screen("offline", "Offline")
+    object Updates : Screen("updates", "Actualizaciones")
+    object ProductDetail : Screen("product_detail/{productId}", "Detalle") {
+        fun createRoute(productId: String) = "product_detail/$productId"
+    }
 }
 
 val bottomNavItems = listOf(

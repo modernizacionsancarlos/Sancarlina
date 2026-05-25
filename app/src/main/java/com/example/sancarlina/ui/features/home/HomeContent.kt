@@ -1,12 +1,10 @@
 package com.example.sancarlina.ui.features.home
 
 import android.content.Intent
-import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -14,8 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Verified
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,11 +33,12 @@ import coil.compose.AsyncImage
 import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
-import com.example.sancarlina.ui.theme.WorkSans
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(viewModel: HomeViewModel = viewModel()) {
+fun HomeContent(
+    viewModel: HomeViewModel = viewModel(),
+    onNavigateToDetail: (String) -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -52,7 +49,10 @@ fun HomeContent(viewModel: HomeViewModel = viewModel()) {
             .verticalScroll(rememberScrollState())
     ) {
         // Top Bar - Custom Header
-        HeaderSection()
+        HeaderSection(
+            onMenuClick = { Toast.makeText(context, "Menú", Toast.LENGTH_SHORT).show() },
+            onSearchClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }
+        )
 
         Column(
             modifier = Modifier
@@ -62,27 +62,39 @@ fun HomeContent(viewModel: HomeViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // Carousel Section
-            BannerCarousel(uiState.banners)
+            BannerCarousel(uiState.banners) { banner ->
+                Toast.makeText(context, "Banner: ${banner.title}", Toast.LENGTH_SHORT).show()
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Categories Section
-            CategoriesGrid(uiState.categories)
+            CategoriesGrid(uiState.categories) { category ->
+                Toast.makeText(context, "Categoría: ${category.name}", Toast.LENGTH_SHORT).show()
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Nearby Section
-            NearbySection(uiState.nearbyProduct) { product ->
-                val url = "https://api.whatsapp.com/send?phone=${product.phone}&text=Hola, estoy interesado en ${product.name} visto en Sancarlina."
-                val whatsappIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                context.startActivity(whatsappIntent)
-            }
+            NearbySection(
+                product = uiState.nearbyProduct,
+                onClick = { product -> onNavigateToDetail(product.id) },
+                onWhatsAppClick = { product ->
+                    val url = "https://api.whatsapp.com/send?phone=${product.phone}&text=Hola, estoy interesado en ${product.name} visto en Sancarlina."
+                    try {
+                        val whatsappIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+                        context.startActivity(whatsappIntent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "WhatsApp no instalado", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun HeaderSection() {
+fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
     Surface(
         color = SancarlinaPrimary,
         shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp),
@@ -91,16 +103,29 @@ fun HeaderSection() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 40.dp, bottom = 24.dp, start = 20.dp, end = 20.dp),
+                .padding(top = 24.dp, bottom = 24.dp, start = 20.dp, end = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "SANCARLINA",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 2.sp
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onMenuClick) {
+                    Icon(Icons.Default.Menu, contentDescription = null, tint = Color.White)
+                }
+                Text(
+                    text = "SANCARLINA",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 2.sp
+                )
+                IconButton(onClick = onSearchClick) {
+                    Icon(Icons.Default.Search, contentDescription = null, tint = Color.White)
+                }
+            }
+            
             Text(
                 text = "Lo nuestro, a un clic de distancia",
                 style = MaterialTheme.typography.labelMedium,
@@ -110,31 +135,34 @@ fun HeaderSection() {
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Search Bar
-            TextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text("Buscar productos, servicios o comercios...", fontSize = 14.sp) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) },
+            // Search Bar Placeholder
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .clip(CircleShape),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                singleLine = true
-            )
+                    .clip(CircleShape)
+                    .clickable { onSearchClick() },
+                color = Color.White
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray)
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Buscar productos, servicios o comercios...",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-fun BannerCarousel(banners: List<BannerItem>) {
+fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Unit) {
     val pagerState = rememberPagerState(pageCount = { banners.size })
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -144,10 +172,10 @@ fun BannerCarousel(banners: List<BannerItem>) {
                 .fillMaxWidth()
                 .height(160.dp)
                 .clip(RoundedCornerShape(16.dp))
+                .clickable { onBannerClick(banners[pagerState.currentPage]) }
         ) { page ->
             val banner = banners[page]
             Row(modifier = Modifier.fillMaxSize()) {
-                // Left Part (Accent Color)
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -163,7 +191,6 @@ fun BannerCarousel(banners: List<BannerItem>) {
                         fontWeight = FontWeight.Bold
                     )
                 }
-                // Right Part (Image)
                 Box(
                     modifier = Modifier
                         .weight(1.2f)
@@ -181,11 +208,7 @@ fun BannerCarousel(banners: List<BannerItem>) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Dots Indicator
-        Row(
-            modifier = Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
+        Row(horizontalArrangement = Arrangement.Center) {
             repeat(banners.size) { iteration ->
                 val color = if (pagerState.currentPage == iteration) SancarlinaPrimary else Color.LightGray
                 Box(
@@ -201,9 +224,7 @@ fun BannerCarousel(banners: List<BannerItem>) {
 }
 
 @Composable
-fun CategoriesGrid(categories: List<CategoryItem>) {
-    // We use a fixed height container for the grid to work inside scrollable column
-    // or just a non-lazy version for small fixed grids.
+fun CategoriesGrid(categories: List<CategoryItem>, onCategoryClick: (CategoryItem) -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val rows = categories.chunked(3)
         rows.forEach { row ->
@@ -212,7 +233,9 @@ fun CategoriesGrid(categories: List<CategoryItem>) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 row.forEach { category ->
-                    CategoryItemView(category, modifier = Modifier.weight(1f))
+                    CategoryItemView(category, modifier = Modifier.weight(1f)) {
+                        onCategoryClick(category)
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -221,22 +244,20 @@ fun CategoriesGrid(categories: List<CategoryItem>) {
 }
 
 @Composable
-fun CategoryItemView(category: CategoryItem, modifier: Modifier = Modifier) {
+fun CategoryItemView(category: CategoryItem, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Surface(
             modifier = Modifier.size(72.dp),
             shape = CircleShape,
-            color = Color(0xFFF0F2E1), // inverse-on-surface from design
+            color = Color(0xFFF0F2E1),
             shadowElevation = 2.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
-                // Here we would map iconName to actual icons. 
-                // For now placeholder icon.
                 Icon(
-                    imageVector = Icons.Default.Verified, // Placeholder
+                    imageVector = Icons.Default.Category,
                     contentDescription = null,
                     tint = SancarlinaAccent,
                     modifier = Modifier.size(36.dp)
@@ -256,7 +277,11 @@ fun CategoryItemView(category: CategoryItem, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NearbySection(product: ProductItem?, onWhatsAppClick: (ProductItem) -> Unit) {
+fun NearbySection(
+    product: ProductItem?, 
+    onClick: (ProductItem) -> Unit,
+    onWhatsAppClick: (ProductItem) -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -277,7 +302,9 @@ fun NearbySection(product: ProductItem?, onWhatsAppClick: (ProductItem) -> Unit)
 
         if (product != null) {
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick(product) },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -295,7 +322,7 @@ fun NearbySection(product: ProductItem?, onWhatsAppClick: (ProductItem) -> Unit)
                             color = Color(0xFFF0F2E1)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Verified, // Placeholder for jar
+                                imageVector = Icons.Default.Storefront,
                                 contentDescription = null,
                                 tint = SancarlinaAccent,
                                 modifier = Modifier.padding(16.dp)
@@ -335,8 +362,7 @@ fun NearbySection(product: ProductItem?, onWhatsAppClick: (ProductItem) -> Unit)
                         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp, topStart = 0.dp, topEnd = 0.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent)
                     ) {
-                        // Placeholder for WhatsApp icon
-                        Icon(Icons.Default.Verified, contentDescription = null)
+                        Icon(Icons.Default.Chat, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             "CONTACTO DIRECTO POR WHATSAPP",

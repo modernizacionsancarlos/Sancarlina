@@ -12,7 +12,9 @@ import androidx.navigation.compose.composable
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
+import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
+import com.example.sancarlina.ui.features.updates.UpdatesContent
 
 @Composable
 fun SancarlinaNavGraph(
@@ -25,7 +27,11 @@ fun SancarlinaNavGraph(
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeContent()
+            HomeContent(
+                onNavigateToDetail = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                }
+            )
         }
         composable(Screen.Map.route) {
             MapContent()
@@ -34,7 +40,19 @@ fun SancarlinaNavGraph(
             PointsContent()
         }
         composable(Screen.Profile.route) {
-            ProfileContent()
+            ProfileContent(
+                onNavigateToUpdates = { navController.navigate(Screen.Updates.route) }
+            )
+        }
+        composable(Screen.ProductDetail.route) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            ProductDetailContent(
+                productId = productId,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Updates.route) {
+            UpdatesContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Offline.route) {
             PlaceholderScreen(Screen.Offline.title)

@@ -19,9 +19,10 @@ data class CategoryItem(
 )
 
 data class ProductItem(
+    val id: String,
     val name: String,
     val brand: String,
-    val price: String, // Though not explicitly in requirement, useful for future
+    val price: String,
     val phone: String,
     val hasSelloOrigen: Boolean = true
 )
