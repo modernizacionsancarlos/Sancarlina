@@ -2,10 +2,7 @@ package com.example.sancarlina.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,30 +18,51 @@ import com.example.sancarlina.navigation.SancarlinaNavGraph
 import com.example.sancarlina.navigation.Screen
 import com.example.sancarlina.navigation.bottomNavItems
 import com.example.sancarlina.utils.ConnectivityObserver
+import com.example.sancarlina.ui.components.QuickGuide
 import com.example.sancarlina.utils.NetworkConnectivityObserver
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun MainScaffold() {
     val context = LocalContext.current
-    val connectivityObserver = NetworkConnectivityObserver(context)
-    val status by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
     val navController = rememberNavController()
+    val sharedPrefs = remember { context.getSharedPreferences("sancarlina_prefs", android.content.Context.MODE_PRIVATE) }
     
-    LaunchedEffect(status) {
-        if (status != ConnectivityObserver.Status.Available) {
-            navController.navigate(Screen.Offline.route) {
+    val auth = remember { FirebaseAuth.getInstance() }
+    val currentUser = remember { mutableStateOf(auth.currentUser) }
+
+    // Flags
+    val onboardingCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("onboarding_completed", false)) }
+    val guideCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("guide_completed", false)) }
+    var showQuickGuide by remember { mutableStateOf(false) }
+
+    // Auth Listener
+    DisposableEffect(Unit) {
+        val listener = FirebaseAuth.AuthStateListener { 
+            currentUser.value = it.currentUser 
+        }
+        auth.addAuthStateListener(listener)
+        onDispose { auth.removeAuthStateListener(listener) }
+    }
+
+    LaunchedEffect(onboardingCompleted.value) {
+        if (!onboardingCompleted.value) {
+            navController.navigate(Screen.Onboarding.route) {
                 popUpTo(0)
             }
+        } else if (!guideCompleted.value) {
+            showQuickGuide = true
         }
     }
-    
+
     Scaffold(
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
             
-            // Solo mostrar bottomBar en las 4 vistas maestras
-            val showBottomBar = bottomNavItems.any { it.route == currentDestination?.route }
+            // Only show bottom bar for main master views and if logged in
+            val isMainView = bottomNavItems.any { it.route == currentDestination?.route }
+            val showBottomBar = isMainView && currentUser.value != null
             
             if (showBottomBar) {
                 NavigationBar(
@@ -89,9 +107,20 @@ fun MainScaffold() {
             }
         }
     ) { innerPadding ->
+        if (showQuickGuide) {
+            QuickGuide(onFinish = {
+                sharedPrefs.edit().putBoolean("guide_completed", true).apply()
+                showQuickGuide = false
+            })
+        }
+
         SancarlinaNavGraph(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onOnboardingFinished = {
+                sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
+                onboardingCompleted.value = true
+            }
         )
     }
 }

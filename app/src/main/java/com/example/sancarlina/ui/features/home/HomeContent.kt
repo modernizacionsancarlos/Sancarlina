@@ -14,9 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,14 +31,18 @@ import coil.compose.AsyncImage
 import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeContent(
     viewModel: HomeViewModel = viewModel(),
-    onNavigateToDetail: (String) -> Unit = {}
+    onNavigateToDetail: (String) -> Unit = {},
+    onNavigateToLogin: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val auth = remember { FirebaseAuth.getInstance() }
+    var showLoginPrompt by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -80,16 +82,45 @@ fun HomeContent(
                 product = uiState.nearbyProduct,
                 onClick = { product -> onNavigateToDetail(product.id) },
                 onWhatsAppClick = { product ->
-                    val url = "https://api.whatsapp.com/send?phone=${product.phone}&text=Hola, estoy interesado en ${product.name} visto en Sancarlina."
-                    try {
-                        val whatsappIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                        context.startActivity(whatsappIntent)
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "WhatsApp no instalado", Toast.LENGTH_SHORT).show()
+                    if (auth.currentUser == null) {
+                        showLoginPrompt = true
+                    } else {
+                        val url = "https://api.whatsapp.com/send?phone=${product.phone}&text=Hola, estoy interesado en ${product.name} visto en Sancarlina."
+                        try {
+                            val whatsappIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+                            context.startActivity(whatsappIntent)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "WhatsApp no instalado", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             )
         }
+    }
+
+    if (showLoginPrompt) {
+        AlertDialog(
+            onDismissRequest = { showLoginPrompt = false },
+            title = { Text("¡Acción exclusiva!") },
+            text = { Text("Para contactar a un comercio y sumar puntos, necesitas iniciar sesión.") },
+            confirmButton = {
+                Button(
+                    onClick = { 
+                        showLoginPrompt = false
+                        onNavigateToLogin()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent)
+                ) {
+                    Text("INICIAR SESIÓN")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLoginPrompt = false }) {
+                    Text("CONTINUAR EXPLORANDO", color = Color.Gray)
+                }
+            },
+            containerColor = Color.White
+        )
     }
 }
 

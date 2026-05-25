@@ -6,9 +6,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+import com.google.firebase.auth.FirebaseAuth
+
 class ProfileViewModel : ViewModel() {
 
+    private val auth = FirebaseAuth.getInstance()
     private val _uiState = MutableStateFlow(ProfileUiState())
+// ... rest of the properties
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
@@ -32,7 +36,7 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun confirmLogout() {
-        // Logic to clear session
+        auth.signOut()
         _uiState.update { it.copy(showLogoutConfirmation = false) }
     }
 

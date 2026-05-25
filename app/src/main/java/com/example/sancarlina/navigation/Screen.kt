@@ -18,6 +18,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object SplashScreen : Screen("splash", "Splash")
     object Onboarding : Screen("onboarding", "Onboarding")
     object Login : Screen("login", "Login")
+    object Register : Screen("register", "Registro")
     object Offline : Screen("offline", "Offline")
     object Updates : Screen("updates", "Actualizaciones")
     object ProductDetail : Screen("product_detail/{productId}", "Detalle") {

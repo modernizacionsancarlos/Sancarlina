@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Explora lo Local</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1a1d13",
+                        "tertiary-fixed-dim": "#c6c7c4",
+                        "on-secondary-fixed-variant": "#802635",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e8ead9",
+                        "surface-container": "#edefdf",
+                        "secondary-container": "#ff8795",
+                        "on-secondary-fixed": "#40000f",
+                        "secondary": "#9f3d4c",
+                        "on-tertiary-container": "#fdfdfa",
+                        "on-tertiary-fixed-variant": "#454745",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9fbea",
+                        "surface-tint": "#556421",
+                        "primary-fixed": "#d8eb98",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f5e4",
+                        "primary": "#53621f",
+                        "primary-container": "#6b7b36",
+                        "on-surface-variant": "#46483b",
+                        "tertiary-fixed": "#e2e3e0",
+                        "tertiary-container": "#737573",
+                        "on-primary-container": "#fbffe3",
+                        "inverse-on-surface": "#f0f2e1",
+                        "surface-dim": "#d9dbcb",
+                        "inverse-surface": "#2f3227",
+                        "background": "#f9fbea",
+                        "surface-bright": "#f9fbea",
+                        "secondary-fixed": "#ffdadb",
+                        "outline-variant": "#c6c8b7",
+                        "inverse-primary": "#bccf7f",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1d13",
+                        "primary-fixed-dim": "#bccf7f",
+                        "outline": "#76786a",
+                        "surface-container-highest": "#e2e4d3",
+                        "on-primary-fixed-variant": "#3e4c0a",
+                        "surface-variant": "#e2e4d3",
+                        "on-secondary-container": "#771e2f",
+                        "on-primary-fixed": "#171e00",
+                        "tertiary": "#5b5c5a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "headline-sm": ["Work Sans"],
+                        "headline-md": ["Work Sans"],
+                        "label-md": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #f9fbea; /* fallback */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+<main class="flex-1 flex flex-col p-container-padding max-w-md mx-auto w-full relative">
+<!-- Illustration Area -->
+<div class="flex-1 flex flex-col items-center justify-center pt-8 pb-stack-lg animate-fade-in-up">
+<!-- Decorative soft background glow behind illustration -->
+<div class="relative w-full aspect-square max-w-[280px] mb-stack-lg flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-2xl transform scale-110"></div>
+<img alt="Map Illustration" class="relative z-10 w-full h-full object-cover rounded-full shadow-[0_8px_24px_rgba(83,98,31,0.08)] border-4 border-surface" data-alt="A clean, minimalist 2D flat vector illustration of a stylized local city map with charming storefronts, small artisanal bodegas, and location pins. The artwork uses a tight color palette anchored by a Bone White background, highlighted with elegant Olive Green streets and buildings, and punctuated by deep Burgundy or Wine-colored location markers. The lighting is flat, modern, and bright, fitting a premium regional professional app. The mood is welcoming, organized, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcyu-dU4nfJRT0EYuZIRoE8tge1rgyfGFNzkwLas-yQDDshOFlxv2RrYt66gjDaXeiDh0q29sWPtKg12pcEBGwrNXmk3-8mMjIueDNSvTImSorhY7wzP3KzEqLENhv30P_2-QqCXu1UdvCvOLtWxm0HhhK8P0MiJmYzR0FOMoHYFO6LhrvOwpXCuIbQDgnWHJ274Dr2Ji4KlVThbnVKRbYXUPoQuul8tP6YsAni2JKpZY4ngTJ7nSHmE8FDUJHY1sjKcNtpS6LDpE"/>
+</div>
+<!-- Text Content -->
+<div class="text-center px-4">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-primary mb-stack-sm tracking-tight">
+                    Explora lo Local
+                </h1>
+<p class="text-body-md font-body-md text-primary opacity-80 max-w-[280px] mx-auto leading-relaxed">
+                    Encuentra bodegas, emprendedores y servicios regionales con nuestro mapa interactivo.
+                </p>
+</div>
+</div>
+<!-- Bottom Actions Area -->
+<div class="mt-auto pb-8 pt-4 flex flex-col items-center gap-stack-lg w-full bg-surface">
+<!-- Progress Dots -->
+<div class="flex items-center justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+<div class="w-6 h-2 rounded-full bg-secondary transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+</div>
+<!-- Buttons -->
+<div class="w-full flex flex-col gap-stack-sm">
+<button class="w-full h-12 bg-secondary text-on-secondary text-label-md font-label-md rounded-lg shadow-[0_4px_12px_rgba(112,25,42,0.15)] flex items-center justify-center tracking-wider transition-transform active:scale-[0.98] hover:bg-on-secondary-fixed-variant">
+                    SIGUIENTE
+                </button>
+<button class="w-full h-12 text-primary text-label-md font-label-md rounded-lg flex items-center justify-center tracking-wider transition-colors hover:bg-primary/5 active:bg-primary/10">
+                    SALTAR
+                </button>
+</div>
+</div>
+</main>
+<style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</body></html>

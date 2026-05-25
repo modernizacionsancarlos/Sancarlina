@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sancarlina.ui.features.auth.LoginContent
+import com.example.sancarlina.ui.features.auth.OnboardingContent
+import com.example.sancarlina.ui.features.auth.RegisterContent
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
@@ -19,7 +22,8 @@ import com.example.sancarlina.ui.features.updates.UpdatesContent
 @Composable
 fun SancarlinaNavGraph(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOnboardingFinished: () -> Unit = {}
 ) {
     NavHost(
         navController = navController,
@@ -30,6 +34,39 @@ fun SancarlinaNavGraph(
             HomeContent(
                 onNavigateToDetail = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route)
+                }
+            )
+        }
+        composable(Screen.Login.route) {
+            LoginContent(
+                onNavigateToRegister = { navController.navigate(Screen.Register.route) },
+                onLoginSuccess = { 
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(Screen.Onboarding.route) {
+            OnboardingContent(
+                onFinish = {
+                    onOnboardingFinished()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(Screen.Register.route) {
+            RegisterContent(
+                onBack = { navController.popBackStack() },
+                onRegisterSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
                 }
             )
         }

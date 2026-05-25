@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Puntos</title>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1a1d13",
+                        "tertiary-fixed-dim": "#c6c7c4",
+                        "on-secondary-fixed-variant": "#802635",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e8ead9",
+                        "surface-container": "#edefdf",
+                        "secondary-container": "#ff8795",
+                        "on-secondary-fixed": "#40000f",
+                        "secondary": "#9f3d4c",
+                        "on-tertiary-container": "#fdfdfa",
+                        "on-tertiary-fixed-variant": "#454745",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9fbea",
+                        "surface-tint": "#556421",
+                        "primary-fixed": "#d8eb98",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f5e4",
+                        "primary": "#53621f",
+                        "primary-container": "#6b7b36",
+                        "on-surface-variant": "#46483b",
+                        "tertiary-fixed": "#e2e3e0",
+                        "tertiary-container": "#737573",
+                        "on-primary-container": "#fbffe3",
+                        "inverse-on-surface": "#f0f2e1",
+                        "surface-dim": "#d9dbcb",
+                        "inverse-surface": "#2f3227",
+                        "background": "#f9fbea",
+                        "surface-bright": "#f9fbea",
+                        "secondary-fixed": "#ffdadb",
+                        "outline-variant": "#c6c8b7",
+                        "inverse-primary": "#bccf7f",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1d13",
+                        "primary-fixed-dim": "#bccf7f",
+                        "outline": "#76786a",
+                        "surface-container-highest": "#e2e4d3",
+                        "on-primary-fixed-variant": "#3e4c0a",
+                        "surface-variant": "#e2e4d3",
+                        "on-secondary-container": "#771e2f",
+                        "on-primary-fixed": "#171e00",
+                        "tertiary": "#5b5c5a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "headline-sm": ["Work Sans"],
+                        "headline-md": ["Work Sans"],
+                        "label-md": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-sans antialiased selection:bg-primary selection:text-on-primary">
+<main class="flex-1 flex flex-col px-container-padding pb-container-padding pt-12 relative overflow-hidden">
+<!-- Decorative abstract shape background (optional subtle touch) -->
+<div class="absolute top-0 right-0 -mr-24 -mt-24 w-64 h-64 bg-primary-fixed opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Content Area -->
+<div class="flex-1 flex flex-col items-center justify-center text-center space-y-stack-lg max-w-md mx-auto w-full z-10 mt-12">
+<!-- Illustration -->
+<div class="w-56 h-56 relative mb-4 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center shadow-[0_8px_24px_rgba(83,98,31,0.06)]">
+<img alt="Illustration" class="object-cover w-full h-full mix-blend-multiply opacity-90" data-alt="A minimalist, flat-vector style illustration of a stylized QR code pattern surrounded by subtle, floating geometric stars and coins. The design uses a warm, earthy color palette with muted olive green and soft cream tones, reflecting an artisanal, organic aesthetic. The artwork is clean, modern, and uncluttered, set against a pristine bone-white background. The lighting is bright and even, maintaining a premium light-mode vibe suited for a high-end application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxDd2wV8aaC0QC7H4IPGDMLuorJixL5SdX4viksa-s8bDbRMMKQu7641fI0eWllyFEGYshDHdR-W8N_Er-ZabeZOuXr-KAsEZCTx-FJlrpLxhs-4hEfjo1ynRmSkpjemFzyZfrKERsKBqM7WJCXA3kbWUXjTIyEd_lHKKzIEOC8P35ou3ruRkhwEC-mYZu8HAobD8dScGBMHS4s7p21dOcPpLSc8sE43m2iJ2wVwE-S1vY2d63OKfZyfEwz8nXXumFTdcqa785WB8"/>
+</div>
+<!-- Text Content -->
+<div class="space-y-stack-sm flex flex-col items-center">
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">
+                    Suma y Gana
+                </h1>
+<p class="text-body-lg font-body-lg text-primary max-w-sm px-4">
+                    Escanea códigos QR en tus compras, acumula puntos y canjealos por beneficios exclusivos.
+                </p>
+</div>
+</div>
+<!-- Bottom Controls -->
+<div class="w-full max-w-md mx-auto flex flex-col items-center space-y-stack-md mt-auto pt-8 z-10">
+<!-- Progress Dots -->
+<div class="flex space-x-3 mb-4">
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+<div class="w-8 h-2 rounded-full bg-secondary transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-colors duration-300"></div>
+</div>
+<!-- Primary Action -->
+<button class="w-full h-12 bg-secondary text-on-secondary rounded-lg text-label-md font-label-md flex items-center justify-center hover:bg-on-secondary-fixed-variant transition-colors shadow-sm active:scale-[0.98]">
+                SIGUIENTE
+            </button>
+<!-- Secondary/Skip Action -->
+<button class="w-full h-12 bg-transparent text-outline rounded-lg text-label-md font-label-md flex items-center justify-center hover:bg-surface-container transition-colors active:scale-[0.98]">
+                SALTAR
+            </button>
+</div>
+</main>
+</body></html>
