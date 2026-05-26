@@ -37,7 +37,8 @@ import com.google.firebase.auth.FirebaseAuth
 fun HomeContent(
     viewModel: HomeViewModel = viewModel(),
     onNavigateToDetail: (String) -> Unit = {},
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onNavigateToCategory: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -45,6 +46,7 @@ fun HomeContent(
     var showLoginPrompt by remember { mutableStateOf(false) }
 
     Column(
+// ... inside Column
         modifier = Modifier
             .fillMaxSize()
             .background(SancarlinaBackground)
@@ -72,7 +74,7 @@ fun HomeContent(
 
             // Categories Section
             CategoriesGrid(uiState.categories) { category ->
-                Toast.makeText(context, "Categoría: ${category.name}", Toast.LENGTH_SHORT).show()
+                onNavigateToCategory(category.name)
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -134,7 +136,8 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 24.dp, start = 20.dp, end = 20.dp),
+                .statusBarsPadding()
+                .padding(top = 16.dp, bottom = 24.dp, start = 20.dp, end = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(

@@ -1,14 +1,23 @@
 package com.example.sancarlina.ui.components
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -17,9 +26,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sancarlina.navigation.SancarlinaNavGraph
 import com.example.sancarlina.navigation.Screen
 import com.example.sancarlina.navigation.bottomNavItems
-import com.example.sancarlina.utils.ConnectivityObserver
-import com.example.sancarlina.ui.components.QuickGuide
-import com.example.sancarlina.utils.NetworkConnectivityObserver
+import com.example.sancarlina.ui.theme.SancarlinaAccent
+import com.example.sancarlina.ui.theme.SancarlinaBackground
+import com.example.sancarlina.ui.theme.SancarlinaPrimary
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -56,54 +65,16 @@ fun MainScaffold() {
     }
 
     Scaffold(
+        containerColor = SancarlinaBackground,
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
+            val currentDestination = navBackStackEntry?.destination?.route
             
-            // Only show bottom bar for main master views and if logged in
-            val isMainView = bottomNavItems.any { it.route == currentDestination?.route }
-            val showBottomBar = isMainView && currentUser.value != null
+            // Only show bottom bar for main master views
+            val isMainView = bottomNavItems.any { it.route == currentDestination }
             
-            if (showBottomBar) {
-                NavigationBar(
-                    containerColor = Color.White,
-                    tonalElevation = 8.dp
-                ) {
-                    bottomNavItems.forEach { screen ->
-                        val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-                        NavigationBarItem(
-                            icon = { 
-                                screen.icon?.let { 
-                                    Icon(it, contentDescription = screen.title) 
-                                } 
-                            },
-                            label = { 
-                                Text(
-                                    text = screen.title.uppercase(),
-                                    fontSize = 10.sp,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
-                                ) 
-                            },
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.secondary,
-                                selectedTextColor = MaterialTheme.colorScheme.secondary,
-                                unselectedIconColor = Color.Gray,
-                                unselectedTextColor = Color.Gray,
-                                indicatorColor = Color.Transparent
-                            )
-                        )
-                    }
-                }
+            if (isMainView) {
+                SancarlinaBottomBar(navController, currentDestination)
             }
         }
     ) { innerPadding ->
@@ -113,14 +84,163 @@ fun MainScaffold() {
                 showQuickGuide = false
             })
         }
-
+        
         SancarlinaNavGraph(
             navController = navController,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(
+                bottom = 64.dp // Standard bar height
+            ),
             onOnboardingFinished = {
                 sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
                 onboardingCompleted.value = true
             }
         )
+    }
+}
+
+@Composable
+fun SancarlinaBottomBar(
+    navController: NavHostController,
+    currentDestination: String?
+) {
+    val bordeaux = SancarlinaAccent
+    val olive = SancarlinaPrimary
+    val inactive = Color.Gray
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(96.dp), // Adjusted height to align button exactly half-in half-out
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        // Main Bar Background
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            color = Color(0xFFF9F9F6), // crema-claro
+            border = BorderStroke(0.5.dp, Color.LightGray.copy(alpha = 0.3f)),
+            shadowElevation = 8.dp
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Item 1: Inicio
+                BottomNavItem(
+                    screen = Screen.Home,
+                    isSelected = currentDestination == Screen.Home.route,
+                    activeColor = olive,
+                    onClick = { navigateTo(navController, Screen.Home.route) }
+                )
+
+                // Item 2: Turismo
+                BottomNavItem(
+                    screen = Screen.Turismo,
+                    isSelected = currentDestination == Screen.Turismo.route,
+                    activeColor = bordeaux,
+                    onClick = { navigateTo(navController, Screen.Turismo.route) }
+                )
+
+                // ITEM CENTRAL: Solo etiqueta MAPA alineada
+                Column(
+                    modifier = Modifier
+                        .width(64.dp)
+                        .fillMaxHeight()
+                        .clickable { navigateTo(navController, Screen.Map.route) },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.size(24.dp)) // Espacio del ícono para alinear texto
+                    Text(
+                        text = "MAPA",
+                        fontSize = 10.sp,
+                        fontWeight = if (currentDestination == Screen.Map.route) FontWeight.Bold else FontWeight.Normal,
+                        color = if (currentDestination == Screen.Map.route) bordeaux else inactive,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+                // Item 4: Puntos
+                BottomNavItem(
+                    screen = Screen.Points,
+                    isSelected = currentDestination == Screen.Points.route,
+                    activeColor = bordeaux,
+                    onClick = { navigateTo(navController, Screen.Points.route) }
+                )
+
+                // Item 5: Perfil
+                BottomNavItem(
+                    screen = Screen.Profile,
+                    isSelected = currentDestination == Screen.Profile.route,
+                    activeColor = bordeaux,
+                    onClick = { navigateTo(navController, Screen.Profile.route) }
+                )
+            }
+        }
+
+        // Botón Circular Elevado (Mitad dentro, mitad fuera)
+        Surface(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(64.dp)
+                .shadow(12.dp, CircleShape)
+                .clickable { navigateTo(navController, Screen.Map.route) },
+            color = bordeaux,
+            shape = CircleShape,
+            border = BorderStroke(4.dp, Color(0xFFF9F9F6))
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    Screen.Map.icon!!,
+                    contentDescription = "Mapa",
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavItem(
+    screen: Screen,
+    isSelected: Boolean,
+    activeColor: Color,
+    onClick: () -> Unit
+) {
+    val contentColor = if (isSelected) activeColor else Color.Gray
+    Column(
+        modifier = Modifier
+            .width(64.dp)
+            .fillMaxHeight()
+            .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            screen.icon!!,
+            contentDescription = screen.title,
+            tint = contentColor,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = screen.title.uppercase(),
+            fontSize = 10.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = contentColor,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
+}
+
+private fun navigateTo(navController: NavHostController, route: String) {
+    navController.navigate(route) {
+        popUpTo(navController.graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }

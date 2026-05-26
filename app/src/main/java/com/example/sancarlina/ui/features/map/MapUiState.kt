@@ -6,9 +6,13 @@ data class MapUiState(
     val markers: List<CommerceMarker> = emptyList(),
     val filteredMarkers: List<CommerceMarker> = emptyList(),
     val categories: List<String> = emptyList(),
+    val locations: List<String> = emptyList(),
     val selectedCategory: String = "Todos",
+    val selectedLocation: String = "Todas",
+    val onlyWithSello: Boolean = false,
     val selectedMarker: CommerceMarker? = null,
     val isBottomSheetVisible: Boolean = false,
+    val isFilterPanelVisible: Boolean = false,
     val isLocationPermissionGranted: Boolean = false
 )
 

@@ -9,10 +9,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
@@ -21,23 +25,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.sancarlina.ui.theme.SancarlinaAccent
-import com.example.sancarlina.ui.theme.SancarlinaPrimary
+import com.example.sancarlina.ui.theme.*
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -105,7 +111,6 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
     fun updateToCurrentLocation() {
         scope.launch {
             try {
-                // Request current high accuracy location
                 val location = fusedLocationClient.getCurrentLocation(
                     Priority.PRIORITY_HIGH_ACCURACY,
                     null
@@ -116,12 +121,10 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                     cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
                 }
             } catch (e: Exception) {
-                // In case of error or null location, fallback to default or log
             }
         }
     }
 
-    // Auto-track location when permission is granted
     LaunchedEffect(uiState.isLocationPermissionGranted) {
         if (uiState.isLocationPermissionGranted) {
             updateToCurrentLocation()
@@ -157,27 +160,48 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
             }
         }
 
-        // Category Filters
+        // Top Controls: Category Bar + Advanced Filters Button
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                items(uiState.categories) { category ->
-                    FilterChip(
-                        selected = uiState.selectedCategory == category,
-                        onClick = { viewModel.onCategorySelected(category) },
-                        label = { Text(category) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = SancarlinaPrimary,
-                            selectedLabelColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(20.dp)
+                LazyRow(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiState.categories) { category ->
+                        FilterChip(
+                            selected = uiState.selectedCategory == category,
+                            onClick = { viewModel.onCategorySelected(category) },
+                            label = { Text(category) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = SancarlinaPrimary,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                    }
+                }
+                
+                IconButton(
+                    onClick = { viewModel.toggleFilterPanel(true) },
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(40.dp)
+                        .shadow(4.dp, CircleShape)
+                        .background(Color.White, CircleShape)
+                ) {
+                    Icon(
+                        Icons.Default.Tune, 
+                        contentDescription = "Filtros Avanzados",
+                        tint = SancarlinaPrimary,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
@@ -189,7 +213,7 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                 onClick = { updateToCurrentLocation() },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = 100.dp, end = 16.dp),
+                    .padding(bottom = 24.dp, end = 16.dp),
                 containerColor = Color.White,
                 contentColor = SancarlinaPrimary,
                 shape = RoundedCornerShape(12.dp)
@@ -198,6 +222,19 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
             }
         }
 
+        // Advanced Filter Panel [VISTA 19]
+        if (uiState.isFilterPanelVisible) {
+            AdvancedFilterPanel(
+                uiState = uiState,
+                onDismiss = { viewModel.toggleFilterPanel(false) },
+                onLocationSelected = { viewModel.onLocationSelected(it) },
+                onSelloToggled = { viewModel.onSelloToggled(it) },
+                onClearFilters = { viewModel.clearFilters() },
+                onApplyFilters = { viewModel.toggleFilterPanel(false) }
+            )
+        }
+
+        // Detail Bottom Sheet [VISTA 18]
         if (uiState.isBottomSheetVisible && uiState.selectedMarker != null) {
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onDismissBottomSheet() },
@@ -218,13 +255,12 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
-                        .padding(bottom = 80.dp) // Space for bottom nav
+                        .padding(bottom = 32.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Square Image (Vista 18)
                         AsyncImage(
                             model = marker.imageUrl,
                             contentDescription = null,
@@ -253,7 +289,6 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(top = 4.dp)
                             ) {
-                                // Star Rating (Vista 18)
                                 repeat(5) { index ->
                                     Icon(
                                         imageVector = Icons.Default.Star,
@@ -278,7 +313,6 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Button 1: WhatsApp (Guinda/Vino - Vista 18)
                         Button(
                             onClick = {
                                 val intent = Intent(Intent.ACTION_VIEW)
@@ -296,7 +330,6 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
                             Text("CONTACTO WHATSAPP", style = MaterialTheme.typography.labelLarge)
                         }
                         
-                        // Button 2: Directions (Primary border - Vista 18)
                         OutlinedButton(
                             onClick = {
                                 val gmmIntentUri = Uri.parse("geo:${marker.position.latitude},${marker.position.longitude}?q=${Uri.encode(marker.name)}")
@@ -316,4 +349,140 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AdvancedFilterPanel(
+    uiState: MapUiState,
+    onDismiss: () -> Unit,
+    onLocationSelected: (String) -> Unit,
+    onSelloToggled: (Boolean) -> Unit,
+    onClearFilters: () -> Unit,
+    onApplyFilters: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = Color.White,
+        dragHandle = { BottomSheetDefaults.DragHandle(color = Color.LightGray) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = "Filtros Avanzados",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            // Section 1: Localidad
+            Text(
+                text = "POR LOCALIDAD",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray,
+                letterSpacing = 1.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                uiState.locations.forEach { location ->
+                    FilterChip(
+                        selected = uiState.selectedLocation == location,
+                        onClick = { onLocationSelected(location) },
+                        label = { Text(location) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = SancarlinaAccent,
+                            selectedLabelColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            // Section 2: Sello de Origen
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xFFF3F5E4),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, Color(0xFFE2E4D3))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Verified, 
+                        contentDescription = null, 
+                        tint = SancarlinaPrimary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Sello de Origen",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Mostrar solo certificados",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray
+                        )
+                    }
+                    Switch(
+                        checked = uiState.onlyWithSello,
+                        onCheckedChange = onSelloToggled,
+                        colors = SwitchDefaults.colors(checkedThumbColor = SancarlinaPrimary)
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(40.dp))
+            
+            // Footer Actions
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TextButton(
+                    onClick = onClearFilters,
+                    modifier = Modifier.weight(0.4f)
+                ) {
+                    Text("LIMPIAR", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
+                }
+                Button(
+                    onClick = onApplyFilters,
+                    modifier = Modifier.weight(0.6f).height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("APLICAR FILTROS", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun FlowRow(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    content: @Composable () -> Unit
+) {
+    androidx.compose.foundation.layout.FlowRow(
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement,
+        content = { content() }
+    )
 }

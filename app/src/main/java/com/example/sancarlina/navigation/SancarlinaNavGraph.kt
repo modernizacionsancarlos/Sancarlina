@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import com.example.sancarlina.ui.features.auth.LoginContent
 import com.example.sancarlina.ui.features.auth.OnboardingContent
 import com.example.sancarlina.ui.features.auth.RegisterContent
+import com.example.sancarlina.ui.features.category.CategoryListContent
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
@@ -37,8 +38,24 @@ fun SancarlinaNavGraph(
                 },
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route)
+                },
+                onNavigateToCategory = { categoryId ->
+                    navController.navigate(Screen.CategoryList.createRoute(categoryId))
                 }
             )
+        }
+        composable(Screen.CategoryList.route) { backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
+            CategoryListContent(
+                categoryId = categoryId,
+                onBack = { navController.popBackStack() },
+                onNavigateToDetail = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                }
+            )
+        }
+        composable(Screen.Turismo.route) {
+            PlaceholderScreen(Screen.Turismo.title)
         }
         composable(Screen.Login.route) {
             LoginContent(
@@ -54,7 +71,7 @@ fun SancarlinaNavGraph(
             OnboardingContent(
                 onFinish = {
                     onOnboardingFinished()
-                    navController.navigate(Screen.Login.route) {
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Onboarding.route) { inclusive = true }
                     }
                 }

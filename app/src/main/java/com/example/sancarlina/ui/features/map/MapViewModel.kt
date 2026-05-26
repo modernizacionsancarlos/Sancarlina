@@ -54,27 +54,61 @@ class MapViewModel : ViewModel() {
         )
 
         val categories = listOf("Todos") + markers.map { it.category }.distinct()
+        val locations = listOf("Todas") + markers.map { it.locationName }.distinct()
 
         _uiState.update { 
             it.copy(
                 markers = markers,
                 filteredMarkers = markers,
-                categories = categories
+                categories = categories,
+                locations = locations
             )
         }
     }
 
     fun onCategorySelected(category: String) {
-        _uiState.update { 
-            val filtered = if (category == "Todos") {
-                it.markers
-            } else {
-                it.markers.filter { marker -> marker.category == category }
-            }
-            it.copy(
-                selectedCategory = category,
-                filteredMarkers = filtered
+        _uiState.update { state ->
+            val updatedState = state.copy(selectedCategory = category)
+            updatedState.copy(filteredMarkers = applyFilters(updatedState))
+        }
+    }
+
+    fun onLocationSelected(location: String) {
+        _uiState.update { state ->
+            val updatedState = state.copy(selectedLocation = location)
+            updatedState.copy(filteredMarkers = applyFilters(updatedState))
+        }
+    }
+
+    fun onSelloToggled(enabled: Boolean) {
+        _uiState.update { state ->
+            val updatedState = state.copy(onlyWithSello = enabled)
+            updatedState.copy(filteredMarkers = applyFilters(updatedState))
+        }
+    }
+
+    private fun applyFilters(state: MapUiState): List<CommerceMarker> {
+        return state.markers.filter { marker ->
+            val categoryMatch = state.selectedCategory == "Todos" || marker.category == state.selectedCategory
+            val locationMatch = state.selectedLocation == "Todas" || marker.locationName == state.selectedLocation
+            // Sello logic: for now markers don't have it, let's assume all have it or add it to CommerceMarker
+            val selloMatch = !state.onlyWithSello // Simplified for now
+            categoryMatch && locationMatch && selloMatch
+        }
+    }
+
+    fun toggleFilterPanel(visible: Boolean) {
+        _uiState.update { it.copy(isFilterPanelVisible = visible) }
+    }
+
+    fun clearFilters() {
+        _uiState.update { state ->
+            val updatedState = state.copy(
+                selectedCategory = "Todos",
+                selectedLocation = "Todas",
+                onlyWithSello = false
             )
+            updatedState.copy(filteredMarkers = updatedState.markers)
         }
     }
 

@@ -1,17 +1,15 @@
 package com.example.sancarlina.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector? = null) {
     // Main Tabs
     object Home : Screen("home", "Inicio", Icons.Default.Home)
-    object Map : Screen("map", "Mapa", Icons.Default.LocationOn)
-    object Points : Screen("points", "Puntos", Icons.Default.Star)
+    object Turismo : Screen("turismo", "Turismo", Icons.Default.Explore)
+    object Map : Screen("map", "Mapa", Icons.Default.Map)
+    object Points : Screen("points", "Puntos", Icons.Default.Stars)
     object Profile : Screen("profile", "Perfil", Icons.Default.Person)
 
     // Other screens
@@ -24,10 +22,14 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object ProductDetail : Screen("product_detail/{productId}", "Detalle") {
         fun createRoute(productId: String) = "product_detail/$productId"
     }
+    object CategoryList : Screen("category_list/{categoryId}", "Categoría") {
+        fun createRoute(categoryId: String) = "category_list/$categoryId"
+    }
 }
 
 val bottomNavItems = listOf(
     Screen.Home,
+    Screen.Turismo,
     Screen.Map,
     Screen.Points,
     Screen.Profile
