@@ -1,29 +1,48 @@
 package com.example.sancarlina.utils
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import com.example.sancarlina.BuildConfig
+import com.example.sancarlina.MainActivity
+import com.example.sancarlina.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.File
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import java.io.FileOutputStream
 
 class UpdateManager(private val context: Context) {
 
     private val client = OkHttpClient()
-    private val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-    // URL real de tu repositorio de distribución
     private val CONFIG_URL = "https://raw.githubusercontent.com/franco-valenzuela/sancarlina-distribucion/main/config.json"
+    private val CHANNEL_ID = "updates_channel"
+
+    init {
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Actualizaciones"
+            val descriptionText = "Notificaciones de nuevas versiones de Sancarlina"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
     suspend fun checkForUpdates(onUpdateAvailable: (apkUrl: String, notes: String) -> Unit) {
         withContext(Dispatchers.IO) {
@@ -40,6 +59,7 @@ class UpdateManager(private val context: Context) {
                     val releaseNotes = json.optString("releaseNotes", "Nueva versión disponible")
 
                     if (latestVersionCode > BuildConfig.VERSION_CODE) {
+                        showUpdateNotification(releaseNotes)
                         withContext(Dispatchers.Main) {
                             onUpdateAvailable(apkUrl, releaseNotes)
                         }
@@ -51,35 +71,75 @@ class UpdateManager(private val context: Context) {
         }
     }
 
-    fun downloadAndInstall(apkUrl: String) {
-        val fileName = "sancarlina_update.apk"
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
-        if (file.exists()) file.delete()
-
-        val request = DownloadManager.Request(Uri.parse(apkUrl))
-            .setTitle("Sancarlina Actualización")
-            .setDescription("Descargando nueva versión...")
-            .setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, fileName)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(true)
-
-        val downloadId = downloadManager.enqueue(request)
-
-        val onComplete = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                if (downloadId == id) {
-                    installApk(file)
-                    context.unregisterReceiver(this)
-                }
-            }
+    private fun showUpdateNotification(notes: String) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_EXPORTED)
-        } else {
-            context.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_sys_download_done) // Replace with your app icon
+            .setContentTitle("¡Nueva actualización disponible!")
+            .setContentText("Mejoras de rendimiento y nuevas funciones.")
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notes))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .addAction(0, "ACTUALIZAR AHORA", pendingIntent)
+            .build()
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(1001, notification)
+    }
+
+    suspend fun downloadAndInstallWithProgress(
+        apkUrl: String,
+        onProgress: (Float) -> Unit,
+        onComplete: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        withContext(Dispatchers.IO) {
+            try {
+                val request = Request.Builder().url(apkUrl).build()
+                val response = client.newCall(request).execute()
+                
+                if (!response.isSuccessful) {
+                    withContext(Dispatchers.Main) { onError("Error en el servidor") }
+                    return@withContext
+                }
+
+                val body = response.body ?: throw Exception("Cuerpo de respuesta vacío")
+                val totalBytes = body.contentLength()
+                val fileName = "sancarlina_update.apk"
+                val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+                
+                body.byteStream().use { input ->
+                    FileOutputStream(file).use { output ->
+                        val buffer = ByteArray(8192)
+                        var bytesRead: Int
+                        var downloadedBytes = 0L
+                        
+                        while (input.read(buffer).also { bytesRead = it } != -1) {
+                            output.write(buffer, 0, bytesRead)
+                            downloadedBytes += bytesRead
+                            if (totalBytes > 0) {
+                                val progress = downloadedBytes.toFloat() / totalBytes.toFloat()
+                                withContext(Dispatchers.Main) { onProgress(progress) }
+                            }
+                        }
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                    installApk(file)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { onError(e.message ?: "Error desconocido") }
+            }
         }
     }
 

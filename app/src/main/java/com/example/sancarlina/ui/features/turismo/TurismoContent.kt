@@ -37,7 +37,7 @@ fun TurismoContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "TURISMO SANCARLINO",
+                        "EXPERIENCIAS SANCARLINAS",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,

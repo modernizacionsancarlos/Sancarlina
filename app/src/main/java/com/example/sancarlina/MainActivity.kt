@@ -1,9 +1,15 @@
 package com.example.sancarlina
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,17 +25,70 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import com.example.sancarlina.ui.components.MainScaffold
 import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
 import com.example.sancarlina.ui.theme.SancarlinaTheme
 import com.example.sancarlina.utils.UpdateManager
+import kotlinx.coroutines.launch
+
+@Composable
+fun DownloadOverlay(progress: Float) {
+    Dialog(
+        onDismissRequest = { },
+        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            shape = RoundedCornerShape(24.dp),
+            color = Color.White
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    progress = { progress },
+                    color = SancarlinaAccent,
+                    modifier = Modifier.size(64.dp),
+                    strokeWidth = 6.dp
+                )
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    "Descargando actualización...",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "Por favor, no cierres la aplicación.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+                Spacer(Modifier.height(16.dp))
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth().height(8.dp).background(Color(0xFFF0F2E1), CircleShape),
+                    color = SancarlinaAccent,
+                    strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+                Text(
+                    "${(progress * 100).toInt()}%",
+                    modifier = Modifier.padding(top = 8.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaPrimary
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun UpdateAnouncementModal(
@@ -58,7 +117,7 @@ fun UpdateAnouncementModal(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 450.dp) // Limitamos el texto para dejar aire abajo
+                            .heightIn(max = 450.dp)
                             .verticalScroll(scrollState)
                             .padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -79,7 +138,6 @@ fun UpdateAnouncementModal(
                         
                         Spacer(Modifier.height(16.dp))
 
-                        // Box de Novedades
                         Surface(modifier = Modifier.fillMaxWidth(), color = Color(0xFFF9F9F6), shape = RoundedCornerShape(16.dp), border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E4D3))) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text("NOVEDADES", style = MaterialTheme.typography.labelMedium, color = SancarlinaPrimary, fontWeight = FontWeight.Bold)
@@ -97,7 +155,7 @@ fun UpdateAnouncementModal(
                         }
                     }
 
-                    // BOTONES FIJOS (Siempre visibles)
+                    // BOTONES FIJOS
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -129,32 +187,61 @@ class MainActivity : ComponentActivity() {
         val updateManager = UpdateManager(this)
         enableEdgeToEdge()
         setContent {
+            val scope = rememberCoroutineScope()
             var showUpdateDialog by remember { mutableStateOf(false) }
+            var isDownloading by remember { mutableStateOf(false) }
+            var downloadProgress by remember { mutableStateOf(0f) }
             var apkUrl by remember { mutableStateOf("") }
             var releaseNotes by remember { mutableStateOf("") }
             var latestVersionName by remember { mutableStateOf("") }
 
+            val permissionLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { }
+
             LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+
                 updateManager.checkForUpdates { url, notes ->
                     apkUrl = url
                     releaseNotes = notes
-                    latestVersionName = "v3.7.1" 
+                    latestVersionName = "v3.9.1" 
                     showUpdateDialog = true
                 }
             }
 
             SancarlinaTheme {
                 MainScaffold()
+                
                 if (showUpdateDialog) {
                     UpdateAnouncementModal(
                         version = latestVersionName,
                         notes = releaseNotes,
                         onDownload = {
-                            updateManager.downloadAndInstall(apkUrl)
                             showUpdateDialog = false
+                            isDownloading = true
+                            scope.launch {
+                                updateManager.downloadAndInstallWithProgress(
+                                    apkUrl = apkUrl,
+                                    onProgress = { downloadProgress = it },
+                                    onComplete = { isDownloading = false },
+                                    onError = { 
+                                        isDownloading = false
+                                        Toast.makeText(this@MainActivity, "Error: $it", Toast.LENGTH_LONG).show()
+                                    }
+                                )
+                            }
                         },
                         onDismiss = { showUpdateDialog = false }
                     )
+                }
+
+                if (isDownloading) {
+                    DownloadOverlay(progress = downloadProgress)
                 }
             }
         }

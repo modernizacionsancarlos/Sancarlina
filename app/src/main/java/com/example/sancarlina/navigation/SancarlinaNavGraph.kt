@@ -18,6 +18,7 @@ import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
+import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.turismo.TurismoContent
 import com.example.sancarlina.ui.features.updates.UpdatesContent
 
@@ -42,7 +43,11 @@ fun SancarlinaNavGraph(
                     navController.navigate(Screen.Login.route)
                 },
                 onNavigateToCategory = { categoryId ->
-                    navController.navigate(Screen.CategoryList.createRoute(categoryId))
+                    if (categoryId.contains("SERVICIOS", ignoreCase = true)) {
+                        navController.navigate(Screen.ServiciosSello.route)
+                    } else {
+                        navController.navigate(Screen.CategoryList.createRoute(categoryId))
+                    }
                 },
                 onOpenDrawer = onOpenDrawer
             )
@@ -115,6 +120,9 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Updates.route) {
             UpdatesContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.ServiciosSello.route) {
+            ServiciosSelloContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Offline.route) {
             PlaceholderScreen(Screen.Offline.title)

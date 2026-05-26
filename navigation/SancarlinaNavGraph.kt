@@ -18,6 +18,7 @@ import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
+import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.turismo.TurismoContent
 import com.example.sancarlina.ui.features.updates.UpdatesContent
 
