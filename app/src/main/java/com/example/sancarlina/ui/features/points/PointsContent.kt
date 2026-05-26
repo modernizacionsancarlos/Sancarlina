@@ -11,9 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +30,67 @@ import com.example.sancarlina.ui.theme.SancarlinaPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PointsContent(viewModel: PointsViewModel = viewModel()) {
+fun PointsContent(
+    viewModel: PointsViewModel = viewModel(),
+    onNavigateToLogin: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
+    val auth = remember { com.google.firebase.auth.FirebaseAuth.getInstance() }
+    var showLoginPrompt by remember { mutableStateOf(false) }
+
+    if (auth.currentUser == null) {
+        Box(
+            modifier = Modifier.fillMaxSize().background(SancarlinaBackground),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(32.dp)
+            ) {
+                Surface(
+                    color = Color.White,
+                    shape = CircleShape,
+                    modifier = Modifier.size(120.dp),
+                    shadowElevation = 4.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Stars,
+                            contentDescription = null,
+                            tint = SancarlinaAccent,
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "Acceso Exclusivo",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Iniciá sesión para empezar a sumar puntos y canjear beneficios únicos.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                Button(
+                    onClick = onNavigateToLogin,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Text("INICIAR SESIÓN", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+        return
+    }
 
     Scaffold(
+// ... rest of the file
         topBar = {
             CenterAlignedTopAppBar(
                 title = {

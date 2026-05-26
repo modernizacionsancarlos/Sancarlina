@@ -1,5 +1,6 @@
 package com.example.sancarlina.ui.features.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,16 +13,16 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,140 +30,190 @@ import coil.compose.AsyncImage
 import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
-
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(
     viewModel: ProfileViewModel = viewModel(),
-    onNavigateToUpdates: () -> Unit = {}
+    onNavigateToUpdates: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val auth = remember { FirebaseAuth.getInstance() }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "SANCARLINA",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { Toast.makeText(context, "Menú lateral", Toast.LENGTH_SHORT).show() }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+    if (auth.currentUser == null) {
+        Box(
+            modifier = Modifier.fillMaxSize().background(SancarlinaBackground),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(32.dp)
+            ) {
+                Surface(
+                    color = Color.White,
+                    shape = CircleShape,
+                    modifier = Modifier.size(120.dp),
+                    shadowElevation = 4.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = null,
+                            tint = SancarlinaAccent,
+                            modifier = Modifier.size(64.dp)
+                        )
                     }
-                },
-                actions = {
-                    IconButton(onClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "Tu Perfil Personal",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
+                Text(
+                    text = "Iniciá sesión para gestionar tus favoritos, ver tu historial y personalizar tu experiencia.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                Button(
+                    onClick = onNavigateToLogin,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Text("INICIAR SESIÓN", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    } else {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            "SANCARLINA",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 2.sp,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { Toast.makeText(context, "Menú lateral", Toast.LENGTH_SHORT).show() }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = SancarlinaPrimary
+                    )
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(SancarlinaBackground)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                // Profile Header
+                ProfileHeaderSection(uiState) {
+                    Toast.makeText(context, "Editar foto de perfil", Toast.LENGTH_SHORT).show()
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Menu Section
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White)
+                ) {
+                    MenuItem(Icons.Default.Person, "Mis Datos Personales") {
+                        Toast.makeText(context, "Vista de Datos Personales", Toast.LENGTH_SHORT).show()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
+                        Toast.makeText(context, "Vista de Favoritos", Toast.LENGTH_SHORT).show()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
+                        Toast.makeText(context, "Historial", Toast.LENGTH_SHORT).show()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(
+                        Icons.Default.Notifications, 
+                        "Notificaciones", 
+                        badgeCount = uiState.notificationCount
+                    ) {
+                        Toast.makeText(context, "Centro de Notificaciones", Toast.LENGTH_SHORT).show()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(Icons.Default.Update, "Actualizaciones") {
+                        onNavigateToUpdates()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(Icons.AutoMirrored.Filled.Help, "Ayuda y Soporte") {
+                        Toast.makeText(context, "Ayuda", Toast.LENGTH_SHORT).show()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    LogoutItem { viewModel.onLogoutClicked() }
+                }
+
+                // Version Info
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "SANCARLINA",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray.copy(alpha = 0.5f),
+                        letterSpacing = 4.sp
+                    )
+                    Text(
+                        text = "Versión 3.2.0",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray.copy(alpha = 0.5f)
+                    )
+                }
+            }
+        }
+
+        // Logout Confirmation [MODAL 32]
+        if (uiState.showLogoutConfirmation) {
+            AlertDialog(
+                onDismissRequest = { viewModel.dismissLogout() },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.confirmLogout() }) {
+                        Text("CERRAR SESIÓN", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { viewModel.dismissLogout() }) {
+                        Text("CANCELAR", color = Color.Gray)
+                    }
+                },
+                title = { Text("¿Cerrar sesión?") },
+                text = { Text("¿Estás seguro que deseas salir de tu cuenta?") },
+                containerColor = Color.White
             )
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Profile Header
-            ProfileHeaderSection(uiState) {
-                Toast.makeText(context, "Editar foto de perfil", Toast.LENGTH_SHORT).show()
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Menu Section
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
-            ) {
-                MenuItem(Icons.Default.Person, "Mis Datos Personales") {
-                    Toast.makeText(context, "Vista de Datos Personales", Toast.LENGTH_SHORT).show()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
-                    Toast.makeText(context, "Vista de Favoritos", Toast.LENGTH_SHORT).show()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
-                    Toast.makeText(context, "Historial", Toast.LENGTH_SHORT).show()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                MenuItem(
-                    Icons.Default.Notifications, 
-                    "Notificaciones", 
-                    badgeCount = uiState.notificationCount
-                ) {
-                    Toast.makeText(context, "Centro de Notificaciones", Toast.LENGTH_SHORT).show()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                MenuItem(Icons.Default.Update, "Actualizaciones") {
-                    onNavigateToUpdates()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                MenuItem(Icons.AutoMirrored.Filled.Help, "Ayuda y Soporte") {
-                    Toast.makeText(context, "Ayuda", Toast.LENGTH_SHORT).show()
-                }
-                HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                LogoutItem { viewModel.onLogoutClicked() }
-            }
-
-            // Version Info
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 40.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "SANCARLINA",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Gray.copy(alpha = 0.5f),
-                    letterSpacing = 4.sp
-                )
-                Text(
-                    text = "Versión 2.4.1",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray.copy(alpha = 0.5f)
-                )
-            }
-        }
-    }
-
-    // Logout Confirmation [MODAL 32]
-    if (uiState.showLogoutConfirmation) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissLogout() },
-            confirmButton = {
-                TextButton(onClick = { viewModel.confirmLogout() }) {
-                    Text("CERRAR SESIÓN", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.dismissLogout() }) {
-                    Text("CANCELAR", color = Color.Gray)
-                }
-            },
-            title = { Text("¿Cerrar sesión?") },
-            text = { Text("¿Estás seguro que deseas salir de tu cuenta?") },
-            containerColor = Color.White
-        )
     }
 }
 
@@ -236,7 +287,7 @@ fun ProfileHeaderSection(uiState: ProfileUiState, onEditClick: () -> Unit) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "1,250 Puntos",
+                        text = "${uiState.pointsBalance} Puntos",
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelLarge

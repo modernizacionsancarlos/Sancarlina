@@ -18,6 +18,7 @@ import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
+import com.example.sancarlina.ui.features.turismo.TurismoContent
 import com.example.sancarlina.ui.features.updates.UpdatesContent
 
 @Composable
@@ -55,7 +56,7 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Turismo.route) {
-            PlaceholderScreen(Screen.Turismo.title)
+            TurismoContent()
         }
         composable(Screen.Login.route) {
             LoginContent(
@@ -91,11 +92,14 @@ fun SancarlinaNavGraph(
             MapContent()
         }
         composable(Screen.Points.route) {
-            PointsContent()
+            PointsContent(
+                onNavigateToLogin = { navController.navigate(Screen.Login.route) }
+            )
         }
         composable(Screen.Profile.route) {
             ProfileContent(
-                onNavigateToUpdates = { navController.navigate(Screen.Updates.route) }
+                onNavigateToUpdates = { navController.navigate(Screen.Updates.route) },
+                onNavigateToLogin = { navController.navigate(Screen.Login.route) }
             )
         }
         composable(Screen.ProductDetail.route) { backStackEntry ->
