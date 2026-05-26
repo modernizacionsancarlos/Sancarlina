@@ -12,7 +12,35 @@ import com.google.firebase.firestore.GeoPoint
 class HomeViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val _uiState = MutableStateFlow(HomeUiState())
+    
+    // Default state with Mock data to ensure the screen is NEVER empty
+    private val _uiState = MutableStateFlow(
+        HomeUiState(
+            banners = listOf(
+                BannerItem(
+                    title = "OFERTAS",
+                    subtitle = "DEL DÍA",
+                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCeoCpk-R2i54OyCev_9a8nISL8N4TfvmTw-qnf4YaN48ZMMhF2NYLR6Zu8N3RegJ0eu_btmYZQdN6_jCsVtBxmIlWdKSMdAXltJuJs8LO-wluOzOE-PSCFeC4yiYKF8QCesAI88_It5-rz_RkiB3rmL0XPG01otSg_7oyTl1VK6lEV9HYj-_F_JSHIlpzfe_BQ41I67IkSRw0eX1HbBh4LGNYWM5HuBjRZRvvA72XzqZd4MosGs7xy49UJGMcIdzZaIutSQryyoSA"
+                )
+            ),
+            categories = listOf(
+                CategoryItem("PRODUCTOS\nREGIONALES", "prescriptions"),
+                CategoryItem("BODEGAS\nY VINOS", "wine_bar"),
+                CategoryItem("ARTESANÍAS", "potted_plant"),
+                CategoryItem("GASTRONOMÍA", "restaurant"),
+                CategoryItem("SERVICIOS", "handyman"),
+                CategoryItem("EMPRENDEDORES", "storefront")
+            ),
+            nearbyProduct = ProductItem(
+                id = "miel-1",
+                name = "Miel Sancarlina - 1kg",
+                brand = "Producción Local",
+                price = "$ 4500",
+                phone = "5492622000000",
+                hasSelloOrigen = true
+            )
+        )
+    )
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -22,21 +50,17 @@ class HomeViewModel : ViewModel() {
     private fun loadHomeData() {
         _uiState.update { it.copy(isLoading = true) }
 
-        // Start by loading mock data so the screen isn't empty while waiting for Firestore
-        loadMockData()
-
-        // Then try to fetch from Firestore and update if successful
         // Fetch Banners
         firestore.collection("banners").get()
             .addOnSuccessListener { result ->
-                val banners = result.documents.map { doc ->
-                    BannerItem(
-                        title = doc.getString("title") ?: "",
-                        subtitle = doc.getString("subtitle") ?: "",
-                        imageUrl = doc.getString("imageUrl") ?: ""
-                    )
-                }
-                if (banners.isNotEmpty()) {
+                if (!result.isEmpty) {
+                    val banners = result.documents.map { doc ->
+                        BannerItem(
+                            title = doc.getString("title") ?: "",
+                            subtitle = doc.getString("subtitle") ?: "",
+                            imageUrl = doc.getString("imageUrl") ?: ""
+                        )
+                    }
                     _uiState.update { it.copy(banners = banners) }
                 }
             }
@@ -44,13 +68,13 @@ class HomeViewModel : ViewModel() {
         // Fetch Categories
         firestore.collection("categories").orderBy("order").get()
             .addOnSuccessListener { result ->
-                val categories = result.documents.map { doc ->
-                    CategoryItem(
-                        name = doc.getString("name") ?: "",
-                        iconName = doc.getString("iconName") ?: ""
-                    )
-                }
-                if (categories.isNotEmpty()) {
+                if (!result.isEmpty) {
+                    val categories = result.documents.map { doc ->
+                        CategoryItem(
+                            name = doc.getString("name") ?: "",
+                            iconName = doc.getString("iconName") ?: ""
+                        )
+                    }
                     _uiState.update { it.copy(categories = categories) }
                 }
             }
@@ -77,36 +101,7 @@ class HomeViewModel : ViewModel() {
             }
     }
 
-    private fun loadMockData() {
-        _uiState.value = HomeUiState(
-            banners = listOf(
-                BannerItem(
-                    title = "OFERTAS",
-                    subtitle = "DEL DÍA",
-                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCeoCpk-R2i54OyCev_9a8nISL8N4TfvmTw-qnf4YaN48ZMMhF2NYLR6Zu8N3RegJ0eu_btmYZQdN6_jCsVtBxmIlWdKSMdAXltJuJs8LO-wluOzOE-PSCFeC4yiYKF8QCesAI88_It5-rz_RkiB3rmL0XPG01otSg_7oyTl1VK6lEV9HYj-_F_JSHIlpzfe_BQ41I67IkSRw0eX1HbBh4LGNYWM5HuBjRZRvvA72XzqZd4MosGs7xy49UJGMcIdzZaIutSQryyoSA"
-                )
-            ),
-            categories = listOf(
-                CategoryItem("PRODUCTOS\nREGIONALES", "prescriptions"),
-                CategoryItem("BODEGAS\nY VINOS", "wine_bar"),
-                CategoryItem("ARTESANÍAS", "potted_plant"),
-                CategoryItem("GASTRONOMÍA", "restaurant"),
-                CategoryItem("SERVICIOS", "handyman"),
-                CategoryItem("EMPRENDEDORES", "storefront")
-            ),
-            nearbyProduct = ProductItem(
-                id = "miel-1",
-                name = "Miel Sancarlina - 1kg",
-                brand = "Producción Local",
-                price = "$ 4500",
-                phone = "5492622000000",
-                hasSelloOrigen = true
-            ),
-            isLoading = false
-        )
-    }
-
-    // Call this once to populate your Firebase if it's empty
+    // Utility to seed initial data if needed
     fun seedFirestore() {
         val categories = listOf(
             mapOf("name" to "PRODUCTOS\nREGIONALES", "iconName" to "prescriptions", "order" to 1),

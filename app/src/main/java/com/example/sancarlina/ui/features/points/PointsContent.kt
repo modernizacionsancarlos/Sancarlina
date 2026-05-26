@@ -9,12 +9,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.sancarlina.ui.theme.SancarlinaAccent
@@ -32,11 +36,11 @@ import com.example.sancarlina.ui.theme.SancarlinaPrimary
 @Composable
 fun PointsContent(
     viewModel: PointsViewModel = viewModel(),
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onOpenDrawer: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val auth = remember { com.google.firebase.auth.FirebaseAuth.getInstance() }
-    var showLoginPrompt by remember { mutableStateOf(false) }
 
     if (auth.currentUser == null) {
         Box(
@@ -90,7 +94,6 @@ fun PointsContent(
     }
 
     Scaffold(
-// ... rest of the file
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -103,7 +106,7 @@ fun PointsContent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Menu */ }) {
+                    IconButton(onClick = onOpenDrawer) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                     }
                 },
@@ -402,65 +405,82 @@ fun QrDialog(
     onDismiss: () -> Unit,
     onSimulateScan: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        confirmButton = {},
-        title = { 
-            Text(
-                "QR de Canje", 
-                modifier = Modifier.fillMaxWidth(), 
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            ) 
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.6f))
+                .clickable { onDismiss() },
+            contentAlignment = Alignment.Center
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .clickable(enabled = false) { }
+                    .clip(RoundedCornerShape(24.dp)),
+                color = Color.White
             ) {
-                Text(
-                    "Mostrá este código al comerciante",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                // QR Placeholder
-                Surface(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clickable { onSimulateScan() },
-                    color = Color.White,
-                    border = BorderStroke(1.dp, Color.LightGray),
-                    shape = RoundedCornerShape(16.dp)
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.QrCode2, 
-                            contentDescription = null, 
-                            modifier = Modifier.size(180.dp),
-                            tint = Color.Black
-                        )
+                    Text(
+                        "QR de Canje", 
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Mostrá este código al comerciante",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    Surface(
+                        modifier = Modifier
+                            .size(220.dp)
+                            .clickable { onSimulateScan() },
+                        color = Color.White,
+                        border = BorderStroke(1.dp, Color.LightGray),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.QrCode2, 
+                                contentDescription = null, 
+                                modifier = Modifier.size(200.dp),
+                                tint = Color.Black
+                            )
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    Text(
+                        text = "Vence en: $timeRemaining",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = SancarlinaAccent,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                        shape = RoundedCornerShape(24.dp)
+                    ) {
+                        Text("CERRAR")
                     }
                 }
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                Text(
-                    text = "Vence en: $timeRemaining",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = SancarlinaAccent,
-                    fontWeight = FontWeight.Bold
-                )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                TextButton(onClick = { onDismiss() }) {
-                    Text("CERRAR", color = Color.Gray)
-                }
             }
-        },
-        containerColor = Color.White
-    )
+        }
+    }
 }

@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 16,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v16/app-debug.apk",
-  "releaseNotes": "¡Correcciones Críticas y Sidebar!\n- Solucionado el bug del QR que bloqueaba la app.\n- Activado el Sidebar (menú lateral) funcional.\n- El Inicio ahora carga datos correctamente (mock/firestore).\n- Mapa ajustado para ser totalmente responsive."
+  "latestVersionCode": 18,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v18/app-debug.apk",
+  "releaseNotes": "¡Parche Crítico de Interfaz!\n- Reconstruido el modal de actualizaciones para ser 100% responsive.\n- Corregido error de scroll que ocultaba los botones en pantallas pequeñas.\n- Mejorada la jerarquía visual de las novedades.\n- Solucionado bug del QR y Sidebar (v17)."
 }

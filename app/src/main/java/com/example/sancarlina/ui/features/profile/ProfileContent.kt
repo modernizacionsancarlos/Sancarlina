@@ -37,7 +37,8 @@ import com.google.firebase.auth.FirebaseAuth
 fun ProfileContent(
     viewModel: ProfileViewModel = viewModel(),
     onNavigateToUpdates: () -> Unit = {},
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    onOpenDrawer: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -105,7 +106,7 @@ fun ProfileContent(
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { Toast.makeText(context, "Menú lateral", Toast.LENGTH_SHORT).show() }) {
+                        IconButton(onClick = onOpenDrawer) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                         }
                     },
@@ -187,7 +188,7 @@ fun ProfileContent(
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 3.2.0",
+                        text = "Versión 3.5.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )

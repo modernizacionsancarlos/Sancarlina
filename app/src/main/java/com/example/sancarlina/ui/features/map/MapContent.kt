@@ -77,7 +77,10 @@ const val MAP_STYLE_JSON = """
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapContent(viewModel: MapViewModel = viewModel()) {
+fun MapContent(
+    viewModel: MapViewModel = viewModel(),
+    onOpenDrawer: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
@@ -125,225 +128,266 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
         }
     }
 
-    LaunchedEffect(uiState.isLocationPermissionGranted) {
-        if (uiState.isLocationPermissionGranted) {
-            updateToCurrentLocation()
+    LaunchedEffect(uiState.filteredMarkers) {
+        if (uiState.filteredMarkers.isNotEmpty()) {
+            val builder = com.google.android.gms.maps.model.LatLngBounds.Builder()
+            uiState.filteredMarkers.forEach { builder.include(it.position) }
+            val bounds = builder.build()
+            
+            if (uiState.filteredMarkers.size == 1) {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(uiState.filteredMarkers[0].position, 15f)
+                )
+            } else {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngBounds(bounds, 150)
+                )
+            }
         }
     }
 
     val sheetState = rememberModalBottomSheetState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            properties = MapProperties(
-                isMyLocationEnabled = uiState.isLocationPermissionGranted,
-                mapType = MapType.NORMAL,
-                mapStyleOptions = MapStyleOptions(MAP_STYLE_JSON)
-            ),
-            uiSettings = MapUiSettings(
-                zoomControlsEnabled = false,
-                myLocationButtonEnabled = false
-            ),
-            contentPadding = PaddingValues(bottom = 80.dp) // Keeps Google logo & buttons above the bottom bar
-        ) {
-            uiState.filteredMarkers.forEach { commerce ->
-                Marker(
-                    state = MarkerState(position = commerce.position),
-                    title = commerce.name,
-                    snippet = commerce.locationName,
-                    onClick = {
-                        viewModel.onMarkerClick(commerce)
-                        true
-                    }
-                )
-            }
-        }
-
-        // Top Controls: Category Bar + Advanced Filters Button
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                LazyRow(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiState.categories) { category ->
-                        FilterChip(
-                            selected = uiState.selectedCategory == category,
-                            onClick = { viewModel.onCategorySelected(category) },
-                            label = { Text(category) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = SancarlinaPrimary,
-                                selectedLabelColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                    }
-                }
-                
-                IconButton(
-                    onClick = { viewModel.toggleFilterPanel(true) },
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(40.dp)
-                        .shadow(4.dp, CircleShape)
-                        .background(Color.White, CircleShape)
-                ) {
-                    Icon(
-                        Icons.Default.Tune, 
-                        contentDescription = "Filtros Avanzados",
-                        tint = SancarlinaPrimary,
-                        modifier = Modifier.size(20.dp)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "SANCARLINA",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                        color = Color.White
                     )
-                }
-            }
-        }
-
-        // My Location Button
-        if (uiState.isLocationPermissionGranted) {
-            FloatingActionButton(
-                onClick = { updateToCurrentLocation() },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 24.dp, end = 16.dp),
-                containerColor = Color.White,
-                contentColor = SancarlinaPrimary,
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(Icons.Default.MyLocation, contentDescription = "Mi ubicación")
-            }
-        }
-
-        // Advanced Filter Panel [VISTA 19]
-        if (uiState.isFilterPanelVisible) {
-            AdvancedFilterPanel(
-                uiState = uiState,
-                onDismiss = { viewModel.toggleFilterPanel(false) },
-                onLocationSelected = { viewModel.onLocationSelected(it) },
-                onSelloToggled = { viewModel.onSelloToggled(it) },
-                onClearFilters = { viewModel.clearFilters() },
-                onApplyFilters = { viewModel.toggleFilterPanel(false) }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onOpenDrawer) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* TODO: Search */ }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = SancarlinaPrimary
+                )
             )
         }
-
-        // Detail Bottom Sheet [VISTA 18]
-        if (uiState.isBottomSheetVisible && uiState.selectedMarker != null) {
-            ModalBottomSheet(
-                onDismissRequest = { viewModel.onDismissBottomSheet() },
-                sheetState = sheetState,
-                containerColor = Color.White,
-                dragHandle = {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 8.dp, bottom = 20.dp)
-                            .width(48.dp)
-                            .height(6.dp)
-                            .background(Color(0xFFE2E4D3), RoundedCornerShape(3.dp))
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = MapProperties(
+                    isMyLocationEnabled = uiState.isLocationPermissionGranted,
+                    mapType = MapType.NORMAL,
+                    mapStyleOptions = MapStyleOptions(MAP_STYLE_JSON)
+                ),
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = false,
+                    myLocationButtonEnabled = false
+                ),
+                contentPadding = PaddingValues(bottom = 80.dp)
+            ) {
+                uiState.filteredMarkers.forEach { commerce ->
+                    Marker(
+                        state = MarkerState(position = commerce.position),
+                        title = commerce.name,
+                        snippet = commerce.locationName,
+                        onClick = {
+                            viewModel.onMarkerClick(commerce)
+                            true
+                        }
                     )
                 }
+            }
+
+            // Top Controls: Category Bar + Advanced Filters Button
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             ) {
-                val marker = uiState.selectedMarker!!
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(bottom = 32.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                    LazyRow(
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        AsyncImage(
-                            model = marker.imageUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(88.dp)
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                        
-                        Spacer(modifier = Modifier.width(16.dp))
-                        
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = marker.name,
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                        items(uiState.categories) { category ->
+                            FilterChip(
+                                selected = uiState.selectedCategory == category,
+                                onClick = { viewModel.onCategorySelected(category) },
+                                label = { Text(category) },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = SancarlinaPrimary,
+                                    selectedLabelColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(20.dp)
                             )
-                            Text(
-                                text = marker.category,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Gray
-                            )
-                            
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(top = 4.dp)
-                            ) {
-                                repeat(5) { index ->
-                                    Icon(
-                                        imageVector = Icons.Default.Star,
-                                        contentDescription = null,
-                                        tint = if (index < marker.rating.toInt()) Color(0xFFF59E0B) else Color.LightGray,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = marker.distance,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color.Gray
-                                )
-                            }
                         }
                     }
                     
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    IconButton(
+                        onClick = { viewModel.toggleFilterPanel(true) },
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(40.dp)
+                            .shadow(4.dp, CircleShape)
+                            .background(Color.White, CircleShape)
                     ) {
-                        Button(
-                            onClick = {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse("https://wa.me/${marker.phone}")
-                                context.startActivity(intent)
-                            },
+                        Icon(
+                            Icons.Default.Tune, 
+                            contentDescription = "Filtros Avanzados",
+                            tint = SancarlinaPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
+
+            // My Location Button
+            if (uiState.isLocationPermissionGranted) {
+                FloatingActionButton(
+                    onClick = { updateToCurrentLocation() },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 24.dp, end = 16.dp),
+                    containerColor = Color.White,
+                    contentColor = SancarlinaPrimary,
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Icon(Icons.Default.MyLocation, contentDescription = "Mi ubicación")
+                }
+            }
+
+            // Advanced Filter Panel [VISTA 19]
+            if (uiState.isFilterPanelVisible) {
+                AdvancedFilterPanel(
+                    uiState = uiState,
+                    onDismiss = { viewModel.toggleFilterPanel(false) },
+                    onLocationSelected = { viewModel.onLocationSelected(it) },
+                    onSelloToggled = { viewModel.onSelloToggled(it) },
+                    onClearFilters = { viewModel.clearFilters() },
+                    onApplyFilters = { viewModel.toggleFilterPanel(false) }
+                )
+            }
+
+            // Detail Bottom Sheet [VISTA 18]
+            if (uiState.isBottomSheetVisible && uiState.selectedMarker != null) {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onDismissBottomSheet() },
+                    sheetState = sheetState,
+                    containerColor = Color.White,
+                    dragHandle = {
+                        Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                            shape = RoundedCornerShape(24.dp)
+                                .padding(top = 8.dp, bottom = 20.dp)
+                                .width(48.dp)
+                                .height(6.dp)
+                                .background(Color(0xFFE2E4D3), RoundedCornerShape(3.dp))
+                        )
+                    }
+                ) {
+                    val marker = uiState.selectedMarker!!
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                            .padding(bottom = 32.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null, modifier = Modifier.size(20.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("CONTACTO WHATSAPP", style = MaterialTheme.typography.labelLarge)
+                            AsyncImage(
+                                model = marker.imageUrl,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(88.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                            
+                            Spacer(modifier = Modifier.width(16.dp))
+                            
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = marker.name,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = marker.category,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = Color.Gray
+                                )
+                                
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                ) {
+                                    repeat(5) { index ->
+                                        Icon(
+                                            imageVector = Icons.Default.Star,
+                                            contentDescription = null,
+                                            tint = if (index < marker.rating.toInt()) Color(0xFFF59E0B) else Color.LightGray,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = marker.distance,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
                         }
                         
-                        OutlinedButton(
-                            onClick = {
-                                val gmmIntentUri = Uri.parse("geo:${marker.position.latitude},${marker.position.longitude}?q=${Uri.encode(marker.name)}")
-                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                                mapIntent.setPackage("com.google.android.apps.maps")
-                                context.startActivity(mapIntent)
-                            },
-                            modifier = Modifier.size(48.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            contentPadding = PaddingValues(0.dp),
-                            border = BorderStroke(2.dp, SancarlinaPrimary)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(Icons.Default.Directions, contentDescription = null, tint = SancarlinaPrimary)
+                            Button(
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.data = Uri.parse("https://wa.me/${marker.phone}")
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                                shape = RoundedCornerShape(24.dp)
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("CONTACTO WHATSAPP", style = MaterialTheme.typography.labelLarge)
+                            }
+                            
+                            OutlinedButton(
+                                onClick = {
+                                    val gmmIntentUri = Uri.parse("geo:${marker.position.latitude},${marker.position.longitude}?q=${Uri.encode(marker.name)}")
+                                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                    mapIntent.setPackage("com.google.android.apps.maps")
+                                    context.startActivity(mapIntent)
+                                },
+                                modifier = Modifier.size(48.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(0.dp),
+                                border = BorderStroke(2.dp, SancarlinaPrimary)
+                            ) {
+                                Icon(Icons.Default.Directions, contentDescription = null, tint = SancarlinaPrimary)
+                            }
                         }
                     }
                 }

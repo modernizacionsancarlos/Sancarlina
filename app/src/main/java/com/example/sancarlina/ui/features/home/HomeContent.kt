@@ -146,7 +146,7 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onMenuClick) {
-                    Icon(Icons.Default.Menu, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                 }
                 Text(
                     text = "SANCARLINA",
@@ -156,7 +156,7 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
                     letterSpacing = 2.sp
                 )
                 IconButton(onClick = onSearchClick) {
-                    Icon(Icons.Default.Search, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                 }
             }
             
