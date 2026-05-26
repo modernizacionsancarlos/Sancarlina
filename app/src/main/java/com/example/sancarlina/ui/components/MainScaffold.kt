@@ -136,7 +136,7 @@ fun MainScaffold() {
                 Spacer(modifier = Modifier.weight(1f))
                 
                 Text(
-                    text = "v3.4.0",
+                    text = "v3.9.0",
                     modifier = Modifier.padding(24.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.LightGray
@@ -168,7 +168,7 @@ fun MainScaffold() {
             SancarlinaNavGraph(
                 navController = navController,
                 modifier = Modifier.padding(
-                    bottom = 64.dp // Standard bar height
+                    bottom = innerPadding.calculateBottomPadding() // FIX: Use dynamic padding from Scaffold
                 ),
                 onOnboardingFinished = {
                     sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
@@ -194,7 +194,9 @@ fun SancarlinaBottomBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(96.dp), // Adjusted height to align button exactly half-in half-out
+            .background(Color(0xFFF9F9F6)) // Match crema-claro
+            .navigationBarsPadding() // FIX: Crucial for responsive system buttons
+            .height(96.dp), 
         contentAlignment = Alignment.BottomCenter
     ) {
         // Main Bar Background
@@ -202,7 +204,7 @@ fun SancarlinaBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp),
-            color = Color(0xFFF9F9F6), // crema-claro
+            color = Color(0xFFF9F9F6),
             border = BorderStroke(0.5.dp, Color.LightGray.copy(alpha = 0.3f)),
             shadowElevation = 8.dp
         ) {
@@ -211,7 +213,6 @@ fun SancarlinaBottomBar(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Item 1: Inicio
                 BottomNavItem(
                     screen = Screen.Home,
                     isSelected = currentDestination == Screen.Home.route,
@@ -219,7 +220,6 @@ fun SancarlinaBottomBar(
                     onClick = { navigateTo(navController, Screen.Home.route) }
                 )
 
-                // Item 2: Turismo
                 BottomNavItem(
                     screen = Screen.Turismo,
                     isSelected = currentDestination == Screen.Turismo.route,
@@ -227,7 +227,7 @@ fun SancarlinaBottomBar(
                     onClick = { navigateTo(navController, Screen.Turismo.route) }
                 )
 
-                // ITEM CENTRAL: Solo etiqueta MAPA alineada
+                // ITEM CENTRAL: MAPA
                 Column(
                     modifier = Modifier
                         .width(64.dp)
@@ -236,7 +236,7 @@ fun SancarlinaBottomBar(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Spacer(modifier = Modifier.size(24.dp)) // Espacio del ícono para alinear texto
+                    Spacer(modifier = Modifier.size(24.dp))
                     Text(
                         text = "MAPA",
                         fontSize = 10.sp,
@@ -246,7 +246,6 @@ fun SancarlinaBottomBar(
                     )
                 }
 
-                // Item 4: Puntos
                 BottomNavItem(
                     screen = Screen.Points,
                     isSelected = currentDestination == Screen.Points.route,
@@ -254,7 +253,6 @@ fun SancarlinaBottomBar(
                     onClick = { navigateTo(navController, Screen.Points.route) }
                 )
 
-                // Item 5: Perfil
                 BottomNavItem(
                     screen = Screen.Profile,
                     isSelected = currentDestination == Screen.Profile.route,
@@ -264,7 +262,7 @@ fun SancarlinaBottomBar(
             }
         }
 
-        // Botón Circular Elevado (Mitad dentro, mitad fuera)
+        // Botón Circular Elevado
         Surface(
             modifier = Modifier
                 .align(Alignment.TopCenter)

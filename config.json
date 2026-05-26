@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 18,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v18/app-debug.apk",
-  "releaseNotes": "¡Parche Crítico de Interfaz!\n- Reconstruido el modal de actualizaciones para ser 100% responsive.\n- Corregido error de scroll que ocultaba los botones en pantallas pequeñas.\n- Mejorada la jerarquía visual de las novedades.\n- Solucionado bug del QR y Sidebar (v17)."
+  "latestVersionCode": 20,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v20/app-debug.apk",
+  "releaseNotes": "¡Optimización Final de Interfaz!\n- Barra de navegación ahora respeta los botones del sistema Android.\n- Compatible con todos los modelos de celular (Full Responsive).\n- Corregido solapamiento en menús inferiores.\n- Mejora de estabilidad en el modal de actualizaciones."
 }
