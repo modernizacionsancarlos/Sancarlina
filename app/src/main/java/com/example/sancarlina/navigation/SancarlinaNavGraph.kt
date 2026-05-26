@@ -13,12 +13,14 @@ import com.example.sancarlina.ui.features.auth.LoginContent
 import com.example.sancarlina.ui.features.auth.OnboardingContent
 import com.example.sancarlina.ui.features.auth.RegisterContent
 import com.example.sancarlina.ui.features.category.CategoryListContent
+import com.example.sancarlina.ui.features.favorites.FavoritesContent
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
+import com.example.sancarlina.ui.features.splash.SplashScreenContent
 import com.example.sancarlina.ui.features.turismo.TurismoContent
 import com.example.sancarlina.ui.features.updates.UpdatesContent
 
@@ -31,9 +33,18 @@ fun SancarlinaNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.SplashScreen.route,
         modifier = modifier
     ) {
+        composable(Screen.SplashScreen.route) {
+            SplashScreenContent(
+                onTimeout = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Screen.Home.route) {
             HomeContent(
                 onNavigateToDetail = { productId ->
@@ -108,7 +119,16 @@ fun SancarlinaNavGraph(
             ProfileContent(
                 onNavigateToUpdates = { navController.navigate(Screen.Updates.route) },
                 onNavigateToLogin = { navController.navigate(Screen.Login.route) },
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToFavorites = { navController.navigate(Screen.Favorites.route) }
+            )
+        }
+        composable(Screen.Favorites.route) {
+            FavoritesContent(
+                onBack = { navController.popBackStack() },
+                onNavigateToDetail = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                }
             )
         }
         composable(Screen.ProductDetail.route) { backStackEntry ->

@@ -38,7 +38,8 @@ fun ProfileContent(
     viewModel: ProfileViewModel = viewModel(),
     onNavigateToUpdates: () -> Unit = {},
     onNavigateToLogin: () -> Unit = {},
-    onOpenDrawer: () -> Unit = {}
+    onOpenDrawer: () -> Unit = {},
+    onNavigateToFavorites: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -147,7 +148,7 @@ fun ProfileContent(
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
-                        Toast.makeText(context, "Vista de Favoritos", Toast.LENGTH_SHORT).show()
+                        onNavigateToFavorites()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
@@ -188,7 +189,7 @@ fun ProfileContent(
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 3.5.0",
+                        text = "Versión 4.2.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )
