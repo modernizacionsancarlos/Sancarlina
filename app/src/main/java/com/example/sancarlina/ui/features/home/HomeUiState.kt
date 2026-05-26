@@ -15,7 +15,7 @@ data class BannerItem(
 
 data class CategoryItem(
     val name: String,
-    val iconName: String // Using Material Symbols Name or custom icon
+    val iconUrl: String // Using high quality illustrative icons
 )
 
 data class ProductItem(

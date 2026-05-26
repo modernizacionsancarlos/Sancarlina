@@ -290,11 +290,10 @@ fun CategoryItemView(category: CategoryItem, modifier: Modifier = Modifier, onCl
             shadowElevation = 2.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.Default.Category,
-                    contentDescription = null,
-                    tint = SancarlinaAccent,
-                    modifier = Modifier.size(36.dp)
+                AsyncImage(
+                    model = category.iconUrl,
+                    contentDescription = category.name,
+                    modifier = Modifier.size(44.dp)
                 )
             }
         }

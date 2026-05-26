@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 22,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v22/app-debug.apk",
-  "releaseNotes": "¡Nueva Vista de Servicios y Sello de Origen!\n- Implementada la Vista 3 del catálogo.\n- Información detallada sobre el Sello de Origen Sancarlino.\n- Navegación optimizada y responsive en el menú inferior.\n- Mejoras de estabilidad en la descarga de actualizaciones."
+  "latestVersionCode": 23,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v23/app-debug.apk",
+  "releaseNotes": "¡Identidad Visual Premium!\n- Iconos ilustrativos artesanales en el Inicio (v1).\n- Los logos de categorías coinciden exactamente con el diseño institucional.\n- Mejora de calidad en los activos visuales del Home.\n- Mantenimiento de la barra de navegación responsive."
 }
