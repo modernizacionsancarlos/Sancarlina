@@ -38,7 +38,8 @@ fun HomeContent(
     viewModel: HomeViewModel = viewModel(),
     onNavigateToDetail: (String) -> Unit = {},
     onNavigateToLogin: () -> Unit = {},
-    onNavigateToCategory: (String) -> Unit = {}
+    onNavigateToCategory: (String) -> Unit = {},
+    onOpenDrawer: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -46,7 +47,6 @@ fun HomeContent(
     var showLoginPrompt by remember { mutableStateOf(false) }
 
     Column(
-// ... inside Column
         modifier = Modifier
             .fillMaxSize()
             .background(SancarlinaBackground)
@@ -54,7 +54,7 @@ fun HomeContent(
     ) {
         // Top Bar - Custom Header
         HeaderSection(
-            onMenuClick = { Toast.makeText(context, "Menú", Toast.LENGTH_SHORT).show() },
+            onMenuClick = onOpenDrawer,
             onSearchClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }
         )
 

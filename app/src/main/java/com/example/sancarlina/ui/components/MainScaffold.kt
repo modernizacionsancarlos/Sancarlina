@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScaffold() {
@@ -44,6 +47,10 @@ fun MainScaffold() {
     val onboardingCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("onboarding_completed", false)) }
     val guideCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("guide_completed", false)) }
     var showQuickGuide by remember { mutableStateOf(false) }
+
+    // Sidebar state
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     // Auth Listener
     DisposableEffect(Unit) {
@@ -64,37 +71,114 @@ fun MainScaffold() {
         }
     }
 
-    Scaffold(
-        containerColor = SancarlinaBackground,
-        bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination?.route
-            
-            // Only show bottom bar for main master views
-            val isMainView = bottomNavItems.any { it.route == currentDestination }
-            
-            if (isMainView) {
-                SancarlinaBottomBar(navController, currentDestination)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                drawerContainerColor = Color.White,
+                drawerShape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
+            ) {
+                Spacer(Modifier.height(32.dp))
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "SANCARLINA",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Black,
+                        color = SancarlinaPrimary,
+                        letterSpacing = 2.sp
+                    )
+                    Text(
+                        text = "Municipalidad de San Carlos",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+                
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), color = SancarlinaBackground)
+                
+                NavigationDrawerItem(
+                    label = { Text("Inicio") },
+                    selected = false,
+                    onClick = { 
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.Home.route) 
+                    },
+                    icon = { Icon(Icons.Default.Home, null) },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+                
+                NavigationDrawerItem(
+                    label = { Text("Turismo") },
+                    selected = false,
+                    onClick = { 
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.Turismo.route) 
+                    },
+                    icon = { Icon(Icons.Default.Explore, null) },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Mapa") },
+                    selected = false,
+                    onClick = { 
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.Map.route) 
+                    },
+                    icon = { Icon(Icons.Default.Map, null) },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+                
+                Text(
+                    text = "v3.4.0",
+                    modifier = Modifier.padding(24.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.LightGray
+                )
             }
         }
-    ) { innerPadding ->
-        if (showQuickGuide) {
-            QuickGuide(onFinish = {
-                sharedPrefs.edit().putBoolean("guide_completed", true).apply()
-                showQuickGuide = false
-            })
-        }
-        
-        SancarlinaNavGraph(
-            navController = navController,
-            modifier = Modifier.padding(
-                bottom = 64.dp // Standard bar height
-            ),
-            onOnboardingFinished = {
-                sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
-                onboardingCompleted.value = true
+    ) {
+        Scaffold(
+            containerColor = SancarlinaBackground,
+            bottomBar = {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination?.route
+                
+                // Only show bottom bar for main master views
+                val isMainView = bottomNavItems.any { it.route == currentDestination }
+                
+                if (isMainView) {
+                    SancarlinaBottomBar(navController, currentDestination)
+                }
             }
-        )
+        ) { innerPadding ->
+            if (showQuickGuide) {
+                QuickGuide(onFinish = {
+                    sharedPrefs.edit().putBoolean("guide_completed", true).apply()
+                    showQuickGuide = false
+                })
+            }
+            
+            SancarlinaNavGraph(
+                navController = navController,
+                modifier = Modifier.padding(
+                    bottom = 64.dp // Standard bar height
+                ),
+                onOnboardingFinished = {
+                    sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
+                    onboardingCompleted.value = true
+                },
+                onOpenDrawer = {
+                    scope.launch { drawerState.open() }
+                }
+            )
+        }
     }
 }
 

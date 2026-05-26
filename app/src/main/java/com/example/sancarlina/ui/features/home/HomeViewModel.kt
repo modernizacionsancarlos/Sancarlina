@@ -22,50 +22,59 @@ class HomeViewModel : ViewModel() {
     private fun loadHomeData() {
         _uiState.update { it.copy(isLoading = true) }
 
+        // Start by loading mock data so the screen isn't empty while waiting for Firestore
+        loadMockData()
+
+        // Then try to fetch from Firestore and update if successful
         // Fetch Banners
-        firestore.collection("banners").get().addOnSuccessListener { result ->
-            val banners = result.documents.map { doc ->
-                BannerItem(
-                    title = doc.getString("title") ?: "",
-                    subtitle = doc.getString("subtitle") ?: "",
-                    imageUrl = doc.getString("imageUrl") ?: ""
-                )
+        firestore.collection("banners").get()
+            .addOnSuccessListener { result ->
+                val banners = result.documents.map { doc ->
+                    BannerItem(
+                        title = doc.getString("title") ?: "",
+                        subtitle = doc.getString("subtitle") ?: "",
+                        imageUrl = doc.getString("imageUrl") ?: ""
+                    )
+                }
+                if (banners.isNotEmpty()) {
+                    _uiState.update { it.copy(banners = banners) }
+                }
             }
-            if (banners.isNotEmpty()) {
-                _uiState.update { it.copy(banners = banners) }
-            }
-        }
 
         // Fetch Categories
-        firestore.collection("categories").orderBy("order").get().addOnSuccessListener { result ->
-            val categories = result.documents.map { doc ->
-                CategoryItem(
-                    name = doc.getString("name") ?: "",
-                    iconName = doc.getString("iconName") ?: ""
-                )
+        firestore.collection("categories").orderBy("order").get()
+            .addOnSuccessListener { result ->
+                val categories = result.documents.map { doc ->
+                    CategoryItem(
+                        name = doc.getString("name") ?: "",
+                        iconName = doc.getString("iconName") ?: ""
+                    )
+                }
+                if (categories.isNotEmpty()) {
+                    _uiState.update { it.copy(categories = categories) }
+                }
             }
-            if (categories.isNotEmpty()) {
-                _uiState.update { it.copy(categories = categories) }
-            }
-        }
 
         // Fetch Featured Product (Nearby)
-        firestore.collection("products").whereEqualTo("featured", true).limit(1).get().addOnSuccessListener { result ->
-            val doc = result.documents.firstOrNull()
-            if (doc != null) {
-                val product = ProductItem(
-                    id = doc.id,
-                    name = doc.getString("name") ?: "",
-                    brand = doc.getString("brand") ?: "",
-                    price = doc.getString("price") ?: "",
-                    phone = doc.getString("phone") ?: ""
-                )
-                _uiState.update { it.copy(nearbyProduct = product, isLoading = false) }
-            } else {
-                // Use default if nothing in Firestore yet
-                loadMockData()
+        firestore.collection("products").whereEqualTo("featured", true).limit(1).get()
+            .addOnSuccessListener { result ->
+                val doc = result.documents.firstOrNull()
+                if (doc != null) {
+                    val product = ProductItem(
+                        id = doc.id,
+                        name = doc.getString("name") ?: "",
+                        brand = doc.getString("brand") ?: "",
+                        price = doc.getString("price") ?: "",
+                        phone = doc.getString("phone") ?: ""
+                    )
+                    _uiState.update { it.copy(nearbyProduct = product, isLoading = false) }
+                } else {
+                    _uiState.update { it.copy(isLoading = false) }
+                }
             }
-        }
+            .addOnFailureListener {
+                _uiState.update { it.copy(isLoading = false) }
+            }
     }
 
     private fun loadMockData() {

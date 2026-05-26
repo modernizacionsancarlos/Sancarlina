@@ -145,7 +145,8 @@ fun MapContent(viewModel: MapViewModel = viewModel()) {
             uiSettings = MapUiSettings(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false
-            )
+            ),
+            contentPadding = PaddingValues(bottom = 80.dp) // Keeps Google logo & buttons above the bottom bar
         ) {
             uiState.filteredMarkers.forEach { commerce ->
                 Marker(

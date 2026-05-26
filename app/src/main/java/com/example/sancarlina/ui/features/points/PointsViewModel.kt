@@ -83,7 +83,7 @@ class PointsViewModel : ViewModel() {
     }
 
     fun dismissModal() {
-        _uiState.update { it.copy(showSuccessModal = false, selectedBenefit = null) }
+        _uiState.update { it.copy(showSuccessModal = false, selectedBenefit = null, qrCodeActive = false) }
     }
 
     override fun onCleared() {

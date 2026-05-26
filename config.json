@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 15,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v15/app-debug.apk",
-  "releaseNotes": "¡Funciones Básicas Completas!\n- Nueva sección de Turismo con experiencias locales.\n- Acceso como invitado (Home y Mapa sin login).\n- Guía rápida de uso al iniciar.\n- Protección de datos: Puntos y Perfil requieren login."
+  "latestVersionCode": 16,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v16/app-debug.apk",
+  "releaseNotes": "¡Correcciones Críticas y Sidebar!\n- Solucionado el bug del QR que bloqueaba la app.\n- Activado el Sidebar (menú lateral) funcional.\n- El Inicio ahora carga datos correctamente (mock/firestore).\n- Mapa ajustado para ser totalmente responsive."
 }

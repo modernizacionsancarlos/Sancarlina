@@ -25,7 +25,8 @@ import com.example.sancarlina.ui.features.updates.UpdatesContent
 fun SancarlinaNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    onOnboardingFinished: () -> Unit = {}
+    onOnboardingFinished: () -> Unit = {},
+    onOpenDrawer: () -> Unit = {}
 ) {
     NavHost(
         navController = navController,
@@ -42,7 +43,8 @@ fun SancarlinaNavGraph(
                 },
                 onNavigateToCategory = { categoryId ->
                     navController.navigate(Screen.CategoryList.createRoute(categoryId))
-                }
+                },
+                onOpenDrawer = onOpenDrawer
             )
         }
         composable(Screen.CategoryList.route) { backStackEntry ->
