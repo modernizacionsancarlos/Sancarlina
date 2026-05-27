@@ -78,12 +78,19 @@ fun MainScaffold() {
                 drawerContainerColor = Color.White,
                 drawerShape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
             ) {
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(48.dp))
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 24.dp, vertical = 16.dp)
-                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = com.example.sancarlina.R.drawable.app_logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
                     Text(
                         text = "SANCARLINA",
                         style = MaterialTheme.typography.headlineMedium,

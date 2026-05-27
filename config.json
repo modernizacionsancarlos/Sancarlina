@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 26,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v26/app-debug.apk",
-  "releaseNotes": "¡Notificaciones de Actualización Automáticas!\n- Las actualizaciones ahora se detectan incluso con la app cerrada.\n- Notificación push automática con botón de acceso rápido.\n- Optimización del consumo de batería en tareas de fondo.\n- Se mantienen las mejoras visuales premium."
+  "latestVersionCode": 27,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v27/app-debug.apk",
+  "releaseNotes": "¡Identidad de Marca Renovada!\n- Actualizado el logo oficial de la aplicación en todas las pantallas.\n- Nuevo diseño en el Splash Screen, Menú Lateral y Cabecera.\n- Mejoras visuales en el modal de actualizaciones.\n- Se mantienen las notificaciones automáticas de fondo."
 }

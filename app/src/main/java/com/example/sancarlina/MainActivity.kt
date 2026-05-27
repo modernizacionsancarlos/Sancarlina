@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -122,11 +123,13 @@ fun UpdateAnouncementModal(
                             .padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Surface(modifier = Modifier.size(80.dp), shape = CircleShape, color = Color(0xFFF0F2E1)) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(Icons.Default.RocketLaunch, null, modifier = Modifier.size(40.dp), tint = SancarlinaAccent)
-                            }
-                        }
+                        // Logo Section
+                    Image(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.app_logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Fit
+                    )
                         
                         Spacer(Modifier.height(16.dp))
                         

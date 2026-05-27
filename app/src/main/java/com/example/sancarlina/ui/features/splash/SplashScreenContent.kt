@@ -1,6 +1,7 @@
 package com.example.sancarlina.ui.features.splash
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,9 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sancarlina.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -41,32 +45,23 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.alpha(fadeAnim.value)
         ) {
+            // New Official Logo
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "Sancarlina Logo",
+                modifier = Modifier.size(240.dp),
+                contentScale = ContentScale.Fit
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
             Text(
                 text = "SANCARLINA",
                 color = Color.White,
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Black,
                 letterSpacing = 4.sp
             )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Minimalist Illustration
-            Box(
-                modifier = Modifier.size(200.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    modifier = Modifier.size(40.dp).offset(y = (-40).dp, x = 30.dp),
-                    shape = CircleShape,
-                    color = Color.White.copy(alpha = 0.2f)
-                ) {}
-                
-                Text(
-                    text = "⛰️",
-                    fontSize = 100.sp
-                )
-            }
         }
         
         Column(
