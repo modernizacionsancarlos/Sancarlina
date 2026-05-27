@@ -41,7 +41,8 @@ fun ProfileContent(
     onOpenDrawer: () -> Unit = {},
     onNavigateToFavorites: () -> Unit = {},
     onNavigateToEditProfile: () -> Unit = {},
-    onNavigateToEmprendimiento: () -> Unit = {}
+    onNavigateToEmprendimiento: () -> Unit = {},
+    onNavigateToNotifications: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -164,7 +165,7 @@ fun ProfileContent(
                         "Notificaciones", 
                         badgeCount = uiState.notificationCount
                     ) {
-                        Toast.makeText(context, "Centro de Notificaciones", Toast.LENGTH_SHORT).show()
+                        onNavigateToNotifications()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.Update, "Actualizaciones") {
@@ -193,7 +194,7 @@ fun ProfileContent(
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 4.7.0",
+                        text = "Versión 4.9.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )

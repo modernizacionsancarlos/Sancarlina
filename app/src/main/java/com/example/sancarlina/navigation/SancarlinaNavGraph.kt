@@ -15,6 +15,7 @@ import com.example.sancarlina.ui.features.auth.RegisterContent
 import com.example.sancarlina.ui.features.category.CategoryListContent
 import com.example.sancarlina.ui.features.emprendimiento.EmprendimientoContent
 import com.example.sancarlina.ui.features.favorites.FavoritesContent
+import com.example.sancarlina.ui.features.notifications.NotificationsContent
 import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.map.MapContent
@@ -124,7 +125,8 @@ fun SancarlinaNavGraph(
                 onOpenDrawer = onOpenDrawer,
                 onNavigateToFavorites = { navController.navigate(Screen.Favorites.route) },
                 onNavigateToEditProfile = { navController.navigate(Screen.EditProfile.route) },
-                onNavigateToEmprendimiento = { navController.navigate(Screen.Emprendimiento.route) }
+                onNavigateToEmprendimiento = { navController.navigate(Screen.Emprendimiento.route) },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
         composable(Screen.EditProfile.route) {
@@ -132,6 +134,9 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Emprendimiento.route) {
             EmprendimientoContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Notifications.route) {
+            NotificationsContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Favorites.route) {
             FavoritesContent(

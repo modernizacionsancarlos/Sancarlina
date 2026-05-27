@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 30,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v30/app-debug.apk",
-  "releaseNotes": "¡Sumá tu Emprendimiento!\n- Nueva vista (v12) para que los comercios se registren en la app.\n- Las solicitudes se envían directamente a la Municipalidad vía nube.\n- Mejoras en la navegación del Perfil.\n- Ajustes de estabilidad general."
+  "latestVersionCode": 31,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v31/app-debug.apk",
+  "releaseNotes": "¡Centro de Notificaciones y Estabilidad!\n- Nueva vista de Notificaciones (v13) para estar al día.\n- Mejoras en el perfil y navegación entre secciones.\n- Ajustes de diseño premium en listas de favoritos y registros.\n- Solucionados detalles visuales menores."
 }
