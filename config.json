@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 29,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v29/app-debug.apk",
-  "releaseNotes": "¡Personaliza tu Perfil!\n- Nueva vista de Mis Datos (v11) para editar tu perfil.\n- Actualiza tu nombre, teléfono y localidad fácilmente.\n- Los cambios se sincronizan en tiempo real con la nube.\n- Mejorada la navegación y estabilidad general."
+  "latestVersionCode": 30,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v30/app-debug.apk",
+  "releaseNotes": "¡Sumá tu Emprendimiento!\n- Nueva vista (v12) para que los comercios se registren en la app.\n- Las solicitudes se envían directamente a la Municipalidad vía nube.\n- Mejoras en la navegación del Perfil.\n- Ajustes de estabilidad general."
 }

@@ -40,7 +40,8 @@ fun ProfileContent(
     onNavigateToLogin: () -> Unit = {},
     onOpenDrawer: () -> Unit = {},
     onNavigateToFavorites: () -> Unit = {},
-    onNavigateToEditProfile: () -> Unit = {}
+    onNavigateToEditProfile: () -> Unit = {},
+    onNavigateToEmprendimiento: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -148,6 +149,10 @@ fun ProfileContent(
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
                         onNavigateToFavorites()
+                    }
+                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
+                    MenuItem(Icons.Default.Storefront, "Sumá tu Emprendimiento") {
+                        onNavigateToEmprendimiento()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
@@ -356,7 +361,7 @@ fun LogoutItem(onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             Icons.AutoMirrored.Filled.Logout, 

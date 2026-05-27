@@ -22,6 +22,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object ServiciosSello : Screen("servicios_sello", "Servicios")
     object Favorites : Screen("favorites", "Favoritos")
     object EditProfile : Screen("edit_profile", "Mis Datos")
+    object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")
     object ProductDetail : Screen("product_detail/{productId}", "Detalle") {
         fun createRoute(productId: String) = "product_detail/$productId"
     }
