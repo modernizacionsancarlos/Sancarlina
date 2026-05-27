@@ -59,7 +59,15 @@ class UpdateManager(private val context: Context) {
                     val releaseNotes = json.optString("releaseNotes", "Nueva versión disponible")
 
                     if (latestVersionCode > BuildConfig.VERSION_CODE) {
-                        showUpdateNotification(releaseNotes)
+                        // Check if we already notified about this specific version
+                        val prefs = context.getSharedPreferences("update_prefs", Context.MODE_PRIVATE)
+                        val lastNotified = prefs.getInt("last_notified_version", -1)
+                        
+                        if (latestVersionCode != lastNotified) {
+                            showUpdateNotification(releaseNotes)
+                            prefs.edit().putInt("last_notified_version", latestVersionCode).apply()
+                        }
+
                         withContext(Dispatchers.Main) {
                             onUpdateAvailable(apkUrl, releaseNotes)
                         }

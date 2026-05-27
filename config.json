@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 24,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v24/app-debug.apk",
-  "releaseNotes": "¡Splash Screen y Favoritos!\n- Implementada la pantalla de bienvenida oficial (v9).\n- Nueva sección de Favoritos (v10) accesible desde el Perfil.\n- Navegación fluida y profesional entre secciones.\n- Ajustes de diseño premium en listas."
+  "latestVersionCode": 26,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v26/app-debug.apk",
+  "releaseNotes": "¡Notificaciones de Actualización Automáticas!\n- Las actualizaciones ahora se detectan incluso con la app cerrada.\n- Notificación push automática con botón de acceso rápido.\n- Optimización del consumo de batería en tareas de fondo.\n- Se mantienen las mejoras visuales premium."
 }
