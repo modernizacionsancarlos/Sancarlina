@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -46,15 +47,22 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.alpha(fadeAnim.value)
         ) {
-            // New Official Logo
-            Image(
-                painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "Sancarlina Logo",
-                modifier = Modifier.size(240.dp),
-                contentScale = ContentScale.Fit
-            )
+            // New Official Logo with CIRCULAR CLIP to remove white corners
+            Surface(
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(CircleShape),
+                color = Color.White
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.app_logo),
+                    contentDescription = "Sancarlina Logo",
+                    modifier = Modifier.fillMaxSize().padding(12.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             
             Text(
                 text = "GÓNDOLA\nSANCARLINA",

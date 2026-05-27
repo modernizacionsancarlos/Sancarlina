@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 34,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v34/app-debug.apk",
-  "releaseNotes": "¡Salto Gigante en Funcionalidad!\n- Implementadas 6 nuevas vistas estratégicas (v20-v28).\n- Nueva pantalla de Historial de Puntos y Búsqueda Activa.\n- Sistema de Calificación de Comercios habilitado.\n- Recuperación de cuenta y sección legal integradas.\n- Unificación total de marca: GÓNDOLA SANCARLINA."
+  "latestVersionCode": 35,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v35/app-debug.apk",
+  "releaseNotes": "¡Identidad Visual Perfeccionada!\n- Icono adaptativo para el celular (sin fondo blanco).\n- Rediseño circular del logo en Splash y Cabeceras.\n- Unificación total de marca: GÓNDOLA SANCARLINA.\n- Mejoras de rendimiento y navegación."
 }

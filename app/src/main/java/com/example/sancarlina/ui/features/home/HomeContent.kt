@@ -154,18 +154,24 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
                 }
                 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.app_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp)
-                    )
+                    Surface(
+                        modifier = Modifier.size(40.dp).clip(CircleShape),
+                        color = Color.White
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.app_logo),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize().padding(4.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp
+                        letterSpacing = 1.sp
                     )
                 }
 
