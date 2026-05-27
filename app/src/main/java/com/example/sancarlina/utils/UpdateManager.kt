@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
@@ -13,6 +12,7 @@ import androidx.core.content.FileProvider
 import com.example.sancarlina.BuildConfig
 import com.example.sancarlina.MainActivity
 import com.example.sancarlina.R
+import com.example.sancarlina.SancarlinaApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -59,15 +59,18 @@ class UpdateManager(private val context: Context) {
                     val releaseNotes = json.optString("releaseNotes", "Nueva versión disponible")
 
                     if (latestVersionCode > BuildConfig.VERSION_CODE) {
-                        // Check if we already notified about this specific version
-                        val prefs = context.getSharedPreferences("update_prefs", Context.MODE_PRIVATE)
-                        val lastNotified = prefs.getInt("last_notified_version", -1)
-                        
-                        if (latestVersionCode != lastNotified) {
-                            showUpdateNotification(releaseNotes)
-                            prefs.edit().putInt("last_notified_version", latestVersionCode).apply()
+                        // SOLO mostramos notificación si la app NO está en primer plano
+                        if (!SancarlinaApp.isAppInForeground) {
+                            val prefs = context.getSharedPreferences("update_prefs", Context.MODE_PRIVATE)
+                            val lastNotified = prefs.getInt("last_notified_version", -1)
+                            
+                            if (latestVersionCode != lastNotified) {
+                                showUpdateNotification(releaseNotes)
+                                prefs.edit().putInt("last_notified_version", latestVersionCode).apply()
+                            }
                         }
 
+                        // El callback para el modal interno se dispara siempre para que MainActivity decida
                         withContext(Dispatchers.Main) {
                             onUpdateAvailable(apkUrl, releaseNotes)
                         }
@@ -89,14 +92,15 @@ class UpdateManager(private val context: Context) {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_sys_download_done) // Replace with your app icon
-            .setContentTitle("¡Nueva actualización disponible!")
-            .setContentText("Mejoras de rendimiento y nuevas funciones.")
+            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentTitle("¡Sancarlina tiene mejoras!")
+            .setContentText("Hay una nueva actualización lista para instalar.")
             .setStyle(NotificationCompat.BigTextStyle().bigText(notes))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .addAction(0, "ACTUALIZAR AHORA", pendingIntent)
+            .addAction(android.R.drawable.ic_menu_upload, "INSTALAR AHORA", pendingIntent)
             .build()
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
