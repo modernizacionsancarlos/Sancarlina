@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 28,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v28/app-debug.apk",
-  "releaseNotes": "¡Notificaciones de Actualización Inteligentes!\n- Se activa el aviso automático solo cuando la app está cerrada.\n- Mejorada la detección en segundo plano (vía WorkManager).\n- Evitamos duplicar avisos si ya estás dentro de la aplicación.\n- Optimización del ciclo de vida para mayor ahorro de batería."
+  "latestVersionCode": 29,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v29/app-debug.apk",
+  "releaseNotes": "¡Personaliza tu Perfil!\n- Nueva vista de Mis Datos (v11) para editar tu perfil.\n- Actualiza tu nombre, teléfono y localidad fácilmente.\n- Los cambios se sincronizan en tiempo real con la nube.\n- Mejorada la navegación y estabilidad general."
 }

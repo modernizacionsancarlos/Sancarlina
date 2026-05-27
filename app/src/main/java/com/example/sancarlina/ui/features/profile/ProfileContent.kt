@@ -39,7 +39,8 @@ fun ProfileContent(
     onNavigateToUpdates: () -> Unit = {},
     onNavigateToLogin: () -> Unit = {},
     onOpenDrawer: () -> Unit = {},
-    onNavigateToFavorites: () -> Unit = {}
+    onNavigateToFavorites: () -> Unit = {},
+    onNavigateToEditProfile: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -130,9 +131,7 @@ fun ProfileContent(
                     .verticalScroll(rememberScrollState())
             ) {
                 // Profile Header
-                ProfileHeaderSection(uiState) {
-                    Toast.makeText(context, "Editar foto de perfil", Toast.LENGTH_SHORT).show()
-                }
+                ProfileHeaderSection(uiState, onNavigateToEditProfile)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -144,7 +143,7 @@ fun ProfileContent(
                         .background(Color.White)
                 ) {
                     MenuItem(Icons.Default.Person, "Mis Datos Personales") {
-                        Toast.makeText(context, "Vista de Datos Personales", Toast.LENGTH_SHORT).show()
+                        onNavigateToEditProfile()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.Favorite, "Mis Comercios Favoritos") {
@@ -189,7 +188,7 @@ fun ProfileContent(
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 4.2.0",
+                        text = "Versión 4.7.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )
@@ -237,7 +236,7 @@ fun ProfileHeaderSection(uiState: ProfileUiState, onEditClick: () -> Unit) {
                 modifier = Modifier.clickable { onEditClick() }
             ) {
                 AsyncImage(
-                    model = uiState.profileImageUrl,
+                    model = uiState.profileImageUrl.ifEmpty { "https://via.placeholder.com/150" },
                     contentDescription = null,
                     modifier = Modifier
                         .size(96.dp)
@@ -251,7 +250,7 @@ fun ProfileHeaderSection(uiState: ProfileUiState, onEditClick: () -> Unit) {
                     color = SancarlinaAccent,
                     shadowElevation = 2.dp
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize().clickable { onEditClick() }, contentAlignment = Alignment.Center) {
                         Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                     }
                 }
@@ -260,7 +259,7 @@ fun ProfileHeaderSection(uiState: ProfileUiState, onEditClick: () -> Unit) {
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                text = uiState.userName,
+                text = uiState.userName.ifEmpty { "Usuario Sancarlino" },
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
