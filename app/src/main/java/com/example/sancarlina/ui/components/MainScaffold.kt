@@ -92,7 +92,7 @@ fun MainScaffold() {
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "SANCARLINA",
+                        text = "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Black,
                         color = SancarlinaPrimary,

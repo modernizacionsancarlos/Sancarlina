@@ -35,7 +35,7 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "SERVICIOS Y SELLO",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White

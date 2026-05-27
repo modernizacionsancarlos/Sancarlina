@@ -40,7 +40,7 @@ fun NotificationsContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "NOTIFICACIONES",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White

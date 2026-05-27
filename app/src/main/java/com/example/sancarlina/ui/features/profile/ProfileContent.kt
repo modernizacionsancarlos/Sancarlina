@@ -42,7 +42,8 @@ fun ProfileContent(
     onNavigateToFavorites: () -> Unit = {},
     onNavigateToEditProfile: () -> Unit = {},
     onNavigateToEmprendimiento: () -> Unit = {},
-    onNavigateToNotifications: () -> Unit = {}
+    onNavigateToNotifications: () -> Unit = {},
+    onNavigateToSupport: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -102,7 +103,7 @@ fun ProfileContent(
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            "SANCARLINA",
+                            "GÓNDOLA SANCARLINA",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 2.sp,
@@ -173,7 +174,7 @@ fun ProfileContent(
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.AutoMirrored.Filled.Help, "Ayuda y Soporte") {
-                        Toast.makeText(context, "Ayuda", Toast.LENGTH_SHORT).show()
+                        onNavigateToSupport()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     LogoutItem { viewModel.onLogoutClicked() }
@@ -194,7 +195,7 @@ fun ProfileContent(
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 4.9.0",
+                        text = "Versión 5.0.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )

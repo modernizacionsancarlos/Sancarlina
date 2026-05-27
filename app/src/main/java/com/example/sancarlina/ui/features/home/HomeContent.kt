@@ -160,7 +160,7 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "SANCARLINA",
+                        text = "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,

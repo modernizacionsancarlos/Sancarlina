@@ -137,7 +137,7 @@ fun UpdateAnouncementModal(
                             Text(version, color = Color.White, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), fontWeight = FontWeight.Bold)
                         }
 
-                        Text("¡Sancarlina se renueva!", style = MaterialTheme.typography.headlineSmall, color = SancarlinaPrimary, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 12.dp))
+                        Text("GÓNDOLA SANCARLINA", style = MaterialTheme.typography.headlineSmall, color = SancarlinaPrimary, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 12.dp))
                         
                         Spacer(Modifier.height(16.dp))
 

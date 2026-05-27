@@ -13,6 +13,7 @@ import com.example.sancarlina.ui.features.auth.LoginContent
 import com.example.sancarlina.ui.features.auth.OnboardingContent
 import com.example.sancarlina.ui.features.auth.RegisterContent
 import com.example.sancarlina.ui.features.category.CategoryListContent
+import com.example.sancarlina.ui.features.common.SuccessContent
 import com.example.sancarlina.ui.features.emprendimiento.EmprendimientoContent
 import com.example.sancarlina.ui.features.favorites.FavoritesContent
 import com.example.sancarlina.ui.features.notifications.NotificationsContent
@@ -24,6 +25,7 @@ import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.splash.SplashScreenContent
+import com.example.sancarlina.ui.features.support.SupportContent
 import com.example.sancarlina.ui.features.turismo.TurismoContent
 import com.example.sancarlina.ui.features.updates.UpdatesContent
 
@@ -126,17 +128,37 @@ fun SancarlinaNavGraph(
                 onNavigateToFavorites = { navController.navigate(Screen.Favorites.route) },
                 onNavigateToEditProfile = { navController.navigate(Screen.EditProfile.route) },
                 onNavigateToEmprendimiento = { navController.navigate(Screen.Emprendimiento.route) },
-                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) },
+                onNavigateToSupport = { navController.navigate(Screen.Support.route) }
             )
         }
         composable(Screen.EditProfile.route) {
             EditProfileContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Emprendimiento.route) {
-            EmprendimientoContent(onBack = { navController.popBackStack() })
+            EmprendimientoContent(onBack = { 
+                navController.navigate(Screen.Success.route) {
+                    popUpTo(Screen.Emprendimiento.route) { inclusive = true }
+                }
+            })
         }
         composable(Screen.Notifications.route) {
             NotificationsContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Success.route) {
+            SuccessContent(
+                onButtonClick = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+        composable(Screen.Support.route) {
+            SupportContent(
+                onBack = { navController.popBackStack() },
+                onOpenDrawer = onOpenDrawer
+            )
         }
         composable(Screen.Favorites.route) {
             FavoritesContent(

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sancarlina.R
@@ -56,11 +57,12 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
-                text = "SANCARLINA",
+                text = "GÓNDOLA\nSANCARLINA",
                 color = Color.White,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Black,
-                letterSpacing = 4.sp
+                letterSpacing = 4.sp,
+                textAlign = TextAlign.Center
             )
         }
         

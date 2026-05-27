@@ -153,7 +153,7 @@ fun MapContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "SANCARLINA",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,

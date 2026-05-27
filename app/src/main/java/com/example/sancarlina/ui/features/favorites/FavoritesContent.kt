@@ -41,7 +41,7 @@ fun FavoritesContent(onBack: () -> Unit, onNavigateToDetail: (String) -> Unit) {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "MIS FAVORITOS",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
