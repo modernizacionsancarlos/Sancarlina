@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 33,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v33/app-debug.apk",
-  "releaseNotes": "¡Renacimiento: GÓNDOLA SANCARLINA!\n- El nombre público de la aplicación ahora es oficialmente GÓNDOLA SANCARLINA.\n- Actualizado el nombre en el ícono del celular, Splash Screen y cabeceras internas.\n- Unificación total de la marca en todas las pantallas de la app.\n- Se mantienen todas las funcionalidades premium de San Carlos."
+  "latestVersionCode": 34,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v34/app-debug.apk",
+  "releaseNotes": "¡Salto Gigante en Funcionalidad!\n- Implementadas 6 nuevas vistas estratégicas (v20-v28).\n- Nueva pantalla de Historial de Puntos y Búsqueda Activa.\n- Sistema de Calificación de Comercios habilitado.\n- Recuperación de cuenta y sección legal integradas.\n- Unificación total de marca: GÓNDOLA SANCARLINA."
 }

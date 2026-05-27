@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sancarlina.ui.features.auth.ForgotPasswordContent
 import com.example.sancarlina.ui.features.auth.LoginContent
 import com.example.sancarlina.ui.features.auth.OnboardingContent
 import com.example.sancarlina.ui.features.auth.RegisterContent
@@ -16,12 +17,17 @@ import com.example.sancarlina.ui.features.category.CategoryListContent
 import com.example.sancarlina.ui.features.common.SuccessContent
 import com.example.sancarlina.ui.features.emprendimiento.EmprendimientoContent
 import com.example.sancarlina.ui.features.favorites.FavoritesContent
-import com.example.sancarlina.ui.features.notifications.NotificationsContent
-import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.home.HomeContent
+import com.example.sancarlina.ui.features.home.SearchContent
+import com.example.sancarlina.ui.features.legal.LegalContent
+import com.example.sancarlina.ui.features.map.CommerceProfileContent
 import com.example.sancarlina.ui.features.map.MapContent
+import com.example.sancarlina.ui.features.map.RateCommerceContent
+import com.example.sancarlina.ui.features.notifications.NotificationsContent
 import com.example.sancarlina.ui.features.points.PointsContent
+import com.example.sancarlina.ui.features.points.PointsHistoryContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
+import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.splash.SplashScreenContent
@@ -68,6 +74,9 @@ fun SancarlinaNavGraph(
                 onOpenDrawer = onOpenDrawer
             )
         }
+        composable(Screen.Search.route) {
+            SearchContent(onBack = { navController.popBackStack() })
+        }
         composable(Screen.CategoryList.route) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
             CategoryListContent(
@@ -84,12 +93,16 @@ fun SancarlinaNavGraph(
         composable(Screen.Login.route) {
             LoginContent(
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },
+                onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) },
                 onLoginSuccess = { 
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
             )
+        }
+        composable(Screen.ForgotPassword.route) {
+            ForgotPasswordContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Onboarding.route) {
             OnboardingContent(
@@ -129,8 +142,12 @@ fun SancarlinaNavGraph(
                 onNavigateToEditProfile = { navController.navigate(Screen.EditProfile.route) },
                 onNavigateToEmprendimiento = { navController.navigate(Screen.Emprendimiento.route) },
                 onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) },
-                onNavigateToSupport = { navController.navigate(Screen.Support.route) }
+                onNavigateToSupport = { navController.navigate(Screen.Support.route) },
+                onNavigateToHistory = { navController.navigate(Screen.PointsHistory.route) }
             )
+        }
+        composable(Screen.PointsHistory.route) {
+            PointsHistoryContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.EditProfile.route) {
             EditProfileContent(onBack = { navController.popBackStack() })
@@ -167,6 +184,26 @@ fun SancarlinaNavGraph(
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
                 }
             )
+        }
+        composable(Screen.CommerceProfile.route) { backStackEntry ->
+            val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
+            CommerceProfileContent(
+                commerceId = commerceId,
+                onBack = { navController.popBackStack() },
+                onNavigateToProduct = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                }
+            )
+        }
+        composable(Screen.RateCommerce.route) { backStackEntry ->
+            val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
+            RateCommerceContent(
+                commerceId = commerceId,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Legal.route) {
+            LegalContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.ProductDetail.route) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""

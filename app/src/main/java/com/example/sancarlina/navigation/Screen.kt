@@ -17,21 +17,32 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Onboarding : Screen("onboarding", "Onboarding")
     object Login : Screen("login", "Login")
     object Register : Screen("register", "Registro")
+    object ForgotPassword : Screen("forgot_password", "Recuperar")
     object Offline : Screen("offline", "Offline")
     object Updates : Screen("updates", "Actualizaciones")
-    object ServiciosSello : Screen("servicios_sello", "Servicios")
     object Favorites : Screen("favorites", "Favoritos")
     object EditProfile : Screen("edit_profile", "Mis Datos")
     object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")
     object Notifications : Screen("notifications", "Notificaciones")
     object Success : Screen("success", "Éxito")
     object Support : Screen("support", "Soporte")
+    object Search : Screen("search", "Búsqueda")
+    object Legal : Screen("legal", "Legal")
+    object PointsHistory : Screen("points_history", "Historial")
+    
     object ProductDetail : Screen("product_detail/{productId}", "Detalle") {
         fun createRoute(productId: String) = "product_detail/$productId"
     }
     object CategoryList : Screen("category_list/{categoryId}", "Categoría") {
         fun createRoute(categoryId: String) = "category_list/$categoryId"
     }
+    object CommerceProfile : Screen("commerce_profile/{commerceId}", "Comercio") {
+        fun createRoute(commerceId: String) = "commerce_profile/$commerceId"
+    }
+    object RateCommerce : Screen("rate_commerce/{commerceId}", "Calificar") {
+        fun createRoute(commerceId: String) = "rate_commerce/$commerceId"
+    }
+    object ServiciosSello : Screen("servicios_sello", "Servicios")
 }
 
 val bottomNavItems = listOf(

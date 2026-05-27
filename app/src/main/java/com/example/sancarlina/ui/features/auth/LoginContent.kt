@@ -27,6 +27,7 @@ import com.example.sancarlina.ui.theme.*
 fun LoginContent(
     viewModel: AuthViewModel = viewModel(),
     onNavigateToRegister: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -39,7 +40,7 @@ fun LoginContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "SANCARLINA",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
@@ -117,6 +118,13 @@ fun LoginContent(
                     singleLine = true
                 )
 
+                TextButton(
+                    onClick = onNavigateToForgotPassword,
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("¿Olvidaste tu contraseña?", color = SancarlinaPrimary, style = MaterialTheme.typography.labelSmall)
+                }
+
                 if (uiState.error != null) {
                     Text(
                         text = uiState.error!!,
@@ -126,7 +134,7 @@ fun LoginContent(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = { viewModel.login(email, password, onLoginSuccess) },

@@ -43,7 +43,8 @@ fun ProfileContent(
     onNavigateToEditProfile: () -> Unit = {},
     onNavigateToEmprendimiento: () -> Unit = {},
     onNavigateToNotifications: () -> Unit = {},
-    onNavigateToSupport: () -> Unit = {}
+    onNavigateToSupport: () -> Unit = {},
+    onNavigateToHistory: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -158,7 +159,7 @@ fun ProfileContent(
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(Icons.Default.History, "Historial de Puntos y Compras") {
-                        Toast.makeText(context, "Historial", Toast.LENGTH_SHORT).show()
+                        onNavigateToHistory()
                     }
                     HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
                     MenuItem(
@@ -188,14 +189,14 @@ fun ProfileContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "SANCARLINA",
+                        text = "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray.copy(alpha = 0.5f),
                         letterSpacing = 4.sp
                     )
                     Text(
-                        text = "Versión 5.0.0",
+                        text = "Versión 5.2.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray.copy(alpha = 0.5f)
                     )

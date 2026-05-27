@@ -42,7 +42,8 @@ fun HomeContent(
     onNavigateToDetail: (String) -> Unit = {},
     onNavigateToLogin: () -> Unit = {},
     onNavigateToCategory: (String) -> Unit = {},
-    onOpenDrawer: () -> Unit = {}
+    onOpenDrawer: () -> Unit = {},
+    onNavigateToSearch: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -58,7 +59,7 @@ fun HomeContent(
         // Top Bar - Custom Header
         HeaderSection(
             onMenuClick = onOpenDrawer,
-            onSearchClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }
+            onSearchClick = onNavigateToSearch
         )
 
         Column(
