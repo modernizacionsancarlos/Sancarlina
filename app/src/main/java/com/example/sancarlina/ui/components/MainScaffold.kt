@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -85,18 +86,13 @@ fun MainScaffold() {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(id = com.example.sancarlina.R.drawable.app_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "GÓNDOLA SANCARLINA",
-                        style = MaterialTheme.typography.headlineMedium,
+                        text = "GÓNDOLA\nSANCARLINA",
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         color = SancarlinaPrimary,
-                        letterSpacing = 2.sp
+                        letterSpacing = 2.sp,
+                        textAlign = TextAlign.Center
                     )
                     Text(
                         text = "Municipalidad de San Carlos",

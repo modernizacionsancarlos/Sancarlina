@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -153,29 +154,17 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
                     Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                 }
                 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(
-                        modifier = Modifier.size(52.dp),
-                        shape = CircleShape,
-                        color = Color.White,
-                        shadowElevation = 3.dp
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.app_logo),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "GÓNDOLA SANCARLINA",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
-                    )
-                }
+                Text(
+                    text = "GÓNDOLA SANCARLINA",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
                 IconButton(onClick = onSearchClick) {
                     Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
