@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 35,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v35/app-debug.apk",
-  "releaseNotes": "¡Identidad Visual Perfeccionada!\n- Icono adaptativo para el celular (sin fondo blanco).\n- Rediseño circular del logo en Splash y Cabeceras.\n- Unificación total de marca: GÓNDOLA SANCARLINA.\n- Mejoras de rendimiento y navegación."
+  "latestVersionCode": 36,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v36/app-debug.apk",
+  "releaseNotes": "¡Optimización Visual de Marca!\n- Logo al tamaño máximo en Splash y Cabecera.\n- Icono adaptativo del celular mejorado (estilo premium circular).\n- Eliminados bordes blancos residuales en la iconografía.\n- Unificación total de GÓNDOLA SANCARLINA."
 }

@@ -47,18 +47,19 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.alpha(fadeAnim.value)
         ) {
-            // New Official Logo with CIRCULAR CLIP to remove white corners
+            // Official Logo - MAX SIZE (No padding)
             Surface(
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(220.dp)
                     .clip(CircleShape),
-                color = Color.White
+                color = Color.White,
+                shadowElevation = 8.dp
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.app_logo),
                     contentDescription = "Sancarlina Logo",
-                    modifier = Modifier.fillMaxSize().padding(12.dp),
-                    contentScale = ContentScale.Fit
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
             }
             

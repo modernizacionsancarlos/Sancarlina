@@ -3,15 +3,15 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Aquí escalamos el logo para que no se corte en los bordes del icono circular -->
+    <!-- Escalado máximo para que el logo ocupe todo el espacio circular del icono -->
     <group
-        android:scaleX="0.65"
-        android:scaleY="0.65"
-        android:translateX="18.9"
-        android:translateY="18.9">
+        android:scaleX="1.15"
+        android:scaleY="1.15"
+        android:translateX="-8.1"
+        android:translateY="-8.1">
         <path
             android:fillColor="#00000000"
             android:pathData="M0,0h108v108h-108z" />
-        <!-- El sistema usará el app_logo.png automáticamente si está referenciado correctamente -->
+        <!-- El sistema centrará el app_logo.png automáticamente -->
     </group>
 </vector>
