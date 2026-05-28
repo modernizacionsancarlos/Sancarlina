@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 39,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v39/app-debug.apk",
-  "releaseNotes": "¡Módulo de Turismo Avanzado!\n- Rediseño completo de la sección Turismo (v36) con categorías y destacados.\n- Onboarding unificado con la nueva marca GÓNDOLA SANCARLINA.\n- Mejoras en el Mapa: Filtros avanzados (v19) y detalles de comercio (v18) optimizados.\n- Estabilidad mejorada en el registro de usuarios."
+  "latestVersionCode": 40,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v40/app-debug.apk",
+  "releaseNotes": "¡Identidad de Marca Definitiva: GÓNDOLA SANCARLINA!\n- Corregido el icono del celular (ya no se ve blanco).\n- El logo oficial ahora luce nítido y centrado en el escritorio.\n- Cabecera del Inicio simplificada: Solo texto en una línea.\n- Mejoras de rendimiento en la carga de datos de Firebase."
 }
