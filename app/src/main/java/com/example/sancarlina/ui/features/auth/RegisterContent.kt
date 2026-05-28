@@ -42,7 +42,7 @@ fun RegisterContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "CREAR CUENTA",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White

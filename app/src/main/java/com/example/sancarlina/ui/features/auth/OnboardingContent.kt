@@ -102,11 +102,12 @@ fun OnboardingContent(onFinish: () -> Unit) {
                                 .padding(bottom = 16.dp)
                         )
                         Text(
-                            text = "SANCARLINA",
-                            style = MaterialTheme.typography.displaySmall,
+                            text = "GÓNDOLA\nSANCARLINA",
+                            style = MaterialTheme.typography.headlineLarge,
                             color = SancarlinaAccent,
                             fontWeight = FontWeight.Black,
                             letterSpacing = 4.sp,
+                            textAlign = TextAlign.Center,
                             modifier = Modifier.padding(bottom = 32.dp)
                         )
                     } else if (page.imageRes != null) {

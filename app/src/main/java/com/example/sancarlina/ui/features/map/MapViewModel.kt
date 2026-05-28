@@ -53,8 +53,8 @@ class MapViewModel : ViewModel() {
             )
         )
 
-        val categories = listOf("Todos") + markers.map { it.category }.distinct()
-        val locations = listOf("Todas") + markers.map { it.locationName }.distinct()
+        val categories = listOf("Todos", "Bodegas", "Productores", "Turismo", "Artesanías", "Gastronomía", "Servicios")
+        val locations = listOf("Todas", "La Consulta", "Eugenio Bustos", "Villa de San Carlos", "Pareditas", "Tres Esquinas", "Chilecito")
 
         _uiState.update { 
             it.copy(
@@ -91,8 +91,7 @@ class MapViewModel : ViewModel() {
         return state.markers.filter { marker ->
             val categoryMatch = state.selectedCategory == "Todos" || marker.category == state.selectedCategory
             val locationMatch = state.selectedLocation == "Todas" || marker.locationName == state.selectedLocation
-            // Sello logic: for now markers don't have it, let's assume all have it or add it to CommerceMarker
-            val selloMatch = !state.onlyWithSello // Simplified for now
+            val selloMatch = !state.onlyWithSello
             categoryMatch && locationMatch && selloMatch
         }
     }

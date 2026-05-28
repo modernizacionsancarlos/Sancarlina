@@ -156,7 +156,7 @@ fun MapContent(
                         "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
+                        letterSpacing = 1.sp,
                         color = Color.White
                     )
                 },
@@ -166,8 +166,8 @@ fun MapContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Search */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                    IconButton(onClick = { viewModel.toggleFilterPanel(true) }) {
+                        Icon(Icons.Default.Tune, contentDescription = "Filtros", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -204,48 +204,26 @@ fun MapContent(
                 }
             }
 
-            // Top Controls: Category Bar + Advanced Filters Button
+            // Category Bar
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    LazyRow(
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.categories) { category ->
-                            FilterChip(
-                                selected = uiState.selectedCategory == category,
-                                onClick = { viewModel.onCategorySelected(category) },
-                                label = { Text(category) },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = SancarlinaPrimary,
-                                    selectedLabelColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(20.dp)
-                            )
-                        }
-                    }
-                    
-                    IconButton(
-                        onClick = { viewModel.toggleFilterPanel(true) },
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(40.dp)
-                            .shadow(4.dp, CircleShape)
-                            .background(Color.White, CircleShape)
-                    ) {
-                        Icon(
-                            Icons.Default.Tune, 
-                            contentDescription = "Filtros Avanzados",
-                            tint = SancarlinaPrimary,
-                            modifier = Modifier.size(20.dp)
+                    items(uiState.categories) { category ->
+                        FilterChip(
+                            selected = uiState.selectedCategory == category,
+                            onClick = { viewModel.onCategorySelected(category) },
+                            label = { Text(category) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = SancarlinaPrimary,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(20.dp)
                         )
                     }
                 }

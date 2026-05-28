@@ -12,39 +12,47 @@ class TurismoViewModel : ViewModel() {
     val uiState: StateFlow<TurismoUiState> = _uiState.asStateFlow()
 
     init {
-        loadExperiences()
+        loadTurismoData()
     }
 
-    private fun loadExperiences() {
+    private fun loadTurismoData() {
         _uiState.update { 
             it.copy(
+                categories = listOf("Todos", "Gastronomía", "Cultura", "Hospedaje", "Bodegas"),
+                featuredExperience = ExperienceItem(
+                    id = "feat-1",
+                    title = "Finca La Esencia",
+                    location = "Valle de Uco, Mendoza",
+                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAGAC6Q7XZc-RLrUnfJpEt4gFQhp52lGxHdAVJ_-_f5nuYa9nms7goZ9FWFI-4Fvvq5FHIhm9_v6-tQwoDpytt9T6u4PRJ_bplpQK_UfUaL_Z_AmDetucGDdt18-DTTL9z5gh3RPs6fMm47pGjeHi26EsPlu8yqHUE59WNZpEuve7KdVz2NtjyakzHvFhedUEU9HbxwxE9ysGHiwyO9aph7ptlB1VtJDl2IMh9FAXCKNIAszxYJJiN05YAM2wUtoImWpuDvYLaHLrM",
+                    category = "Bodegas",
+                    rating = 4.9f,
+                    description = "Experiencia vitivinícola premium con degustación de vinos maduros y gastronomía de autor entre viñedos centenarios."
+                ),
                 experiences = listOf(
                     ExperienceItem(
-                        "1", 
-                        "Atardecer en los Viñedos", 
-                        "La Consulta", 
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDxrlCdWV-oLelj-JgQ0MijsJKJKVsP389UkDVE1BUSdv8p8PJjXpZInJvuNIDqNGGyPvYKHGFpQg0vo23GOxVWi2LL1gEBpApfvF-IA_KwNyKbZgrUXwDMN_xsj0QXVlIEuJ52VaIGlTrpvBV6fXC3GWvnl0bW-iXJWi1P6BX_CDhGES5l_7rPL5V-mCGLbgc9YR9xXI247rU99MMqEYY1UO6u4g8iFNTTwn3i8Iq-lsdUsGfpbxeVSVH0wkGR3Rq5Q0iLIa2KTOI",
-                        "ENOTURISMO",
-                        "Disfruta de una cata guiada mientras el sol se oculta tras la Cordillera de los Andes."
+                        id = "exp-1",
+                        title = "Posada del Sol",
+                        location = "Centro Histórico",
+                        imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBNPTCtbz-ib_ipoATnmhksnha2qDjNTPc5SY-XCFzForLjqg-iyRh6gUIrt7mPOBuHlLxbl2v7pOIDB1gKv7YyHM65MxbqPISOYJb3223FcS4omCSo_mpVKGiZZ1f0l6PiitBREkyNBzCF0lv66HbsSJeV0lnFUJNLEOGHsmNKVtLY0u2c6ebTBeiQAjLQu1WnSMYfdkWDd6Z6Cpd2edrEIijY-Oo6wxQiqw_7thjNbOCF3wtfmPgP9mBDQi-ho655CzkM3LajWC0",
+                        category = "Hospedaje",
+                        rating = 4.7f,
+                        description = "Descanso y tranquilidad en un entorno natural con servicios de primera clase."
                     ),
                     ExperienceItem(
-                        "2", 
-                        "Ruta de la Miel", 
-                        "Eugenio Bustos", 
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDR7fJTZFE8JC-jbBEEXqwKx4eQ9tKdpfStvBK4mTzoPzMk0SJns9EG6SD50Mpoz0XKOlTnz_LadQNg8nhvGMSodQbdkC-khhlnmMkF3u9kp6xdpW5HjOXWosku-khh2gMgGNb6yx_9GPoSx6beIl-Yro2pCcHCEJMlhC8lC8t-8ndz0YyOIGm3QQtk7lINPBoRkS7GdlzDmsbY9X-jeoGyk_tWogB_1aYLu-nrGO1KxCBm8HaaKV60PyGv5GuOh3RmDiS24P2qnyQ",
-                        "ARTESANAL",
-                        "Conoce el proceso de producción de la miel sancarlina desde la colmena hasta el frasco."
-                    ),
-                    ExperienceItem(
-                        "3", 
-                        "Senderismo Histórico", 
-                        "Villa de San Carlos", 
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDw9EFruk8dtYQ3VOmMeX74BhP2e3DCbNJ2uQ2g4j2pqOv86Wl5qSie69ieAiZ--o0DQbu-aAm50puCwqXYNAb7Gv5YmlhZpO7hW-L-YqXlisMGIOaWRTEBY08t9jkI-L4dA6_3Hgo9JG2CQOHB-CPrV1voY2XADOsx6J936J44G3oRWAqCuuhLjriYjYswkEf5pWZiU_SMZFSanPOQNvYLyohZ5QcI-UO582RoDgOsn4eb2JtQIo-QLEilNaIWEyNht_INTw8D5Po",
-                        "HISTORIA",
-                        "Recorre los puntos fundacionales de nuestro departamento y descubre sus secretos."
+                        id = "exp-2",
+                        title = "El Fogón Ancestral",
+                        location = "Ruta de los Sabores",
+                        imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBLka7HoOnPnFV6YnJWyyMvlP48vQSWb-wgyIOGWycStTZ4UkuBRnN_3Xp5oRwrx-GRoWvsFkVpMRRaRVYmKwWNER-zoXcHQFoSB7JXPkyDdem1EyLJ3ScOuS6OeFH6W9ToSohazcyQ3oUI0LLbAZGPs-psHq2tjRYoKqTTrSkNd3FE_pxh3lntgeHXyp1w-X6w0_iAt7GeCkvlRqBsAc0nA8aOMOcCZcNdVYbSZUrBRJ_DLdBLpHevZJncTbj2rJ1odT4mzTcmPq8",
+                        category = "Gastronomía",
+                        rating = 4.8f,
+                        description = "Sabores auténticos cocinados al fuego de leña. Una propuesta gastronómica única."
                     )
                 )
             )
         }
+    }
+
+    fun onCategorySelected(category: String) {
+        _uiState.update { it.copy(selectedCategory = category) }
     }
 }
