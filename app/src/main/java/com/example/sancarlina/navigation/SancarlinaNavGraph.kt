@@ -17,17 +17,19 @@ import com.example.sancarlina.ui.features.category.CategoryListContent
 import com.example.sancarlina.ui.features.common.SuccessContent
 import com.example.sancarlina.ui.features.emprendimiento.EmprendimientoContent
 import com.example.sancarlina.ui.features.favorites.FavoritesContent
+import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.home.HomeContent
 import com.example.sancarlina.ui.features.home.SearchContent
+import com.example.sancarlina.ui.features.home.NewsDetailContent
 import com.example.sancarlina.ui.features.legal.LegalContent
 import com.example.sancarlina.ui.features.map.CommerceProfileContent
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.map.RateCommerceContent
 import com.example.sancarlina.ui.features.notifications.NotificationsContent
+import com.example.sancarlina.ui.features.notifications.NotificationSettingsContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.points.PointsHistoryContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
-import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.splash.SplashScreenContent
@@ -71,7 +73,9 @@ fun SancarlinaNavGraph(
                         navController.navigate(Screen.CategoryList.createRoute(categoryId))
                     }
                 },
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToSearch = { navController.navigate(Screen.Search.route) },
+                onNavigateToNews = { navController.navigate(Screen.NewsDetail.route) }
             )
         }
         composable(Screen.Search.route) {
@@ -150,7 +154,14 @@ fun SancarlinaNavGraph(
             PointsHistoryContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.EditProfile.route) {
-            EditProfileContent(onBack = { navController.popBackStack() })
+            EditProfileContent(
+                onBack = { navController.popBackStack() },
+                onLogout = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
         composable(Screen.Emprendimiento.route) {
             EmprendimientoContent(onBack = { 
@@ -160,7 +171,13 @@ fun SancarlinaNavGraph(
             })
         }
         composable(Screen.Notifications.route) {
-            NotificationsContent(onBack = { navController.popBackStack() })
+            NotificationsContent(
+                onBack = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(Screen.NotificationSettings.route) }
+            )
+        }
+        composable(Screen.NotificationSettings.route) {
+            NotificationSettingsContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Success.route) {
             SuccessContent(
@@ -210,6 +227,12 @@ fun SancarlinaNavGraph(
             ProductDetailContent(
                 productId = productId,
                 onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.NewsDetail.route) {
+            NewsDetailContent(
+                onBack = { navController.popBackStack() },
+                onNavigateToMap = { navController.navigate(Screen.Map.route) }
             )
         }
         composable(Screen.Updates.route) {

@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.sancarlina.ui.theme.SancarlinaAccent
 import com.example.sancarlina.ui.theme.SancarlinaBackground
 import com.example.sancarlina.ui.theme.SancarlinaPrimary
 
@@ -30,7 +32,8 @@ import com.example.sancarlina.ui.theme.SancarlinaPrimary
 @Composable
 fun EditProfileContent(
     viewModel: EditProfileViewModel = viewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -48,7 +51,7 @@ fun EditProfileContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "MIS DATOS",
+                        "GÓNDOLA SANCARLINA",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -79,6 +82,15 @@ fun EditProfileContent(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text(
+                    text = "MIS DATOS",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaPrimary
+                )
+                
+                Spacer(modifier = Modifier.height(24.dp))
+
                 // Avatar Section
                 Box(contentAlignment = Alignment.BottomEnd) {
                     AsyncImage(
@@ -181,7 +193,7 @@ fun EditProfileContent(
                         .fillMaxWidth()
                         .height(56.dp),
                     enabled = !uiState.isSaving,
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(28.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
                 ) {
                     if (uiState.isSaving) {
@@ -190,7 +202,50 @@ fun EditProfileContent(
                         Text("GUARDAR CAMBIOS", fontWeight = FontWeight.Bold)
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextButton(
+                    onClick = { viewModel.setShowDeleteDialog(true) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Eliminar Cuenta", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
+                }
             }
         }
+    }
+
+    if (uiState.showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.setShowDeleteDialog(false) },
+            confirmButton = {
+                Button(
+                    onClick = { 
+                        viewModel.deleteAccount {
+                            onLogout()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent)
+                ) {
+                    Text("SÍ, ELIMINAR")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.setShowDeleteDialog(false) }) {
+                    Text("CANCELAR", color = Color.Gray)
+                }
+            },
+            icon = {
+                Icon(Icons.Default.DeleteForever, null, tint = SancarlinaAccent, modifier = Modifier.size(48.dp))
+            },
+            title = { Text("¿Eliminar tu cuenta?") },
+            text = { 
+                Text(
+                    "Esta acción es irreversible. Al confirmar, perderás de forma definitiva tu acceso, favoritos y puntos acumulados.",
+                    textAlign = TextAlign.Center
+                ) 
+            },
+            containerColor = Color.White
+        )
     }
 }

@@ -44,7 +44,8 @@ fun HomeContent(
     onNavigateToLogin: () -> Unit = {},
     onNavigateToCategory: (String) -> Unit = {},
     onOpenDrawer: () -> Unit = {},
-    onNavigateToSearch: () -> Unit = {}
+    onNavigateToSearch: () -> Unit = {},
+    onNavigateToNews: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -72,7 +73,7 @@ fun HomeContent(
 
             // Carousel Section
             BannerCarousel(uiState.banners) { banner ->
-                Toast.makeText(context, "Banner: ${banner.title}", Toast.LENGTH_SHORT).show()
+                onNavigateToNews()
             }
 
             Spacer(modifier = Modifier.height(32.dp))

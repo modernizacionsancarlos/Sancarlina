@@ -78,4 +78,29 @@ class EditProfileViewModel : ViewModel() {
     fun resetSuccess() {
         _uiState.update { it.copy(saveSuccess = false) }
     }
+
+    fun setShowDeleteDialog(show: Boolean) {
+        _uiState.update { it.copy(showDeleteDialog = show) }
+    }
+
+    fun deleteAccount(onSuccess: () -> Unit) {
+        val user = auth.currentUser ?: return
+        _uiState.update { it.copy(isLoading = true, showDeleteDialog = false) }
+
+        // 1. Delete from Firestore
+        firestore.collection("users").document(user.uid).delete()
+            .addOnSuccessListener {
+                // 2. Delete from Auth
+                user.delete()
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+                    .addOnFailureListener {
+                        _uiState.update { it.copy(isLoading = false, error = "Error al eliminar usuario. Re-inicie sesión e intente de nuevo.") }
+                    }
+            }
+            .addOnFailureListener {
+                _uiState.update { it.copy(isLoading = false, error = "Error al eliminar datos") }
+            }
+    }
 }

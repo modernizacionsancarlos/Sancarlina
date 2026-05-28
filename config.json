@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 37,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v37/app-debug.apk",
-  "releaseNotes": "¡Diseño Minimalista GÓNDOLA SANCARLINA!\n- Eliminado el logo de las cabeceras para una interfaz más limpia.\n- Nombre de la app unificado en una sola línea en el Inicio.\n- Sidebar optimizado sin imagen para carga más rápida.\n- Se mantiene el icono adaptativo circular en el celular."
+  "latestVersionCode": 38,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v38/app-debug.apk",
+  "releaseNotes": "¡Bloque masivo de funciones y seguridad!\n- Nueva vista de Ajustes de Alertas (v29) integrada.\n- Detalle de Novedades (v30) habilitado desde banners.\n- Sistema de eliminación de cuenta (v31) funcional y seguro.\n- Mantenida la unificación de GÓNDOLA SANCARLINA.\n- Mejoras visuales y de navegación en todo el Perfil."
 }

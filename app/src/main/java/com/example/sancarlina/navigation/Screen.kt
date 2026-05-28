@@ -24,9 +24,11 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object EditProfile : Screen("edit_profile", "Mis Datos")
     object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")
     object Notifications : Screen("notifications", "Notificaciones")
+    object NotificationSettings : Screen("notification_settings", "Ajustes de Alertas")
     object Success : Screen("success", "Éxito")
     object Support : Screen("support", "Soporte")
     object Search : Screen("search", "Búsqueda")
+    object NewsDetail : Screen("news_detail", "Novedad")
     object Legal : Screen("legal", "Legal")
     object PointsHistory : Screen("points_history", "Historial")
     

@@ -31,7 +31,8 @@ import com.example.sancarlina.ui.theme.SancarlinaPrimary
 @Composable
 fun NotificationsContent(
     viewModel: NotificationsViewModel = viewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigateToSettings: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -52,7 +53,7 @@ fun NotificationsContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO */ }) {
+                    IconButton(onClick = onNavigateToSettings) {
                         Icon(Icons.Default.Settings, contentDescription = "Configuración", tint = Color.White)
                     }
                 },

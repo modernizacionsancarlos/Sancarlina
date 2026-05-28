@@ -8,6 +8,7 @@ data class EditProfileUiState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val saveSuccess: Boolean = false,
+    val showDeleteDialog: Boolean = false,
     val error: String? = null
 )
 
