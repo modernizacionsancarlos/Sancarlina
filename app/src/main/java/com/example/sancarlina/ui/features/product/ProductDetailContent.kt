@@ -1,7 +1,7 @@
 package com.example.sancarlina.ui.features.product
 
 import android.content.Intent
-import android.widget.Toast
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,29 +12,29 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.sancarlina.ui.theme.*
+import com.example.sancarlina.ui.theme.SancarlinaAccent
+import com.example.sancarlina.ui.theme.SancarlinaBackground
+import com.example.sancarlina.ui.theme.SancarlinaPrimary
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailContent(
     productId: String,
@@ -43,201 +43,171 @@ fun ProductDetailContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var isFav by remember { mutableStateOf(false) }
 
     LaunchedEffect(productId) {
         viewModel.loadProduct(productId)
     }
 
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = SancarlinaPrimary)
+        }
+        return
+    }
+
+    val product = uiState.product ?: return
+
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "SANCARLINA",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { Toast.makeText(context, "Buscador", Toast.LENGTH_SHORT).show() }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        },
         bottomBar = {
-            uiState.product?.let { product ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Color.White,
-                    shadowElevation = 8.dp
+            Surface(
+                modifier = Modifier.fillMaxWidth().navigationBarsPadding(),
+                color = Color.White,
+                shadowElevation = 8.dp
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
                         onClick = {
-                            val url = "https://wa.me/${product.phone}?text=Hola, estoy interesado en ${product.name}"
-                            try {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "WhatsApp no instalado", Toast.LENGTH_SHORT).show()
-                            }
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse("https://wa.me/${product.phone}")
+                            context.startActivity(intent)
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp)
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                        shape = RoundedCornerShape(12.dp)
+                        modifier = Modifier.weight(1f).height(56.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("CONTACTO DIRECTO POR WHATSAPP", fontWeight = FontWeight.Bold)
+                        Text("CONTACTO WHATSAPP", fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }
     ) { innerPadding ->
-        uiState.product?.let { product ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .background(SancarlinaBackground)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // Hero Image
-                Box(modifier = Modifier.fillMaxWidth().height(350.dp)) {
-                    AsyncImage(
-                        model = product.imageUrl,
-                        contentDescription = product.name,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                    // Gradient overlay
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .align(Alignment.BottomCenter)
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(Color.Transparent, SancarlinaBackground)
-                                )
-                            )
-                    )
-                }
-
-                Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(SancarlinaBackground)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Header Image with Back Button
+            Box(modifier = Modifier.fillMaxWidth().height(300.dp)) {
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                
+                Row(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .offset(y = (-20).dp)
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .statusBarsPadding(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.background(Color.White.copy(alpha = 0.8f), CircleShape)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                    }
+                    
+                    Row {
+                        IconButton(
+                            onClick = { isFav = !isFav },
+                            modifier = Modifier.background(Color.White.copy(alpha = 0.8f), CircleShape)
+                        ) {
+                            Icon(
+                                if (isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = "Favorito",
+                                tint = if (isFav) SancarlinaAccent else Color.Black
+                            )
+                        }
+                    }
+                }
+            }
+
+            Column(modifier = Modifier.padding(24.dp)) {
+                Surface(
+                    color = SancarlinaPrimary.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = product.name,
-                            style = MaterialTheme.typography.headlineLarge,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Surface(
-                            shape = CircleShape,
-                            color = Color.White,
-                            shadowElevation = 2.dp,
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            IconButton(onClick = { viewModel.toggleFavorite() }) {
-                                Icon(
-                                    if (product.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                    contentDescription = null,
-                                    tint = if (product.isFavorite) SancarlinaAccent else Color.Gray
-                                )
-                            }
-                        }
+                        Icon(Icons.Default.Verified, null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Sello de Origen", style = MaterialTheme.typography.labelSmall, color = SancarlinaPrimary, fontWeight = FontWeight.Bold)
                     }
+                }
 
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.LocationOn, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = product.location, style = MaterialTheme.typography.labelMedium, color = Color.Gray)
-                    }
+                Spacer(Modifier.height(12.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                    Icon(Icons.Default.LocationOn, null, tint = Color.Gray, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(product.location, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+                }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        product.tags.forEach { tag ->
-                            Surface(
-                                color = if (tag == "Artesanal") SancarlinaPrimary.copy(alpha = 0.1f) else Color.White,
-                                shape = CircleShape,
-                                border = if (tag != "Artesanal") androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray) else null
-                            ) {
-                                Text(
-                                    text = tag,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = if (tag == "Artesanal") SancarlinaPrimary else Color.Gray,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                    }
+                Spacer(Modifier.height(24.dp))
 
-                    Spacer(modifier = Modifier.height(24.dp))
-                    HorizontalDivider(color = Color.LightGray.copy(alpha = 0.3f))
-                    Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    "Descripción",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = product.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.DarkGray,
+                    lineHeight = 22.sp
+                )
 
+                if (product.galleryImages.isNotEmpty()) {
+                    Spacer(Modifier.height(24.dp))
                     Text(
-                        text = "Origen y Elaboración",
-                        style = MaterialTheme.typography.titleLarge,
+                        "Galería",
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = product.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        lineHeight = 24.sp,
-                        color = Color.DarkGray
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Text(
-                        text = "Galería",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp)
-                    ) {
-                        items(product.galleryImages) { imageUrl ->
+                    Spacer(Modifier.height(16.dp))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        items(product.galleryImages) { img ->
                             AsyncImage(
-                                model = imageUrl,
+                                model = img,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(112.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(Color.LightGray),
+                                    .size(120.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
                                 contentScale = ContentScale.Crop
                             )
                         }
                     }
                 }
+
+                Spacer(Modifier.height(32.dp))
                 
-                Spacer(modifier = Modifier.height(100.dp)) // Extra space for bottom bar
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    product.tags.forEach { tag ->
+                        SuggestionChip(
+                            onClick = {},
+                            label = { Text(tag) }
+                        )
+                    }
+                }
+                
+                Spacer(Modifier.height(100.dp)) // Extra space for bottom bar
             }
         }
     }
