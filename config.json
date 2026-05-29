@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 42,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v42/app-debug.apk",
-  "releaseNotes": "¡PROYECTO COMPLETADO AL 100%!\n- Implementado Escáner QR Real (v27) para sumar puntos en comercios.\n- Buscador Inteligente conectado a Firestore: encontrá productos y marcas al instante.\n- Sistema de manejo de errores de red (v33) con diálogos intuitivos.\n- Todas las vistas del prototipo 'stitch' están ahora vivas y conectadas.\n- Identidad GÓNDOLA SANCARLINA definitiva y pulida."
+  "latestVersionCode": 44,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v44/app-debug.apk",
+  "releaseNotes": "Integración Total con Backend Góndola Sancarlina:\n- Conexión real con Firestore (Comercios, Zonas, Beneficios).\n- Sincronización automática de perfiles de usuario al iniciar sesión.\n- Sistema de puntos seguro mediante Cloud Functions (awardPoints).\n- Envío de formularios centralizado en la colección Submissions.\n- Verificación de estado de comercios (activo/inactivo) en tiempo real."
 }

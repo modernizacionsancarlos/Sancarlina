@@ -1,9 +1,12 @@
 package com.example.sancarlina.ui.features.home
 
+import com.example.sancarlina.data.model.Tenant
+
 data class HomeUiState(
     val banners: List<BannerItem> = emptyList(),
     val categories: List<CategoryItem> = emptyList(),
     val nearbyProduct: ProductItem? = null,
+    val tenants: List<Tenant> = emptyList(),
     val isLoading: Boolean = false
 )
 
@@ -15,7 +18,8 @@ data class BannerItem(
 
 data class CategoryItem(
     val name: String,
-    val iconUrl: String // Using high quality illustrative icons
+    val iconUrl: String = "",
+    val iconRes: Int? = null
 )
 
 data class ProductItem(
@@ -24,5 +28,6 @@ data class ProductItem(
     val brand: String,
     val price: String,
     val phone: String,
+    val imageUrl: String = "",
     val hasSelloOrigen: Boolean = true
 )

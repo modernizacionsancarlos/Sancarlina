@@ -222,11 +222,13 @@ fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Uni
         ) { page ->
             val banner = banners[page]
             Row(modifier = Modifier.fillMaxSize()) {
+                // Left Part - Wine Red overlapping design (Design stitch v1)
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .background(SancarlinaAccent),
+                        .background(SancarlinaAccent, RoundedCornerShape(topEnd = 48.dp, bottomEnd = 48.dp))
+                        .padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -234,18 +236,22 @@ fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Uni
                         color = Color.White,
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 28.sp
                     )
                 }
+                
+                // Right Part - Image
                 Box(
                     modifier = Modifier
                         .weight(1.2f)
                         .fillMaxHeight()
+                        .offset(x = (-20).dp) // Overlap effect
                 ) {
                     AsyncImage(
                         model = banner.imageUrl,
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(topStart = 48.dp, bottomStart = 48.dp)),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -291,33 +297,28 @@ fun CategoriesGrid(categories: List<CategoryItem>, onCategoryClick: (CategoryIte
 
 @Composable
 fun CategoryItemView(category: CategoryItem, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Column(
-        modifier = modifier.clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(4.dp)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
-        Surface(
-            modifier = Modifier.size(72.dp),
-            shape = CircleShape,
-            color = Color(0xFFF0F2E1),
-            shadowElevation = 2.dp
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                AsyncImage(
-                    model = category.iconUrl,
-                    contentDescription = category.name,
-                    modifier = Modifier.size(44.dp)
-                )
-            }
+        if (category.iconRes != null) {
+            Image(
+                painter = painterResource(id = category.iconRes),
+                contentDescription = category.name,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            AsyncImage(
+                model = category.iconUrl,
+                contentDescription = category.name,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = category.name,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface,
-            lineHeight = 14.sp
-        )
     }
 }
 
@@ -366,12 +367,20 @@ fun NearbySection(
                             shape = RoundedCornerShape(12.dp),
                             color = Color(0xFFF0F2E1)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Storefront,
-                                contentDescription = null,
-                                tint = SancarlinaAccent,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            if (product.imageUrl.isNotEmpty()) {
+                                AsyncImage(
+                                    model = product.imageUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize().padding(12.dp)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Storefront,
+                                    contentDescription = null,
+                                    tint = SancarlinaAccent,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
                         }
                         
                         Spacer(modifier = Modifier.width(16.dp))

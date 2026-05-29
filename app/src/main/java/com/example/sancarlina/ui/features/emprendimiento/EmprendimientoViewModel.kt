@@ -1,16 +1,20 @@
 package com.example.sancarlina.ui.features.emprendimiento
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.SubmissionsRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class EmprendimientoViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val submissionsRepository = SubmissionsRepository(firestore, auth)
 
     private val _uiState = MutableStateFlow(EmprendimientoUiState())
     val uiState: StateFlow<EmprendimientoUiState> = _uiState.asStateFlow()
@@ -51,23 +55,22 @@ class EmprendimientoViewModel : ViewModel() {
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         val requestData = mapOf(
-            "userId" to user.uid,
-            "userEmail" to user.email,
+            "userEmail" to (user.email ?: ""),
             "nombre" to state.nombre,
             "categoria" to state.categoria,
             "telefono" to state.telefono,
             "ubicacion" to state.ubicacion,
-            "timestamp" to com.google.firebase.Timestamp.now(),
             "status" to "pending"
         )
 
-        firestore.collection("emprendimiento_solicitudes").add(requestData)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            val result = submissionsRepository.submitForm("emprendimiento_solicitud", requestData)
+            if (result.isSuccess) {
                 _uiState.update { it.copy(isLoading = false, isSuccess = true) }
+            } else {
+                _uiState.update { it.copy(isLoading = false, error = "Error al enviar: ${result.exceptionOrNull()?.message}") }
             }
-            .addOnFailureListener { e ->
-                _uiState.update { it.copy(isLoading = false, error = "Error al enviar: ${e.message}") }
-            }
+        }
     }
 
     fun resetState() {

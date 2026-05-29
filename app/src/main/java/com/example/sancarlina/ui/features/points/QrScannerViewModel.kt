@@ -1,13 +1,15 @@
 package com.example.sancarlina.ui.features.points
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.PointsRepository
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 data class QrScannerUiState(
     val isLoading: Boolean = false,
@@ -17,7 +19,7 @@ data class QrScannerUiState(
 
 class QrScannerViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    private val pointsRepository = PointsRepository()
     
     private val _uiState = MutableStateFlow(QrScannerUiState())
     val uiState: StateFlow<QrScannerUiState> = _uiState.asStateFlow()
@@ -41,27 +43,32 @@ class QrScannerViewModel : ViewModel() {
         }
 
         val amount = parts[3].toIntOrNull() ?: 0
-        val userId = auth.currentUser?.uid ?: return
+        val tenantId = parts[2]
+        
+        viewModelScope.launch {
+            // Fetch tenant name first if needed, or just use a generic name if not in QR
+            // For now, let's try to get it from Firestore since we have tenantId
+            var tenantName = "Comercio Asociado"
+            try {
+                val tenantDoc = firestore.collection("tenants").document(tenantId).get().await()
+                tenantName = tenantDoc.getString("name") ?: tenantName
+            } catch (e: Exception) {
+                // fallback to default name
+            }
 
-        // 1. Update User Points in Firestore
-        firestore.collection("users").document(userId)
-            .update("pointsBalance", FieldValue.increment(amount.toLong()))
-            .addOnSuccessListener {
-                // 2. Log History
-                val history = mapOf(
-                    "type" to "EARNED",
-                    "amount" to amount,
-                    "title" to "Escaneo en Comercio",
-                    "timestamp" to FieldValue.serverTimestamp(),
-                    "userId" to userId
-                )
-                firestore.collection("points_history").add(history)
-                
+            val result = pointsRepository.awardPoints(
+                points = amount,
+                reason = "Escaneo de código QR",
+                tenantId = tenantId,
+                tenantName = tenantName
+            )
+
+            if (result.isSuccess) {
                 _uiState.update { it.copy(isLoading = false, successPoints = amount) }
+            } else {
+                _uiState.update { it.copy(isLoading = false, error = "Error al procesar puntos: ${result.exceptionOrNull()?.message}") }
             }
-            .addOnFailureListener {
-                _uiState.update { it.copy(isLoading = false, error = "Error al procesar los puntos") }
-            }
+        }
     }
 
     fun resetState() {

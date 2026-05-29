@@ -1,15 +1,19 @@
 package com.example.sancarlina.ui.features.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val userRepository = UserRepository()
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -28,8 +32,14 @@ class AuthViewModel : ViewModel() {
         auth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _uiState.update { it.copy(isLoading = false, isUserLoggedIn = true) }
-                    onSuccess()
+                    val user = auth.currentUser
+                    viewModelScope.launch {
+                        user?.let {
+                            userRepository.syncUserProfile(it.uid, it.email)
+                        }
+                        _uiState.update { it.copy(isLoading = false, isUserLoggedIn = true) }
+                        onSuccess()
+                    }
                 } else {
                     _uiState.update { it.copy(isLoading = false, error = task.exception?.localizedMessage ?: "Error al iniciar sesión") }
                 }
@@ -51,9 +61,14 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Here we would also save the name to Firestore or update profile
-                    _uiState.update { it.copy(isLoading = false, isUserLoggedIn = true) }
-                    onSuccess()
+                    val user = auth.currentUser
+                    viewModelScope.launch {
+                        user?.let {
+                            userRepository.syncUserProfile(it.uid, it.email, name)
+                        }
+                        _uiState.update { it.copy(isLoading = false, isUserLoggedIn = true) }
+                        onSuccess()
+                    }
                 } else {
                     _uiState.update { it.copy(isLoading = false, error = task.exception?.localizedMessage ?: "Error al registrarse") }
                 }

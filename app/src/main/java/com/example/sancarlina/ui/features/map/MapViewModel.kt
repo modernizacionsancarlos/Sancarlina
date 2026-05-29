@@ -1,17 +1,23 @@
 package com.example.sancarlina.ui.features.map
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.AreasRepository
+import com.example.sancarlina.data.repository.TenantsRepository
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MapViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val tenantsRepository = TenantsRepository(firestore)
+    private val areasRepository = AreasRepository(firestore)
+    
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
@@ -20,42 +26,46 @@ class MapViewModel : ViewModel() {
     }
 
     private fun loadMarkers() {
-        firestore.collection("commerces").get()
-            .addOnSuccessListener { result ->
-                val markers = result.documents.map { doc ->
-                    val pos = doc.getGeoPoint("position") ?: GeoPoint(0.0, 0.0)
-                    CommerceMarker(
-                        id = doc.id,
-                        name = doc.getString("name") ?: "",
-                        locationName = doc.getString("locationName") ?: "",
-                        position = LatLng(pos.latitude, pos.longitude),
-                        category = doc.getString("category") ?: "General",
-                        phone = doc.getString("phone") ?: "",
-                        imageUrl = doc.getString("imageUrl") ?: "",
-                        rating = (doc.getDouble("rating") ?: 5.0).toFloat(),
-                        distance = doc.getString("distance") ?: "Cerca de vos"
+        viewModelScope.launch {
+            val tenants = tenantsRepository.getActiveTenants()
+            val areas = areasRepository.getAreas()
+            
+            val markers = tenants.map { tenant ->
+                val coords = tenant.geoCoordinates.split(",")
+                val lat = coords.getOrNull(0)?.toDoubleOrNull() ?: 0.0
+                val lng = coords.getOrNull(1)?.toDoubleOrNull() ?: 0.0
+                
+                val areaName = areas.find { it.id == tenant.areaId }?.name ?: "General"
+                
+                CommerceMarker(
+                    id = tenant.id,
+                    name = tenant.name,
+                    locationName = areaName,
+                    position = LatLng(lat, lng),
+                    category = tenant.industry,
+                    phone = tenant.contactEmail,
+                    imageUrl = tenant.imageUrl.ifEmpty { tenant.coverUrl },
+                    rating = tenant.rating.toFloat(),
+                    distance = "Góndola Sancarlina"
+                )
+            }
+
+            if (markers.isNotEmpty()) {
+                val categories = listOf("Todos") + markers.map { it.category }.distinct()
+                val locations = listOf("Todas") + areas.map { it.name }.distinct()
+
+                _uiState.update { 
+                    it.copy(
+                        markers = markers,
+                        filteredMarkers = markers,
+                        categories = categories,
+                        locations = locations
                     )
                 }
-
-                if (markers.isNotEmpty()) {
-                    val categories = listOf("Todos") + markers.map { it.category }.distinct()
-                    val locations = listOf("Todas") + markers.map { it.locationName }.distinct()
-
-                    _uiState.update { 
-                        it.copy(
-                            markers = markers,
-                            filteredMarkers = markers,
-                            categories = categories,
-                            locations = locations
-                        )
-                    }
-                } else {
-                    loadMockMarkers()
-                }
-            }
-            .addOnFailureListener {
+            } else {
                 loadMockMarkers()
             }
+        }
     }
 
     private fun loadMockMarkers() {

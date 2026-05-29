@@ -1,19 +1,25 @@
 package com.example.sancarlina.ui.features.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 
+import com.example.sancarlina.R
+import com.example.sancarlina.data.repository.TenantsRepository
+
 class HomeViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val tenantsRepository = TenantsRepository(firestore)
     
-    // Default state with High-Quality Professional Illustrative Icons
+    // Default state with High-Quality Professional Illustrative Icons from stitch/iconos_app
     private val _uiState = MutableStateFlow(
         HomeUiState(
             banners = listOf(
@@ -24,30 +30,12 @@ class HomeViewModel : ViewModel() {
                 )
             ),
             categories = listOf(
-                CategoryItem(
-                    "PRODUCTOS\nREGIONALES", 
-                    "https://img.icons8.com/color/512/honey.png" // Clean Jar Icon
-                ),
-                CategoryItem(
-                    "BODEGAS\nY VINOS", 
-                    "https://img.icons8.com/color/512/wine-bottle.png" // Professional Wine Icon
-                ),
-                CategoryItem(
-                    "ARTESANÍAS", 
-                    "https://img.icons8.com/color/512/pottery.png" // Artisan Pottery
-                ),
-                CategoryItem(
-                    "GASTRONOMÍA", 
-                    "https://img.icons8.com/color/512/restaurant.png" // Premium Food Icon
-                ),
-                CategoryItem(
-                    "SERVICIOS", 
-                    "https://img.icons8.com/color/512/maintenance.png" // Tools/Services
-                ),
-                CategoryItem(
-                    "EMPRENDEDORES", 
-                    "https://img.icons8.com/color/512/small-business.png" // Storefront
-                )
+                CategoryItem("PRODUCTOS REGIONALES", iconRes = R.drawable.ic_cat_miel),
+                CategoryItem("BODEGAS Y VINOS", iconRes = R.drawable.ic_cat_vino),
+                CategoryItem("ARTESANÍAS", iconRes = R.drawable.ic_cat_ceramica),
+                CategoryItem("GASTRONOMÍA", iconRes = R.drawable.ic_cat_gastronomia),
+                CategoryItem("SERVICIOS", iconRes = R.drawable.ic_cat_emprendedores),
+                CategoryItem("EMPRENDEDORES", iconRes = R.drawable.ic_cat_emprendedores)
             ),
             nearbyProduct = ProductItem(
                 id = "miel-1",
@@ -55,6 +43,7 @@ class HomeViewModel : ViewModel() {
                 brand = "Producción Local",
                 price = "$ 4500",
                 phone = "5492622000000",
+                imageUrl = "https://img.icons8.com/color/512/honey.png",
                 hasSelloOrigen = true
             )
         )
@@ -67,6 +56,11 @@ class HomeViewModel : ViewModel() {
 
     private fun loadHomeData() {
         _uiState.update { it.copy(isLoading = true) }
+
+        viewModelScope.launch {
+            val tenants = tenantsRepository.getActiveTenants()
+            _uiState.update { it.copy(tenants = tenants) }
+        }
 
         // Fetch Banners
         firestore.collection("banners").get()
