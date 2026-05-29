@@ -16,8 +16,8 @@ android {
         applicationId = "com.example.sancarlina"
         minSdk = 24
         targetSdk = 36
-        versionCode = 40
-        versionName = "6.6.0"
+        versionCode = 42
+        versionName = "7.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,6 +59,13 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.okhttp)
     implementation(libs.androidx.work.runtime.ktx)
+    
+    // CameraX & ML Kit
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.barcode.scanning)
     
     // Firebase
     implementation(platform(libs.firebase.bom))

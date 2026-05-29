@@ -29,6 +29,7 @@ import com.example.sancarlina.ui.features.notifications.NotificationsContent
 import com.example.sancarlina.ui.features.notifications.NotificationSettingsContent
 import com.example.sancarlina.ui.features.points.PointsContent
 import com.example.sancarlina.ui.features.points.PointsHistoryContent
+import com.example.sancarlina.ui.features.points.QrScannerContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
@@ -79,7 +80,15 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Search.route) {
-            SearchContent(onBack = { navController.popBackStack() })
+            SearchContent(
+                onBack = { navController.popBackStack() },
+                onNavigateToProduct = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                },
+                onNavigateToCommerce = { commerceId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(commerceId))
+                }
+            )
         }
         composable(Screen.CategoryList.route) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
@@ -134,7 +143,16 @@ fun SancarlinaNavGraph(
         composable(Screen.Points.route) {
             PointsContent(
                 onNavigateToLogin = { navController.navigate(Screen.Login.route) },
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToScanner = { navController.navigate(Screen.QrScanner.route) }
+            )
+        }
+        composable(Screen.QrScanner.route) {
+            QrScannerContent(
+                onBack = { navController.popBackStack() },
+                onSuccess = { 
+                    navController.popBackStack() 
+                }
             )
         }
         composable(Screen.Profile.route) {

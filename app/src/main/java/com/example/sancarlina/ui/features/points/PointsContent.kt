@@ -37,7 +37,8 @@ import com.example.sancarlina.ui.theme.SancarlinaPrimary
 fun PointsContent(
     viewModel: PointsViewModel = viewModel(),
     onNavigateToLogin: () -> Unit = {},
-    onOpenDrawer: () -> Unit = {}
+    onOpenDrawer: () -> Unit = {},
+    onNavigateToScanner: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val auth = remember { com.google.firebase.auth.FirebaseAuth.getInstance() }
@@ -150,19 +151,40 @@ fun PointsContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Primary Action Button
-            Button(
-                onClick = { viewModel.startQrGeneration() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                shape = RoundedCornerShape(28.dp),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+            // Primary Action Buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Icon(Icons.Default.QrCodeScanner, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("GENERAR QR DE CANJE", fontWeight = FontWeight.Bold)
+                Button(
+                    onClick = { viewModel.startQrGeneration() },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.QrCode2, contentDescription = null)
+                        Text("CANJEAR", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+                
+                Button(
+                    onClick = onNavigateToScanner,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.QrCodeScanner, contentDescription = null)
+                        Text("SUMAR PUNTOS", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))

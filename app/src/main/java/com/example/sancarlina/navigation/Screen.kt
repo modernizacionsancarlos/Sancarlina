@@ -10,6 +10,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Turismo : Screen("turismo", "Turismo", Icons.Default.Explore)
     object Map : Screen("map", "Mapa", Icons.Default.Map)
     object Points : Screen("points", "Puntos", Icons.Default.Stars)
+    object QrScanner : Screen("qr_scanner", "Escanear QR")
     object Profile : Screen("profile", "Perfil", Icons.Default.Person)
 
     // Other screens

@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 40,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v40/app-debug.apk",
-  "releaseNotes": "¡Identidad de Marca Definitiva: GÓNDOLA SANCARLINA!\n- Corregido el icono del celular (ya no se ve blanco).\n- El logo oficial ahora luce nítido y centrado en el escritorio.\n- Cabecera del Inicio simplificada: Solo texto en una línea.\n- Mejoras de rendimiento en la carga de datos de Firebase."
+  "latestVersionCode": 42,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v42/app-debug.apk",
+  "releaseNotes": "¡PROYECTO COMPLETADO AL 100%!\n- Implementado Escáner QR Real (v27) para sumar puntos en comercios.\n- Buscador Inteligente conectado a Firestore: encontrá productos y marcas al instante.\n- Sistema de manejo de errores de red (v33) con diálogos intuitivos.\n- Todas las vistas del prototipo 'stitch' están ahora vivas y conectadas.\n- Identidad GÓNDOLA SANCARLINA definitiva y pulida."
 }
