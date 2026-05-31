@@ -9,24 +9,31 @@ import kotlinx.coroutines.tasks.await
 class TenantsRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
+    private var cachedTenants: List<Tenant>? = null
+
     suspend fun getActiveTenants(): List<Tenant> {
+        cachedTenants?.let { return it }
+        
         return try {
             val snapshot = firestore.collection(FirestoreCollections.TENANTS)
                 .whereEqualTo("status", "active")
                 .get()
                 .await()
             
-            snapshot.documents.mapNotNull { doc ->
+            val tenants = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(Tenant::class.java)?.copy(id = doc.id)
-            }.also {
-                Log.d("TenantsRepository", "Fetched ${it.size} active tenants from Firestore")
-                it.forEach { tenant ->
-                    Log.d("TenantsRepository", "Tenant: ${tenant.name}")
-                }
             }
+            cachedTenants = tenants
+            
+            Log.d("TenantsRepository", "Fetched ${tenants.size} active tenants from Firestore")
+            tenants
         } catch (e: Exception) {
             Log.e("TenantsRepository", "Error fetching tenants", e)
             emptyList()
         }
+    }
+    
+    fun clearCache() {
+        cachedTenants = null
     }
 }

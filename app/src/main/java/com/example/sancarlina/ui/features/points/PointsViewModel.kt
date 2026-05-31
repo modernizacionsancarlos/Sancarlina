@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PointsViewModel : ViewModel() {
-
-    private val auth = FirebaseAuth.getInstance()
-    private val userRepository = UserRepository()
-    private val benefitsRepository = BenefitsRepository()
+class PointsViewModel(
+    private val auth: FirebaseAuth,
+    private val userRepository: UserRepository,
+    private val benefitsRepository: BenefitsRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PointsUiState())
     val uiState: StateFlow<PointsUiState> = _uiState.asStateFlow()

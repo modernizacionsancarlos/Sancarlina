@@ -1,5 +1,5 @@
 {
-  "latestVersionCode": 44,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v44/app-debug.apk",
-  "releaseNotes": "Integración Total con Backend Góndola Sancarlina:\n- Conexión real con Firestore (Comercios, Zonas, Beneficios).\n- Sincronización automática de perfiles de usuario al iniciar sesión.\n- Sistema de puntos seguro mediante Cloud Functions (awardPoints).\n- Envío de formularios centralizado en la colección Submissions.\n- Verificación de estado de comercios (activo/inactivo) en tiempo real."
+  "latestVersionCode": 45,
+  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v45/app-debug.apk",
+  "releaseNotes": "Versión Optimizada de Alto Rendimiento:\n- Arquitectura de Inyección de Dependencias (DI) para conexiones persistentes.\n- Pre-carga de datos de Firestore en pantalla de inicio (Splash).\n- Sistema de caché inteligente para transiciones instantáneas entre pantallas.\n- Vinculación completa con perfiles de usuario y transacciones seguras.\n- Eliminación de tiempos de carga en el Mapa y sección de Turismo."
 }

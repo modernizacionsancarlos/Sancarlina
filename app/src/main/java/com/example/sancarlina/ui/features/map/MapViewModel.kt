@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MapViewModel : ViewModel() {
+class MapViewModel(
+    private val tenantsRepository: TenantsRepository,
+    private val areasRepository: AreasRepository
+) : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val tenantsRepository = TenantsRepository(firestore)
-    private val areasRepository = AreasRepository(firestore)
     
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()

@@ -5,10 +5,14 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.*
+import com.example.sancarlina.di.AppContainer
 import com.example.sancarlina.workers.UpdateWorker
 import java.util.concurrent.TimeUnit
 
 class SancarlinaApp : Application() {
+
+    // Instancia global del contenedor de dependencias
+    lateinit var container: AppContainer
 
     companion object {
         var isAppInForeground: Boolean = false
@@ -17,6 +21,7 @@ class SancarlinaApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        container = AppContainer()
         
         // Rastreador de estado de la aplicación (Primer plano / Segundo plano)
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {

@@ -1,15 +1,20 @@
 package com.example.sancarlina.ui.features.turismo
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.AreasRepository
+import com.example.sancarlina.data.repository.TenantsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class TurismoViewModel : ViewModel() {
+class TurismoViewModel(
+    private val tenantsRepository: TenantsRepository,
+    private val areasRepository: AreasRepository
+) : ViewModel() {
 
-    private val firestore = FirebaseFirestore.getInstance()
     private val _uiState = MutableStateFlow(TurismoUiState())
     val uiState: StateFlow<TurismoUiState> = _uiState.asStateFlow()
 
@@ -20,22 +25,34 @@ class TurismoViewModel : ViewModel() {
     private fun loadTurismoData() {
         _uiState.update { it.copy(isLoading = true) }
 
-        firestore.collection("experiences").get()
-            .addOnSuccessListener { result ->
-                val experiences = result.documents.map { doc ->
+        viewModelScope.launch {
+            try {
+                val tenants = tenantsRepository.getActiveTenants()
+                val areas = areasRepository.getAreas()
+                
+                // Filtramos tenants que tengan categorías turísticas
+                val touristTenants = tenants.filter { 
+                    it.industry.contains("Bodega", ignoreCase = true) || 
+                    it.industry.contains("Turismo", ignoreCase = true) ||
+                    it.industry.contains("Hospedaje", ignoreCase = true) ||
+                    it.industry.contains("Gastronomía", ignoreCase = true)
+                }
+
+                val experiences = touristTenants.map { tenant ->
+                    val areaName = areas.find { it.id == tenant.areaId }?.name ?: "San Carlos"
                     ExperienceItem(
-                        id = doc.id,
-                        title = doc.getString("title") ?: "",
-                        location = doc.getString("location") ?: "",
-                        imageUrl = doc.getString("imageUrl") ?: "",
-                        category = doc.getString("category") ?: "Cultura",
-                        rating = (doc.getDouble("rating") ?: 5.0).toFloat(),
-                        description = doc.getString("description") ?: ""
+                        id = tenant.id,
+                        title = tenant.name,
+                        location = areaName,
+                        imageUrl = tenant.imageUrl.ifEmpty { tenant.coverUrl },
+                        category = tenant.industry,
+                        rating = tenant.rating.toFloat(),
+                        description = tenant.description
                     )
                 }
 
                 if (experiences.isNotEmpty()) {
-                    val featured = experiences.firstOrNull { it.id.contains("feat") } ?: experiences.first()
+                    val featured = experiences.first() // O lógica para destacados
                     _uiState.update { 
                         it.copy(
                             categories = listOf("Todos") + experiences.map { it.category }.distinct(),
@@ -47,10 +64,10 @@ class TurismoViewModel : ViewModel() {
                 } else {
                     loadMockData()
                 }
-            }
-            .addOnFailureListener {
+            } catch (e: Exception) {
                 loadMockData()
             }
+        }
     }
 
     private fun loadMockData() {

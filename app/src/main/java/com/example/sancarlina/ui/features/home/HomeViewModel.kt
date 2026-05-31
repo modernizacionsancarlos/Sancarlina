@@ -2,22 +2,21 @@ package com.example.sancarlina.ui.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sancarlina.data.repository.TenantsRepository
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.example.sancarlina.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
-
-import com.example.sancarlina.R
-import com.example.sancarlina.data.repository.TenantsRepository
-
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val tenantsRepository: TenantsRepository
+) : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val tenantsRepository = TenantsRepository(firestore)
     
     // Default state with High-Quality Professional Illustrative Icons from stitch/iconos_app
     private val _uiState = MutableStateFlow(

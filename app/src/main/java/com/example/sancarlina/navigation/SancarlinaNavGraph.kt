@@ -4,11 +4,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sancarlina.SancarlinaApp
+import com.example.sancarlina.ui.features.auth.AuthViewModel
 import com.example.sancarlina.ui.features.auth.ForgotPasswordContent
 import com.example.sancarlina.ui.features.auth.LoginContent
 import com.example.sancarlina.ui.features.auth.OnboardingContent
@@ -19,24 +25,30 @@ import com.example.sancarlina.ui.features.emprendimiento.EmprendimientoContent
 import com.example.sancarlina.ui.features.favorites.FavoritesContent
 import com.example.sancarlina.ui.features.profile.EditProfileContent
 import com.example.sancarlina.ui.features.home.HomeContent
+import com.example.sancarlina.ui.features.home.HomeViewModel
 import com.example.sancarlina.ui.features.home.SearchContent
 import com.example.sancarlina.ui.features.home.NewsDetailContent
 import com.example.sancarlina.ui.features.legal.LegalContent
 import com.example.sancarlina.ui.features.map.CommerceProfileContent
 import com.example.sancarlina.ui.features.map.MapContent
+import com.example.sancarlina.ui.features.map.MapViewModel
 import com.example.sancarlina.ui.features.map.RateCommerceContent
 import com.example.sancarlina.ui.features.notifications.NotificationsContent
 import com.example.sancarlina.ui.features.notifications.NotificationSettingsContent
 import com.example.sancarlina.ui.features.points.PointsContent
+import com.example.sancarlina.ui.features.points.PointsViewModel
 import com.example.sancarlina.ui.features.points.PointsHistoryContent
 import com.example.sancarlina.ui.features.points.QrScannerContent
 import com.example.sancarlina.ui.features.product.ProductDetailContent
 import com.example.sancarlina.ui.features.profile.ProfileContent
 import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
 import com.example.sancarlina.ui.features.splash.SplashScreenContent
+import com.example.sancarlina.ui.features.splash.SplashViewModel
 import com.example.sancarlina.ui.features.support.SupportContent
 import com.example.sancarlina.ui.features.turismo.TurismoContent
+import com.example.sancarlina.ui.features.turismo.TurismoViewModel
 import com.example.sancarlina.ui.features.updates.UpdatesContent
+import com.example.sancarlina.utils.ViewModelFactory
 
 @Composable
 fun SancarlinaNavGraph(
@@ -45,22 +57,32 @@ fun SancarlinaNavGraph(
     onOnboardingFinished: () -> Unit = {},
     onOpenDrawer: () -> Unit = {}
 ) {
+    val app = LocalContext.current.applicationContext as SancarlinaApp
+    val factory = ViewModelFactory(app.container)
+
     NavHost(
         navController = navController,
         startDestination = Screen.SplashScreen.route,
         modifier = modifier
     ) {
         composable(Screen.SplashScreen.route) {
+            val splashViewModel: SplashViewModel = viewModel(factory = factory)
+            val isReady by splashViewModel.isReady.collectAsState()
+
             SplashScreenContent(
                 onTimeout = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    if (isReady) {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                        }
                     }
                 }
             )
         }
         composable(Screen.Home.route) {
+            val homeViewModel: HomeViewModel = viewModel(factory = factory)
             HomeContent(
+                viewModel = homeViewModel,
                 onNavigateToDetail = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
                 },
@@ -101,10 +123,16 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Turismo.route) {
-            TurismoContent(onOpenDrawer = onOpenDrawer)
+            val turismoViewModel: TurismoViewModel = viewModel(factory = factory)
+            TurismoContent(
+                viewModel = turismoViewModel,
+                onOpenDrawer = onOpenDrawer
+            )
         }
         composable(Screen.Login.route) {
+            val authViewModel: AuthViewModel = viewModel(factory = factory)
             LoginContent(
+                viewModel = authViewModel,
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },
                 onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) },
                 onLoginSuccess = { 
@@ -128,7 +156,9 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Register.route) {
+            val authViewModel: AuthViewModel = viewModel(factory = factory)
             RegisterContent(
+                viewModel = authViewModel,
                 onBack = { navController.popBackStack() },
                 onRegisterSuccess = {
                     navController.navigate(Screen.Home.route) {
@@ -138,10 +168,16 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Map.route) {
-            MapContent(onOpenDrawer = onOpenDrawer)
+            val mapViewModel: MapViewModel = viewModel(factory = factory)
+            MapContent(
+                viewModel = mapViewModel,
+                onOpenDrawer = onOpenDrawer
+            )
         }
         composable(Screen.Points.route) {
+            val pointsViewModel: PointsViewModel = viewModel(factory = factory)
             PointsContent(
+                viewModel = pointsViewModel,
                 onNavigateToLogin = { navController.navigate(Screen.Login.route) },
                 onOpenDrawer = onOpenDrawer,
                 onNavigateToScanner = { navController.navigate(Screen.QrScanner.route) }

@@ -34,7 +34,6 @@ class UserRepository(
     suspend fun getUserBalance(uid: String): Int {
         return try {
             val doc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid).get().await()
-            // Try points_balance first, then points
             (doc.getLong("points_balance") ?: doc.getLong("points") ?: 0L).toInt()
         } catch (e: Exception) {
             0

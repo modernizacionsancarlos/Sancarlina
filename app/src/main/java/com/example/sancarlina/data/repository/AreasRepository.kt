@@ -13,12 +13,18 @@ data class Area(
 class AreasRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
+    private var cachedAreas: List<Area>? = null
+
     suspend fun getAreas(): List<Area> {
+        cachedAreas?.let { return it }
+
         return try {
             val snapshot = firestore.collection(FirestoreCollections.AREAS).get().await()
-            snapshot.documents.mapNotNull { doc ->
+            val areas = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(Area::class.java)?.copy(id = doc.id)
             }
+            cachedAreas = areas
+            areas
         } catch (e: Exception) {
             emptyList()
         }
