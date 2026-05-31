@@ -36,4 +36,8 @@ class AppContainer {
     val pointsRepository: PointsRepository by lazy {
         PointsRepository()
     }
+
+    val formsRepository: FormsRepository by lazy {
+        FormsRepository(firestore)
+    }
 }

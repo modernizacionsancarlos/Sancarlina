@@ -30,6 +30,7 @@ import com.example.sancarlina.ui.features.home.SearchContent
 import com.example.sancarlina.ui.features.home.NewsDetailContent
 import com.example.sancarlina.ui.features.legal.LegalContent
 import com.example.sancarlina.ui.features.map.CommerceProfileContent
+import com.example.sancarlina.ui.features.map.CommerceProfileViewModel
 import com.example.sancarlina.ui.features.map.MapContent
 import com.example.sancarlina.ui.features.map.MapViewModel
 import com.example.sancarlina.ui.features.map.RateCommerceContent
@@ -258,8 +259,11 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.CommerceProfile.route) { backStackEntry ->
             val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
+            val commerceProfileViewModel: CommerceProfileViewModel = viewModel(factory = factory)
+            
             CommerceProfileContent(
                 commerceId = commerceId,
+                viewModel = commerceProfileViewModel,
                 onBack = { navController.popBackStack() },
                 onNavigateToProduct = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))

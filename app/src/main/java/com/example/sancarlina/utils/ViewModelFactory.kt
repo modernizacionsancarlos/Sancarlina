@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sancarlina.di.AppContainer
 import com.example.sancarlina.ui.features.auth.AuthViewModel
 import com.example.sancarlina.ui.features.home.HomeViewModel
+import com.example.sancarlina.ui.features.map.CommerceProfileViewModel
 import com.example.sancarlina.ui.features.map.MapViewModel
 import com.example.sancarlina.ui.features.points.PointsViewModel
 import com.example.sancarlina.ui.features.splash.SplashViewModel
@@ -31,6 +32,9 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             }
             modelClass.isAssignableFrom(TurismoViewModel::class.java) -> {
                 TurismoViewModel(container.tenantsRepository, container.areasRepository) as T
+            }
+            modelClass.isAssignableFrom(CommerceProfileViewModel::class.java) -> {
+                CommerceProfileViewModel(container.tenantsRepository, container.formsRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
