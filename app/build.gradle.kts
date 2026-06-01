@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sancarlina"
+    namespace = "com.sancarlina.app"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -13,11 +13,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.sancarlina"
+        applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 46
-        versionName = "7.5.0"
+        versionCode = 47
+        versionName = "7.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

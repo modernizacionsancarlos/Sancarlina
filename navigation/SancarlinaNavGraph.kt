@@ -1,4 +1,4 @@
-package com.example.sancarlina.navigation
+package com.sancarlina.app.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,18 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.sancarlina.ui.features.auth.LoginContent
-import com.example.sancarlina.ui.features.auth.OnboardingContent
-import com.example.sancarlina.ui.features.auth.RegisterContent
-import com.example.sancarlina.ui.features.category.CategoryListContent
-import com.example.sancarlina.ui.features.home.HomeContent
-import com.example.sancarlina.ui.features.map.MapContent
-import com.example.sancarlina.ui.features.points.PointsContent
-import com.example.sancarlina.ui.features.product.ProductDetailContent
-import com.example.sancarlina.ui.features.profile.ProfileContent
-import com.example.sancarlina.ui.features.servicios.ServiciosSelloContent
-import com.example.sancarlina.ui.features.turismo.TurismoContent
-import com.example.sancarlina.ui.features.updates.UpdatesContent
+import com.sancarlina.app.ui.features.auth.LoginContent
+import com.sancarlina.app.ui.features.auth.OnboardingContent
+import com.sancarlina.app.ui.features.auth.RegisterContent
+import com.sancarlina.app.ui.features.category.CategoryListContent
+import com.sancarlina.app.ui.features.home.HomeContent
+import com.sancarlina.app.ui.features.map.MapContent
+import com.sancarlina.app.ui.features.points.PointsContent
+import com.sancarlina.app.ui.features.product.ProductDetailContent
+import com.sancarlina.app.ui.features.profile.ProfileContent
+import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
+import com.sancarlina.app.ui.features.turismo.TurismoContent
+import com.sancarlina.app.ui.features.updates.UpdatesContent
 
 @Composable
 fun SancarlinaNavGraph(
