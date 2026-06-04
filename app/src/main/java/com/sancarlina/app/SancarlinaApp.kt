@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.work.*
 import com.sancarlina.app.di.AppContainer
-import com.sancarlina.app.workers.UpdateWorker
-import java.util.concurrent.TimeUnit
 
 class SancarlinaApp : Application() {
 
@@ -33,27 +30,5 @@ class SancarlinaApp : Application() {
                 isAppInForeground = false
             }
         })
-
-        scheduleUpdateChecks()
-    }
-
-    private fun scheduleUpdateChecks() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        // Verificamos cada 1 hora para mayor precisión sin matar la batería
-        val updateRequest = PeriodicWorkRequestBuilder<UpdateWorker>(
-            1, TimeUnit.HOURS 
-        )
-            .setConstraints(constraints)
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 15, TimeUnit.MINUTES)
-            .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "UpdateCheckWork",
-            ExistingPeriodicWorkPolicy.KEEP,
-            updateRequest
-        )
     }
 }

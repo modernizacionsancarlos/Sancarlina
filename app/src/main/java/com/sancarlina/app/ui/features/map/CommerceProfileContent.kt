@@ -2,6 +2,8 @@ package com.sancarlina.app.ui.features.map
 
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,15 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sancarlina.app.data.model.FormSchema
+import com.sancarlina.app.R
+import com.sancarlina.app.data.models.FormSchema
+import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.ui.theme.SancarlinaAccent
 import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.viewmodel.CommerceProfileViewModel
+import com.sancarlina.app.utils.Logger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +55,14 @@ fun CommerceProfileContent(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("GÓNDOLA SANCARLINA", color = Color.White, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) },
+                title = { 
+                    Text(
+                        text = "Perfil del Comercio",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
@@ -63,6 +78,12 @@ fun CommerceProfileContent(
             }
         } else {
             val tenant = uiState.tenant
+            val displayUrl = tenant?.displayImageUrl() ?: ""
+            
+            if (displayUrl.isNotEmpty()) {
+                Logger.d("Cargando imagen para ${tenant?.name}: $displayUrl")
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -73,7 +94,7 @@ fun CommerceProfileContent(
                 // Hero Section
                 Box(modifier = Modifier.fillMaxWidth().height(240.dp)) {
                     AsyncImage(
-                        model = tenant?.imageUrl?.ifEmpty { tenant.coverUrl } ?: "",
+                        model = displayUrl,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -131,7 +152,7 @@ fun CommerceProfileContent(
                             lineHeight = 20.sp
                         )
                         
-                        // Forms Section (NEW)
+                        // Forms Section
                         if (uiState.forms.isNotEmpty()) {
                             Spacer(Modifier.height(24.dp))
                             Divider(color = Color.LightGray.copy(alpha = 0.5f))
@@ -146,9 +167,22 @@ fun CommerceProfileContent(
                             
                             uiState.forms.forEach { form ->
                                 FormItem(form = form) {
-                                    val url = form.submitUrl ?: "https://gondolasancarlina.web.app/formulario/${form.id}"
-                                    val intent = CustomTabsIntent.Builder().build()
-                                    intent.launchUrl(context, Uri.parse(url))
+                                    val url = if (!form.submitUrl.isNullOrBlank()) {
+                                        form.submitUrl!!
+                                    } else {
+                                        "https://gondolasancarlina.web.app/formulario/${form.id}"
+                                    }
+                                    try {
+                                        val colorParams = CustomTabColorSchemeParams.Builder()
+                                            .setToolbarColor(android.graphics.Color.parseColor("#4A6332"))
+                                            .build()
+                                        val intent = CustomTabsIntent.Builder()
+                                            .setDefaultColorSchemeParams(colorParams)
+                                            .build()
+                                        intent.launchUrl(context, Uri.parse(url))
+                                    } catch (e: Exception) {
+                                        Logger.e("Error al abrir Custom Tab: ${e.message}")
+                                    }
                                 }
                                 Spacer(Modifier.height(8.dp))
                             }
@@ -185,23 +219,23 @@ fun FormItem(form: FormSchema, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(form.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
                 if (form.description.isNotBlank()) {
-                    Text(form.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(
+                        form.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "Completar en línea",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SancarlinaAccent,
+                    fontWeight = FontWeight.Bold
+                )
             }
-            Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
+            Icon(Icons.AutoMirrored.Filled.OpenInNew, null, tint = Color.Gray, modifier = Modifier.size(20.dp))
         }
     }
 }
-
-@Composable
-fun Tag(text: String) {
-    Surface(
-        color = SancarlinaBackground,
-        shape = CircleShape,
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f))
-    ) {
-        Text(text, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelSmall)
-    }
-}
-
-data class ProductMini(val id: String, val name: String, val category: String, val price: String, val imageUrl: String)

@@ -1,0 +1,101 @@
+TECNICAL ANALYSIS - GONDOLAPP ANDROID PROJECT
+Status: Pre-Production Audit
+Date: 2024-06-04
+
+----------------------------------------
+1. ESTRUCTURA DEL PROYECTO
+----------------------------------------
+- com.sancarlina.app
+    ├── data/
+    │   ├── models/ (Tenant, FormSchema) - Modelos de datos de Firestore.
+    │   ├── remote/ (FirestoreCollections) - Constantes de nombres de colecciones.
+    │   └── repository/ (Areas, Benefits, Forms, Points, Submissions, Tenants, User) - Capa de abstracción de datos.
+    ├── di/ (AppContainer) - Inyección de dependencias manual.
+    ├── navigation/ (NavGraph, Screen) - Lógica de rutas y destinos.
+    ├── ui/
+    │   ├── screens/ - Pantallas principales consolidadas (Home, Explore, Map, Benefits, Profile, Splash).
+    │   ├── components/ - Componentes UI reutilizables.
+    │   └── theme/ - Definición de Material 3 (Color, Type, Theme).
+    ├── viewmodel/ - Lógica de negocio y estados (UiState) centralizados.
+    └── utils/ - Utilidades generales (Connectivity, Factory).
+
+Organización: El proyecto sigue una estructura limpia, separando la lógica de UI de la lógica de datos mediante ViewModels y Repositorios.
+
+----------------------------------------
+2. DEPENDENCIAS (Gradle)
+----------------------------------------
+- Core: Kotlin 2.2.10, AGP 9.2.1.
+- UI: Jetpack Compose (BOM 2026.02.01), Material 3.
+- Firebase: BOM 33.10.0 (Analytics, Auth, Firestore, Storage, Functions).
+- Maps: Google Maps Compose 6.4.4, Play Services Maps 19.0.0.
+- Networking/Images: OkHttp 4.12.0, Coil 2.6.0.
+- Architecture: Lifecycle Runtime/Process, Navigation Compose, WorkManager.
+
+----------------------------------------
+3. ARQUITECTURA
+----------------------------------------
+- Patrón: MVVM (Model-View-ViewModel).
+- Conexiones:
+    - UI: Basada en Declarative UI con Compose. Observa cambios de estado vía StateFlow.
+    - ViewModel: Maneja el estado de la pantalla y se comunica con los repositorios.
+    - Data: Los repositorios centralizan el acceso a Firebase Firestore y Auth, gestionando la asincronía con Coroutines.
+
+----------------------------------------
+4. PANTALLAS
+----------------------------------------
+- SplashScreen: Animación de entrada con branding. (Completa)
+- Onboarding: Introducción por pasos para nuevos usuarios. (Completa)
+- HomeScreen: Dashboard con banners dinámicos, categorías y productos cercanos. (Completa)
+- ExploreScreen (Turismo): Catálogo de puntos de interés. (Funcional / Mock data inicial)
+- MapScreen: Mapa interactivo de comercios con filtros avanzados y BottomSheet de detalle. (Completa/Firestore)
+- BenefitsScreen: Sistema de puntos, generación de QR y canje de beneficios. (Completa/Requiere Auth)
+- ProfileScreen: Gestión de cuenta, favoritos y accesos directos. (Completa)
+- CommerceProfile: Perfil detallado del comercio con integración de formularios web. (Completa)
+- Auth Flow: Pantallas de Login, Registro y Recuperación. (Completa)
+
+----------------------------------------
+5. FIREBASE
+----------------------------------------
+- Firestore: Uso intensivo para datos dinámicos. Colecciones principales: tenants, areas, categories, userProfiles, FormSchemas.
+- Auth: Autenticación por email/password implementada.
+- Storage: Gestión de imágenes para banners y comercios.
+- Seguridad: Se han implementado reglas de ProGuard para evitar fallos de parseo por ofuscación de modelos (R8).
+- Riesgo: Dependencia absoluta de las Rules configuradas en la consola de Firebase para evitar escrituras fraudulentas desde el cliente.
+
+----------------------------------------
+6. MANEJO DE ESTADO
+----------------------------------------
+- Implementación: StateFlow y MutableStateFlow en todos los ViewModels.
+- Patrón: Uso de data classes 'UiState' para representar estados de carga, error y éxito de forma atómica.
+- Estabilidad: El flujo de datos es unidireccional (UDF), facilitando el testing y la depuración.
+
+----------------------------------------
+7. RENDIMIENTO
+----------------------------------------
+- Asincronía: Coroutines (viewModelScope) en todas las operaciones pesadas.
+- UI: Se ha evitado el bloqueo del Main Thread. Se utilizan LazyColumn/LazyRow para listas eficientes.
+- Potenciales problemas: Posible exceso de recomposición en pantallas complejas (MapScreen) si no se optimizan los modificadores y el estado del mapa.
+
+----------------------------------------
+8. SEGURIDAD
+----------------------------------------
+- HTTPS: Forzado por Firebase y configuraciones internas.
+- Ofuscación: Reglas de ProGuard configuradas para modelos de datos.
+- FALTANTE: Implementación de EncryptedSharedPreferences para el guardado de datos sensibles en el dispositivo (actualmente usa SharedPreferences estándar para flags).
+- FALTANTE: Validación exhaustiva de tokens en el lado del cliente (se delega a Firebase SDK).
+
+----------------------------------------
+9. ERRORES POTENCIALES
+----------------------------------------
+- Null-Safety: Riesgo en el mapeo de documentos de Firestore si faltan campos (parcialmente mitigado con valores por defecto en modelos).
+- Errores de Red: Aunque hay try/catch, algunos flujos podrían mejorar la experiencia del usuario mostrando estados de "Sin Conexión" más amigables.
+- Firebase Quotas: El uso intensivo de lecturas en el mapa podría escalar costos si no se gestionan correctamente los listeners o el caché.
+
+----------------------------------------
+10. RECOMENDACIONES
+----------------------------------------
+1. Seguridad Local: Migrar 'sancarlina_prefs' a EncryptedSharedPreferences.
+2. Manejo de Errores: Implementar un interceptor global o un wrapper 'Resource<T>' para unificar los mensajes de error de Firebase.
+3. Optimización de Datos: Revisar el tamaño de los documentos en Firestore para minimizar lecturas de campos innecesarios.
+4. Testing: Realizar pruebas de carga en el MapScreen con +100 markers para verificar fluidez de la cámara.
+5. Play Integrity: Considerar la integración de Play Integrity API si el sistema de puntos se vuelve crítico para el negocio.

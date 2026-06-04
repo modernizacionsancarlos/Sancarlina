@@ -3,22 +3,40 @@ package com.sancarlina.app.data.repository
 import com.sancarlina.app.data.model.FormSchema
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 class FormsRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
-    suspend fun getFormsByTenant(tenantId: String): List<FormSchema> {
+    suspend fun getFormsByTenant(commerceId: String): List<FormSchema> {
         return try {
-            val snapshot = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
-                .whereEqualTo("tenantId", tenantId)
-                .whereEqualTo("active", true)
+            // Buscamos por tenantId (camelCase)
+            val snapshot1 = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .whereEqualTo("tenantId", commerceId)
                 .get()
                 .await()
             
-            snapshot.documents.mapNotNull { doc ->
-                doc.toObject(FormSchema::class.java)?.copy(id = doc.id)
+            // Buscamos por tenant_id (snake_case) como fallback/complemento
+            val snapshot2 = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .whereEqualTo("tenant_id", commerceId)
+                .get()
+                .await()
+            
+            val formsMap = mutableMapOf<String, FormSchema>()
+            
+            fun addFromSnapshot(snapshot: QuerySnapshot) {
+                snapshot.documents.forEach { doc ->
+                    doc.toObject(FormSchema::class.java)?.let { form ->
+                        formsMap[doc.id] = form.copy(id = doc.id)
+                    }
+                }
             }
+            
+            addFromSnapshot(snapshot1)
+            addFromSnapshot(snapshot2)
+            
+            formsMap.values.toList()
         } catch (e: Exception) {
             emptyList()
         }

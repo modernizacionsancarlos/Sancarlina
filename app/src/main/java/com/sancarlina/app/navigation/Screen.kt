@@ -20,7 +20,6 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Register : Screen("register", "Registro")
     object ForgotPassword : Screen("forgot_password", "Recuperar")
     object Offline : Screen("offline", "Offline")
-    object Updates : Screen("updates", "Actualizaciones")
     object Favorites : Screen("favorites", "Favoritos")
     object EditProfile : Screen("edit_profile", "Mis Datos")
     object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")

@@ -40,7 +40,7 @@ fun LoginContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "GÓNDOLA SANCARLINA",
+                        "GondolApp",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,

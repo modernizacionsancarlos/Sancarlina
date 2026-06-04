@@ -1,5 +1,0 @@
-{
-  "latestVersionCode": 47,
-  "apkUrl": "https://github.com/franco-valenzuela/sancarlina-distribucion/releases/download/v47/app-debug.apk",
-  "releaseNotes": "Integración de Trámites y Formularios en Línea:\n- Acceso directo a formularios desde la ficha de cada comercio.\n- Integración mediante Custom Tabs para una experiencia web fluida y segura.\n- Sincronización automática con FormSchemas de Góndola Sancarlina.\n- Los trámites se completan en la plataforma web oficial para mayor seguridad."
-}

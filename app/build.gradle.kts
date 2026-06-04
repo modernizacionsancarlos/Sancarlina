@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -16,15 +18,39 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 47
-        versionName = "7.6.0"
+        versionCode = 50
+        versionName = "7.7.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        ndk {
+            //noinspection ChromeSymbols
+            debugSymbolLevel = "FULL"
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            val properties = Properties()
+            val propertiesFile = project.rootProject.file("keystore.properties")
+            if (propertiesFile.exists()) {
+                properties.load(propertiesFile.inputStream())
+                storeFile = file(properties.getProperty("storeFile"))
+                storePassword = properties.getProperty("storePassword")
+                keyAlias = properties.getProperty("keyAlias")
+                keyPassword = properties.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -60,6 +86,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.okhttp)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.security.crypto)
     
     // CameraX & ML Kit
     implementation(libs.androidx.camera.core)

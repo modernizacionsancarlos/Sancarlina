@@ -32,6 +32,7 @@ import com.sancarlina.app.navigation.bottomNavItems
 import com.sancarlina.app.ui.theme.SancarlinaAccent
 import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.utils.PrefsManager
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -39,14 +40,14 @@ import kotlinx.coroutines.launch
 fun MainScaffold() {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val sharedPrefs = remember { context.getSharedPreferences("sancarlina_prefs", android.content.Context.MODE_PRIVATE) }
+    val prefsManager = remember { PrefsManager(context) }
     
     val auth = remember { FirebaseAuth.getInstance() }
     val currentUser = remember { mutableStateOf(auth.currentUser) }
 
     // Flags
-    val onboardingCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("onboarding_completed", false)) }
-    val guideCompleted = remember { mutableStateOf(sharedPrefs.getBoolean("guide_completed", false)) }
+    val onboardingCompleted = remember { mutableStateOf(prefsManager.isOnboardingCompleted()) }
+    val guideCompleted = remember { mutableStateOf(prefsManager.isGuideCompleted()) }
     var showQuickGuide by remember { mutableStateOf(false) }
 
     // Sidebar state
@@ -163,7 +164,7 @@ fun MainScaffold() {
         ) { innerPadding ->
             if (showQuickGuide) {
                 QuickGuide(onFinish = {
-                    sharedPrefs.edit().putBoolean("guide_completed", true).apply()
+                    prefsManager.setGuideCompleted(true)
                     showQuickGuide = false
                 })
             }
@@ -174,7 +175,7 @@ fun MainScaffold() {
                     bottom = innerPadding.calculateBottomPadding() // FIX: Use dynamic padding from Scaffold
                 ),
                 onOnboardingFinished = {
-                    sharedPrefs.edit().putBoolean("onboarding_completed", true).apply()
+                    prefsManager.setOnboardingCompleted(true)
                     onboardingCompleted.value = true
                 },
                 onOpenDrawer = {

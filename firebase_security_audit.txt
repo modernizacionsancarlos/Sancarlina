@@ -1,0 +1,102 @@
+FIREBASE SECURITY AUDIT - GONDOLAPP
+Auditor: Technical Lead
+Date: 2024-06-04
+Status: Production Readiness Review
+
+----------------------------------------
+1. FIRESTORE RULES (INFERIDAS/RECOMENDADAS)
+----------------------------------------
+Basado en el esquema actual (FIRESTORE-SCHEMA.md) y el código fuente:
+
+Reglas Requeridas:
+- allow read: true; (Para tenants, areas, categories, benefits) - Acceso público.
+- allow write: if request.auth.token.role == 'admin'; (Para la mayoría de colecciones desde Web Admin).
+- allow read, write: if request.auth.uid == userId; (Para userProfiles, permitiendo al usuario gestionar su propio perfil).
+- allow create: if request.auth != null; (Para Submissions, permitiendo envíos de formularios).
+
+Riesgos Detectados:
+- Inconsistencia de Colecciones: El código usa "userProfiles" en repositorios pero "users" en EditProfileViewModel. Si las reglas no cubren ambos, uno de los dos fallará en producción o será vulnerable.
+- Escritura de Perfil: Permitir escritura directa en 'points' desde el cliente es un riesgo crítico. Se recomienda que 'points' solo sea modificable vía Cloud Functions (Admin SDK).
+
+----------------------------------------
+2. STORAGE RULES (INFERIDAS)
+----------------------------------------
+Uso detectado: Almacenamiento de imágenes de comercios y banners.
+
+Reglas Requeridas:
+- allow read: true; (Acceso público para visualizar logos y banners).
+- allow write: if request.auth.token.role == 'admin'; (Solo administradores pueden subir contenido).
+
+Riesgos Detectados:
+- Si no hay reglas de tipo de archivo (mimetype), un atacante podría subir archivos maliciosos si la escritura estuviera abierta.
+
+----------------------------------------
+3. AUTENTICACIÓN
+----------------------------------------
+Estado actual:
+- Implementado: Firebase Auth con Email y Contraseña.
+- Validación: Se realiza en MainActivity y MainScaffold mediante AuthStateListener.
+- Dependencia: Total dependencia de Firebase Auth para la identificación del ciudadano.
+
+Mejora Sugerida:
+- Implementar re-autenticación antes de acciones sensibles (como eliminar cuenta).
+
+----------------------------------------
+4. ACCESO DESDE ANDROID
+----------------------------------------
+Operaciones identificadas:
+- Lectura: tenants, areas, benefits, FormSchemas, userProfiles.
+- Escritura (Add): Submissions (envío de formularios).
+- Update: userProfiles (datos básicos del ciudadano).
+- Delete: userProfiles (solicitud de baja de cuenta).
+
+Riesgo de Manipulación:
+- El cliente tiene acceso a modificar su propio documento de perfil. Se debe asegurar vía Rules que el campo 'role' y 'points' NO sean editables por el cliente directamente.
+
+----------------------------------------
+5. ACCESO DESDE WEB ADMIN
+----------------------------------------
+- Escritura completa: tenants, areas, benefits, FormSchemas, Notifications.
+- Gestión: Moderación de Submissions y auditoría de AuditLogs.
+- Control de Roles: El sistema asume la existencia de un rol 'admin' o 'superAdmin' (colección superAdmins).
+
+----------------------------------------
+6. VALIDACIÓN DE DATOS
+----------------------------------------
+App-side:
+- Validaciones básicas en AuthViewModel (email no vacío, passwords coinciden).
+- Null-safety en modelos (Tenant, FormSchema) mediante valores por defecto.
+
+Backend (Faltante sugerido):
+- Validación de esquemas en Rules (ej. que 'rating' sea siempre un número entre 0 y 5).
+- Validación de existencia de 'tenantId' relacionado al crear una Submission.
+
+----------------------------------------
+7. DATOS SENSIBLES
+----------------------------------------
+- Usuarios: email, phone, location (Protegidos por Auth/Rules).
+- Puntos: Son el activo más crítico. Actualmente se gestionan mediante Cloud Function 'awardPoints', lo cual es correcto y seguro.
+- Beneficios: Datos de canje (AuditLogs) deben ser estrictamente privados para Admin.
+
+----------------------------------------
+8. RIESGOS CRÍTICOS
+----------------------------------------
+1. Manipulación de Puntos: Si las reglas de Firestore permiten `allow write` en `userProfiles` sin filtrar campos, un usuario malintencionado podría editar sus propios puntos mediante herramientas como Postman o el SDK de Firebase manual.
+2. Fuga de Datos: Si `AuditLogs` o `Submissions` tienen lectura pública, se expondrían datos privados de otros ciudadanos.
+3. Inconsistencia de Datos: El uso de la colección "users" vs "userProfiles" puede llevar a que datos sensibles queden en una colección sin las reglas de seguridad adecuadas.
+
+----------------------------------------
+9. NIVEL DE SEGURIDAD
+----------------------------------------
+Clasificación: MEDIO
+
+Motivo: La arquitectura es correcta (uso de Cloud Functions para puntos y Auth para sesiones), pero la seguridad final depende de la configuración de Rules en la consola de Firebase, la cual presenta riesgos por la duplicidad de nombres de colecciones en el código.
+
+----------------------------------------
+10. RECOMENDACIONES
+----------------------------------------
+1. UNIFICAR COLECCIONES: Cambiar todas las referencias de "users" a "userProfiles" para usar una única fuente de verdad y un único set de reglas. (PRIORIDAD ALTA).
+2. LOCKDOWN DE PUNTOS: En las Rules de Firestore, añadir explicitamente:
+   `allow update: if request.auth.uid == userId && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['points', 'points_balance', 'role'])`
+3. VALIDACIÓN DE WEB ADMIN: Asegurar que la colección `superAdmins` sea la única con permisos de escritura en el catálogo.
+4. AUDITORÍA DE STORAGE: Bloquear toda subida (`allow write: if false`) desde la app móvil específicamente, permitiendo solo desde la web.

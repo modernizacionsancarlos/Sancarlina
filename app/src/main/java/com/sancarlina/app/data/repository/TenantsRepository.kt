@@ -1,9 +1,9 @@
 package com.sancarlina.app.data.repository
 
-import android.util.Log
-import com.sancarlina.app.data.model.Tenant
+import com.sancarlina.app.data.models.Tenant
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.tasks.await
 
 class TenantsRepository(
@@ -25,10 +25,10 @@ class TenantsRepository(
             }
             cachedTenants = tenants
             
-            Log.d("TenantsRepository", "Fetched ${tenants.size} active tenants from Firestore")
+            Logger.d("Fetched ${tenants.size} active tenants from Firestore")
             tenants
         } catch (e: Exception) {
-            Log.e("TenantsRepository", "Error fetching tenants", e)
+            Logger.e("Error fetching tenants", e)
             emptyList()
         }
     }

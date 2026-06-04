@@ -67,7 +67,7 @@ fun LegalContent(onBack: () -> Unit) {
                 ) {
                     LegalSection(
                         title = "1. Uso de la plataforma",
-                        content = "Góndola Sancarlina es una herramienta de la Municipalidad de San Carlos para promover el comercio local. El uso de la misma implica la aceptación de estas normas de convivencia y seguridad."
+                        content = "GondolApp es una herramienta para promover el comercio local. El uso de la misma implica la aceptación de estas normas de convivencia y seguridad."
                     )
                     LegalSection(
                         title = "2. Protección de datos personales",

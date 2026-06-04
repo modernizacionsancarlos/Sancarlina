@@ -1,21 +1,12 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ProGuard rules for Sancarlina / GondolApp
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Firebase Firestore Models
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.sancarlina.app.data.models.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Also keep viewmodel states if they are ever used with toObject
+-keep class com.sancarlina.app.viewmodel.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Prevent obfuscation of BuildConfig fields if needed
+-keep class com.sancarlina.app.BuildConfig { *; }

@@ -101,14 +101,13 @@ fun OnboardingContent(onFinish: () -> Unit) {
                                 .size(180.dp)
                                 .padding(bottom = 16.dp)
                         )
+                        // Nombre GondolApp en lugar de logotipo
                         Text(
-                            text = "GÓNDOLA\nSANCARLINA",
-                            style = MaterialTheme.typography.headlineLarge,
-                            color = SancarlinaAccent,
+                            text = "GondolApp",
+                            style = MaterialTheme.typography.displayMedium,
                             fontWeight = FontWeight.Black,
-                            letterSpacing = 4.sp,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(bottom = 32.dp)
+                            color = SancarlinaPrimary,
+                            modifier = Modifier.padding(bottom = 16.dp)
                         )
                     } else if (page.imageRes != null) {
                         Image(

@@ -3,13 +3,7 @@ package com.sancarlina.app.utils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sancarlina.app.di.AppContainer
-import com.sancarlina.app.ui.features.auth.AuthViewModel
-import com.sancarlina.app.ui.features.home.HomeViewModel
-import com.sancarlina.app.ui.features.map.CommerceProfileViewModel
-import com.sancarlina.app.ui.features.map.MapViewModel
-import com.sancarlina.app.ui.features.points.PointsViewModel
-import com.sancarlina.app.ui.features.splash.SplashViewModel
-import com.sancarlina.app.ui.features.turismo.TurismoViewModel
+import com.sancarlina.app.viewmodel.*
 
 class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
