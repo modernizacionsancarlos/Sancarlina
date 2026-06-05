@@ -1,6 +1,6 @@
 package com.sancarlina.app.data.repository
 
-import com.sancarlina.app.data.model.FormSchema
+import com.sancarlina.app.data.models.FormSchema
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -10,6 +10,8 @@ class FormsRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
     suspend fun getFormsByTenant(commerceId: String): List<FormSchema> {
+        if (commerceId.isBlank()) return emptyList()
+
         return try {
             // Buscamos por tenantId (camelCase)
             val snapshot1 = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
@@ -27,8 +29,12 @@ class FormsRepository(
             
             fun addFromSnapshot(snapshot: QuerySnapshot) {
                 snapshot.documents.forEach { doc ->
-                    doc.toObject(FormSchema::class.java)?.let { form ->
-                        formsMap[doc.id] = form.copy(id = doc.id)
+                    try {
+                        doc.toObject(FormSchema::class.java)?.let { form ->
+                            formsMap[doc.id] = form.copy(id = doc.id)
+                        }
+                    } catch (e: Exception) {
+                        // Skip corrupted documents
                     }
                 }
             }

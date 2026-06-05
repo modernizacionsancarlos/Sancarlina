@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.AreasRepository
 import com.sancarlina.app.data.repository.TenantsRepository
+import com.sancarlina.app.utils.Logger
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,42 +30,51 @@ class MapViewModel(
 
     private fun loadMarkers() {
         viewModelScope.launch {
-            val tenants = tenantsRepository.getActiveTenants()
-            val areas = areasRepository.getAreas()
-            
-            val markers = tenants.map { tenant ->
-                val coords = tenant.geoCoordinates.split(",")
-                val lat = coords.getOrNull(0)?.toDoubleOrNull() ?: 0.0
-                val lng = coords.getOrNull(1)?.toDoubleOrNull() ?: 0.0
+            try {
+                val tenants = tenantsRepository.getActiveTenants()
+                val areas = areasRepository.getAreas()
                 
-                val areaName = areas.find { it.id == tenant.areaId }?.name ?: "General"
-                
-                CommerceMarker(
-                    id = tenant.id,
-                    name = tenant.name,
-                    locationName = areaName,
-                    position = LatLng(lat, lng),
-                    category = tenant.industry,
-                    phone = tenant.contactEmail,
-                    imageUrl = tenant.displayImageUrl(),
-                    rating = tenant.rating.toFloat(),
-                    distance = "GondolApp"
-                )
-            }
-
-            if (markers.isNotEmpty()) {
-                val categories = listOf("Todos") + markers.map { it.category }.distinct()
-                val locations = listOf("Todas") + areas.map { it.name }.distinct()
-
-                _uiState.update { 
-                    it.copy(
-                        markers = markers,
-                        filteredMarkers = markers,
-                        categories = categories,
-                        locations = locations
-                    )
+                val markers = tenants.mapNotNull { tenant ->
+                    try {
+                        val coords = tenant.geoCoordinates.split(",")
+                        val lat = coords.getOrNull(0)?.toDoubleOrNull() ?: return@mapNotNull null
+                        val lng = coords.getOrNull(1)?.toDoubleOrNull() ?: return@mapNotNull null
+                        
+                        val areaName = areas.find { it.id == tenant.areaId }?.name ?: "General"
+                        
+                        CommerceMarker(
+                            id = tenant.id,
+                            name = tenant.name,
+                            locationName = areaName,
+                            position = LatLng(lat, lng),
+                            category = tenant.industry,
+                            phone = tenant.contactEmail,
+                            imageUrl = tenant.displayImageUrl(),
+                            rating = tenant.rating.toFloat(),
+                            distance = "GondolApp"
+                        )
+                    } catch (e: Exception) {
+                        null // Skip invalid markers
+                    }
                 }
-            } else {
+
+                if (markers.isNotEmpty()) {
+                    val categories = listOf("Todos") + markers.map { it.category }.distinct()
+                    val locations = listOf("Todas") + areas.map { it.name }.distinct()
+
+                    _uiState.update { 
+                        it.copy(
+                            markers = markers,
+                            filteredMarkers = markers,
+                            categories = categories,
+                            locations = locations
+                        )
+                    }
+                } else {
+                    loadMockMarkers()
+                }
+            } catch (e: Exception) {
+                Logger.e("Error loading map markers", e)
                 loadMockMarkers()
             }
         }

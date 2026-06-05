@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.features.map.CommerceMarker
+import com.sancarlina.app.viewmodel.CommerceMarker
 import com.sancarlina.app.ui.theme.SancarlinaAccent
 import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.ui.theme.SancarlinaPrimary

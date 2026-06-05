@@ -36,7 +36,6 @@ import com.sancarlina.app.ui.features.points.PointsHistoryContent
 import com.sancarlina.app.ui.features.points.QrScannerContent
 import com.sancarlina.app.ui.features.product.ProductDetailContent
 import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
-import com.sancarlina.app.ui.features.splash.SplashScreenContent
 import com.sancarlina.app.ui.features.support.SupportContent
 import com.sancarlina.app.utils.ViewModelFactory
 

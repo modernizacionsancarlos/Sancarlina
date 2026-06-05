@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.viewmodel.AuthViewModel
+import com.sancarlina.app.viewmodel.AuthUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,7 +129,7 @@ fun LoginContent(
 
                 if (uiState.error != null) {
                     Text(
-                        text = uiState.error!!,
+                        text = uiState.error ?: "",
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(top = 8.dp)

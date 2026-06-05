@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sancarlina.app.data.repository.BenefitsRepository
 import com.sancarlina.app.data.repository.UserRepository
+import com.sancarlina.app.utils.Logger
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,25 +32,30 @@ class PointsViewModel(
         _uiState.update { it.copy(isLoading = true) }
         
         viewModelScope.launch {
-            val uid = auth.currentUser?.uid
-            val balance = uid?.let { userRepository.getUserBalance(it) } ?: 0
-            val benefits = benefitsRepository.getActiveBenefits().map { b ->
-                BenefitItem(
-                    id = b.id,
-                    title = b.title,
-                    brand = b.industry,
-                    cost = if (b.points_cost > 0) b.points_cost else b.cost,
-                    category = b.industry,
-                    imageUrl = b.cover_url
-                )
-            }
-            
-            _uiState.update { 
-                it.copy(
-                    balance = balance,
-                    benefits = benefits,
-                    isLoading = false
-                )
+            try {
+                val uid = auth.currentUser?.uid
+                val balance = uid?.let { userRepository.getUserBalance(it) } ?: 0
+                val benefits = benefitsRepository.getActiveBenefits().map { b ->
+                    BenefitItem(
+                        id = b.id,
+                        title = b.title,
+                        brand = b.industry,
+                        cost = if (b.points_cost > 0) b.points_cost else b.cost,
+                        category = b.industry,
+                        imageUrl = b.cover_url
+                    )
+                }
+                
+                _uiState.update { 
+                    it.copy(
+                        balance = balance,
+                        benefits = benefits,
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                Logger.e("Error loading points data", e)
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

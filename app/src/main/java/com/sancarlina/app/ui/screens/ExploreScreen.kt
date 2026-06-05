@@ -6,6 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -67,40 +70,58 @@ fun ExploreScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(SancarlinaBackground)
         ) {
-            // Categories Row
-            LazyRow(
-                modifier = Modifier.padding(vertical = 16.dp),
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(uiState.categories) { category ->
-                    FilterChip(
-                        selected = uiState.selectedCategory == category,
-                        onClick = { viewModel.onCategorySelected(category) },
-                        label = { Text(category) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = SancarlinaPrimary,
-                            selectedLabelColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(20.dp)
-                    )
+            val isTablet = maxWidth > 600.dp
+            
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Categories Row
+                LazyRow(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(uiState.categories) { category ->
+                        FilterChip(
+                            selected = uiState.selectedCategory == category,
+                            onClick = { viewModel.onCategorySelected(category) },
+                            label = { Text(category) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = SancarlinaPrimary,
+                                selectedLabelColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                    }
                 }
-            }
 
-            // Turismo Points List
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(uiState.points) { point ->
-                    TurismoPointCard(point)
+                // Turismo Points List / Grid
+                if (isTablet) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(uiState.points) { point ->
+                            TurismoPointCard(point)
+                        }
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(uiState.points) { point ->
+                            TurismoPointCard(point)
+                        }
+                    }
                 }
             }
         }
@@ -112,11 +133,11 @@ fun TurismoPointCard(point: TurismoPoint) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp),
+            .heightIn(min = 200.dp, max = 280.dp),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth().aspectRatio(1.5f)) {
             AsyncImage(
                 model = point.imageUrl,
                 contentDescription = null,

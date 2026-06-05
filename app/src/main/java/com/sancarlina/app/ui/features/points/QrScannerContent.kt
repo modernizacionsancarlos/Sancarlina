@@ -82,9 +82,9 @@ fun QrScannerContent(
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             if (hasCameraPermission) {
-                if (uiState.successPoints != null) {
-                    SuccessOverlay(uiState.successPoints!!, onBack)
-                } else {
+                uiState.successPoints?.let { points ->
+                    SuccessOverlay(points, onBack)
+                } ?: run {
                     CameraPreviewWrapper { qrData ->
                         viewModel.processQrCode(qrData, onSuccess)
                     }
@@ -117,13 +117,13 @@ fun QrScannerContent(
                 }
             }
 
-            if (uiState.error != null) {
+            uiState.error?.let { errorMsg ->
                 SnackbarHost(
                     hostState = remember { SnackbarHostState() },
                     modifier = Modifier.align(Alignment.BottomCenter)
                 ) {
                     Snackbar(containerColor = Color.Red, contentColor = Color.White) {
-                        Text(uiState.error!!)
+                        Text(errorMsg)
                     }
                 }
             }

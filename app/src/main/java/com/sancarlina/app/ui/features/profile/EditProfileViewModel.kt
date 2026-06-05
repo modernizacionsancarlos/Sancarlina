@@ -1,12 +1,16 @@
 package com.sancarlina.app.ui.features.profile
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class EditProfileViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
@@ -21,27 +25,29 @@ class EditProfileViewModel : ViewModel() {
 
     private fun loadUserData() {
         val user = auth.currentUser ?: return
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, error = null) }
 
-        firestore.collection("users").document(user.uid).get()
-            .addOnSuccessListener { doc ->
+        viewModelScope.launch {
+            try {
+                val doc = firestore.collection("userProfiles").document(user.uid).get().await()
                 if (doc.exists()) {
                     _uiState.update {
                         it.copy(
-                            fullName = doc.getString("name") ?: "",
+                            fullName = doc.getString("user_name") ?: doc.getString("name") ?: "",
                             phone = doc.getString("phone") ?: "",
                             location = doc.getString("location") ?: "La Consulta",
-                            profileImageUrl = doc.getString("imageUrl") ?: "",
+                            profileImageUrl = doc.getString("imageUrl") ?: doc.getString("photo_url") ?: "",
                             isLoading = false
                         )
                     }
                 } else {
                     _uiState.update { it.copy(isLoading = false) }
                 }
-            }
-            .addOnFailureListener {
+            } catch (e: Exception) {
+                Logger.e("Error loading user data", e)
                 _uiState.update { it.copy(isLoading = false, error = "Error al cargar datos") }
             }
+        }
     }
 
     fun onFullNameChange(name: String) {
@@ -58,21 +64,23 @@ class EditProfileViewModel : ViewModel() {
 
     fun saveProfile() {
         val user = auth.currentUser ?: return
-        _uiState.update { it.copy(isSaving = true) }
+        _uiState.update { it.copy(isSaving = true, error = null) }
 
         val data = mapOf(
-            "name" to _uiState.value.fullName,
+            "user_name" to _uiState.value.fullName,
             "phone" to _uiState.value.phone,
             "location" to _uiState.value.location
         )
 
-        firestore.collection("users").document(user.uid).update(data)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            try {
+                firestore.collection("userProfiles").document(user.uid).update(data).await()
                 _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
-            }
-            .addOnFailureListener {
+            } catch (e: Exception) {
+                Logger.e("Error saving profile", e)
                 _uiState.update { it.copy(isSaving = false, error = "Error al guardar cambios") }
             }
+        }
     }
 
     fun resetSuccess() {
@@ -85,22 +93,21 @@ class EditProfileViewModel : ViewModel() {
 
     fun deleteAccount(onSuccess: () -> Unit) {
         val user = auth.currentUser ?: return
-        _uiState.update { it.copy(isLoading = true, showDeleteDialog = false) }
+        _uiState.update { it.copy(isLoading = true, showDeleteDialog = false, error = null) }
 
-        // 1. Delete from Firestore
-        firestore.collection("users").document(user.uid).delete()
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            try {
+                // 1. Delete from Firestore
+                firestore.collection("userProfiles").document(user.uid).delete().await()
+                
                 // 2. Delete from Auth
-                user.delete()
-                    .addOnSuccessListener {
-                        onSuccess()
-                    }
-                    .addOnFailureListener {
-                        _uiState.update { it.copy(isLoading = false, error = "Error al eliminar usuario. Re-inicie sesión e intente de nuevo.") }
-                    }
+                user.delete().await()
+                
+                onSuccess()
+            } catch (e: Exception) {
+                Logger.e("Error deleting account", e)
+                _uiState.update { it.copy(isLoading = false, error = "Error al eliminar usuario. Re-inicie sesión e intente de nuevo.") }
             }
-            .addOnFailureListener {
-                _uiState.update { it.copy(isLoading = false, error = "Error al eliminar datos") }
-            }
+        }
     }
 }

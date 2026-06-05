@@ -1,13 +1,17 @@
 package com.sancarlina.app.ui.features.category
 
 import androidx.lifecycle.ViewModel
-import com.sancarlina.app.ui.features.map.CommerceMarker
+import androidx.lifecycle.viewModelScope
+import com.sancarlina.app.viewmodel.CommerceMarker
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class CategoryListViewModel : ViewModel() {
 
@@ -16,12 +20,17 @@ class CategoryListViewModel : ViewModel() {
     val uiState: StateFlow<CategoryListUiState> = _uiState.asStateFlow()
 
     fun loadCategory(categoryId: String) {
+        if (categoryId.isBlank()) return
+        
         _uiState.update { it.copy(isLoading = true, categoryName = categoryId.uppercase()) }
 
-        firestore.collection("commerces")
-            .whereEqualTo("category", categoryId)
-            .get()
-            .addOnSuccessListener { result ->
+        viewModelScope.launch {
+            try {
+                val result = firestore.collection("commerces")
+                    .whereEqualTo("category", categoryId)
+                    .get()
+                    .await()
+                
                 val commerceList = result.documents.map { doc ->
                     val pos = doc.getGeoPoint("position")
                     CommerceMarker(
@@ -37,21 +46,24 @@ class CategoryListViewModel : ViewModel() {
                     )
                 }
 
-                val locations = listOf("Todas") + commerceList.map { it.locationName }.distinct()
-
-                _uiState.update { 
-                    it.copy(
-                        commerces = commerceList,
-                        filteredCommerces = commerceList,
-                        locations = locations,
-                        isLoading = false
-                    )
+                if (commerceList.isEmpty()) {
+                    loadMockData(categoryId)
+                } else {
+                    val locations = listOf("Todas") + commerceList.map { it.locationName }.distinct()
+                    _uiState.update { 
+                        it.copy(
+                            commerces = commerceList,
+                            filteredCommerces = commerceList,
+                            locations = locations,
+                            isLoading = false
+                        )
+                    }
                 }
-            }
-            .addOnFailureListener {
-                // Fallback to mock data if Firestore is empty or fails for now
+            } catch (e: Exception) {
+                Logger.e("Error loading category commerces", e)
                 loadMockData(categoryId)
             }
+        }
     }
 
     private fun loadMockData(categoryId: String) {

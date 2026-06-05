@@ -297,6 +297,7 @@ fun ProfileMenuItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileAuthRequiredPlaceholder(onNavigateToLogin: () -> Unit, onOpenDrawer: () -> Unit) {
     Scaffold(

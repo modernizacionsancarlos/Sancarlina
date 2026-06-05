@@ -152,9 +152,9 @@ fun BenefitsScreen(
     }
 
     // Modal de Canje
-    if (uiState.selectedBenefit != null) {
+    uiState.selectedBenefit?.let { benefit ->
         RedeemDialog(
-            benefit = uiState.selectedBenefit!!,
+            benefit = benefit,
             userBalance = uiState.balance,
             onDismiss = { viewModel.dismissModal() },
             onRedeem = { viewModel.redeemBenefit() }
@@ -365,6 +365,7 @@ fun SuccessPointsDialog(onDismiss: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthRequiredPlaceholder(onNavigateToLogin: () -> Unit, onOpenDrawer: () -> Unit) {
     Scaffold(

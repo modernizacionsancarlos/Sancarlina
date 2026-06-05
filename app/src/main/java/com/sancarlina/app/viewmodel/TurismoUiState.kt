@@ -9,10 +9,10 @@ data class TurismoUiState(
 )
 
 data class TurismoPoint(
-    val id: String,
-    val name: String,
-    val description: String,
-    val imageUrl: String,
-    val category: String,
+    val id: String = "",
+    val name: String = "",
+    val description: String = "",
+    val imageUrl: String = "",
+    val category: String = "",
     val location: String = "San Carlos"
 )

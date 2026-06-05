@@ -6,11 +6,13 @@ import com.sancarlina.app.data.repository.TenantsRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.sancarlina.app.R
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class HomeViewModel(
     private val tenantsRepository: TenantsRepository
@@ -57,15 +59,15 @@ class HomeViewModel(
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val tenants = tenantsRepository.getActiveTenants()
-            _uiState.update { it.copy(tenants = tenants) }
-        }
+            try {
+                // 1. Fetch Tenants
+                val tenants = tenantsRepository.getActiveTenants()
+                _uiState.update { it.copy(tenants = tenants) }
 
-        // Fetch Banners
-        firestore.collection("banners").get()
-            .addOnSuccessListener { result ->
-                if (!result.isEmpty) {
-                    val banners = result.documents.map { doc ->
+                // 2. Fetch Banners
+                val bannerSnapshot = firestore.collection("banners").get().await()
+                if (!bannerSnapshot.isEmpty) {
+                    val banners = bannerSnapshot.documents.map { doc ->
                         BannerItem(
                             title = doc.getString("title") ?: "",
                             subtitle = doc.getString("subtitle") ?: "",
@@ -74,13 +76,11 @@ class HomeViewModel(
                     }
                     _uiState.update { it.copy(banners = banners) }
                 }
-            }
 
-        // Fetch Categories
-        firestore.collection("categories").orderBy("order").get()
-            .addOnSuccessListener { result ->
-                if (!result.isEmpty) {
-                    val categories = result.documents.map { doc ->
+                // 3. Fetch Categories
+                val categorySnapshot = firestore.collection("categories").orderBy("order").get().await()
+                if (!categorySnapshot.isEmpty) {
+                    val categories = categorySnapshot.documents.map { doc ->
                         CategoryItem(
                             name = doc.getString("name") ?: "",
                             iconUrl = doc.getString("iconUrl") ?: ""
@@ -88,28 +88,32 @@ class HomeViewModel(
                     }
                     _uiState.update { it.copy(categories = categories) }
                 }
-            }
 
-        // Fetch Featured Product (Nearby)
-        firestore.collection("products").whereEqualTo("featured", true).limit(1).get()
-            .addOnSuccessListener { result ->
-                val doc = result.documents.firstOrNull()
-                if (doc != null) {
+                // 4. Fetch Featured Product (Nearby)
+                val productSnapshot = firestore.collection("products")
+                    .whereEqualTo("featured", true)
+                    .limit(1)
+                    .get()
+                    .await()
+                    
+                val productDoc = productSnapshot.documents.firstOrNull()
+                if (productDoc != null) {
                     val product = ProductItem(
-                        id = doc.id,
-                        name = doc.getString("name") ?: "",
-                        brand = doc.getString("brand") ?: "",
-                        price = doc.getString("price") ?: "",
-                        phone = doc.getString("phone") ?: ""
+                        id = productDoc.id,
+                        name = productDoc.getString("name") ?: "",
+                        brand = productDoc.getString("brand") ?: "",
+                        price = productDoc.getString("price") ?: "",
+                        phone = productDoc.getString("phone") ?: ""
                     )
                     _uiState.update { it.copy(nearbyProduct = product, isLoading = false) }
                 } else {
                     _uiState.update { it.copy(isLoading = false) }
                 }
-            }
-            .addOnFailureListener {
+            } catch (e: Exception) {
+                Logger.e("Error loading home data", e)
                 _uiState.update { it.copy(isLoading = false) }
             }
+        }
     }
 
     // Utility to seed initial data if needed

@@ -185,13 +185,15 @@ fun MapScreen(
                 ),
                 uiSettings = MapUiSettings(
                     zoomControlsEnabled = false,
-                    myLocationButtonEnabled = false
+                    myLocationButtonEnabled = false,
+                    mapToolbarEnabled = false // Optimization for low-end devices
                 ),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
                 uiState.filteredMarkers.forEach { commerce ->
+                    val markerState = rememberMarkerState(position = commerce.position)
                     Marker(
-                        state = MarkerState(position = commerce.position),
+                        state = markerState,
                         title = commerce.name,
                         snippet = commerce.locationName,
                         onClick = {
@@ -254,115 +256,124 @@ fun MapScreen(
                 )
             }
 
-            // Detail Bottom Sheet [VISTA 18]
-            if (uiState.isBottomSheetVisible && uiState.selectedMarker != null) {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onDismissBottomSheet() },
-                    sheetState = sheetState,
-                    containerColor = Color.White,
-                    dragHandle = {
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 8.dp, bottom = 20.dp)
-                                .width(48.dp)
-                                .height(6.dp)
-                                .background(Color(0xFFE2E4D3), RoundedCornerShape(3.dp))
-                        )
-                    }
-                ) {
-                    val marker = uiState.selectedMarker!!
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                            .padding(bottom = 32.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AsyncImage(
-                                model = marker.imageUrl,
-                                contentDescription = null,
+    // Detail Bottom Sheet [VISTA 18]
+            if (uiState.isBottomSheetVisible) {
+                uiState.selectedMarker?.let { marker ->
+                    ModalBottomSheet(
+                        onDismissRequest = { viewModel.onDismissBottomSheet() },
+                        sheetState = sheetState,
+                        containerColor = Color.White,
+                        dragHandle = {
+                            Box(
                                 modifier = Modifier
-                                    .size(88.dp)
-                                    .clip(RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.Crop
+                                    .padding(top = 8.dp, bottom = 20.dp)
+                                    .width(48.dp)
+                                    .height(6.dp)
+                                    .background(Color(0xFFE2E4D3), RoundedCornerShape(3.dp))
                             )
-                            
-                            Spacer(modifier = Modifier.width(16.dp))
-                            
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = marker.name,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = marker.category,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Gray
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp)
+                                .padding(bottom = 32.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                AsyncImage(
+                                    model = marker.imageUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(88.dp)
+                                        .clip(RoundedCornerShape(12.dp)),
+                                    contentScale = ContentScale.Crop
                                 )
                                 
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(top = 4.dp)
-                                ) {
-                                    repeat(5) { index ->
-                                        Icon(
-                                            imageVector = Icons.Default.Star,
-                                            contentDescription = null,
-                                            tint = if (index < marker.rating.toInt()) Color(0xFFF59E0B) else Color.LightGray,
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(16.dp))
+                                
+                                Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = marker.distance,
-                                        style = MaterialTheme.typography.labelSmall,
+                                        text = marker.name,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = marker.category,
+                                        style = MaterialTheme.typography.bodyMedium,
                                         color = Color.Gray
                                     )
+                                    
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    ) {
+                                        repeat(5) { index ->
+                                            Icon(
+                                                imageVector = Icons.Default.Star,
+                                                contentDescription = null,
+                                                tint = if (index < marker.rating.toInt()) Color(0xFFF59E0B) else Color.LightGray,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = marker.distance,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = Color.Gray
+                                        )
+                                    }
                                 }
                             }
-                        }
-                        
-                        Spacer(modifier = Modifier.height(24.dp))
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Button(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW)
-                                    intent.data = Uri.parse("https://wa.me/${marker.phone}")
-                                    context.startActivity(intent)
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(48.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                                shape = RoundedCornerShape(24.dp)
-                            ) {
-                                Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null, modifier = Modifier.size(20.dp))
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("CONTACTO WHATSAPP", style = MaterialTheme.typography.labelLarge)
-                            }
                             
-                            OutlinedButton(
-                                onClick = {
-                                    val gmmIntentUri = Uri.parse("geo:${marker.position.latitude},${marker.position.longitude}?q=${Uri.encode(marker.name)}")
-                                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                                    mapIntent.setPackage("com.google.android.apps.maps")
-                                    context.startActivity(mapIntent)
-                                },
-                                modifier = Modifier.size(48.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                contentPadding = PaddingValues(0.dp),
-                                border = BorderStroke(2.dp, SancarlinaPrimary)
+                            Spacer(modifier = Modifier.height(24.dp))
+                            
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Icon(Icons.Default.Directions, contentDescription = null, tint = SancarlinaPrimary)
+                                Button(
+                                    onClick = {
+                                        try {
+                                            val intent = Intent(Intent.ACTION_VIEW)
+                                            intent.data = Uri.parse("https://wa.me/${marker.phone}")
+                                            context.startActivity(intent)
+                                        } catch (e: Exception) {
+                                            // Handle case where WhatsApp is not installed
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(48.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                                    shape = RoundedCornerShape(24.dp)
+                                ) {
+                                    Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null, modifier = Modifier.size(20.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("CONTACTO WHATSAPP", style = MaterialTheme.typography.labelLarge)
+                                }
+                                
+                                OutlinedButton(
+                                    onClick = {
+                                        try {
+                                            val gmmIntentUri = Uri.parse("geo:${marker.position.latitude},${marker.position.longitude}?q=${Uri.encode(marker.name)}")
+                                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                            mapIntent.setPackage("com.google.android.apps.maps")
+                                            context.startActivity(mapIntent)
+                                        } catch (e: Exception) {
+                                            // Fallback if Google Maps app is not installed
+                                        }
+                                    },
+                                    modifier = Modifier.size(48.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    contentPadding = PaddingValues(0.dp),
+                                    border = BorderStroke(2.dp, SancarlinaPrimary)
+                                ) {
+                                    Icon(Icons.Default.Directions, contentDescription = null, tint = SancarlinaPrimary)
+                                }
                             }
                         }
                     }

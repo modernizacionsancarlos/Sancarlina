@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -155,7 +156,7 @@ fun CommerceProfileContent(
                         // Forms Section
                         if (uiState.forms.isNotEmpty()) {
                             Spacer(Modifier.height(24.dp))
-                            Divider(color = Color.LightGray.copy(alpha = 0.5f))
+                            HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f))
                             Spacer(Modifier.height(16.dp))
                             Text(
                                 "Trámites y Formularios",
@@ -168,7 +169,7 @@ fun CommerceProfileContent(
                             uiState.forms.forEach { form ->
                                 FormItem(form = form) {
                                     val url = if (!form.submitUrl.isNullOrBlank()) {
-                                        form.submitUrl!!
+                                        form.submitUrl ?: ""
                                     } else {
                                         "https://gondolasancarlina.web.app/formulario/${form.id}"
                                     }
@@ -210,7 +211,7 @@ fun FormItem(form: FormSchema, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                Icons.Default.Assignment,
+                Icons.AutoMirrored.Filled.Assignment,
                 contentDescription = null,
                 tint = SancarlinaAccent,
                 modifier = Modifier.size(32.dp)

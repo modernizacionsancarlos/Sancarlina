@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +49,7 @@ fun MainScaffold() {
     // Flags
     val onboardingCompleted = remember { mutableStateOf(prefsManager.isOnboardingCompleted()) }
     val guideCompleted = remember { mutableStateOf(prefsManager.isGuideCompleted()) }
-    var showQuickGuide by remember { mutableStateOf(false) }
+    var showQuickGuide by rememberSaveable { mutableStateOf(false) }
 
     // Sidebar state
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -278,12 +279,14 @@ fun SancarlinaBottomBar(
             border = BorderStroke(4.dp, Color(0xFFF9F9F6))
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    Screen.Map.icon!!,
-                    contentDescription = "Mapa",
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
-                )
+                Screen.Map.icon?.let { icon ->
+                    Icon(
+                        icon,
+                        contentDescription = "Mapa",
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
         }
     }
@@ -305,12 +308,14 @@ fun BottomNavItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            screen.icon!!,
-            contentDescription = screen.title,
-            tint = contentColor,
-            modifier = Modifier.size(24.dp)
-        )
+        screen.icon?.let { icon ->
+            Icon(
+                icon,
+                contentDescription = screen.title,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
+            )
+        }
         Text(
             text = screen.title.uppercase(),
             fontSize = 10.sp,

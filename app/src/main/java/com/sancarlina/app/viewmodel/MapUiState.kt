@@ -17,12 +17,12 @@ data class MapUiState(
 )
 
 data class CommerceMarker(
-    val id: String,
-    val name: String,
-    val locationName: String,
-    val position: LatLng,
-    val category: String,
-    val phone: String,
+    val id: String = "",
+    val name: String = "",
+    val locationName: String = "",
+    val position: LatLng = LatLng(0.0, 0.0),
+    val category: String = "",
+    val phone: String = "",
     val imageUrl: String = "",
     val rating: Float = 5f,
     val distance: String = "A 1.5 km de vos"

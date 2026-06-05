@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +54,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val auth = remember { FirebaseAuth.getInstance() }
-    var showLoginPrompt by remember { mutableStateOf(false) }
+    var showLoginPrompt by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -229,6 +230,8 @@ fun HeaderSection(onMenuClick: () -> Unit, onSearchClick: () -> Unit) {
 
 @Composable
 fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Unit) {
+    if (banners.isEmpty()) return
+
     val pagerState = rememberPagerState(pageCount = { banners.size })
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -238,7 +241,11 @@ fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Uni
                 .fillMaxWidth()
                 .height(160.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .clickable { onBannerClick(banners[pagerState.currentPage]) }
+                .clickable { 
+                    if (banners.isNotEmpty() && pagerState.currentPage < banners.size) {
+                        onBannerClick(banners[pagerState.currentPage]) 
+                    }
+                }
         ) { page ->
             val banner = banners[page]
             Row(modifier = Modifier.fillMaxSize()) {
@@ -295,20 +302,29 @@ fun BannerCarousel(banners: List<BannerItem>, onBannerClick: (BannerItem) -> Uni
 
 @Composable
 fun CategoriesGrid(categories: List<CategoryItem>, onCategoryClick: (CategoryItem) -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        val rows = categories.chunked(3)
-        rows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                row.forEach { category ->
-                    CategoryItemView(category, modifier = Modifier.weight(1f)) {
-                        onCategoryClick(category)
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val columns = if (maxWidth > 600.dp) 4 else 3
+        Column(modifier = Modifier.fillMaxWidth()) {
+            val rows = categories.chunked(columns)
+            rows.forEach { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    row.forEach { category ->
+                        CategoryItemView(category, modifier = Modifier.weight(1f)) {
+                            onCategoryClick(category)
+                        }
+                    }
+                    // Fill empty slots in the last row to keep weights correct
+                    if (row.size < columns) {
+                        repeat(columns - row.size) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

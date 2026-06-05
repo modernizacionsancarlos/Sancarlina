@@ -6,6 +6,7 @@ import com.sancarlina.app.data.models.FormSchema
 import com.sancarlina.app.data.models.Tenant
 import com.sancarlina.app.data.repository.FormsRepository
 import com.sancarlina.app.data.repository.TenantsRepository
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +29,11 @@ class CommerceProfileViewModel(
     val uiState: StateFlow<CommerceProfileUiState> = _uiState.asStateFlow()
 
     fun loadCommerce(commerceId: String) {
+        if (commerceId.isBlank()) {
+            _uiState.update { it.copy(error = "ID de comercio no válido") }
+            return
+        }
+
         _uiState.update { it.copy(isLoading = true, error = null) }
         
         viewModelScope.launch {
@@ -50,7 +56,8 @@ class CommerceProfileViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+                Logger.e("Error loading commerce profile", e)
+                _uiState.update { it.copy(isLoading = false, error = "Error al cargar la información") }
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.sancarlina.app.ui.features.category
 
-import com.sancarlina.app.ui.features.map.CommerceMarker
+import com.sancarlina.app.viewmodel.CommerceMarker
 
 data class CategoryListUiState(
     val categoryName: String = "",

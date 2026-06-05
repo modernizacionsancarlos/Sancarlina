@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sancarlina.app.data.repository.PointsRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,27 +47,32 @@ class QrScannerViewModel : ViewModel() {
         val tenantId = parts[2]
         
         viewModelScope.launch {
-            // Fetch tenant name first if needed, or just use a generic name if not in QR
-            // For now, let's try to get it from Firestore since we have tenantId
-            var tenantName = "Comercio Asociado"
             try {
-                val tenantDoc = firestore.collection("tenants").document(tenantId).get().await()
-                tenantName = tenantDoc.getString("name") ?: tenantName
+                // Fetch tenant name first if needed, or just use a generic name if not in QR
+                // For now, let's try to get it from Firestore since we have tenantId
+                var tenantName = "Comercio Asociado"
+                try {
+                    val tenantDoc = firestore.collection("tenants").document(tenantId).get().await()
+                    tenantName = tenantDoc.getString("name") ?: tenantName
+                } catch (e: Exception) {
+                    // fallback to default name
+                }
+
+                val result = pointsRepository.awardPoints(
+                    points = amount,
+                    reason = "Escaneo de código QR",
+                    tenantId = tenantId,
+                    tenantName = tenantName
+                )
+
+                if (result.isSuccess) {
+                    _uiState.update { it.copy(isLoading = false, successPoints = amount) }
+                } else {
+                    _uiState.update { it.copy(isLoading = false, error = "Error al procesar puntos: ${result.exceptionOrNull()?.message}") }
+                }
             } catch (e: Exception) {
-                // fallback to default name
-            }
-
-            val result = pointsRepository.awardPoints(
-                points = amount,
-                reason = "Escaneo de código QR",
-                tenantId = tenantId,
-                tenantName = tenantName
-            )
-
-            if (result.isSuccess) {
-                _uiState.update { it.copy(isLoading = false, successPoints = amount) }
-            } else {
-                _uiState.update { it.copy(isLoading = false, error = "Error al procesar puntos: ${result.exceptionOrNull()?.message}") }
+                Logger.e("QR Processing failed", e)
+                _uiState.update { it.copy(isLoading = false, error = "Error inesperado al procesar el código") }
             }
         }
     }

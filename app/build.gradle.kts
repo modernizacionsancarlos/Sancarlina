@@ -18,8 +18,8 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 50
-        versionName = "7.7.2"
+        versionCode = 53
+        versionName = "7.7.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -55,6 +55,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    packaging {
+        jniLibs {
+            keepDebugSymbols.add("**/*.so")
         }
     }
     compileOptions {
