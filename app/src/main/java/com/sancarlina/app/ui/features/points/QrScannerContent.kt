@@ -10,6 +10,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -60,71 +62,53 @@ fun QrScannerContent(
         }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "ESCANEAR CÓDIGO",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = SancarlinaPrimary)
-            )
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+        if (hasCameraPermission) {
+            uiState.successPoints?.let { points ->
+                SuccessOverlay(points, onBack)
+            } ?: run {
+                CameraPreviewWrapper { qrData ->
+                    viewModel.processQrCode(qrData, onSuccess)
+                }
+                
+                // Scanning UI Overlay
+                ScannerFrame()
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("Necesitamos permiso de cámara para escanear el código QR.", textAlign = TextAlign.Center, color = Color.White)
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = { launcher.launch(Manifest.permission.CAMERA) },
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                ) {
+                    Text("CONCEDER PERMISO")
+                }
+            }
         }
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-            if (hasCameraPermission) {
-                uiState.successPoints?.let { points ->
-                    SuccessOverlay(points, onBack)
-                } ?: run {
-                    CameraPreviewWrapper { qrData ->
-                        viewModel.processQrCode(qrData, onSuccess)
-                    }
-                    
-                    // Scanning UI Overlay
-                    ScannerFrame()
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text("Necesitamos permiso de cámara para escanear el código QR.", textAlign = TextAlign.Center)
-                    Spacer(Modifier.height(16.dp))
-                    Button(onClick = { launcher.launch(Manifest.permission.CAMERA) }) {
-                        Text("CONCEDER PERMISO")
-                    }
-                }
-            }
 
-            if (uiState.isLoading) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.Black.copy(alpha = 0.5f)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color.White)
-                    }
-                }
-            }
+        // Floating Back Button
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(16.dp)
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
+        }
 
-            uiState.error?.let { errorMsg ->
-                SnackbarHost(
-                    hostState = remember { SnackbarHostState() },
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                ) {
-                    Snackbar(containerColor = Color.Red, contentColor = Color.White) {
-                        Text(errorMsg)
-                    }
+        if (uiState.isLoading) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.Black.copy(alpha = 0.5f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = SancarlinaPrimary)
                 }
             }
         }
@@ -204,24 +188,30 @@ fun ScannerFrame() {
     ) {
         // Transparent gray overlay
         Box(
-            modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.3f))
+            modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.4f))
         )
         
         // Transparent center window
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
                 modifier = Modifier
-                    .size(240.dp)
-                    .border(2.dp, Color.White, RoundedCornerShape(24.dp))
-                    .clip(RoundedCornerShape(24.dp))
+                    .size(260.dp)
+                    .border(2.dp, Color.White.copy(alpha = 0.8f), RoundedCornerShape(32.dp))
+                    .clip(RoundedCornerShape(32.dp))
                     .background(Color.Transparent)
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             Text(
-                text = "Enmarcá el código QR del comercio",
+                text = "Escanea el código QR",
                 color = Color.White,
-                fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Ubícalo dentro del recuadro",
+                color = Color.White.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
         }
@@ -232,37 +222,46 @@ fun ScannerFrame() {
 fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = SancarlinaPrimary
+        color = SancarlinaSurface
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                Icons.Default.CheckCircle, 
-                contentDescription = null, 
-                tint = Color.White, 
-                modifier = Modifier.size(100.dp)
-            )
+            Surface(
+                modifier = Modifier.size(120.dp),
+                color = SancarlinaPrimary.copy(alpha = 0.1f),
+                shape = CircleShape
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        Icons.Default.CheckCircle, 
+                        contentDescription = null, 
+                        tint = SancarlinaPrimary, 
+                        modifier = Modifier.size(80.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = "¡Escaneo Exitoso!",
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.White,
+                color = SancarlinaOnSurface,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Sumaste $points puntos a tu cuenta.",
+                text = "Has sumado $points puntos a tu cuenta.",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.9f),
-                textAlign = TextAlign.Center
+                color = SancarlinaOnSurfaceVariant,
+                textAlign = TextAlign.Center,
+                lineHeight = 24.sp
             )
             Spacer(modifier = Modifier.height(48.dp))
             Button(
                 onClick = onFinish,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = SancarlinaPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
                 shape = RoundedCornerShape(28.dp),
                 modifier = Modifier.fillMaxWidth().height(56.dp)
             ) {

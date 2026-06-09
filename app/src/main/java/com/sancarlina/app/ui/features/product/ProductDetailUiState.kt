@@ -10,6 +10,7 @@ data class ProductDetail(
     val name: String,
     val location: String,
     val description: String,
+    val price: String = "",
     val imageUrl: String,
     val galleryImages: List<String>,
     val tags: List<String>,

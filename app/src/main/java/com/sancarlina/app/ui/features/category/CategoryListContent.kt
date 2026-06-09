@@ -6,28 +6,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sancarlina.app.viewmodel.CommerceMarker
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,61 +36,59 @@ fun CategoryListContent(
     onNavigateToDetail: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showFilters by remember { mutableStateOf(false) }
 
     LaunchedEffect(categoryId) {
         viewModel.loadCategory(categoryId)
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        uiState.categoryName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-        ) {
-            // Location Filters
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // App Bar
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
-                shadowElevation = 2.dp
+                color = SancarlinaSurfaceContainerLow
             ) {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    items(uiState.locations) { location ->
-                        FilterChip(
-                            selected = uiState.selectedLocation == location,
-                            onClick = { viewModel.onLocationSelected(location) },
-                            label = { Text(location) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = SancarlinaAccent,
-                                selectedLabelColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(20.dp)
-                        )
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
                     }
+                    Text(
+                        text = uiState.categoryName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface,
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(onClick = { showFilters = true }) {
+                        Icon(Icons.Default.Tune, null, tint = SancarlinaPrimary)
+                    }
+                }
+            }
+
+            // Quick Location Chips
+            LazyRow(
+                modifier = Modifier.padding(vertical = 12.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiState.locations) { location ->
+                    FilterChip(
+                        selected = uiState.selectedLocation == location,
+                        onClick = { viewModel.onLocationSelected(location) },
+                        label = { Text(location) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = SancarlinaPrimary,
+                            selectedLabelColor = Color.White,
+                            containerColor = SancarlinaSurfaceContainer,
+                            labelColor = SancarlinaOnSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(20.dp),
+                        border = null
+                    )
                 }
             }
 
@@ -102,105 +98,165 @@ fun CategoryListContent(
                 }
             } else {
                 LazyColumn(
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     items(uiState.filteredCommerces) { commerce ->
                         CommerceCard(commerce) {
                             onNavigateToDetail(commerce.id)
                         }
                     }
-                    
-                    item { Spacer(Modifier.height(80.dp)) }
+                    item { Spacer(modifier = Modifier.height(100.dp)) }
                 }
             }
+        }
+
+        if (showFilters) {
+            AdvancedFiltersBottomSheet(
+                onDismiss = { showFilters = false },
+                onApply = { /* Apply logic */ }
+            )
         }
     }
 }
 
 @Composable
 fun CommerceCard(commerce: CommerceMarker, onClick: () -> Unit) {
-    var isFav by remember { mutableStateOf(false) }
-
-    Card(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(24.dp),
+        color = SancarlinaSurfaceContainerLowest,
+        shadowElevation = 2.dp
     ) {
-        Row(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.padding(12.dp)) {
             AsyncImage(
                 model = commerce.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
-                    .width(120.dp)
-                    .fillMaxHeight(),
+                    .size(96.dp)
+                    .clip(RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
             )
             
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(12.dp)
+                    .padding(start = 16.dp, end = 4.dp)
+                    .align(Alignment.CenterVertically)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Text(
-                        text = commerce.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    IconButton(
-                        onClick = { isFav = !isFav },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            if (isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = null,
-                            tint = if (isFav) SancarlinaAccent else Color.Gray,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
+                Text(
+                    text = commerce.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaOnSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.LocationOn, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(14.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Icon(Icons.Default.LocationOn, null, tint = SancarlinaOutline, modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = commerce.locationName,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        style = MaterialTheme.typography.labelMedium,
+                        color = SancarlinaOnSurfaceVariant,
+                        maxLines = 1
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Star, contentDescription = null, tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Icon(Icons.Default.Star, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = commerce.rating.toString(),
                         style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = commerce.distance,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray
+                    if (commerce.distance.isNotEmpty()) {
+                        Text(
+                            text = commerce.distance,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = SancarlinaOutline
+                        )
+                    }
+                }
+            }
+            
+            IconButton(onClick = { /* Favorite */ }) {
+                Icon(Icons.Default.FavoriteBorder, null, tint = SancarlinaSecondary)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = SancarlinaSurface,
+        dragHandle = { BottomSheetDefaults.DragHandle(color = SancarlinaOutlineVariant) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+                .padding(bottom = 32.dp)
+        ) {
+            Text(
+                "Filtros Avanzados",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = SancarlinaPrimary
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            Text("Distancia", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+            var sliderValue by remember { mutableStateOf(5f) }
+            Slider(
+                value = sliderValue,
+                onValueChange = { sliderValue = it },
+                valueRange = 0f..20f,
+                colors = SliderDefaults.colors(thumbColor = SancarlinaPrimary, activeTrackColor = SancarlinaPrimary)
+            )
+            Text("${sliderValue.toInt()} km", style = MaterialTheme.typography.bodySmall, color = SancarlinaOutline)
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            Text("Calificación mínima", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+                repeat(5) { index ->
+                    val starIndex = index + 1
+                    FilterChip(
+                        selected = false,
+                        onClick = { },
+                        label = { Text("$starIndex★") },
+                        shape = RoundedCornerShape(12.dp)
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(
+                onClick = { onApply(); onDismiss() },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Text("Aplicar Filtros", fontWeight = FontWeight.Bold)
             }
         }
     }

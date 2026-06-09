@@ -22,204 +22,125 @@ import com.sancarlina.app.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatesContent(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "ACTUALIZACIONES",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp)
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Hero Section
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
-                shape = RoundedCornerShape(24.dp),
-                shadowElevation = 2.dp
+                color = SancarlinaSurfaceContainerLow
             ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Surface(
-                        color = SancarlinaPrimary.copy(alpha = 0.1f),
-                        shape = CircleShape,
-                        modifier = Modifier.size(80.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.CheckCircle,
-                                contentDescription = null,
-                                tint = SancarlinaPrimary,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Tu aplicación está al día",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                        text = "Historial de Versiones",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface
                     )
-                    Text(
-                        text = "Última revisión: Hoy, 10:30 AM",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Surface(
-                        color = Color(0xFFF3F5E4),
-                        shape = CircleShape,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E4D3))
-                    ) {
-                        Text(
-                            text = "Versión actual: v2.4.2",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaPrimary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = "Historial de versiones",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Version Cards
-            VersionCard(
-                version = "v2.4.1",
-                time = "Hace 2 semanas",
-                changes = listOf(
-                    "Nueva pantalla de Mis Puntos",
-                    "Corrección de precisión en el mapa de locales",
-                    "Mejoras de rendimiento al cargar imágenes"
-                ),
-                icon = Icons.Default.NewReleases,
-                opacity = 1f
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            VersionCard(
-                version = "v2.4.0",
-                time = "Hace 1 mes",
-                changes = listOf(
-                    "Rediseño completo de la interfaz",
-                    "Implementación de Modo Oscuro"
-                ),
-                icon = Icons.Default.Update,
-                opacity = 0.8f
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Bottom Action (Simplified fixed position using Spacer)
-            Button(
-                onClick = { /* Check for updates action */ },
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                shape = RoundedCornerShape(28.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp)
             ) {
-                Icon(Icons.Default.Sync, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("BUSCAR ACTUALIZACIONES AHORA", fontWeight = FontWeight.Bold)
+                // Current Version Hero
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = SancarlinaSurfaceContainerLowest,
+                    shape = RoundedCornerShape(24.dp),
+                    shadowElevation = 2.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Surface(
+                            color = SancarlinaPrimary.copy(alpha = 0.1f),
+                            shape = CircleShape,
+                            modifier = Modifier.size(64.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(Icons.Default.Verified, null, tint = SancarlinaPrimary, modifier = Modifier.size(32.dp))
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(text = "App Actualizada", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = SancarlinaOnSurface)
+                        Text(text = "Versión actual: v8.1.0", style = MaterialTheme.typography.bodyMedium, color = SancarlinaOnSurfaceVariant)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = "Novedades recientes",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaOnSurface
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                VersionUpdateItem(
+                    version = "v8.1.0",
+                    date = "Hoy",
+                    changes = listOf("Rediseño visual completo (Hyper-Rounded)", "Nueva paleta de colores institucional", "Mejoras en navegación y mapas", "Optimización de perfiles y beneficios")
+                )
+                
+                VersionUpdateItem(
+                    version = "v8.0.0",
+                    date = "Anterior",
+                    changes = listOf("Versión estable inicial", "Integración con Firebase")
+                )
+
+                Spacer(modifier = Modifier.height(48.dp))
+                
+                Button(
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Icon(Icons.Default.Sync, null)
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text("BUSCAR ACTUALIZACIONES", fontWeight = FontWeight.Bold)
+                }
             }
-            
-            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
 @Composable
-fun VersionCard(
-    version: String,
-    time: String,
-    changes: List<String>,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    opacity: Float
-) {
+fun VersionUpdateItem(version: String, date: String, changes: List<String>) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = Color.White.copy(alpha = opacity),
-        shape = RoundedCornerShape(16.dp),
-        shadowElevation = 1.dp,
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E4D3).copy(alpha = 0.5f))
+        modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+        color = Color.Transparent
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Surface(
-                color = Color(0xFFF3F5E4),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.size(48.dp)
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(icon, contentDescription = null, tint = if (opacity == 1f) SancarlinaPrimary else Color.Gray)
+                Text(text = version, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = SancarlinaPrimary)
+                Text(text = date, style = MaterialTheme.typography.labelSmall, color = SancarlinaOutline)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            changes.forEach { change ->
+                Row(modifier = Modifier.padding(vertical = 2.dp)) {
+                    Icon(Icons.Default.Check, null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp).padding(top = 2.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = change, style = MaterialTheme.typography.bodySmall, color = SancarlinaOnSurfaceVariant)
                 }
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = version, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text(text = time, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                changes.forEach { change ->
-                    Row(
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Check, 
-                            contentDescription = null, 
-                            tint = if (opacity == 1f) SancarlinaPrimary else Color.Gray,
-                            modifier = Modifier.size(16.dp).padding(top = 2.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = change, style = MaterialTheme.typography.bodySmall, color = Color.DarkGray)
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
         }
     }
 }

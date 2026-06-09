@@ -24,6 +24,13 @@ import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.AuthViewModel
 import com.sancarlina.app.viewmodel.AuthUiState
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.res.painterResource
+import com.sancarlina.app.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContent(
@@ -37,133 +44,191 @@ fun LoginContent(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "GondolApp",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SancarlinaSurface)
+    ) {
+        // Top Header with Logo
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(96.dp),
+            color = SancarlinaSurfaceContainerLow
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_sancarlina_logo),
+                    contentDescription = "Sancarlina Logo",
+                    modifier = Modifier.height(48.dp)
                 )
-            )
+            }
         }
-    ) { innerPadding ->
-        Box(
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground),
-            contentAlignment = Alignment.Center
+                .padding(top = 96.dp)
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(Color.White)
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Text(
+                text = "Bienvenido",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = SancarlinaPrimary
+            )
+            
+            Text(
+                text = "Ingresa tus datos para continuar",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SancarlinaOnSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Form Container
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = SancarlinaSurfaceContainerLowest,
+                shape = RoundedCornerShape(16.dp),
+                shadowElevation = 2.dp
             ) {
-                Text(
-                    text = "¡Bienvenido/a!",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "Ingresá para guardar tus favoritos y empezar a sumar puntos con tus compras.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Email Field
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    placeholder = { Text("Correo Electrónico") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Password Field
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    placeholder = { Text("Contraseña") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
-                )
-
-                TextButton(
-                    onClick = onNavigateToForgotPassword,
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text("¿Olvidaste tu contraseña?", color = SancarlinaPrimary, style = MaterialTheme.typography.labelSmall)
-                }
-
-                if (uiState.error != null) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    // Email
                     Text(
-                        text = uiState.error ?: "",
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.padding(top = 8.dp)
+                        "Email",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = SancarlinaOnSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
-                }
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("tu@email.com") },
+                        leadingIcon = { Icon(Icons.Default.Mail, null, tint = SancarlinaOutline) },
+                        shape = RoundedCornerShape(24.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = SancarlinaSurfaceContainer,
+                            focusedContainerColor = SancarlinaSurfaceContainer,
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = SancarlinaPrimary
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        singleLine = true
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    onClick = { viewModel.login(email, password, onLoginSuccess) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                    shape = RoundedCornerShape(12.dp),
-                    enabled = !uiState.isLoading
-                ) {
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                    } else {
-                        Text("INICIAR SESIÓN", fontWeight = FontWeight.Bold)
+                    // Password
+                    Text(
+                        "Contraseña",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = SancarlinaOnSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("••••••••") },
+                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = SancarlinaOutline) },
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    null,
+                                    tint = SancarlinaOutline
+                                )
+                            }
+                        },
+                        shape = RoundedCornerShape(24.dp),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = SancarlinaSurfaceContainer,
+                            focusedContainerColor = SancarlinaSurfaceContainer,
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = SancarlinaPrimary
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        singleLine = true
+                    )
+
+                    TextButton(
+                        onClick = onNavigateToForgotPassword,
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text("¿Olvidaste tu contraseña?", color = SancarlinaPrimary, style = MaterialTheme.typography.labelLarge)
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Login Button
+                    Button(
+                        onClick = { viewModel.login(email, password, onLoginSuccess) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary),
+                        shape = RoundedCornerShape(28.dp),
+                        enabled = !uiState.isLoading
+                    ) {
+                        if (uiState.isLoading) {
+                            CircularProgressIndicator(color = SancarlinaOnSecondary, modifier = Modifier.size(24.dp))
+                        } else {
+                            Text("Ingresar", fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                        }
+                    }
+
+                    if (uiState.error != null) {
+                        Text(
+                            text = uiState.error ?: "",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
+                    // Divider
+                    Row(
+                        modifier = Modifier.padding(vertical = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = SancarlinaOutlineVariant)
+                        Text("o", modifier = Modifier.padding(horizontal = 16.dp), color = SancarlinaOnSurfaceVariant)
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = SancarlinaOutlineVariant)
+                    }
+
+                    // Google Login
+                    OutlinedButton(
+                        onClick = { /* Google Sign In */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(28.dp),
+                        border = BorderStroke(1.dp, SancarlinaOutlineVariant)
+                    ) {
+                        Text("Acceso con Google", color = SancarlinaOnSurface, fontWeight = FontWeight.Medium)
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "¿No tienes cuenta?", color = SancarlinaOnSurfaceVariant)
                 TextButton(onClick = onNavigateToRegister) {
-                    Text(
-                        text = "¿No tenés cuenta? Registrate aquí",
-                        color = SancarlinaAccent,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Text(text = "Regístrate", color = SancarlinaPrimary, fontWeight = FontWeight.Bold)
                 }
             }
+            
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }

@@ -20,23 +20,31 @@ class HomeViewModel(
 
     private val firestore = FirebaseFirestore.getInstance()
     
-    // Default state with High-Quality Professional Illustrative Icons from stitch/iconos_app
+    // Default state with High-Quality Professional Illustrative Icons from stitch/home assets
     private val _uiState = MutableStateFlow(
         HomeUiState(
             banners = listOf(
                 BannerItem(
-                    title = "OFERTAS",
-                    subtitle = "DEL DÍA",
-                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCeoCpk-R2i54OyCev_9a8nISL8N4TfvmTw-qnf4YaN48ZMMhF2NYLR6Zu8N3RegJ0eu_btmYZQdN6_jCsVtBxmIlWdKSMdAXltJuJs8LO-wluOzOE-PSCFeC4yiYKF8QCesAI88_It5-rz_RkiB3rmL0XPG01otSg_7oyTl1VK6lEV9HYj-_F_JSHIlpzfe_BQ41I67IkSRw0eX1HbBh4LGNYWM5HuBjRZRvvA72XzqZd4MosGs7xy49UJGMcIdzZaIutSQryyoSA"
+                    title = "-20% Dto",
+                    subtitle = "Ruta del Vino",
+                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuD1KKye6sPJABfxVlO1gK6Pvfbjv6tMRCCOaOcpn9-akT_NN-DanH3l6vJyj6y3rMsJLCWci9kF2gGRwuCGnGnhqukX_Diz4fPzrwGGxQ9OVQVdR5_48sl4WwApzaKf4OsDrbCkXM5YuclXvvkL12d0FZFAcAe7alY9joaX-NDMP5LOOwSfk6buPbiWyJDPi8abiES9UQdReTJzLBRkd_wrF0EgcTQt1qmVf0evDbEwxbBJU2I7h345aOzIVxkPaktyrUjBgJ5J07cg"
+                ),
+                BannerItem(
+                    title = "Nuevo",
+                    subtitle = "Sabores Locales",
+                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCnlkVqOZuqtnjf2iYWEs4griajmiMfTpVzJc5xn3A12ujl_raT9kr-bEvdOxO0Mn2i721TkkEXCJlGS9MReCZBCT6XVGqkDMq9ezRBTAtniPYoWqhgO-tjaicma_YOImVKKYMyCE5Idj95__UDluhBbSKXsTUUNlUeYTzTkjqGAwIC5bO3rS9jFLwGqn5btwNgnuCmE9uRjyxqwFdwhfbNPGb0jsACk1aWUN6sUd3jaLC-3BvoWvo_Oa7VgXva7lPhnQlYBprQ8vwR"
+                ),
+                BannerItem(
+                    title = "Escapada",
+                    subtitle = "Estadías de Campo",
+                    imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAjV-1Rz1ySHF1DsiSZuEGobN5EBTnYGI6yazVOQxji2lyXTHrPuh0HlYYS-IjU6Ovyh78zJkZp-jryHIPs3Uay1BndaYJSuCpe6rrWI7BplUF9eqzIch8QoKT4ATBfF_EJAIld2f982pctq-3643tIp9ZmRexEbATcGn6I4zXbIIULzJoIw6AEOcaBQ6dzzhp2yBeRiCHoh6ozUlhdWw1SRSXCrg-5Jveq-RI5gjOreWd-u-Q3QPcnYkkX96a3r2kTQ5-ibNCajlm9"
                 )
             ),
             categories = listOf(
-                CategoryItem("PRODUCTOS REGIONALES", iconRes = R.drawable.ic_cat_miel),
-                CategoryItem("BODEGAS Y VINOS", iconRes = R.drawable.ic_cat_vino),
-                CategoryItem("ARTESANÍAS", iconRes = R.drawable.ic_cat_ceramica),
-                CategoryItem("GASTRONOMÍA", iconRes = R.drawable.ic_cat_gastronomia),
-                CategoryItem("SERVICIOS", iconRes = R.drawable.ic_cat_emprendedores),
-                CategoryItem("EMPRENDEDORES", iconRes = R.drawable.ic_cat_emprendedores)
+                CategoryItem("BODEGAS"),
+                CategoryItem("ARTESANÍAS"),
+                CategoryItem("GASTRONOMÍA"),
+                CategoryItem("ALOJAMIENTO")
             ),
             nearbyProduct = ProductItem(
                 id = "miel-1",

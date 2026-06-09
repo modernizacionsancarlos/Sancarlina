@@ -17,14 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointsHistoryContent(onBack: () -> Unit) {
-    // Mock data for history
     val movements = listOf(
         PointMovement("1", "Compra en Almacén Regional", "20 Mayo", 150, true),
         PointMovement("2", "Descuento en Bodega La Celia", "15 Mayo", -500, false),
@@ -32,88 +29,48 @@ fun PointsHistoryContent(onBack: () -> Unit) {
         PointMovement("4", "Cafetería Plaza Central", "5 Mayo", 50, true)
     )
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = SancarlinaSurfaceContainerLow
+            ) {
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                    }
                     Text(
-                        "MI HISTORIAL",
+                        text = "Historial de Puntos",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = SancarlinaOnSurface
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-        ) {
-            // Summary Card
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                color = Color.White,
-                shape = RoundedCornerShape(24.dp),
-                shadowElevation = 2.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "TU SALDO DISPONIBLE",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.Gray,
-                        letterSpacing = 2.sp
-                    )
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Text(
-                            "1,250",
-                            style = MaterialTheme.typography.displayMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = SancarlinaAccent
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            "pts",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = SancarlinaAccent,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
                 }
             }
 
-            Text(
-                "Movimientos Recientes",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
-            )
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(20.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                item {
+                    Text(
+                        text = "Actividad Reciente",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 12.dp)
+                    )
+                }
+                
                 items(movements) { movement ->
                     MovementCard(movement)
                 }
                 
-                item { Spacer(Modifier.height(80.dp)) }
+                item { Spacer(Modifier.height(100.dp)) }
             }
         }
     }
@@ -123,8 +80,8 @@ fun PointsHistoryContent(onBack: () -> Unit) {
 fun MovementCard(movement: PointMovement) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = Color.White,
-        shape = RoundedCornerShape(16.dp),
+        color = SancarlinaSurfaceContainerLowest,
+        shape = RoundedCornerShape(20.dp),
         shadowElevation = 1.dp
     ) {
         Row(
@@ -132,16 +89,16 @@ fun MovementCard(movement: PointMovement) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(48.dp),
                 shape = CircleShape,
-                color = if (movement.isEarned) SancarlinaPrimary.copy(alpha = 0.1f) else SancarlinaAccent.copy(alpha = 0.1f)
+                color = if (movement.isEarned) SancarlinaPrimary.copy(alpha = 0.1f) else SancarlinaSecondary.copy(alpha = 0.1f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = if (movement.isEarned) Icons.Default.ShoppingBag else Icons.Default.Redeem,
+                        imageVector = if (movement.isEarned) Icons.Default.AddCircleOutline else Icons.Default.RemoveCircleOutline,
                         contentDescription = null,
-                        tint = if (movement.isEarned) SancarlinaPrimary else SancarlinaAccent,
-                        modifier = Modifier.size(20.dp)
+                        tint = if (movement.isEarned) SancarlinaPrimary else SancarlinaSecondary,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -151,21 +108,22 @@ fun MovementCard(movement: PointMovement) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = movement.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaOnSurface
                 )
                 Text(
                     text = movement.date,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = SancarlinaOutline
                 )
             }
             
             Text(
-                text = "${if (movement.amount > 0) "+" else ""}${movement.amount} pts",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "${if (movement.amount > 0) "+" else ""}${movement.amount}",
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (movement.isEarned) SancarlinaPrimary else SancarlinaAccent
+                color = if (movement.isEarned) SancarlinaPrimary else SancarlinaSecondary
             )
         }
     }

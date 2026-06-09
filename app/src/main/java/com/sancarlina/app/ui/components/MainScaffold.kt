@@ -1,6 +1,6 @@
 package com.sancarlina.app.ui.components
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,330 +8,175 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sancarlina.app.R
+import coil.compose.AsyncImage
 import com.sancarlina.app.navigation.SancarlinaNavGraph
 import com.sancarlina.app.navigation.Screen
 import com.sancarlina.app.navigation.bottomNavItems
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.utils.PrefsManager
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffold() {
-    val context = LocalContext.current
     val navController = rememberNavController()
-    val prefsManager = remember { PrefsManager(context) }
-    
-    val auth = remember { FirebaseAuth.getInstance() }
-    val currentUser = remember { mutableStateOf(auth.currentUser) }
-
-    // Flags
-    val onboardingCompleted = remember { mutableStateOf(prefsManager.isOnboardingCompleted()) }
-    val guideCompleted = remember { mutableStateOf(prefsManager.isGuideCompleted()) }
-    var showQuickGuide by rememberSaveable { mutableStateOf(false) }
-
-    // Sidebar state
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    // Auth Listener
-    DisposableEffect(Unit) {
-        val listener = FirebaseAuth.AuthStateListener { 
-            currentUser.value = it.currentUser 
-        }
-        auth.addAuthStateListener(listener)
-        onDispose { auth.removeAuthStateListener(listener) }
-    }
-
-    LaunchedEffect(onboardingCompleted.value) {
-        if (!onboardingCompleted.value) {
-            navController.navigate(Screen.Onboarding.route) {
-                popUpTo(0)
-            }
-        } else if (!guideCompleted.value) {
-            showQuickGuide = true
-        }
-    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route
+    val isMainView = bottomNavItems.any { it.route == currentDestination }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = isMainView,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = Color.White,
+                drawerContainerColor = SancarlinaSurface,
                 drawerShape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
             ) {
                 Spacer(Modifier.height(48.dp))
                 Column(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "GÓNDOLA\nSANCARLINA",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Black,
-                        color = SancarlinaPrimary,
-                        letterSpacing = 2.sp,
-                        textAlign = TextAlign.Center
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
                     )
-                    Text(
-                        text = "Municipalidad de San Carlos",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
-                    )
+                    Spacer(Modifier.height(16.dp))
+                    Text("GONDOLAPP", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = SancarlinaPrimary)
                 }
-                
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), color = SancarlinaBackground)
+                Spacer(modifier = Modifier.height(24.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp), color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
+                Spacer(modifier = Modifier.height(16.dp))
                 
                 NavigationDrawerItem(
                     label = { Text("Inicio") },
-                    selected = false,
-                    onClick = { 
-                        scope.launch { drawerState.close() }
-                        navController.navigate(Screen.Home.route) 
-                    },
+                    selected = currentDestination == Screen.Home.route,
+                    onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Home.route) },
                     icon = { Icon(Icons.Default.Home, null) },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-                
-                NavigationDrawerItem(
-                    label = { Text("Turismo") },
-                    selected = false,
-                    onClick = { 
-                        scope.launch { drawerState.close() }
-                        navController.navigate(Screen.Turismo.route) 
-                    },
-                    icon = { Icon(Icons.Default.Explore, null) },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-
-                NavigationDrawerItem(
-                    label = { Text("Mapa") },
-                    selected = false,
-                    onClick = { 
-                        scope.launch { drawerState.close() }
-                        navController.navigate(Screen.Map.route) 
-                    },
-                    icon = { Icon(Icons.Default.Map, null) },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-                
-                Text(
-                    text = "v3.9.0",
-                    modifier = Modifier.padding(24.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.LightGray
+                    colors = NavigationDrawerItemDefaults.colors(selectedContainerColor = SancarlinaPrimary.copy(alpha = 0.1f), selectedTextColor = SancarlinaPrimary, selectedIconColor = SancarlinaPrimary),
+                    modifier = Modifier.padding(horizontal = 12.dp)
                 )
             }
         }
     ) {
         Scaffold(
-            containerColor = SancarlinaBackground,
-            bottomBar = {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination?.route
-                
-                // Only show bottom bar for main master views
-                val isMainView = bottomNavItems.any { it.route == currentDestination }
-                
+            containerColor = SancarlinaSurface,
+            topBar = {
                 if (isMainView) {
-                    SancarlinaBottomBar(navController, currentDestination)
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = SancarlinaSurfaceContainerLow
+                    ) {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_sancarlina_logo),
+                                    contentDescription = "Gondolapp",
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                    Icon(Icons.Default.Menu, "Menu", tint = SancarlinaPrimary)
+                                }
+                            },
+                            actions = {
+                                IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
+                                    Surface(shape = CircleShape, color = SancarlinaPrimary.copy(alpha = 0.1f), modifier = Modifier.size(40.dp)) {
+                                        Icon(Icons.Outlined.Person, "Perfil", tint = SancarlinaPrimary, modifier = Modifier.padding(8.dp))
+                                    }
+                                }
+                            },
+                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
+                        )
+                    }
+                }
+            },
+            bottomBar = {
+                if (isMainView) {
+                    GondolappBottomBar(navController, currentDestination)
                 }
             }
         ) { innerPadding ->
-            if (showQuickGuide) {
-                QuickGuide(onFinish = {
-                    prefsManager.setGuideCompleted(true)
-                    showQuickGuide = false
-                })
+            Box(modifier = Modifier.padding(innerPadding)) {
+                SancarlinaNavGraph(
+                    navController = navController,
+                    onOpenDrawer = { scope.launch { drawerState.open() } }
+                )
             }
-            
-            SancarlinaNavGraph(
-                navController = navController,
-                modifier = Modifier.padding(
-                    bottom = innerPadding.calculateBottomPadding() // FIX: Use dynamic padding from Scaffold
-                ),
-                onOnboardingFinished = {
-                    prefsManager.setOnboardingCompleted(true)
-                    onboardingCompleted.value = true
-                },
-                onOpenDrawer = {
-                    scope.launch { drawerState.open() }
-                }
-            )
         }
     }
 }
 
 @Composable
-fun SancarlinaBottomBar(
-    navController: NavHostController,
-    currentDestination: String?
-) {
-    val bordeaux = SancarlinaAccent
-    val olive = SancarlinaPrimary
-    val inactive = Color.Gray
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF9F9F6)) // Match crema-claro
-            .navigationBarsPadding() // FIX: Crucial for responsive system buttons
-            .height(96.dp), 
-        contentAlignment = Alignment.BottomCenter
+fun GondolappBottomBar(navController: NavHostController, currentDestination: String?) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = SancarlinaSurfaceContainerLowest,
+        shadowElevation = 16.dp
     ) {
-        // Main Bar Background
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp),
-            color = Color(0xFFF9F9F6),
-            border = BorderStroke(0.5.dp, Color.LightGray.copy(alpha = 0.3f)),
-            shadowElevation = 8.dp
+        Row(
+            modifier = Modifier.fillMaxWidth().height(80.dp).navigationBarsPadding().padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                BottomNavItem(
-                    screen = Screen.Home,
-                    isSelected = currentDestination == Screen.Home.route,
-                    activeColor = olive,
-                    onClick = { navigateTo(navController, Screen.Home.route) }
-                )
-
-                BottomNavItem(
-                    screen = Screen.Turismo,
-                    isSelected = currentDestination == Screen.Turismo.route,
-                    activeColor = bordeaux,
-                    onClick = { navigateTo(navController, Screen.Turismo.route) }
-                )
-
-                // ITEM CENTRAL: MAPA
-                Column(
+            bottomNavItems.forEach { screen ->
+                val isSelected = currentDestination == screen.route
+                val contentColor = if (isSelected) SancarlinaPrimary else SancarlinaOutline
+                
+                Box(
                     modifier = Modifier
-                        .width(64.dp)
-                        .fillMaxHeight()
-                        .clickable { navigateTo(navController, Screen.Map.route) },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(if (isSelected) SancarlinaPrimary.copy(alpha = 0.1f) else Color.Transparent)
+                        .clickable { 
+                            if (!isSelected) {
+                                navController.navigate(screen.route) {
+                                    popUpTo(Screen.Home.route) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        }
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Spacer(modifier = Modifier.size(24.dp))
-                    Text(
-                        text = "MAPA",
-                        fontSize = 10.sp,
-                        fontWeight = if (currentDestination == Screen.Map.route) FontWeight.Bold else FontWeight.Normal,
-                        color = if (currentDestination == Screen.Map.route) bordeaux else inactive,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-
-                BottomNavItem(
-                    screen = Screen.Points,
-                    isSelected = currentDestination == Screen.Points.route,
-                    activeColor = bordeaux,
-                    onClick = { navigateTo(navController, Screen.Points.route) }
-                )
-
-                BottomNavItem(
-                    screen = Screen.Profile,
-                    isSelected = currentDestination == Screen.Profile.route,
-                    activeColor = bordeaux,
-                    onClick = { navigateTo(navController, Screen.Profile.route) }
-                )
-            }
-        }
-
-        // Botón Circular Elevado
-        Surface(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(64.dp)
-                .shadow(12.dp, CircleShape)
-                .clickable { navigateTo(navController, Screen.Map.route) },
-            color = bordeaux,
-            shape = CircleShape,
-            border = BorderStroke(4.dp, Color(0xFFF9F9F6))
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Screen.Map.icon?.let { icon ->
-                    Icon(
-                        icon,
-                        contentDescription = "Mapa",
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            screen.icon ?: Icons.Default.Circle, 
+                            null, 
+                            tint = contentColor, 
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            screen.title, 
+                            fontSize = 11.sp, 
+                            color = contentColor, 
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun BottomNavItem(
-    screen: Screen,
-    isSelected: Boolean,
-    activeColor: Color,
-    onClick: () -> Unit
-) {
-    val contentColor = if (isSelected) activeColor else Color.Gray
-    Column(
-        modifier = Modifier
-            .width(64.dp)
-            .fillMaxHeight()
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        screen.icon?.let { icon ->
-            Icon(
-                icon,
-                contentDescription = screen.title,
-                tint = contentColor,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-        Text(
-            text = screen.title.uppercase(),
-            fontSize = 10.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = contentColor,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-    }
-}
-
-private fun navigateTo(navController: NavHostController, route: String) {
-    navController.navigate(route) {
-        popUpTo(navController.graph.findStartDestination().id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
     }
 }

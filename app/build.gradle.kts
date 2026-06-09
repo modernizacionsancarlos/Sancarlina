@@ -18,15 +18,10 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 53
-        versionName = "7.7.3"
+        versionCode = 57
+        versionName = "8.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-        ndk {
-            //noinspection ChromeSymbols
-            debugSymbolLevel = "FULL"
-        }
     }
 
     signingConfigs {
@@ -58,8 +53,8 @@ android {
         }
     }
     packaging {
-        jniLibs {
-            keepDebugSymbols.add("**/*.so")
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
     compileOptions {

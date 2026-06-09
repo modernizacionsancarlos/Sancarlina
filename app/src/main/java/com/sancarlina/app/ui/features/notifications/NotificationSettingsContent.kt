@@ -2,133 +2,87 @@ package com.sancarlina.app.ui.features.notifications
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSettingsContent(onBack: () -> Unit) {
-    var offersEnabled by remember { mutableStateOf(true) }
     var pointsEnabled by remember { mutableStateOf(true) }
-    var messagesEnabled by remember { mutableStateOf(true) }
-    var eventsEnabled by remember { mutableStateOf(false) }
+    var newsEnabled by remember { mutableStateOf(true) }
+    var offersEnabled by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "AJUSTES DE ALERTAS",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp)
-        ) {
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
-                shape = RoundedCornerShape(16.dp),
-                shadowElevation = 2.dp
+                color = SancarlinaSurfaceContainerLow
             ) {
-                Column {
-                    ToggleSettingItem(
-                        title = "Nuevas Ofertas y Descuentos",
-                        checked = offersEnabled,
-                        onCheckedChange = { offersEnabled = it }
-                    )
-                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                    ToggleSettingItem(
-                        title = "Acreditación de Puntos",
-                        checked = pointsEnabled,
-                        onCheckedChange = { pointsEnabled = it }
-                    )
-                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                    ToggleSettingItem(
-                        title = "Mensajes de Productores",
-                        checked = messagesEnabled,
-                        onCheckedChange = { messagesEnabled = it }
-                    )
-                    HorizontalDivider(color = SancarlinaBackground, thickness = 1.dp)
-                    ToggleSettingItem(
-                        title = "Eventos y Ferias Municipales",
-                        checked = eventsEnabled,
-                        onCheckedChange = { eventsEnabled = it }
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                    }
+                    Text(
+                        text = "Ajustes de Alertas",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Column(modifier = Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(
+                    "Personaliza qué notificaciones deseas recibir en tu dispositivo.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SancarlinaOnSurfaceVariant
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
 
-            TextButton(
-                onClick = {
-                    offersEnabled = true
-                    pointsEnabled = true
-                    messagesEnabled = true
-                    eventsEnabled = false
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Restablecer valores iniciales", color = SancarlinaAccent, fontWeight = FontWeight.Bold)
+                SettingToggle("Puntos y Beneficios", "Nuevos canjes y puntos sumados", pointsEnabled) { pointsEnabled = it }
+                SettingToggle("Novedades Municipales", "Eventos, ferias e info importante", newsEnabled) { newsEnabled = it }
+                SettingToggle("Ofertas Exclusivas", "Promociones de comercios cercanos", offersEnabled) { offersEnabled = it }
             }
         }
     }
 }
 
 @Composable
-fun ToggleSettingItem(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+fun SettingToggle(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = SancarlinaSurfaceContainerLowest,
+        shape = RoundedCornerShape(20.dp),
+        shadowElevation = 2.dp
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = SancarlinaPrimary,
-                uncheckedThumbColor = Color.Gray,
-                uncheckedTrackColor = Color.LightGray
+        Row(
+            modifier = Modifier.padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                Text(text = subtitle, style = MaterialTheme.typography.bodySmall, color = SancarlinaOutline)
+            }
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = SancarlinaPrimary,
+                    checkedTrackColor = SancarlinaPrimary.copy(alpha = 0.3f)
+                )
             )
-        )
+        }
     }
 }

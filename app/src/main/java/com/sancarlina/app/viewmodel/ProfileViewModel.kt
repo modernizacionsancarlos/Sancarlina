@@ -58,4 +58,8 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+
+    fun logout() {
+        auth.signOut()
+    }
 }

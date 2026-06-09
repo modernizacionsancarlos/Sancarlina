@@ -16,9 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import androidx.compose.ui.unit.sp
+import com.sancarlina.app.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,108 +28,110 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
     val auth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "RECUPERAR CUENTA",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Surface(
-                modifier = Modifier.size(100.dp),
-                shape = RoundedCornerShape(24.dp),
-                color = SancarlinaPrimary.copy(alpha = 0.1f)
+                modifier = Modifier.fillMaxWidth(),
+                color = SancarlinaSurfaceContainerLow
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        Icons.Default.LockReset,
-                        contentDescription = null,
-                        tint = SancarlinaPrimary,
-                        modifier = Modifier.size(56.dp)
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                    }
+                    Text(
+                        text = "Recuperar Cuenta",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaOnSurface
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = "Ingresá tu correo electrónico registrado. Te enviaremos un enlace para que puedas restablecer tu contraseña de forma segura.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Correo Electrónico") },
-                placeholder = { Text("tu@email.com") },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                leadingIcon = { Icon(Icons.Default.Mail, null) },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = SancarlinaPrimary,
-                    focusedLabelColor = SancarlinaPrimary
-                )
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(
-                onClick = {
-                    if (email.isBlank()) {
-                        Toast.makeText(context, "Ingresá tu email", Toast.LENGTH_SHORT).show()
-                        return@Button
-                    }
-                    isLoading = true
-                    auth.sendPasswordResetEmail(email)
-                        .addOnSuccessListener {
-                            isLoading = false
-                            Toast.makeText(context, "Enlace enviado. Revisa tu correo.", Toast.LENGTH_LONG).show()
-                            onBack()
-                        }
-                        .addOnFailureListener {
-                            isLoading = false
-                            Toast.makeText(context, "Error: ${it.localizedMessage}", Toast.LENGTH_LONG).show()
-                        }
-                },
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
-                enabled = !isLoading
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                } else {
-                    Text("ENVIAR ENLACE", fontWeight = FontWeight.Bold)
+                Surface(
+                    modifier = Modifier.size(120.dp),
+                    shape = RoundedCornerShape(32.dp),
+                    color = SancarlinaSurfaceContainer
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.LockReset,
+                            contentDescription = null,
+                            tint = SancarlinaPrimary.copy(alpha = 0.8f),
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = "Ingresa tu correo electrónico registrado. Te enviaremos un enlace para restablecer tu contraseña.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = SancarlinaOnSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 24.sp
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    placeholder = { Text("tu@email.com") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    leadingIcon = { Icon(Icons.Default.Mail, null, tint = SancarlinaOutline) },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedContainerColor = SancarlinaSurfaceContainerLowest,
+                        focusedContainerColor = SancarlinaSurfaceContainerLowest,
+                        unfocusedBorderColor = SancarlinaOutlineVariant,
+                        focusedBorderColor = SancarlinaPrimary
+                    ),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                Button(
+                    onClick = {
+                        if (email.isBlank()) {
+                            Toast.makeText(context, "Ingresa tu email", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        isLoading = true
+                        auth.sendPasswordResetEmail(email)
+                            .addOnSuccessListener {
+                                isLoading = false
+                                Toast.makeText(context, "Enlace enviado. Revisa tu correo.", Toast.LENGTH_LONG).show()
+                                onBack()
+                            }
+                            .addOnFailureListener {
+                                isLoading = false
+                                Toast.makeText(context, "Error: ${it.localizedMessage}", Toast.LENGTH_LONG).show()
+                            }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(28.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary),
+                    enabled = !isLoading
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                    } else {
+                        Text("ENVIAR ENLACE", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }

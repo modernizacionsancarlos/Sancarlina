@@ -15,24 +15,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import androidx.compose.ui.unit.sp
+import com.sancarlina.app.ui.theme.*
 
 @Composable
 fun EmptyStateContent(
-    title: String = "No encontramos lo que buscás",
-    description: String = "Probá cambiando los filtros o revisá la ortografía de tu búsqueda.",
+    title: String = "No encontramos resultados",
+    description: String = "Prueba cambiando los filtros o revisa la ortografía de tu búsqueda.",
     icon: ImageVector = Icons.Default.SearchOff,
-    primaryButtonText: String? = "REINICIAR",
-    onPrimaryClick: () -> Unit = {},
-    secondaryButtonText: String? = "VOLVER",
-    onSecondaryClick: () -> Unit = {}
+    primaryButtonText: String? = "VOLVER",
+    onPrimaryClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(SancarlinaSurface)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -41,23 +38,18 @@ fun EmptyStateContent(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Icon Area
-            Box(contentAlignment = Alignment.Center) {
-                Surface(
-                    modifier = Modifier.size(160.dp),
-                    shape = CircleShape,
-                    color = Color.White,
-                    shadowElevation = 2.dp,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.3f))
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            tint = Color.LightGray,
-                            modifier = Modifier.size(80.dp)
-                        )
-                    }
+            Surface(
+                modifier = Modifier.size(140.dp),
+                color = SancarlinaSurfaceContainer,
+                shape = RoundedCornerShape(32.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = SancarlinaOutlineVariant
+                    )
                 }
             }
 
@@ -67,7 +59,7 @@ fun EmptyStateContent(
                 text = title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaAccent,
+                color = SancarlinaOnSurface,
                 textAlign = TextAlign.Center
             )
 
@@ -75,38 +67,26 @@ fun EmptyStateContent(
 
             Text(
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                style = MaterialTheme.typography.bodyLarge,
+                color = SancarlinaOnSurfaceVariant,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp)
+                lineHeight = 24.sp
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                if (secondaryButtonText != null) {
-                    OutlinedButton(
-                        onClick = onSecondaryClick,
-                        modifier = Modifier.weight(1f).height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaPrimary)
-                    ) {
-                        Text(secondaryButtonText, color = SancarlinaPrimary, fontWeight = FontWeight.Bold)
-                    }
-                }
-
-                if (primaryButtonText != null) {
-                    Button(
-                        onClick = onPrimaryClick,
-                        modifier = Modifier.weight(1f).height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
-                    ) {
-                        Text(primaryButtonText, fontWeight = FontWeight.Bold)
-                    }
+            if (primaryButtonText != null) {
+                Spacer(modifier = Modifier.height(48.dp))
+                Button(
+                    onClick = onPrimaryClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Text(
+                        text = primaryButtonText,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

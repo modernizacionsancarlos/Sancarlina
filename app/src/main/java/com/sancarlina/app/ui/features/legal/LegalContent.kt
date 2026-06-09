@@ -3,7 +3,6 @@ package com.sancarlina.app.ui.features.legal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -11,116 +10,75 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LegalContent(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = SancarlinaSurfaceContainerLow
+            ) {
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                    }
                     Text(
-                        "INFORMACIÓN LEGAL",
+                        text = "Legal y Privacidad",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Surface(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                color = Color.White,
-                shape = RoundedCornerShape(16.dp),
-                shadowElevation = 2.dp
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    LegalSection(
-                        title = "1. Uso de la plataforma",
-                        content = "GondolApp es una herramienta para promover el comercio local. El uso de la misma implica la aceptación de estas normas de convivencia y seguridad."
-                    )
-                    LegalSection(
-                        title = "2. Protección de datos personales",
-                        content = "Tus datos están protegidos según la normativa vigente. No compartimos información con terceros sin tu consentimiento explícito."
-                    )
-                    LegalSection(
-                        title = "3. Sistema de puntos locales",
-                        content = "Los puntos acumulados son personales e intransferibles, válidos únicamente en comercios adheridos de San Carlos."
-                    )
-                    LegalSection(
-                        title = "4. Modificaciones",
-                        content = "Nos reservamos el derecho de actualizar estos términos para mejorar la calidad del servicio al ciudadano."
+                        color = SancarlinaOnSurface
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Última actualización: Mayo 2026",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onBack,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp)
             ) {
-                Text("CERRAR", fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Términos y Condiciones de Uso",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaPrimary
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Text(
+                    text = "Bienvenido a GondolApp, la plataforma oficial de la Municipalidad de San Carlos para el fomento del comercio local.\n\n" +
+                           "Al utilizar esta aplicación, usted acepta los siguientes términos:\n\n" +
+                           "1. Veracidad de la información: Los datos proporcionados por los comercios son responsabilidad de sus titulares.\n\n" +
+                           "2. Sistema de Puntos: Los beneficios obtenidos a través del sistema de fidelización están sujetos a disponibilidad en cada comercio adherido.\n\n" +
+                           "3. Uso Responsable: Queda prohibido el uso de la plataforma para fines ilícitos o que atenten contra la integridad de terceros.\n\n" +
+                           "Política de Privacidad\n\n" +
+                           "Sus datos personales están protegidos bajo la Ley de Protección de Datos Personales. La Municipalidad solo utilizará su información para mejorar la experiencia de usuario y el envío de notificaciones oficiales previamente autorizadas.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SancarlinaOnSurfaceVariant,
+                    lineHeight = 24.sp
+                )
+                
+                Spacer(modifier = Modifier.height(48.dp))
+                
+                Text(
+                    text = "Versión 1.0.0 (2026)",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SancarlinaOutline,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
-    }
-}
-
-@Composable
-fun LegalSection(title: String, content: String) {
-    Column(modifier = Modifier.padding(bottom = 24.dp)) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = SancarlinaPrimary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = content,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray,
-            lineHeight = 22.sp
-        )
     }
 }

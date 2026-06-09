@@ -3,6 +3,7 @@ package com.sancarlina.app.ui.features.servicios
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,183 +17,123 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.theme.SancarlinaAccent
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServiciosSelloContent(onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = SancarlinaSurfaceContainerLow
+            ) {
+                Row(
+                    modifier = Modifier.statusBarsPadding().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                    }
                     Text(
-                        "GÓNDOLA SANCARLINA",
+                        text = "Servicios y Sello",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SancarlinaPrimary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Header Image (Vista 3 Style)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            ) {
-                AsyncImage(
-                    model = "https://lh3.googleusercontent.com/aida-public/AB6AXuDBlnBzECUfV3Q8L9JVdnEfGXXRXrm9ZfJJ0m6tqX_9A7EchP_mYE96WOuNQsAK2rDez5ls2ZSOBgbO_O0Q-6C8z2mPntKysTbXVeoEAWu5DOP0ALbMWzGu0HhWe34w0RAPmCyOD9lsSuyWoHUOd6FY_Q3uuFxqXkSrmx7q9kczsPQcXY4f4gCsMlepsiSSQILCTM50_OL5UBRHHhVQhXNLGqBWD0GcjVj0skE_S3r06yEUjpBUgKDMA4b2McArh82DvsEZb-1EjWs",
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(SancarlinaPrimary.copy(alpha = 0.7f))
-                )
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(24.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Sello de Origen",
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        "Garantía de calidad sancarlina",
-                        color = Color.White.copy(alpha = 0.9f),
-                        style = MaterialTheme.typography.bodyMedium
+                        color = SancarlinaOnSurface
                     )
                 }
             }
 
-            Spacer(Modifier.height(24.dp))
-
-            // Categories Grid (Informative)
-            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-                Text(
-                    "Nuestros Servicios",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = SancarlinaPrimary
-                )
-                Spacer(Modifier.height(16.dp))
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    ServiceItem("Miel", "https://lh3.googleusercontent.com/aida-public/AB6AXuBO-zCbcsNCC2scnOIN4pWhL6y4EXC8DB8kozNHGOfapsQSChWI9tpAqFHzamfrcaRTLQ1luw689jxdB5Qd6T4BiQxmi2udVClm4tFOQFdVlwZp5Nv8G4RieGgZ4PDU624OHl0-ymlL7qzjgg7CVcxXDeMNVA2OuGjLfnP6K-5iG7xmLQoWV_21QUqXu9YSIAfqnuauPRmukhPqmz4uk9IHWTqoiPjEQR7qijlzg9mb0QKOcMnB9UJCIPCSLS3pC-_w4ev74l_5BSo")
-                    ServiceItem("Conservas", "https://lh3.googleusercontent.com/aida-public/AB6AXuC-JzLy0T0x03mi-Dz-tDSBj8W7Z6IWSd_vTaXOkRXefQq1BuB86rhJnoWcp7hrUP17h1gtJSjI66HJadhtPGYKDSStAE6fJSBf2CfeCJ5xlcB6knY6SCRBu-hIYE23ti1-cGSbhGhrGlzVfFmOCpHqkfKLeVBc45LiSzu7QzX2J0rIurfrnAUAO8bXXE5AubTq6vW8q7GgZA1XbbuKLh8CdWP9Zfdhw1-k-pJ6FGSQKH0slKRMpNXHUwGbbC2B8zW7wiBTg1LZ3_w")
-                    ServiceItem("Vinos", "https://lh3.googleusercontent.com/aida-public/AB6AXuAaRawZWDnHG1z12w270gKPsi8Tnj5iO0HexCUOQ2_1tCMa-3BFniZRFsj6IBsEmWkTGFUp0rH3M11Hwg6rzLLtBAWwEkrSFMFNPm8ydbMSwfzTolzPR96AZPowv5gZNIommIAbQm-7xsi-LhI9BtSsZD6xqiFF4-2tChqUGsXhitwykVv9pvI8mjhz03qxss3E-hmj8Ggcyct33e2zFpiIVA7jBfqEszqSZewoq2M41MvFuyTvkEXLPHKEQ6w96owDshdzu5UYd_w")
-                }
-            }
-
-            Spacer(Modifier.height(32.dp))
-
-            // Sello de Origen Detailed Section
-            Surface(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                color = Color.White,
-                shape = RoundedCornerShape(24.dp),
-                shadowElevation = 2.dp
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.WorkspacePremium,
-                            contentDescription = null,
-                            tint = SancarlinaAccent,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Text(
-                            "Hecho en San Carlos",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    
-                    Spacer(Modifier.height(16.dp))
-                    
-                    Text(
-                        "El Sello de Origen es una certificación de la Municipalidad que garantiza que el producto que estás adquiriendo ha sido elaborado íntegramente en nuestro departamento, respetando procesos artesanales y estándares de calidad premium.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
-                        lineHeight = 22.sp
-                    )
-                    
-                    Spacer(Modifier.height(24.dp))
-                    
+                // Hero Section
+                Box(modifier = Modifier.fillMaxWidth().height(240.dp)) {
                     AsyncImage(
-                        model = "https://lh3.googleusercontent.com/aida-public/AB6AXuB2uPoSiPE1XyG8NAP1f9MSv0310aepTL_IGeK3YZSw4_Lq-dnj8fiwRJtfIqRNWvvvXTxMrX5QcQwzzRFtfWmKXW9WV_A5ad8W-BxsLTC83Z3iHgUgHdYu0UONKlSdNFYbPZ1B8fmOLGdHel3kDytd7o89Labc2EDn6vNX4S4fhRx4kWBCvb3Mq0hgj2Sj5AtC6zt8eb_XiDJF5VYfoE4kbLne2Ugnnh_4CPB0ujd25qG00kezuR3luyN-bwbXUnsIorvi2zvYLg4",
+                        model = "https://lh3.googleusercontent.com/aida-public/AB6AXuDBlnBzECUfV3Q8L9JVdnEfGXXRXrm9ZfJJ0m6tqX_9A7EchP_mYE96WOuNQsAK2rDez5ls2ZSOBgbO_O0Q-6C8z2mPntKysTbXVeoEAWu5DOP0ALbMWzGu0HhWe34w0RAPmCyOD9lsSuyWoHUOd6FY_Q3uuFxqXkSrmx7q9kczsPQcXY4f4gCsMlepsiSSQILCTM50_OL5UBRHHhVQhXNLGqBWD0GcjVj0skE_S3r06yEUjpBUgKDMA4b2McArh82DvsEZb-1EjWs",
                         contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                            .clip(RoundedCornerShape(16.dp)),
+                        modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
+                    Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.4f)))
+                    Column(
+                        modifier = Modifier.align(Alignment.Center).padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Sello de Origen", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("Identidad y Calidad Sancarlina", style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.9f))
+                    }
+                }
+
+                Column(modifier = Modifier.padding(24.dp)) {
+                    // Feature Card
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = SancarlinaSurfaceContainerLowest,
+                        shape = RoundedCornerShape(24.dp),
+                        shadowElevation = 2.dp
+                    ) {
+                        Column(modifier = Modifier.padding(24.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Surface(
+                                    modifier = Modifier.size(48.dp),
+                                    shape = CircleShape,
+                                    color = SancarlinaSecondary.copy(alpha = 0.1f)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(Icons.Default.WorkspacePremium, null, tint = SancarlinaSecondary)
+                                    }
+                                }
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text("Garantía Municipal", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                "El Sello de Origen certifica que los productos han sido elaborados bajo procesos artesanales y estándares de calidad en el departamento de San Carlos.",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = SancarlinaOnSurfaceVariant,
+                                lineHeight = 24.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Text("Rubros Destacados", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = SancarlinaOnSurface)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.fillMaxWidth()) {
+                        ServiceBadge("Vinos", Icons.Default.WineBar, Modifier.weight(1f))
+                        ServiceBadge("Miel", Icons.Default.FilterVintage, Modifier.weight(1f))
+                        ServiceBadge("Artesanías", Icons.Default.Palette, Modifier.weight(1f))
+                    }
+                    
+                    Spacer(modifier = Modifier.height(64.dp))
                 }
             }
-
-            Spacer(Modifier.height(40.dp))
         }
     }
 }
 
 @Composable
-fun ServiceItem(name: String, imageUrl: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(80.dp)
+fun ServiceBadge(name: String, icon: androidx.compose.ui.graphics.vector.ImageVector, modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier,
+        color = SancarlinaSurfaceContainerLow,
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Surface(
-            modifier = Modifier.size(72.dp),
-            shape = RoundedCornerShape(12.dp),
-            color = Color(0xFFF3F5E4),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E4D3))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = null,
-                modifier = Modifier.padding(12.dp)
-            )
+            Icon(icon, null, tint = SancarlinaPrimary, modifier = Modifier.size(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = name, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
         }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = name,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
     }
 }

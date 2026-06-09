@@ -14,7 +14,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sancarlina.app.SancarlinaApp
-import com.sancarlina.app.ui.screens.*
 import com.sancarlina.app.viewmodel.*
 import com.sancarlina.app.ui.features.auth.ForgotPasswordContent
 import com.sancarlina.app.ui.features.auth.LoginContent
@@ -22,9 +21,14 @@ import com.sancarlina.app.ui.features.auth.OnboardingContent
 import com.sancarlina.app.ui.features.auth.RegisterContent
 import com.sancarlina.app.ui.features.category.CategoryListContent
 import com.sancarlina.app.ui.features.common.SuccessContent
+import com.sancarlina.app.ui.features.common.OfflineContent
 import com.sancarlina.app.ui.features.emprendimiento.EmprendimientoContent
 import com.sancarlina.app.ui.features.favorites.FavoritesContent
+import com.sancarlina.app.ui.features.profile.ProfileContent
 import com.sancarlina.app.ui.features.profile.EditProfileContent
+import com.sancarlina.app.ui.features.home.HomeContent
+import com.sancarlina.app.ui.features.turismo.TurismoContent
+import com.sancarlina.app.ui.features.map.MapContent
 import com.sancarlina.app.ui.features.home.SearchContent
 import com.sancarlina.app.ui.features.home.NewsDetailContent
 import com.sancarlina.app.ui.features.legal.LegalContent
@@ -32,11 +36,13 @@ import com.sancarlina.app.ui.features.map.CommerceProfileContent
 import com.sancarlina.app.ui.features.map.RateCommerceContent
 import com.sancarlina.app.ui.features.notifications.NotificationsContent
 import com.sancarlina.app.ui.features.notifications.NotificationSettingsContent
+import com.sancarlina.app.ui.features.points.BenefitsContent
 import com.sancarlina.app.ui.features.points.PointsHistoryContent
 import com.sancarlina.app.ui.features.points.QrScannerContent
 import com.sancarlina.app.ui.features.product.ProductDetailContent
 import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
 import com.sancarlina.app.ui.features.support.SupportContent
+import com.sancarlina.app.ui.features.splash.SplashContent
 import com.sancarlina.app.utils.ViewModelFactory
 
 @Composable
@@ -58,7 +64,7 @@ fun SancarlinaNavGraph(
             val splashViewModel: SplashViewModel = viewModel(factory = factory)
             val isReady by splashViewModel.isReady.collectAsState()
 
-            SplashScreenContent(
+            SplashContent(
                 onTimeout = {
                     if (isReady) {
                         navController.navigate(Screen.Home.route) {
@@ -70,7 +76,7 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = factory)
-            HomeScreen(
+            HomeContent(
                 viewModel = homeViewModel,
                 onNavigateToDetail = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
@@ -113,7 +119,7 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Turismo.route) {
             val turismoViewModel: TurismoViewModel = viewModel(factory = factory)
-            ExploreScreen(
+            TurismoContent(
                 viewModel = turismoViewModel,
                 onOpenDrawer = onOpenDrawer
             )
@@ -158,14 +164,17 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Map.route) {
             val mapViewModel: MapViewModel = viewModel(factory = factory)
-            MapScreen(
+            MapContent(
                 viewModel = mapViewModel,
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToCommerce = { commerceId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(commerceId))
+                }
             )
         }
         composable(Screen.Points.route) {
             val pointsViewModel: PointsViewModel = viewModel(factory = factory)
-            BenefitsScreen(
+            BenefitsContent(
                 viewModel = pointsViewModel,
                 onNavigateToLogin = { navController.navigate(Screen.Login.route) },
                 onOpenDrawer = onOpenDrawer,
@@ -182,7 +191,7 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Profile.route) {
             val profileViewModel: ProfileViewModel = viewModel(factory = factory)
-            ProfileScreen(
+            ProfileContent(
                 viewModel = profileViewModel,
                 onNavigateToLogin = { navController.navigate(Screen.Login.route) },
                 onOpenDrawer = onOpenDrawer,
@@ -286,14 +295,11 @@ fun SancarlinaNavGraph(
             ServiciosSelloContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.Offline.route) {
-            PlaceholderScreen(Screen.Offline.title)
+            OfflineContent(onRetry = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Offline.route) { inclusive = true }
+                }
+            })
         }
-    }
-}
-
-@Composable
-fun PlaceholderScreen(name: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Pantalla: $name")
     }
 }

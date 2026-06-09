@@ -38,3 +38,7 @@
 -keep class androidx.lifecycle.** { *; }
 -keep class * extends androidx.work.Worker { *; }
 -keep class * extends androidx.work.ListenableWorker { *; }
+
+# 8. Native Symbols Support
+# Ayuda a que las herramientas de depuración identifiquen métodos nativos.
+-keepattributes SourceFile,LineNumberTable

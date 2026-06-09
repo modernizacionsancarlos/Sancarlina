@@ -14,13 +14,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,66 +31,67 @@ fun SearchContent(
     onNavigateToCommerce: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val suggestedCategories = listOf("Malbec", "Miel", "Artesanías", "Turismo")
+    val suggestedCategories = listOf("Vinos", "Miel", "Artesanías", "Turismo", "Gastronomía")
 
-    Scaffold(
-        topBar = {
-            Surface(
-                color = SancarlinaPrimary,
-                shadowElevation = 4.dp
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SancarlinaSurface)
+    ) {
+        // Search Header
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = SancarlinaSurfaceContainerLow
+        ) {
+            Row(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
-                    }
-                    
-                    TextField(
-                        value = uiState.query,
-                        onValueChange = { viewModel.onQueryChange(it) },
-                        placeholder = { Text("¿Qué estás buscando?", color = Color.Gray) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(52.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        leadingIcon = { Icon(Icons.Default.Search, null, tint = Color.Gray) },
-                        trailingIcon = {
-                            if (uiState.query.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.onQueryChange("") }) {
-                                    Icon(Icons.Default.Close, null, tint = Color.Gray)
-                                }
-                            }
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true
-                    )
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
                 }
+                
+                TextField(
+                    value = uiState.query,
+                    onValueChange = { viewModel.onQueryChange(it) },
+                    placeholder = { Text("¿Qué estás buscando?", color = SancarlinaOutline) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(28.dp),
+                    leadingIcon = { Icon(Icons.Default.Search, null, tint = SancarlinaOutline) },
+                    trailingIcon = {
+                        if (uiState.query.isNotEmpty()) {
+                            IconButton(onClick = { viewModel.onQueryChange("") }) {
+                                Icon(Icons.Default.Close, null, tint = SancarlinaOutline)
+                            }
+                        }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = SancarlinaSurfaceContainerLowest,
+                        unfocusedContainerColor = SancarlinaSurfaceContainerLowest,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = SancarlinaPrimary
+                    ),
+                    singleLine = true
+                )
             }
         }
-    ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .background(SancarlinaBackground)
                 .padding(20.dp)
         ) {
             if (uiState.query.isEmpty()) {
-                // Initial State
+                // Initial State: Recent / Suggestions
                 Text(
-                    "CATEGORÍAS SUGERIDAS",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.Gray,
+                    "BÚSQUEDAS SUGERIDAS",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = SancarlinaOnSurfaceVariant,
                     letterSpacing = 1.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -101,26 +102,52 @@ fun SearchContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     suggestedCategories.forEach { category ->
-                        FilterChip(
-                            selected = false,
-                            onClick = { viewModel.onQueryChange(category) },
-                            label = { Text(category) },
+                        Surface(
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .clickable { viewModel.onQueryChange(category) },
+                            color = SancarlinaSurfaceContainer,
                             shape = RoundedCornerShape(20.dp)
-                        )
+                        ) {
+                            Text(
+                                text = category,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = SancarlinaOnSurface
+                            )
+                        }
                     }
                 }
             } else if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
                 }
-            } else if (uiState.results.isEmpty() && uiState.query.length >= 3) {
+            } else if (uiState.results.isEmpty() && uiState.query.length >= 2) {
                 // No results
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No se encontraron resultados", color = Color.Gray)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(Icons.Default.SearchOff, null, modifier = Modifier.size(64.dp), tint = SancarlinaOutlineVariant)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        "No encontramos resultados",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = SancarlinaOnSurfaceVariant
+                    )
+                    Text(
+                        "Intenta con otras palabras clave",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = SancarlinaOutline
+                    )
                 }
             } else {
                 // Results List
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(uiState.results) { result ->
                         SearchResultItem(result) {
                             if (result.type == "PRODUCT") onNavigateToProduct(result.id)
@@ -135,36 +162,50 @@ fun SearchContent(
 
 @Composable
 fun SearchResultItem(result: SearchResult, onClick: () -> Unit) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .clickable { onClick() },
+        color = SancarlinaSurfaceContainerLowest,
+        shape = RoundedCornerShape(16.dp)
     ) {
-        val icon = if (result.type == "PRODUCT") Icons.Default.Inventory2 else Icons.Default.Storefront
-        Surface(
-            color = SancarlinaPrimary.copy(alpha = 0.1f),
-            shape = CircleShape,
-            modifier = Modifier.size(40.dp)
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(icon, null, tint = SancarlinaPrimary, modifier = Modifier.size(20.dp))
+            val icon = if (result.type == "PRODUCT") Icons.Default.Inventory2 else Icons.Default.Storefront
+            Surface(
+                color = SancarlinaPrimary.copy(alpha = 0.1f),
+                shape = CircleShape,
+                modifier = Modifier.size(48.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(icon, null, tint = SancarlinaPrimary, modifier = Modifier.size(24.dp))
+                }
             }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = result.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = SancarlinaOnSurface
+                )
+                Text(
+                    text = result.category,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = SancarlinaOnSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(Icons.Default.ChevronRight, null, tint = SancarlinaOutlineVariant)
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(result.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
-            Text(result.category, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(Icons.Default.ChevronRight, null, tint = Color.LightGray)
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun FlowRow(
+fun FlowRow(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     content: @Composable () -> Unit
