@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notificaciones - Sancarlina</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#c8f17a",
+                      "on-surface-variant": "#444939",
+                      "on-primary-fixed": "#131f00",
+                      "surface-tint": "#496800",
+                      "on-surface": "#1a1c1b",
+                      "inverse-on-surface": "#f1f1ee",
+                      "tertiary-container": "#956e00",
+                      "primary": "#476500",
+                      "tertiary-fixed-dim": "#f6be3b",
+                      "on-background": "#1a1c1b",
+                      "surface-dim": "#dadad7",
+                      "outline-variant": "#c4c9b4",
+                      "outline": "#747967",
+                      "on-tertiary-container": "#fffbff",
+                      "on-primary-container": "#faffe7",
+                      "surface-container-highest": "#e2e3e0",
+                      "inverse-surface": "#2f312f",
+                      "background": "#f9f9f6",
+                      "on-secondary-fixed-variant": "#842231",
+                      "inverse-primary": "#add461",
+                      "secondary-container": "#fd7f8a",
+                      "primary-fixed-dim": "#add461",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#ffdadb",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9f6",
+                      "secondary-fixed-dim": "#ffb2b7",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-container": "#741627",
+                      "surface-variant": "#e2e3e0",
+                      "tertiary": "#765700",
+                      "surface-container-low": "#f4f4f1",
+                      "surface-container-high": "#e8e8e5",
+                      "on-tertiary-fixed": "#261900",
+                      "on-primary-fixed-variant": "#364e00",
+                      "tertiary-fixed": "#ffdea0",
+                      "primary-container": "#5d7f13",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#40000d",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "surface-bright": "#f9f9f6",
+                      "secondary": "#a33a47",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#eeeeeb",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "baseline": "4px",
+                      "stack-lg": "24px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "margin-tablet": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Be Vietnam Pro"],
+                      "body-lg": ["Manrope"],
+                      "headline-lg-mobile": ["Be Vietnam Pro"],
+                      "body-md": ["Manrope"],
+                      "headline-lg": ["Be Vietnam Pro"],
+                      "title-lg": ["Manrope"],
+                      "headline-sm": ["Be Vietnam Pro"],
+                      "label-lg": ["Manrope"],
+                      "headline-md": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Ambient shadow for cards */
+        .ambient-shadow {
+            box-shadow: 0 4px 6px -1px rgba(45, 54, 21, 0.1), 0 2px 4px -1px rgba(45, 54, 21, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low flex justify-between items-center px-margin-mobile h-24 w-full sticky top-0 z-50 flat no shadows">
+<div class="flex items-center gap-4">
+<button aria-label="Volver" class="text-primary hover:bg-surface-variant/50 transition-colors rounded-full p-2">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">Notificaciones</h1>
+</div>
+<button aria-label="Marcar todas como leídas" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined">done_all</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-margin-mobile py-stack-md flex flex-col gap-stack-sm max-w-2xl mx-auto w-full pb-32">
+<!-- Unread Notification 1 -->
+<article class="bg-surface-container-highest rounded-DEFAULT p-stack-md flex gap-4 items-start relative ambient-shadow hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute top-4 right-4 w-3 h-3 bg-secondary rounded-full"></div>
+<div class="bg-primary-container text-on-primary-container w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined icon-fill">stars</span>
+</div>
+<div class="flex flex-col gap-1 pr-6">
+<h2 class="text-title-lg font-title-lg text-on-surface">Puntos ganados</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">¡Felicidades! Has ganado 50 puntos por tu última visita a Bodega Los Valles. Revisa tu saldo.</p>
+<time class="text-label-lg font-label-lg text-outline mt-1">Hace 2 horas</time>
+</div>
+</article>
+<!-- Unread Notification 2 -->
+<article class="bg-surface-container-highest rounded-DEFAULT p-stack-md flex gap-4 items-start relative ambient-shadow hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute top-4 right-4 w-3 h-3 bg-secondary rounded-full"></div>
+<div class="bg-tertiary-container text-on-tertiary-container w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined icon-fill">storefront</span>
+</div>
+<div class="flex flex-col gap-1 pr-6">
+<h2 class="text-title-lg font-title-lg text-on-surface">Nueva oferta en Bodega El Sol</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Descubre nuestra nueva añada de Malbec con un 20% de descuento exclusivo para miembros.</p>
+<time class="text-label-lg font-label-lg text-outline mt-1">Ayer</time>
+</div>
+</article>
+<div class="w-full h-px bg-outline-variant my-stack-sm"></div>
+<h3 class="text-label-lg font-label-lg text-outline px-2 uppercase tracking-wider">Leídas</h3>
+<!-- Read Notification 1 -->
+<article class="bg-surface rounded-DEFAULT p-stack-md flex gap-4 items-start hover:bg-surface-container transition-colors cursor-pointer opacity-80">
+<div class="bg-surface-variant text-on-surface-variant w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">event</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-title-lg font-title-lg text-on-surface">Recordatorio de evento</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Tu cata guiada en Finca La Linda está programada para mañana a las 15:00 hs. ¡Te esperamos!</p>
+<time class="text-label-lg font-label-lg text-outline mt-1">Hace 3 días</time>
+</div>
+</article>
+<!-- Read Notification 2 -->
+<article class="bg-surface rounded-DEFAULT p-stack-md flex gap-4 items-start hover:bg-surface-container transition-colors cursor-pointer opacity-80">
+<div class="bg-surface-variant text-on-surface-variant w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-title-lg font-title-lg text-on-surface">Reserva confirmada</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Tu mesa en el restaurante de la bodega ha sido confirmada para 4 personas.</p>
+<time class="text-label-lg font-label-lg text-outline mt-1">Hace 1 semana</time>
+</div>
+</article>
+</main>
+<!-- Navigation Suppressed as this is a task/sub-page -->
+</body></html>

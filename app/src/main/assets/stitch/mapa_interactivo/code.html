@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mapa Interactivo - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#496800",
+                      "on-primary-container": "#faffe7",
+                      "surface-container": "#eeeeeb",
+                      "secondary-fixed-dim": "#ffb2b7",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "background": "#f9f9f6",
+                      "secondary-fixed": "#ffdadb",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e3e0",
+                      "primary-fixed": "#c8f17a",
+                      "primary": "#476500",
+                      "on-error": "#ffffff",
+                      "surface": "#f9f9f6",
+                      "inverse-surface": "#2f312f",
+                      "tertiary-fixed": "#ffdea0",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#40000d",
+                      "surface-variant": "#e2e3e0",
+                      "primary-fixed-dim": "#add461",
+                      "on-primary-fixed-variant": "#364e00",
+                      "inverse-primary": "#add461",
+                      "surface-dim": "#dadad7",
+                      "on-primary-fixed": "#131f00",
+                      "surface-container-high": "#e8e8e5",
+                      "tertiary": "#765700",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#fffbff",
+                      "secondary-container": "#fd7f8a",
+                      "surface-container-low": "#f4f4f1",
+                      "outline": "#747967",
+                      "on-surface-variant": "#444939",
+                      "secondary": "#a33a47",
+                      "on-background": "#1a1c1b",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-secondary-fixed-variant": "#842231",
+                      "inverse-on-surface": "#f1f1ee",
+                      "outline-variant": "#c4c9b4",
+                      "surface-bright": "#f9f9f6",
+                      "primary-container": "#5d7f13",
+                      "on-tertiary-fixed": "#261900",
+                      "tertiary-container": "#956e00",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#f6be3b",
+                      "on-surface": "#1a1c1b",
+                      "on-secondary-container": "#741627"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "gutter": "16px",
+                      "baseline": "4px",
+                      "stack-lg": "24px",
+                      "margin-mobile": "16px",
+                      "margin-tablet": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-lg": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "title-lg": [
+                              "Manrope"
+                      ],
+                      "headline-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-lg-mobile": [
+                              "Be Vietnam Pro"
+                      ],
+                      "display-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ],
+                      "headline-sm": [
+                              "Be Vietnam Pro"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom)
+    }
+/* Custom Map Styles to simulate a map background */
+.map-container {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuB7SWKuW6N3betVTWwOGcUgEGTnZRchYevwsB8uyCsUFzwOvJUXPm960Y8TY9_ALGJ_sfXnrPHrZu6GBc96gGvCxOdTAbv5fI90TRaBr-XzweaGXQYP7DUt0JGgsP5GCOoMQOoNov-Eha1herBIt9GpAFt855Lqq3ej7uoYx9dm_Z52qst4-Eeab0y7vODk-GVg8KpcK-9X0o3Om0otACCeN4yGOc9X9Frm-8g40ICs2xjxCkE7FLJlgXhtqSnTp69kZ-o_Ujet5a8j);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    position: relative
+    }
+/* Map Pin Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+        } 50% {
+        transform: translateY(-10px);
+        }
+    }
+.animate-bounce-pin {
+    animation: bounce 2s infinite ease-in-out
+    }
+/* Top Search Bar Blur */
+.glass-search {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px)
+    }</style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden m-0 p-0">
+<!-- Main Content Area: Map Canvas -->
+<main class="map-container" data-alt="A detailed, realistic satellite view map interface of a lush agricultural region like Mendoza, Argentina, showing vineyards, winding roads, and distant mountains. The map uses a sophisticated palette of olive greens, earthy browns, and subtle blues for water bodies. Soft, natural lighting highlights the terrain features, creating a premium, tactile feel." data-location="Mendoza, Argentina">
+<!-- Top Search / Filter Bar Overlay -->
+<div class="absolute top-0 left-0 w-full p-margin-mobile pt-10 z-10 flex flex-col gap-stack-sm md:hidden">
+<!-- Search Input -->
+<div class="glass-search bg-surface/80 rounded-xl shadow-sm flex items-center px-4 py-3 border-b-2 border-primary">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input class="bg-transparent border-none outline-none text-body-lg font-body-lg text-on-surface w-full placeholder-on-surface-variant focus:ring-0 p-0" placeholder="Buscar bodegas, vinos..." type="text"/>
+<button class="ml-2 bg-surface-variant/50 p-2 rounded-full text-primary hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<!-- Quick Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container shadow-sm border border-outline-variant text-label-lg font-label-lg text-on-surface hover:bg-surface-variant transition-colors">Abierto ahora</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container shadow-sm text-label-lg font-label-lg hover:bg-primary/90 transition-colors">Degustación</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container shadow-sm border border-outline-variant text-label-lg font-label-lg text-on-surface hover:bg-surface-variant transition-colors">Almuerzo</button>
+</div>
+</div>
+<!-- TopAppBar (Web/Desktop Only - Hidden on Mobile) -->
+<div class="hidden md:flex bg-surface-container-low dark:bg-surface-container-low text-primary dark:text-primary-fixed docked full-width top-0 bg-surface-container-low flat no shadows flex justify-between items-center px-margin-mobile h-24 w-full absolute z-20">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-2xl hover:bg-surface-variant/50 transition-colors p-2 rounded-full cursor-pointer">menu</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">gondolApp</h1>
+</div>
+<!-- Navigation Links for Desktop -->
+<nav class="flex gap-8">
+<a class="text-primary font-bold text-label-lg font-label-lg hover:bg-surface-variant/50 transition-colors px-3 py-2 rounded-lg flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+                     Explorar
+                 </a>
+<a class="text-on-surface-variant text-label-lg font-label-lg hover:bg-surface-variant/50 transition-colors px-3 py-2 rounded-lg flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">wine_bar</span>
+                     Bodegas
+                 </a>
+<a class="text-on-surface-variant text-label-lg font-label-lg hover:bg-surface-variant/50 transition-colors px-3 py-2 rounded-lg flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">favorite</span>
+                     Favoritos
+                 </a>
+</nav>
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-label-lg overflow-hidden border border-outline-variant">
+<!-- Placeholder for User Avatar -->
+<span class="material-symbols-outlined">person</span>
+</div>
+</div>
+</div>
+<!-- Map Markers -->
+<!-- Marker 1 -->
+<div class="absolute top-[30%] left-[20%] transform -translate-x-1/2 -translate-y-full flex flex-col items-center cursor-pointer group">
+<div class="bg-surface p-1 rounded-full shadow-[0_4px_12px_rgba(45,54,21,0.15)] border-2 border-primary relative animate-bounce-pin group-hover:scale-110 transition-transform">
+<img alt="Brand Isologo" class="w-10 h-10 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmWrerA5uGPBSKvSrldM8hVeOZan6SMTfanDiMVO4Jis2b-zWWkWs4Gp8CoC_5Pn3jHpS759oijHJzBDZk5ZYPXOiGSnTk8PTi7fXACsZLJ1YDWI5bHzu8hyJyiiAHItd4KbISV5dU36mbqoc0MAQUujlLbVYCl6pYWtoPFvMm7jH65jE9Mnu88qDh_RtuSWtFA8p2FTqKVaZ5lJ-EieqOMtMf_eGLqV8Fq6xTz4EhDQHfn3h4WfcWNkhYWEyz0wuLn4FYgVJyyVWJ"/>
+</div>
+<!-- Pin Tail -->
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-primary -mt-[2px]"></div>
+</div>
+<!-- Marker 2 (Active/Selected) -->
+<div class="absolute top-[50%] left-[60%] transform -translate-x-1/2 -translate-y-full flex flex-col items-center cursor-pointer z-10">
+<div class="bg-primary-container p-1 rounded-full shadow-[0_4px_12px_rgba(45,54,21,0.25)] border-2 border-primary relative scale-110">
+<img alt="Brand Isologo" class="w-12 h-12 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmWrerA5uGPBSKvSrldM8hVeOZan6SMTfanDiMVO4Jis2b-zWWkWs4Gp8CoC_5Pn3jHpS759oijHJzBDZk5ZYPXOiGSnTk8PTi7fXACsZLJ1YDWI5bHzu8hyJyiiAHItd4KbISV5dU36mbqoc0MAQUujlLbVYCl6pYWtoPFvMm7jH65jE9Mnu88qDh_RtuSWtFA8p2FTqKVaZ5lJ-EieqOMtMf_eGLqV8Fq6xTz4EhDQHfn3h4WfcWNkhYWEyz0wuLn4FYgVJyyVWJ"/>
+</div>
+<!-- Pin Tail -->
+<div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[10px] border-t-primary -mt-[2px]"></div>
+<!-- Selected Card Info Popover -->
+<div class="absolute top-full mt-2 w-48 bg-surface rounded-xl shadow-[0_4px_16px_rgba(45,54,21,0.1)] p-3 pointer-events-none origin-top">
+<h3 class="text-label-lg font-label-lg font-bold text-on-surface truncate">Bodega Catena Zapata</h3>
+<p class="text-body-md font-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">star</span>
+                    4.9 (1.2k)
+                </p>
+</div>
+</div>
+<!-- Marker 3 -->
+<div class="absolute top-[70%] left-[30%] transform -translate-x-1/2 -translate-y-full flex flex-col items-center cursor-pointer group">
+<div class="bg-surface p-1 rounded-full shadow-[0_4px_12px_rgba(45,54,21,0.15)] border-2 border-secondary relative group-hover:scale-110 transition-transform">
+<img alt="Brand Isologo" class="w-10 h-10 object-contain rounded-full opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmWrerA5uGPBSKvSrldM8hVeOZan6SMTfanDiMVO4Jis2b-zWWkWs4Gp8CoC_5Pn3jHpS759oijHJzBDZk5ZYPXOiGSnTk8PTi7fXACsZLJ1YDWI5bHzu8hyJyiiAHItd4KbISV5dU36mbqoc0MAQUujlLbVYCl6pYWtoPFvMm7jH65jE9Mnu88qDh_RtuSWtFA8p2FTqKVaZ5lJ-EieqOMtMf_eGLqV8Fq6xTz4EhDQHfn3h4WfcWNkhYWEyz0wuLn4FYgVJyyVWJ"/>
+</div>
+<!-- Pin Tail -->
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-secondary -mt-[2px]"></div>
+</div>
+<!-- Floating Action Button (FAB) - Mi Ubicación -->
+<button aria-label="Mi Ubicación" class="absolute bottom-28 md:bottom-10 right-4 md:right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_4px_16px_rgba(45,54,21,0.2)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-20">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">my_location</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface-container dark:bg-surface-container text-primary dark:text-primary-fixed fixed bottom-0 w-full z-50 rounded-t-lg bg-surface-container shadow-sm fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4">
+<!-- Explorar (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-label-lg font-label-lg mt-1">Explorar</span>
+</a>
+<!-- Bodegas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant px-5 py-1 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">wine_bar</span>
+<span class="text-label-lg font-label-lg mt-1">Bodegas</span>
+</a>
+<!-- Favoritos (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant px-5 py-1 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+<span class="text-label-lg font-label-lg mt-1">Favoritos</span>
+</a>
+<!-- Perfil (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant px-5 py-1 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-label-lg font-label-lg mt-1">Perfil</span>
+</a>
+</nav>
+</main>
+<script>
+        // Simple JS for interaction demonstration
+        document.addEventListener('DOMContentLoaded', () => {
+            const markers = document.querySelectorAll('.cursor-pointer');
+            
+            markers.forEach(marker => {
+                marker.addEventListener('click', function() {
+                    // Remove active state from all
+                    markers.forEach(m => {
+                        const pinContainer = m.querySelector('div:first-child');
+                        if(pinContainer) {
+                            pinContainer.classList.remove('bg-primary-container', 'scale-110');
+                            pinContainer.classList.add('bg-surface');
+                            const img = pinContainer.querySelector('img');
+                            if(img) img.classList.replace('w-12', 'w-10');
+                            if(img) img.classList.replace('h-12', 'h-10');
+                        }
+                        const tail = m.querySelector('.w-0');
+                        if(tail) {
+                             tail.classList.replace('border-l-[8px]', 'border-l-[6px]');
+                             tail.classList.replace('border-r-[8px]', 'border-r-[6px]');
+                             tail.classList.replace('border-t-[10px]', 'border-t-[8px]');
+                        }
+                        const popover = m.querySelector('.w-48');
+                        if(popover) popover.remove();
+                    });
+
+                    // Add active state to clicked
+                    const activePin = this.querySelector('div:first-child');
+                    if(activePin) {
+                        activePin.classList.remove('bg-surface');
+                        activePin.classList.add('bg-primary-container', 'scale-110');
+                        const img = activePin.querySelector('img');
+                        if(img) img.classList.replace('w-10', 'w-12');
+                        if(img) img.classList.replace('h-10', 'h-12');
+                    }
+                    const activeTail = this.querySelector('.w-0');
+                    if(activeTail) {
+                         activeTail.classList.replace('border-l-[6px]', 'border-l-[8px]');
+                         activeTail.classList.replace('border-r-[6px]', 'border-r-[8px]');
+                         activeTail.classList.replace('border-t-[8px]', 'border-t-[10px]');
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

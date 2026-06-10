@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sancarlina - Explorar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f4f4f1",
+                        "surface-bright": "#f9f9f6",
+                        "inverse-on-surface": "#f1f1ee",
+                        "surface-container-high": "#e8e8e5",
+                        "secondary": "#a33a47",
+                        "on-surface-variant": "#444939",
+                        "on-background": "#1a1c1b",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "tertiary-fixed": "#ffdea0",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "on-tertiary-fixed": "#261900",
+                        "tertiary": "#765700",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#c8f17a",
+                        "on-primary-fixed": "#131f00",
+                        "secondary-container": "#fd7f8a",
+                        "inverse-surface": "#2f312f",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dadad7",
+                        "outline-variant": "#c4c9b4",
+                        "on-secondary-fixed": "#40000d",
+                        "tertiary-container": "#956e00",
+                        "error-container": "#ffdad6",
+                        "primary": "#476500",
+                        "on-secondary-fixed-variant": "#842231",
+                        "on-secondary-container": "#741627",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#add461",
+                        "surface": "#f9f9f6",
+                        "surface-container": "#eeeeeb",
+                        "on-surface": "#1a1c1b",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary": "#ffffff",
+                        "background": "#f9f9f6",
+                        "surface-variant": "#e2e3e0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#faffe7",
+                        "outline": "#747967",
+                        "primary-fixed-dim": "#add461",
+                        "primary-container": "#5d7f13",
+                        "secondary-fixed": "#ffdadb",
+                        "on-primary-fixed-variant": "#364e00",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#496800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "stack-lg": "24px",
+                        "baseline": "4px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .bento-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(45, 54, 21, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-[90px]">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low sticky top-0 z-40 w-full">
+<div class="flex justify-between items-center px-margin-mobile h-24 w-full">
+<button aria-label="Menu" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<div class="flex-1 flex justify-center">
+<img alt="Sancarlina Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxfIiGU9zeAiisf6iGDvFB-0h7ar3pNtGnU6-H-aXt4BRYX4QLbf15wPuBjFQKz3elJd4roWr7EZBmViqoZxpvXsZIXeKnyjGuoe4Iwo_QJn5xl0royBlgFKSEb8icKAjJbL2OEEdbL0_-YajAE9-elwjdJr-YBVveAyY1jPKEi_5L9Lm6oypchpSgVa3jHhGVSUctA_G-oobCwDWfE7Cqi3LJv0uR1ORzUvDpVoEPcH4EFAgCW9gFDRNZZMJt5eYue6de9TP7pUoq"/>
+</div>
+<button aria-label="User profile photo" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+</button>
+</div>
+</header>
+<main class="px-margin-mobile pt-stack-md flex flex-col gap-stack-lg max-w-7xl mx-auto">
+<!-- Search Bar -->
+<section>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="w-full bg-surface-container rounded-full py-4 pl-12 pr-4 text-body-lg font-body-lg text-on-surface placeholder:text-outline border-none focus:ring-2 focus:ring-primary focus:outline-none shadow-sm" placeholder="¿Qué estás buscando?" type="text"/>
+</div>
+</section>
+<!-- Ofertas Carousel -->
+<section>
+<div class="flex justify-between items-end mb-stack-sm">
+<h2 class="text-title-lg font-title-lg text-on-surface">Ofertas y Novedades</h2>
+<a class="text-body-md font-body-md text-primary font-medium hover:underline" href="#">Ver todo</a>
+</div>
+<div class="flex overflow-x-auto gap-4 no-scrollbar pb-2 -mx-margin-mobile px-margin-mobile">
+<!-- Offer Card 1 -->
+<div class="min-w-[280px] max-w-[320px] bg-surface-container-low rounded-[24px] overflow-hidden shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] flex-shrink-0 relative h-[180px]">
+<img alt="Viñedos" class="absolute inset-0 w-full h-full object-cover" data-alt="A sunlit vineyard stretching across a rolling landscape in the late afternoon. Rows of green grapevines lead towards distant mountains under a clear blue sky. The lighting is warm and golden, evoking a premium, agricultural heritage feel. The scene fits perfectly into a modern, earth-toned corporate design system with tactile elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1KKye6sPJABfxVlO1gK6Pvfbjv6tMRCCOaOcpn9-akT_NN-DanH3l6vJyj6y3rMsJLCWci9kF2gGRwuCGnGnhqukX_Diz4fPzrwGGxQ9OVQVdR5_48sl4WwApzaKf4OsDrbCkXM5YuclXvvkL12d0FZFAcAe7alY9joaX-NDMP5LOOwSfk6buPbiWyJDPi8abiES9UQdReTJzLBRkd_wrF0EgcTQt1qmVf0evDbEwxbBJU2I7h345aOzIVxkPaktyrUjBgJ5J07cg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4">
+<span class="inline-block bg-primary/90 text-on-primary text-label-lg font-label-lg px-3 py-1 rounded-full mb-2 backdrop-blur-sm">-20% Dto</span>
+<h3 class="text-title-lg font-title-lg text-white leading-tight shadow-sm">Ruta del Vino</h3>
+</div>
+</div>
+<!-- Offer Card 2 -->
+<div class="min-w-[280px] max-w-[320px] bg-surface-container-low rounded-[24px] overflow-hidden shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] flex-shrink-0 relative h-[180px]">
+<img alt="Gastronomía" class="absolute inset-0 w-full h-full object-cover" data-alt="Close up of a rustic charcuterie board featuring local artisanal cheeses, cured meats, and fresh olives on a dark wooden table. Soft, natural light highlights the textures of the food, creating a warm, farm-to-table aesthetic. The mood is welcoming and dependable, aligning with a premium, organic UI style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnlkVqOZuqtnjf2iYWEs4griajmiMfTpVzJc5xn3A12ujl_raT9kr-bEvdOxO0Mn2i721TkkEXCJlGS9MReCZBCT6XVGqkDMq9ezRBTAtniPYoWqhgO-tjaicma_YOImVKKYMyCE5Idj95__UDluhBbSKXsTUUNlUeYTzTkjqGAwIC5bO3rS9jFLwGqn5btwNgnuCmE9uRjyxqwFdwhfbNPGb0jsACk1aWUN6sUd3jaLC-3BvoWvo_Oa7VgXva7lPhnQlYBprQ8vwR"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4">
+<span class="inline-block bg-secondary/90 text-on-primary text-label-lg font-label-lg px-3 py-1 rounded-full mb-2 backdrop-blur-sm">Nuevo</span>
+<h3 class="text-title-lg font-title-lg text-white leading-tight shadow-sm">Sabores Locales</h3>
+</div>
+</div>
+<!-- Offer Card 3 -->
+<div class="min-w-[280px] max-w-[320px] bg-surface-container-low rounded-[24px] overflow-hidden shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] flex-shrink-0 relative h-[180px]">
+<img alt="Alojamiento" class="absolute inset-0 w-full h-full object-cover" data-alt="A cozy, sunlit patio of a rural bed and breakfast. Wooden chairs and a small table sit on a terracotta floor, surrounded by potted plants and a view of a lush garden. The atmosphere is serene and inviting, perfectly matching a warm, earth-toned brand identity that values reliability and comfort." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjV-1Rz1ySHF1DsiSZuEGobN5EBTnYGI6yazVOQxji2lyXTHrPuh0HlYYS-IjU6Ovyh78zJkZp-jryHIPs3Uay1BndaYJSuCpe6rrWI7BplUF9eqzIch8QoKT4ATBfF_EJAIld2f982pctq-3643tIp9ZmRexEbATcGn6I4zXbIIULzJoIw6AEOcaBQ6dzzhp2yBeRiCHoh6ozUlhdWw1SRSXCrg-5Jveq-RI5gjOreWd-u-Q3QPcnYkkX96a3r2kTQ5-ibNCajlm9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4">
+<span class="inline-block bg-tertiary/90 text-on-primary text-label-lg font-label-lg px-3 py-1 rounded-full mb-2 backdrop-blur-sm">Escapada</span>
+<h3 class="text-title-lg font-title-lg text-white leading-tight shadow-sm">Estadías de Campo</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories Grid -->
+<section>
+<h2 class="text-title-lg font-title-lg text-on-surface mb-stack-sm">Explorar Sancarlina</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Categoria 1 -->
+<button class="bento-card bg-surface-container-low rounded-[24px] p-4 flex flex-col items-center justify-center gap-3 aspect-square shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] border border-outline-variant/30 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-14 h-14 rounded-full bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">wine_bar</span>
+</div>
+<span class="text-title-lg font-title-lg text-on-surface text-center">Bodegas</span>
+</button>
+<!-- Categoria 2 -->
+<button class="bento-card bg-surface-container-low rounded-[24px] p-4 flex flex-col items-center justify-center gap-3 aspect-square shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] border border-outline-variant/30 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-14 h-14 rounded-full bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">palette</span>
+</div>
+<span class="text-title-lg font-title-lg text-on-surface text-center">Artesanías</span>
+</button>
+<!-- Categoria 3 -->
+<button class="bento-card bg-surface-container-low rounded-[24px] p-4 flex flex-col items-center justify-center gap-3 aspect-square shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] border border-outline-variant/30 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-14 h-14 rounded-full bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">restaurant</span>
+</div>
+<span class="text-title-lg font-title-lg text-on-surface text-center">Gastronomía</span>
+</button>
+<!-- Categoria 4 -->
+<button class="bento-card bg-surface-container-low rounded-[24px] p-4 flex flex-col items-center justify-center gap-3 aspect-square shadow-[0_4px_8px_-2px_rgba(45,54,21,0.1)] border border-outline-variant/30 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-14 h-14 rounded-full bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">bed</span>
+</div>
+<span class="text-title-lg font-title-lg text-on-surface text-center">Alojamiento</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container fixed bottom-0 w-full z-50 rounded-t-lg shadow-sm">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4">
+<!-- Active Tab: Explorar -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 duration-150 group">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-label-lg font-label-lg mt-1">Explorar</span>
+</button>
+<!-- Inactive Tab: Bodegas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-1 transition-colors group">
+<span class="material-symbols-outlined text-[24px]">wine_bar</span>
+<span class="text-label-lg font-label-lg mt-1 group-hover:text-on-surface transition-colors">Bodegas</span>
+</button>
+<!-- Inactive Tab: Favoritos -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-1 transition-colors group">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+<span class="text-label-lg font-label-lg mt-1 group-hover:text-on-surface transition-colors">Favoritos</span>
+</button>
+<!-- Inactive Tab: Perfil -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-1 transition-colors group">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-label-lg font-label-lg mt-1 group-hover:text-on-surface transition-colors">Perfil</span>
+</button>
+</div>
+</nav>
+</body></html>

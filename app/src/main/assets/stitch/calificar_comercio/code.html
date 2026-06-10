@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calificar Comercio - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;family=Be+Vietnam+Pro:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f4f4f1",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#5d7f13",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fd7f8a",
+                        "on-secondary-fixed": "#40000d",
+                        "tertiary-fixed": "#ffdea0",
+                        "on-surface-variant": "#444939",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#add461",
+                        "surface-tint": "#496800",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1a1c1b",
+                        "on-primary-fixed": "#131f00",
+                        "on-secondary-container": "#741627",
+                        "primary-fixed-dim": "#add461",
+                        "on-secondary-fixed-variant": "#842231",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "inverse-surface": "#2f312f",
+                        "primary": "#476500",
+                        "outline-variant": "#c4c9b4",
+                        "tertiary": "#765700",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-container": "#faffe7",
+                        "background": "#f9f9f6",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "surface-container": "#eeeeeb",
+                        "outline": "#747967",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f6",
+                        "on-tertiary-fixed": "#261900",
+                        "surface-dim": "#dadad7",
+                        "primary-fixed": "#c8f17a",
+                        "on-surface": "#1a1c1b",
+                        "secondary-fixed": "#ffdadb",
+                        "inverse-on-surface": "#f1f1ee",
+                        "tertiary-container": "#956e00",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px",
+                        "gutter": "16px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "baseline": "4px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .star-rating .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .star-rating .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            color: #f6be3b; /* tertiary-fixed-dim as gold for stars */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low text-primary dark:text-primary-fixed flex justify-between items-center px-margin-mobile h-24 w-full docked full-width top-0 flat no shadows sticky z-40">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-3xl">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">Calificar Comercio</h1>
+<div class="w-12 h-12"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow px-margin-mobile py-stack-lg max-w-2xl mx-auto w-full flex flex-col gap-stack-lg">
+<!-- Star Rating Section -->
+<section class="flex flex-col items-center justify-center gap-stack-sm py-stack-lg">
+<h2 class="text-title-lg font-title-lg text-on-surface text-center mb-4">¿Cómo fue tu visita?</h2>
+<div class="flex gap-2 star-rating" id="starContainer">
+<span class="material-symbols-outlined text-5xl text-outline-variant hover:text-tertiary-fixed-dim" data-value="1">star</span>
+<span class="material-symbols-outlined text-5xl text-outline-variant hover:text-tertiary-fixed-dim" data-value="2">star</span>
+<span class="material-symbols-outlined text-5xl text-outline-variant hover:text-tertiary-fixed-dim" data-value="3">star</span>
+<span class="material-symbols-outlined text-5xl text-outline-variant hover:text-tertiary-fixed-dim" data-value="4">star</span>
+<span class="material-symbols-outlined text-5xl text-outline-variant hover:text-tertiary-fixed-dim" data-value="5">star</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mt-2" id="ratingText">Toca una estrella para calificar</p>
+</section>
+<!-- Review Form -->
+<form class="flex flex-col gap-stack-lg">
+<!-- Comment Area -->
+<div class="flex flex-col gap-stack-sm">
+<label class="text-label-lg font-label-lg text-on-surface" for="reviewComment">Detalles de la experiencia</label>
+<textarea class="w-full bg-surface-container rounded-t-[12px] border-b-2 border-primary focus:border-primary focus:ring-0 px-4 py-3 text-body-lg font-body-lg text-on-surface resize-none" id="reviewComment" placeholder="Cuéntanos tu experiencia..." rows="5"></textarea>
+</div>
+<!-- Photo Upload Button -->
+<div class="flex justify-start">
+<button class="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary hover:bg-secondary/10 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">photo_camera</span>
+<span class="text-label-lg font-label-lg">Subir Foto</span>
+</button>
+</div>
+<!-- Submit Button (Primary Action) -->
+<div class="mt-stack-lg pb-stack-lg">
+<button class="w-full py-4 rounded-[24px] bg-secondary text-on-secondary text-label-lg font-label-lg hover:bg-on-secondary-container transition-colors shadow-sm flex justify-center items-center gap-2" type="button">
+                    Enviar Calificación
+                </button>
+</div>
+</form>
+</main>
+<script>
+        // Simple star rating interaction
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.star-rating .material-symbols-outlined');
+            const ratingText = document.getElementById('ratingText');
+            const ratingMessages = [
+                "Toca una estrella para calificar",
+                "Malo",
+                "Regular",
+                "Bueno",
+                "Muy Bueno",
+                "Excelente"
+            ];
+            
+            let currentRating = 0;
+
+            stars.forEach((star, index) => {
+                // Hover effect
+                star.addEventListener('mouseover', () => {
+                    highlightStars(index + 1);
+                });
+
+                // Mouse out effect
+                star.addEventListener('mouseout', () => {
+                    highlightStars(currentRating);
+                });
+
+                // Click effect
+                star.addEventListener('click', () => {
+                    currentRating = index + 1;
+                    highlightStars(currentRating);
+                    ratingText.textContent = ratingMessages[currentRating];
+                    
+                    // Add a small pop animation to the clicked star
+                    star.classList.add('scale-125');
+                    setTimeout(() => star.classList.remove('scale-125'), 150);
+                });
+            });
+
+            function highlightStars(count) {
+                stars.forEach((s, i) => {
+                    if (i < count) {
+                        s.classList.add('filled');
+                        s.classList.remove('text-outline-variant');
+                    } else {
+                        s.classList.remove('filled');
+                        s.classList.add('text-outline-variant');
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>

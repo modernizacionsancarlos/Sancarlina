@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Escáner QR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#fd7f8a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e8e8e5",
+                        "secondary": "#a33a47",
+                        "on-secondary-container": "#741627",
+                        "on-primary-fixed-variant": "#364e00",
+                        "tertiary": "#765700",
+                        "on-secondary-fixed-variant": "#842231",
+                        "primary": "#476500",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#956e00",
+                        "outline-variant": "#c4c9b4",
+                        "on-background": "#1a1c1b",
+                        "surface-container": "#eeeeeb",
+                        "on-surface": "#1a1c1b",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f4f4f1",
+                        "on-tertiary-fixed": "#261900",
+                        "primary-container": "#5d7f13",
+                        "secondary-fixed": "#ffdadb",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "outline": "#747967",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-fixed": "#40000d",
+                        "background": "#f9f9f6",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1ee",
+                        "surface-dim": "#dadad7",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#131f00",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "on-primary-container": "#faffe7",
+                        "on-surface-variant": "#444939",
+                        "inverse-primary": "#add461",
+                        "surface-tint": "#496800",
+                        "primary-fixed": "#c8f17a",
+                        "surface-bright": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface": "#f9f9f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px",
+                        "baseline": "4px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .scanner-mask {
+            mask-image: radial-gradient(circle at center, transparent 30%, black 30%);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 30%, black 30%);
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(163, 58, 71, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(163, 58, 71, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(163, 58, 71, 0); }
+        }
+        .animate-pulse-border {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-on-background w-full h-screen overflow-hidden relative">
+<div class="absolute inset-0 bg-cover bg-center z-0" data-alt="A first-person view from a smartphone camera pointing at a rustic wooden tasting counter in a premium wine shop or bodega. The background is slightly blurred with soft bokeh, showing rows of elegantly displayed wine bottles and warm, inviting amber lighting. The scene simulates an active camera waiting to scan a QR code on the counter. The overall aesthetic feels rich, earthy, and seamlessly aligns with a farm-to-table corporate modern style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBsDwsAzXQ2cxn2AOE3-ZhEytWLLhZxDmzqlWuVJRKIQDlelYw29O0mbEYdJxL5hBz0CMU7VZ4K-dbKKlVW_1kcdjCYOS368C_hLaUcVaPalba9LyCKKv4ugZgo0jW6AlAp1xhS8XiKktbECeXJ5L2fMHICbzSC6ml5l1ObaULAkW0mGkP9_aZg6JWv8vhXe2Nk4D9_Goe1F0axnK4zLcKHJU4EJbbzQc3Fy4spw7szifJm3_mG0KUqe82U1KQIy1qpirJRWzRvOexO');"></div>
+<div class="absolute inset-0 bg-on-background/80 backdrop-blur-[2px] z-10 flex flex-col justify-between">
+<header class="w-full p-margin-mobile pt-8 flex justify-start items-center">
+<button aria-label="Cerrar escáner" class="w-12 h-12 rounded-full bg-surface-variant/20 hover:bg-surface-variant/40 flex items-center justify-center text-on-primary transition-colors duration-200 backdrop-blur-md">
+<span class="material-symbols-outlined" data-icon="close" style="font-variation-settings: 'wght' 300;">close</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile space-y-stack-lg">
+<div class="relative">
+<div class="w-64 h-64 border-[6px] border-secondary rounded-lg flex items-center justify-center animate-pulse-border relative z-20">
+<div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-secondary rounded-tl-lg -m-[5px]"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-secondary rounded-tr-lg -m-[5px]"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-secondary rounded-bl-lg -m-[5px]"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-secondary rounded-br-lg -m-[5px]"></div>
+<div class="w-full h-0.5 bg-secondary/50 animate-[scan_2s_ease-in-out_infinite] shadow-[0_0_8px_rgba(163,58,71,0.8)] absolute left-0" style="top: 50%;"></div>
+</div>
+<div class="absolute inset-0 w-64 h-64 shadow-[0_0_0_9999px_rgba(26,28,27,0.85)] rounded-lg pointer-events-none z-10"></div>
+</div>
+<div class="text-center max-w-[300px] z-20 mt-stack-lg">
+<p class="font-title-lg text-title-lg text-on-primary drop-shadow-md">
+                    Escanea el código en el comercio para sumar puntos
+                </p>
+</div>
+</main>
+<footer class="w-full pb-12 pt-4 flex justify-center z-20">
+<button aria-label="Encender linterna" class="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-on-background/50 text-on-primary hover:bg-surface-tint active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="flashlight_on" style="font-size: 28px;">flashlight_on</span>
+</button>
+</footer>
+</div>
+<style>
+        @keyframes scan {
+            0% { top: 5%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 95%; opacity: 0; }
+        }
+    </style>
+</body></html>

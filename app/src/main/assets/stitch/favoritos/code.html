@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>gondolApp - Favoritos</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#fd7f8a",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e8e8e5",
+                        "secondary": "#a33a47",
+                        "on-secondary-container": "#741627",
+                        "on-primary-fixed-variant": "#364e00",
+                        "tertiary": "#765700",
+                        "on-secondary-fixed-variant": "#842231",
+                        "primary": "#476500",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#956e00",
+                        "outline-variant": "#c4c9b4",
+                        "on-background": "#1a1c1b",
+                        "surface-container": "#eeeeeb",
+                        "on-surface": "#1a1c1b",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f4f4f1",
+                        "on-tertiary-fixed": "#261900",
+                        "primary-container": "#5d7f13",
+                        "secondary-fixed": "#ffdadb",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "outline": "#747967",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-fixed": "#40000d",
+                        "background": "#f9f9f6",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1ee",
+                        "surface-dim": "#dadad7",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#131f00",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "on-primary-container": "#faffe7",
+                        "on-surface-variant": "#444939",
+                        "inverse-primary": "#add461",
+                        "surface-tint": "#496800",
+                        "primary-fixed": "#c8f17a",
+                        "surface-bright": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface": "#f9f9f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px",
+                        "baseline": "4px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar to hide it for a cleaner mobile look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        .tab-active { border-bottom: 3px solid theme('colors.primary'); color: theme('colors.primary'); }
+        .tab-inactive { border-bottom: 3px solid transparent; color: theme('colors.on-surface-variant'); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col antialiased">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low docked full-width top-0 z-40 fixed w-full">
+<div class="flex justify-between items-center px-margin-mobile h-24 w-full">
+<!-- Leading Icon -->
+<button class="text-primary dark:text-primary-fixed hover:bg-surface-variant/50 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]" data-icon="menu">menu</span>
+</button>
+<!-- Headline / Brand -->
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">
+                gondolApp
+            </h1>
+<!-- Trailing Avatar -->
+<button class="hover:bg-surface-variant/50 transition-colors rounded-full overflow-hidden w-10 h-10 flex items-center justify-center border-2 border-transparent hover:border-primary-container">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close-up, professionally lit headshot of a friendly individual with a warm smile, set against a bright, out-of-focus background typical of a modern app avatar. The image conveys trust and approachability, aligning with the premium yet welcoming aesthetic of the gondolApp brand. Colors are natural and vibrant." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXIuXtHXOOpfZJIYAPN_m3RXjEewi1tWPtWxWSr2SohRvCTE7_2VHlDdCJLeDWq6Pp43ErC7-4DnTUM-5NvTFKAJDHFlltBXIjcyhwODbjzP2_3mDTfEe0xzyzBFvaWvhyTGAYWBSIcfUGKut9QXgcKVR6NiLnmZ-iVw_W1Pz0GRmugeTfi2JnOLtulVKUBlDzRtc9zoJ167FOPbCps1HjwlTr4FrWSvCq75C3E2MGdiAQGnH0OxNq7D2d3qDQlt6aehezl1xAXWn"/>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 pb-28 md:pb-8 px-margin-mobile md:px-margin-tablet max-w-4xl mx-auto w-full flex flex-col">
+<!-- Page Title & Tabs Sticky Header -->
+<div class="sticky top-24 bg-background/90 backdrop-blur-md z-30 pt-4 pb-2 mb-stack-md">
+<h2 class="text-headline-sm font-headline-sm text-on-surface mb-stack-sm">Mis Favoritos</h2>
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant/30 w-full">
+<button class="flex-1 pb-3 text-label-lg font-label-lg font-bold tab-active transition-all duration-300" id="tab-comercios" onclick="switchTab('comercios')">
+                    Comercios
+                </button>
+<button class="flex-1 pb-3 text-label-lg font-label-lg font-bold tab-inactive transition-all duration-300" id="tab-productos" onclick="switchTab('productos')">
+                    Productos
+                </button>
+</div>
+</div>
+<!-- Content Lists -->
+<div class="flex-grow w-full">
+<!-- Comercios List -->
+<div class="flex flex-col gap-stack-md w-full animate-fade-in" id="list-comercios">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex overflow-hidden border border-outline-variant/20 relative group">
+<div class="w-1/3 min-w-[120px] bg-surface-variant flex-shrink-0">
+<img alt="Bodega Los Andes" class="w-full h-full object-cover" data-alt="An expansive, sunlit vineyard landscape with orderly rows of lush green grapevines stretching towards distant, majestic mountains. The scene is bathed in the golden light of late afternoon, evoking a sense of heritage, rich agricultural tradition, and premium wine production. The color palette features deep olive greens, earthy browns, and a clear blue sky, perfectly matching the app's modern corporate tactile aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDodmP0FUr229BW-8swobQvMuuuNuxizydXQT3jWOa9wobFcahHVIZ4uld0o9_gQo-idg5ZQRVnLnJH9ekEXGvidTGz-ByMUAwlDuqM0IOvWBQGlYqzynEQxqzdofR63rSitc6jNZySKjcb80NcEMFu2EtxQLbLZf6TaG3NX1hxfVnSMZlP68_hDx-rNEYtaIv9VmrWFQ8AQXoYhIJhWURopT4JtWpzAWdnir1qi7LcwA1pdWsMS48ADuGIsbcUZ-bsDk_qtDbJWVMG"/>
+</div>
+<div class="p-stack-md flex flex-col justify-center flex-grow pr-12">
+<h3 class="text-title-lg font-title-lg text-on-surface mb-1">Bodega Los Andes</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">Viñedo histórico con catas exclusivas y restaurante farm-to-table.</p>
+<div class="mt-2 flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-lg font-label-lg">4.9</span>
+</div>
+</div>
+<!-- Favorite FAB contextual -->
+<button class="absolute top-stack-md right-stack-md w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm hover:bg-error-container transition-colors group-hover:scale-110 duration-200">
+<span class="material-symbols-outlined text-secondary" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex overflow-hidden border border-outline-variant/20 relative group">
+<div class="w-1/3 min-w-[120px] bg-surface-variant flex-shrink-0">
+<img alt="Boutique del Valle" class="w-full h-full object-cover" data-alt="A warm, inviting storefront of a premium wine and local produce boutique. Wooden shelves are elegantly stocked with artisanal bottles and jars. Soft, ambient lighting highlights the rich burgundy and olive tones of the products. The setting feels rustic yet highly curated, emphasizing reliability and a farm-to-table professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK9Jh-Mucj1hrXVpYLQxSRvYO-m_nFV5_lq5s0XGNmWgh8WUyLAPYxWupPWD9tD8uRWloPxasHKmYZ_ZiJC9aFix0TAjJNxpgWUUEbziboC8yWF6IpKLaVGd4cWY6JxlNwtD8NuRBXtT4TeKU2rpPs1S6l2oJI9JH3yEvMatdUkB-pNu55crEhnxCdGzcX73HLXTJZBwmqBjuPaNEzXxgN1ubfUzqqC67Khl9f0zqzzB6zP-JOKTqh8Kr6yGiCVul0c3CeTR4IC3sy"/>
+</div>
+<div class="p-stack-md flex flex-col justify-center flex-grow pr-12">
+<h3 class="text-title-lg font-title-lg text-on-surface mb-1">Boutique del Valle</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">Selección curada de vinos orgánicos y productos regionales.</p>
+<div class="mt-2 flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-lg font-label-lg">4.7</span>
+</div>
+</div>
+<button class="absolute top-stack-md right-stack-md w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm hover:bg-error-container transition-colors group-hover:scale-110 duration-200">
+<span class="material-symbols-outlined text-secondary" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</article>
+</div>
+<!-- Productos List (Hidden by default) -->
+<div class="hidden flex-col gap-stack-md w-full animate-fade-in" id="list-productos">
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex overflow-hidden border border-outline-variant/20 relative group">
+<div class="w-1/3 min-w-[120px] bg-surface-variant flex-shrink-0 p-2 flex items-center justify-center">
+<img alt="Reserva Malbec 2018" class="w-full h-full object-cover rounded" data-alt="A beautifully styled bottle of premium red wine resting gracefully on a rustic, heavily textured olive wood table. Beside it sits a half-filled elegant wine glass catching the light. The background is softly blurred, focusing on the deep burgundy hues of the wine and the dark, elegant glass bottle, reflecting a sophisticated, dependable product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVKvno_xgsSdd9iFzmCMFoDcp9WKPtQDWCn9BLIY-L3CR2hi-rd8MwNWhCR5yA-tI5jqQ---aFiwVc-sOdG1l1V_V9TIBVOUOPgC5nZ8XSBCcMwUhX4G93SRkP3WKBH_30dUhKygrnmcxtyaz8XQe-cD3n0AgjtB6QPoTIV4MQv_8_DQ7scDCbCI-g-7roW9Htm7qNL6I-LPTtMcx2o4b4pKJwG487GFjbKkniUeZ14mBShETbK3aHd_G74Y9gOTf6jid7clH64a8O"/>
+</div>
+<div class="p-stack-md flex flex-col justify-center flex-grow pr-12">
+<h3 class="text-title-lg font-title-lg text-on-surface mb-1">Reserva Malbec 2018</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">Tinto intenso con notas a frutos rojos y roble. Bodega Los Andes.</p>
+<div class="mt-2 font-bold text-primary">
+                            $24.500
+                        </div>
+</div>
+<button class="absolute top-stack-md right-stack-md w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm hover:bg-error-container transition-colors group-hover:scale-110 duration-200">
+<span class="material-symbols-outlined text-secondary" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</article>
+<!-- Card 4 -->
+<article class="bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex overflow-hidden border border-outline-variant/20 relative group">
+<div class="w-1/3 min-w-[120px] bg-surface-variant flex-shrink-0 p-2 flex items-center justify-center">
+<img alt="Aceite de Oliva Extra Virgen" class="w-full h-full object-cover rounded" data-alt="A sleek, modern bottle of extra virgin olive oil glowing with a rich, golden-green hue against a clean, light-mode background. Small, fresh olive branches lay delicately beside it. The lighting is crisp and natural, highlighting the purity and premium quality of the agricultural product, perfectly fitting the farm-to-table aesthetic of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuEdw5XCYeM6AGZfw39TGFF30Ge0_nPpQGe2t4y8weRL4_hVNemOoUGdEuSdrd7I2rappw8KH5yn17EqOJt15EWG1NogPCjh4EFW_4eCXo9pDvrlBJ0wptYDK_ocM-fFfdkFA6GLS8cvwv7F55z51v5Nfu3FEaIYBN7gJqQzwnCTj1bd_dFdbw3MMiZkwJ9qEs1nL_3EoBFFkzlRnrYrw1d3FXR-8ELvO3mPgdEpLAaCooK2F_Q5s0stn_uo1UjKmlOSOBTDV6zFTI"/>
+</div>
+<div class="p-stack-md flex flex-col justify-center flex-grow pr-12">
+<h3 class="text-title-lg font-title-lg text-on-surface mb-1">Aceite de Oliva Extra Virgen</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">Prensado en frío, acidez menor a 0.2%. Finca El Sol.</p>
+<div class="mt-2 font-bold text-primary">
+                            $8.200
+                        </div>
+</div>
+<button class="absolute top-stack-md right-stack-md w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm hover:bg-error-container transition-colors group-hover:scale-110 duration-200">
+<span class="material-symbols-outlined text-secondary" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</article>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container fixed bottom-0 w-full z-50 rounded-t-lg shadow-sm md:hidden block">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4">
+<!-- Inactive: Explorar -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl p-1 transition-colors">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="text-label-lg font-label-lg">Explorar</span>
+</button>
+<!-- Inactive: Bodegas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl p-1 transition-colors">
+<span class="material-symbols-outlined mb-1" data-icon="wine_bar">wine_bar</span>
+<span class="text-label-lg font-label-lg">Bodegas</span>
+</button>
+<!-- ACTIVE: Favoritos -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-label-lg font-label-lg">Favoritos</span>
+</button>
+<!-- Inactive: Perfil -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl p-1 transition-colors">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="text-label-lg font-label-lg">Perfil</span>
+</button>
+</div>
+</nav>
+<!-- Simple JS for Tabs -->
+<script>
+        function switchTab(tabId) {
+            // Get elements
+            const tabComercios = document.getElementById('tab-comercios');
+            const tabProductos = document.getElementById('tab-productos');
+            const listComercios = document.getElementById('list-comercios');
+            const listProductos = document.getElementById('list-productos');
+
+            // Reset styles
+            tabComercios.className = 'flex-1 pb-3 text-label-lg font-label-lg font-bold tab-inactive transition-all duration-300';
+            tabProductos.className = 'flex-1 pb-3 text-label-lg font-label-lg font-bold tab-inactive transition-all duration-300';
+            
+            listComercios.style.display = 'none';
+            listProductos.style.display = 'none';
+
+            // Set active
+            if (tabId === 'comercios') {
+                tabComercios.className = 'flex-1 pb-3 text-label-lg font-label-lg font-bold tab-active transition-all duration-300';
+                listComercios.style.display = 'flex';
+                // Trigger reflow for animation
+                void listComercios.offsetWidth;
+                listComercios.classList.add('animate-fade-in');
+            } else {
+                tabProductos.className = 'flex-1 pb-3 text-label-lg font-label-lg font-bold tab-active transition-all duration-300';
+                listProductos.style.display = 'flex';
+                void listProductos.offsetWidth;
+                listProductos.classList.add('animate-fade-in');
+            }
+        }
+    </script>
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</body></html>

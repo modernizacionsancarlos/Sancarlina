@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detalle de Noticia - gondolApp</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdadb",
+                        "outline": "#747967",
+                        "primary-container": "#5d7f13",
+                        "secondary-container": "#fd7f8a",
+                        "outline-variant": "#c4c9b4",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-fixed-variant": "#842231",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9f9f6",
+                        "surface-dim": "#dadad7",
+                        "on-primary-container": "#faffe7",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-container": "#eeeeeb",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-fixed": "#131f00",
+                        "primary-fixed": "#c8f17a",
+                        "on-secondary-fixed": "#40000d",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "tertiary": "#765700",
+                        "tertiary-container": "#956e00",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "on-surface-variant": "#444939",
+                        "on-background": "#1a1c1b",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "on-secondary-container": "#741627",
+                        "surface-container-low": "#f4f4f1",
+                        "background": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "secondary": "#a33a47",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-tertiary-container": "#fffbff",
+                        "inverse-primary": "#add461",
+                        "on-surface": "#1a1c1b",
+                        "surface-tint": "#496800",
+                        "primary": "#476500",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-tablet": "24px",
+                        "baseline": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Smooth fade-in for page load */
+        body { opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        /* Dropcap styling for editorial feel */
+        .dropcap {
+            float: left;
+            font-size: 4.5rem;
+            line-height: 0.8;
+            padding-top: 0.2rem;
+            padding-right: 0.5rem;
+            color: theme('colors.primary');
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Top Navigation (Overlay Style for Detail View) -->
+<!-- Note: Suppressing BottomNavBar due to Detail/Task-focused semantic shell mandate. TopAppBar adapted for transparent overlay. -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-tablet h-24 transition-all duration-300" id="top-nav">
+<!-- Back Button -->
+<button aria-label="Volver atrás" class="w-12 h-12 rounded-full bg-surface-container-highest/30 backdrop-blur-md flex items-center justify-center text-white hover:bg-surface-container-highest/50 transition-colors shadow-sm ring-1 ring-white/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<!-- Contextual Actions -->
+<div class="flex gap-2">
+<button aria-label="Guardar artículo" class="w-12 h-12 rounded-full bg-surface-container-highest/30 backdrop-blur-md flex items-center justify-center text-white hover:bg-surface-container-highest/50 transition-colors shadow-sm ring-1 ring-white/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section: Full Screen Image -->
+<header class="relative w-full h-[663px] min-h-[500px] bg-surface-container flex flex-col justify-end">
+<!-- Background Image -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A breathtaking, wide-angle cinematic shot of a historic vineyard valley at sunrise. The soft, golden hour light bathes the lush, meticulously aligned rows of grapevines in a warm glow, contrasting beautifully with the deep olive greens of the leaves. In the background, majestic, earth-toned mountains rise against a clear, soft-blue sky. The atmosphere is highly premium, tranquil, and rooted in rich agricultural heritage, perfectly aligning with a sophisticated, nature-inspired light-mode aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA23BSmo7i5qRE9vJCGZIa9OSe1wOI448d3vY6OlCq44EdAp9qUNqRvPbfQAFOA-B1OfFFLjEUKQbPGX_7RCe88oM3lYpGI6m2WZ3ROewlcOXTrWeKFr-WGJFSNYoHG3JfcvedKSdkzc2OJSMtT8Sg3tRtKFicbat44eg-rni2hSnmQh0htlg1ofVMAynInXlnkecr6w-8lLfsPadlh76fx3ddsWknWGF6GNLq1W78fAJkV_fzbBCoL8rkaMfp2IAIuddaOZVE1Vy4m');">
+</div>
+<!-- Gradient Overlays for Readability -->
+<!-- Top gradient for nav icons, bottom heavy gradient for headline text -->
+<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent opacity-60"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+<!-- Headline Content Anchored to Bottom -->
+<div class="relative z-10 w-full max-w-4xl mx-auto px-margin-mobile md:px-margin-tablet pb-stack-lg md:pb-12 text-white">
+<!-- Category & Date -->
+<div class="flex items-center flex-wrap gap-stack-sm mb-stack-md">
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary font-label-lg text-label-lg px-4 py-1.5 rounded-full uppercase tracking-widest text-[11px] font-bold">
+                    Viticultura
+                </span>
+<span class="text-surface-container-low font-label-lg text-label-lg opacity-90 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                    24 Octubre, 2023
+                </span>
+<span class="text-surface-container-low font-label-lg text-label-lg opacity-90 flex items-center gap-1 before:content-['•'] before:mr-2">
+                    5 min de lectura
+                </span>
+</div>
+<!-- News Title -->
+<h1 class="font-headline-lg md:font-display-lg text-headline-lg md:text-display-lg text-on-primary mb-stack-lg leading-[1.1] tracking-tight text-balance max-w-3xl drop-shadow-md">
+                El Renacimiento de las Cepas Olvidadas en el Valle Central
+            </h1>
+<!-- Author Profile -->
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full ring-2 ring-primary-fixed overflow-hidden bg-surface-container-high shadow-md">
+<div class="w-full h-full bg-cover bg-center" data-alt="A professional, warm portrait of a female agronomist or wine journalist. She has a natural, approachable expression and is softly lit by natural daylight. She wears a casual yet sophisticated earth-toned jacket. The background is a gently blurred, bright outdoor setting with hints of greenery, matching the natural, premium, and reliable mood of the application's visual style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDgzSK8aTH3IbMyzSG4NNuGaxnmN_NaA-Y8yKaRThiSMjlwd9_JxhVw4f1RatT5gZYRKsOHNIipmqn_e4nuBSGMced_fKLTcgya0ajw9dEJ7sXH470LkrS99w_253d6fXsekODc249wPcj-sZ0qH7BiJ3REm9oW7Eex80ACgtEdQO9iV0Sp5Dz96FPFWLX9ZRCQusj0Plz3MKclA1S2pg2w48psbl9PEJ8SF5ZkUHker-MxiOhkwLJI0leO953zTSJceP-YHh7FKtUD');">
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-title-lg text-label-lg text-on-primary font-medium tracking-wide">Por <span class="font-bold text-primary-fixed">Valeria Montes</span></span>
+<span class="font-label-lg text-[13px] text-surface-container-low opacity-80">Enóloga &amp; Editora Principal</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas (Cream Background) -->
+<main class="relative z-20 bg-surface rounded-t-[2rem] md:rounded-t-[3rem] -mt-8 pt-stack-lg md:pt-12 pb-24 shadow-[0_-10px_40px_rgba(45,54,21,0.08)]">
+<!-- Article Container -->
+<article class="max-w-[720px] mx-auto px-margin-mobile md:px-margin-tablet">
+<!-- Lead Paragraph -->
+<p class="font-body-lg text-[18px] md:text-[20px] text-on-surface-variant leading-relaxed mb-stack-lg md:mb-stack-lg">
+<span class="dropcap">D</span>urante décadas, el prestigio de nuestros viñedos se sustentó en un puñado de variedades internacionales. Sin embargo, en los rincones más antiguos de las laderas orientales, un grupo de productores independientes está desenterrando un legado vitivinícola que el mercado moderno había decidido ignorar.
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface leading-[1.8] mb-stack-md">
+                El trabajo de rescate comenzó hace cinco años, casi por accidente. Caminando entre hileras centenarias destinadas al arranque, agrónomos notaron comportamientos inusuales en ciertas plantas: resistencia a la sequía extrema y una adaptación fenológica perfecta a los veranos cada vez más tórridos. No eran Cabernet ni Merlot; eran variedades patrimoniales traídas por los primeros colonos, adaptadas a la geografía local a través de mutaciones naturales durante más de un siglo.
+            </p>
+<!-- Pull Quote Block -->
+<div class="my-10 pl-6 border-l-[3px] border-secondary bg-gradient-to-r from-secondary-container/20 to-transparent py-4 rounded-r-xl">
+<p class="font-title-lg text-[24px] text-on-background italic leading-snug">
+                    "No estamos inventando nada nuevo. Simplemente estamos escuchando lo que la tierra, a través de estas vides resilientes, ha estado intentando decirnos durante los últimos cien años."
+                </p>
+<span class="block mt-4 font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">
+                    — Roberto Allende, Viticultor
+                </span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-[1.8] mb-stack-md">
+                La transición no ha sido sencilla. Elaborar vinos con uvas de perfiles organolépticos desconocidos requiere desaprender técnicas industriales y volver a metodologías más intuitivas, casi artesanales. El uso de ánforas de arcilla y cubas de cemento crudo ha reemplazado a las relucientes barricas de roble nuevo en muchas de estas bodegas pioneras, buscando expresar la desnudez del terruño sin maquillajes maderables.
+            </p>
+<!-- Secondary Heading -->
+<h2 class="font-headline-md text-headline-sm md:text-headline-md text-primary mt-12 mb-6 border-b border-surface-variant pb-2">
+                Un futuro con raíces profundas
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface leading-[1.8] mb-stack-md">
+                Más allá de la novedad romántica, este rescate tiene implicaciones cruciales para la sostenibilidad de la industria. Frente a la innegable realidad del cambio climático, estas "cepas olvidadas" ofrecen un modelo de resiliencia genética inestimable. Requieren menos riego, resisten mejor las olas de calor prolongadas y, sorprendentemente, logran retener una acidez vibrante que las variedades comerciales a menudo pierden bajo el sol implacable.
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface leading-[1.8] mb-stack-md">
+                Al final del día, lo que encontramos en la copa no es solo un vino diferente, sino una cápsula del tiempo líquida que conecta nuestro presente agrícola con un pasado que nos negamos a perder.
+            </p>
+<!-- End Tags / Tags Cluster -->
+<div class="mt-12 flex flex-wrap gap-2 border-t border-surface-variant pt-8">
+<span class="bg-surface-container-high hover:bg-surface-variant transition-colors text-on-surface-variant font-label-lg text-[13px] px-4 py-2 rounded-xl cursor-pointer">Viticultura</span>
+<span class="bg-surface-container-high hover:bg-surface-variant transition-colors text-on-surface-variant font-label-lg text-[13px] px-4 py-2 rounded-xl cursor-pointer">Sostenibilidad</span>
+<span class="bg-surface-container-high hover:bg-surface-variant transition-colors text-on-surface-variant font-label-lg text-[13px] px-4 py-2 rounded-xl cursor-pointer">Valle Central</span>
+<span class="bg-surface-container-high hover:bg-surface-variant transition-colors text-on-surface-variant font-label-lg text-[13px] px-4 py-2 rounded-xl cursor-pointer">Patrimonio</span>
+</div>
+</article>
+</main>
+<!-- Floating Action Button (Share) -->
+<!-- Positioned according to M3 standard, styled with brand primary (Olive) -->
+<button aria-label="Compartir noticia" class="fixed bottom-margin-mobile right-margin-mobile md:bottom-margin-tablet md:right-margin-tablet z-50 w-[56px] h-[56px] bg-primary text-on-primary rounded-[16px] shadow-[0_4px_14px_rgba(45,54,21,0.25),0_8px_24px_rgba(45,54,21,0.15)] flex items-center justify-center hover:scale-[1.03] active:scale-[0.97] transition-all duration-200 group">
+<span class="material-symbols-outlined text-[24px] group-hover:rotate-12 transition-transform duration-300" style="font-variation-settings: 'FILL' 1;">share</span>
+</button>
+<!-- Micro-interaction JS for Top Nav scroll effect -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const topNav = document.getElementById('top-nav');
+            const buttons = topNav.querySelectorAll('button');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    // When scrolling down, subtly hide or change the nav to avoid clashing with white reading background
+                    buttons.forEach(btn => {
+                        btn.classList.remove('text-white', 'bg-surface-container-highest/30', 'ring-white/20');
+                        btn.classList.add('text-on-surface', 'bg-surface/80', 'ring-surface-variant', 'shadow-sm');
+                    });
+                } else {
+                    // At the top, over the dark image gradient
+                    buttons.forEach(btn => {
+                        btn.classList.add('text-white', 'bg-surface-container-highest/30', 'ring-white/20');
+                        btn.classList.remove('text-on-surface', 'bg-surface/80', 'ring-surface-variant', 'shadow-sm');
+                    });
+                }
+            });
+        });
+    </script>
+</body></html>

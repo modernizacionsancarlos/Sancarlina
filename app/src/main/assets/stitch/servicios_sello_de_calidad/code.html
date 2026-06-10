@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sello de Calidad - GondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f4f4f1",
+                      "on-primary-fixed-variant": "#364e00",
+                      "surface-bright": "#f9f9f6",
+                      "secondary": "#a33a47",
+                      "surface-variant": "#e2e3e0",
+                      "on-secondary": "#ffffff",
+                      "primary-container": "#5d7f13",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#fd7f8a",
+                      "on-secondary-fixed": "#40000d",
+                      "tertiary-fixed": "#ffdea0",
+                      "on-surface-variant": "#444939",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#add461",
+                      "surface-tint": "#496800",
+                      "secondary-fixed-dim": "#ffb2b7",
+                      "surface-container-highest": "#e2e3e0",
+                      "error-container": "#ffdad6",
+                      "on-background": "#1a1c1b",
+                      "on-primary-fixed": "#131f00",
+                      "on-secondary-container": "#741627",
+                      "primary-fixed-dim": "#add461",
+                      "on-secondary-fixed-variant": "#842231",
+                      "surface-container-high": "#e8e8e5",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "inverse-surface": "#2f312f",
+                      "primary": "#476500",
+                      "outline-variant": "#c4c9b4",
+                      "tertiary": "#765700",
+                      "on-tertiary-container": "#fffbff",
+                      "on-primary-container": "#faffe7",
+                      "background": "#f9f9f6",
+                      "tertiary-fixed-dim": "#f6be3b",
+                      "surface-container": "#eeeeeb",
+                      "outline": "#747967",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9f6",
+                      "on-tertiary-fixed": "#261900",
+                      "surface-dim": "#dadad7",
+                      "primary-fixed": "#c8f17a",
+                      "on-surface": "#1a1c1b",
+                      "secondary-fixed": "#ffdadb",
+                      "inverse-on-surface": "#f1f1ee",
+                      "tertiary-container": "#956e00",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "24px",
+                      "stack-md": "16px",
+                      "margin-tablet": "24px",
+                      "gutter": "16px",
+                      "stack-sm": "8px",
+                      "margin-mobile": "16px",
+                      "baseline": "4px"
+              },
+              "fontFamily": {
+                      "title-lg": [
+                              "Manrope"
+                      ],
+                      "headline-sm": [
+                              "Be Vietnam Pro"
+                      ],
+                      "display-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-lg-mobile": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "label-lg": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 40px rgba(186, 150, 48, 0.4);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col items-center">
+<!-- Top Navigation (Contextual suppression applied - Sub page with back button) -->
+<header class="w-full flex justify-between items-center px-margin-mobile h-24 bg-surface-container-low max-w-md mx-auto relative z-10 sticky top-0">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[24px]">arrow_back</span>
+</button>
+<span class="text-headline-md font-headline-md font-bold text-primary">gondolApp</span>
+<div class="w-12 h-12"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md mx-auto flex-grow px-margin-mobile pb-32 flex flex-col items-center">
+<!-- Hero Section -->
+<div class="w-full flex flex-col items-center pt-12 pb-8">
+<div class="relative w-48 h-48 flex justify-center items-center mb-stack-lg">
+<div class="absolute inset-0 bg-tertiary-fixed blur-3xl opacity-30 rounded-full"></div>
+<img alt="Sello de Calidad Isologo" class="w-full h-full object-contain relative z-10 drop-shadow-xl filter sepia-[0.3] hue-rotate-[-30deg] saturate-[1.5] brightness-[1.1]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq4X7FD7AdpzOf4bjJWecUSSANEZoo-yp17Pv_nl_zSc7L1KIBM0p2Ju8m4YB2CfO-attKNR92pNuI0c5aV06DDUkDaTALsLj6NIIxNLoFbOg1p2DYeD6uL0GtmR-aXdS3Zu6mhHwfYY_e9xSycVuh7Sp_rO0xN43QVaLzG1clci0jDGKnOP4oYJSKJZD1wBPNoivc_we9zJL6_IBri3g9zZ9h4evntGm7L5ByQFn4mE7hS7T6ZxhoJ0aeYt52thrr0LEOlV1sPJQ_"/>
+</div>
+<h1 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary text-center mb-stack-sm tracking-tight">
+                Excelencia Sancarlina
+            </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant text-center max-w-sm">
+                Un distintivo de calidad superior, arraigado en la tradición y el respeto por nuestra tierra.
+            </p>
+</div>
+<!-- Information Cards (Bento Style) -->
+<div class="w-full grid grid-cols-1 gap-stack-md mt-stack-md">
+<!-- Benefit 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-stack-lg shadow-[0_4px_16px_rgba(45,54,21,0.05)] border border-surface-container flex flex-col items-start">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center mb-stack-md">
+<span class="material-symbols-outlined text-primary fill-icon text-[24px]">workspace_premium</span>
+</div>
+<h3 class="text-title-lg font-title-lg text-on-background mb-baseline">Calidad Garantizada</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Los productos con este sello han superado rigurosos controles de calidad, asegurando un estándar premium en cada paso de su elaboración artesanal.
+                </p>
+</div>
+<!-- Benefit 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-stack-lg shadow-[0_4px_16px_rgba(45,54,21,0.05)] border border-surface-container flex flex-col items-start relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary-fixed/30 rounded-full blur-2xl"></div>
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center mb-stack-md relative z-10">
+<span class="material-symbols-outlined text-secondary fill-icon text-[24px]">eco</span>
+</div>
+<h3 class="text-title-lg font-title-lg text-on-background mb-baseline relative z-10">Origen Local Auténtico</h3>
+<p class="text-body-md font-body-md text-on-surface-variant relative z-10">
+                    Fomenta y protege la identidad agrícola de la región, garantizando que los ingredientes principales provienen exclusivamente de productores locales.
+                </p>
+</div>
+<!-- Standard Section -->
+<div class="bg-primary text-on-primary rounded-xl p-stack-lg shadow-[0_8px_24px_rgba(45,54,21,0.15)] mt-stack-sm flex flex-col items-center text-center relative overflow-hidden">
+<!-- Abstract background pattern -->
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+<span class="material-symbols-outlined text-tertiary-fixed text-[40px] mb-stack-md relative z-10">handshake</span>
+<h3 class="text-headline-sm font-headline-sm text-on-primary mb-stack-sm relative z-10">Compromiso con el Productor</h3>
+<p class="text-body-md font-body-md text-on-primary/90 relative z-10">
+                    Al elegir productos con el sello "Excelencia Sancarlina", estás apoyando directamente a las familias agricultoras y promoviendo el comercio justo en nuestra comunidad.
+                </p>
+</div>
+</div>
+</main>
+</body></html>

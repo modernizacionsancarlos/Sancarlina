@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explorar San Carlos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#496800",
+                    "on-primary-container": "#faffe7",
+                    "surface-container": "#eeeeeb",
+                    "secondary-fixed-dim": "#ffb2b7",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "background": "#f9f9f6",
+                    "secondary-fixed": "#ffdadb",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e3e0",
+                    "primary-fixed": "#c8f17a",
+                    "primary": "#476500",
+                    "on-error": "#ffffff",
+                    "surface": "#f9f9f6",
+                    "inverse-surface": "#2f312f",
+                    "tertiary-fixed": "#ffdea0",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#40000d",
+                    "surface-variant": "#e2e3e0",
+                    "primary-fixed-dim": "#add461",
+                    "on-primary-fixed-variant": "#364e00",
+                    "inverse-primary": "#add461",
+                    "surface-dim": "#dadad7",
+                    "on-primary-fixed": "#131f00",
+                    "surface-container-high": "#e8e8e5",
+                    "tertiary": "#765700",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#fffbff",
+                    "secondary-container": "#fd7f8a",
+                    "surface-container-low": "#f4f4f1",
+                    "outline": "#747967",
+                    "on-surface-variant": "#444939",
+                    "secondary": "#a33a47",
+                    "on-background": "#1a1c1b",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-secondary-fixed-variant": "#842231",
+                    "inverse-on-surface": "#f1f1ee",
+                    "outline-variant": "#c4c9b4",
+                    "surface-bright": "#f9f9f6",
+                    "primary-container": "#5d7f13",
+                    "on-tertiary-fixed": "#261900",
+                    "tertiary-container": "#956e00",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#f6be3b",
+                    "on-surface": "#1a1c1b",
+                    "on-secondary-container": "#741627"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "baseline": "4px",
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px",
+                    "margin-tablet": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "label-lg": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "title-lg": ["Manrope"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "body-lg": ["Manrope"],
+                    "headline-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                    "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                    "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                    "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                    "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                    "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                    "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                    "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low docked full-width top-0 sticky z-40 transition-shadow duration-300 w-full" id="topAppBar">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-tablet h-24 w-full">
+<button aria-label="Menu" class="p-2 hover:bg-surface-variant/50 transition-colors rounded-full">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">gondolApp</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
+<img alt="User profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEt9ZR1FF8q5xt6MEU8nV88ipckbWpVSMtWQHZsH-stwhZAmfMSGV0W08KSUJKnh2pw6XAlSmuUwE0oQdHfLmdB4JMWlVbowTyWLbEQ7O8FEka3ImoPDUKJt0xP5KogPr8pJAKdlYPqnExKmHZWJv8g1Bg0GK8IYlJVDIkDK8pWZeVm4I8Yg60R46d_jTuj2ozi4osSUQhtIhM2JhNo4ouNhjcw3kCNtiK9c4zRlY0ACcyvkmGgqoFdQyUgpdYo6njGS8DOZ1Mg-Vb"/>
+</div>
+</div>
+</header>
+<!-- Desktop Navigation Cluster (Hidden on Mobile) -->
+<nav class="hidden md:flex justify-center space-x-8 py-4 bg-surface-container border-b border-surface-variant/30 px-margin-tablet w-full sticky top-24 z-30 shadow-sm">
+<a class="flex items-center space-x-2 text-primary font-bold hover:bg-surface-variant/50 transition-colors px-4 py-2 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-label-lg font-label-lg">Explorar</span>
+</a>
+<a class="flex items-center space-x-2 text-on-surface-variant hover:bg-surface-variant/50 transition-colors px-4 py-2 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">wine_bar</span>
+<span class="text-label-lg font-label-lg">Bodegas</span>
+</a>
+<a class="flex items-center space-x-2 text-on-surface-variant hover:bg-surface-variant/50 transition-colors px-4 py-2 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
+<span class="text-label-lg font-label-lg">Favoritos</span>
+</a>
+<a class="flex items-center space-x-2 text-on-surface-variant hover:bg-surface-variant/50 transition-colors px-4 py-2 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="text-label-lg font-label-lg">Perfil</span>
+</a>
+</nav>
+<main class="flex-grow flex flex-col w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-tablet pt-4 pb-8 space-y-stack-lg">
+<!-- Search and Filters Section -->
+<section class="flex flex-col space-y-stack-md">
+<!-- Search Bar -->
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="w-full bg-surface-container-high text-on-surface font-body-lg text-body-lg rounded-[12px] rounded-b-none border-0 border-b-2 border-primary py-4 pl-12 pr-4 focus:ring-0 focus:border-primary-container transition-colors placeholder:text-on-surface-variant" placeholder="Buscar en San Carlos..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex overflow-x-auto hide-scrollbar space-x-stack-sm pb-2 pt-1">
+<button class="flex items-center space-x-2 px-4 py-2 rounded-full bg-primary text-on-primary font-label-lg text-label-lg whitespace-nowrap shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[18px]">wine_bar</span>
+<span>Bodegas</span>
+</button>
+<button class="flex items-center space-x-2 px-4 py-2 rounded-full border border-outline text-on-surface-variant hover:bg-surface-variant/50 font-label-lg text-label-lg whitespace-nowrap transition-colors active:scale-95 bg-surface">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+<span>Gastronomía</span>
+</button>
+<button class="flex items-center space-x-2 px-4 py-2 rounded-full border border-outline text-on-surface-variant hover:bg-surface-variant/50 font-label-lg text-label-lg whitespace-nowrap transition-colors active:scale-95 bg-surface">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+<span>Historia</span>
+</button>
+<button class="flex items-center space-x-2 px-4 py-2 rounded-full border border-outline text-on-surface-variant hover:bg-surface-variant/50 font-label-lg text-label-lg whitespace-nowrap transition-colors active:scale-95 bg-surface">
+<span class="material-symbols-outlined text-[18px]">landscape</span>
+<span>Naturaleza</span>
+</button>
+</div>
+</section>
+<!-- Landscape Cards Layout -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<article class="relative h-[400px] rounded-[24px] overflow-hidden group cursor-pointer shadow-sm hover:shadow-md transition-shadow">
+<img alt="Viñedo al atardecer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A breathtaking view of a sprawling vineyard in San Carlos during golden hour. The setting sun casts a warm, golden-olive light across the neat rows of grapevines, highlighting the rich burgundy undertones of the earth. In the background, majestic mountains frame the serene landscape. The image exudes a high-end, tactile, farm-to-table aesthetic, perfectly matching the app's corporate modern style with organic warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDim-kwf4DB3qhWD4b6amd325rw9psV7Gc45dNVgPawPyj_mxMbod8dywxCKZrcRPp14ZA_6sK7s4YJxuCEqiaDdWJbuoPEs4eEQRTSxaUoRjWVQQ275E72xEInjzGTsjbe7nc_4-8PpAHFRaqvUw9nA5nd1WVT1RTNim2Ph3P_CYijF7nu5vsc_TSt3K6Z_J4Z4pjOP5baxZy9AJU-K_k_Vzzx737WP3Pxvnch86LvHmXBqznDGP7gG3Ca2uRamdBbOJzoKYykKF6l"/>
+<!-- Glassmorphism Overlay -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent backdrop-blur-sm">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<h2 class="text-title-lg font-title-lg text-on-primary font-bold drop-shadow-md">Finca La Cima</h2>
+<p class="text-body-md font-body-md text-on-primary/80">Valle de Uco</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/90 text-on-primary flex items-center justify-center backdrop-blur-md shadow-sm hover:bg-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Top Right Badge -->
+<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md rounded-full px-3 py-1 flex items-center space-x-1 shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-lg font-label-lg text-on-surface">4.9</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="relative h-[400px] rounded-[24px] overflow-hidden group cursor-pointer shadow-sm hover:shadow-md transition-shadow">
+<img alt="Bodega Histórica" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="An elegant, historic winery building constructed from stone and timber, nestled in the San Carlos landscape. The architectural details suggest heritage and reliability, bathed in soft, natural daylight. Lush green foliage surrounds the structure, complementing the earthy, premium visual mood of the interface. The lighting is bright and modern, creating a welcoming, professional atmosphere devoid of cold sterility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1FCUSDGiBqvTKfDmG7OMyKv7ZkvFb_fll1TP11CBO2iUu8-tmhHZCTHkuikXFb7_tlzYwNKpenye5_ve6iUM9u78oh4NkqF_u_NmnNcb2n06dtNjtV0SU5CvYbDub69Mir8VUXEfwcPMZzQQb1KyRjLUe9UihawQUY9wtB1t0bw7r6Mr_e90_vq5Swm83IueZ2k3zhgdB8paITUwmdKAtmutfcUZ8J9zXzjFY37kWP3ZyVbcW3npNpLPx1by2rmqFThr2zfeGho7r"/>
+<!-- Glassmorphism Overlay -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent backdrop-blur-sm">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<h2 class="text-title-lg font-title-lg text-on-primary font-bold drop-shadow-md">Bodega Los Álamos</h2>
+<p class="text-body-md font-body-md text-on-primary/80">Ruta del Vino</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/90 text-on-primary flex items-center justify-center backdrop-blur-md shadow-sm hover:bg-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="relative h-[400px] rounded-[24px] overflow-hidden group cursor-pointer shadow-sm hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1">
+<img alt="Camino entre montañas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A scenic, winding dirt road leading towards majestic, snow-capped mountains in the San Carlos region. The landscape is rich with agricultural greenery, olive tones, and deep earthy colors. The sky is clear and bright, providing a light-mode aesthetic. The scene conveys a sense of reliable, natural exploration, aligning with the app's tactile and heritage-inspired corporate modern design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwmoOPeALCyPjM-Vsu9bFmQfBAr9fJRauuiWL4eywISV5Y-89_B5J6pgQAn4ma8aoqGzkt5qV0-lDG3TcB6mSUf8se1ZZHhNsDqn8ZL6wFHjxZGoxaXV0gGOJ3gymtIEwh5nvxcpsaPz024DyWvoP3q92MVxHl7BpxnimdoK0_8j-eAbnRD-_1mbC6RVvPXD_TKBNfKC0IegPHJVwVJTfWBzlkslq9ofGqmDrvz3kIt0iMlrklX4RooBeeTVJBpVLaRt5WhqKndaCw"/>
+<!-- Glassmorphism Overlay -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent backdrop-blur-sm">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<h2 class="text-title-lg font-title-lg text-on-primary font-bold drop-shadow-md">Sendero del Sol</h2>
+<p class="text-body-md font-body-md text-on-primary/80">Reserva Natural</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/90 text-on-primary flex items-center justify-center backdrop-blur-md shadow-sm hover:bg-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface-container dark:bg-surface-container fixed bottom-0 w-full z-50 rounded-t-lg shadow-sm" id="bottomNavBar">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4 bg-surface-container">
+<!-- Active: Explorar -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 Active: scale-90 duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:bg-surface-variant transition-colors rounded-full" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-label-lg font-label-lg">Explorar</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full px-2 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">wine_bar</span>
+<span class="text-label-lg font-label-lg mt-1">Bodegas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full px-2 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
+<span class="text-label-lg font-label-lg mt-1">Favoritos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full px-2 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="text-label-lg font-label-lg mt-1">Perfil</span>
+</a>
+</div>
+</nav>
+<script>
+        // Add subtle shadow to TopAppBar on scroll
+        const topAppBar = document.getElementById('topAppBar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                topAppBar.classList.add('shadow-sm');
+                topAppBar.classList.replace('bg-surface-container-low', 'bg-surface/95');
+                topAppBar.classList.add('backdrop-blur-md');
+            } else {
+                topAppBar.classList.remove('shadow-sm');
+                topAppBar.classList.replace('bg-surface/95', 'bg-surface-container-low');
+                topAppBar.classList.remove('backdrop-blur-md');
+            }
+        });
+    </script>
+</body></html>

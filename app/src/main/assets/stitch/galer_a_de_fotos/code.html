@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Galería - gondolApp</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdadb",
+                        "outline": "#747967",
+                        "primary-container": "#5d7f13",
+                        "secondary-container": "#fd7f8a",
+                        "outline-variant": "#c4c9b4",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-fixed-variant": "#842231",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9f9f6",
+                        "surface-dim": "#dadad7",
+                        "on-primary-container": "#faffe7",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-container": "#eeeeeb",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-fixed": "#131f00",
+                        "primary-fixed": "#c8f17a",
+                        "on-secondary-fixed": "#40000d",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "tertiary": "#765700",
+                        "tertiary-container": "#956e00",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "on-surface-variant": "#444939",
+                        "on-background": "#1a1c1b",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "on-secondary-container": "#741627",
+                        "surface-container-low": "#f4f4f1",
+                        "background": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "secondary": "#a33a47",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-tertiary-container": "#fffbff",
+                        "inverse-primary": "#add461",
+                        "on-surface": "#1a1c1b",
+                        "surface-tint": "#496800",
+                        "primary": "#476500",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-tablet": "24px",
+                        "baseline": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for immersive view */
+        body {
+            overflow: hidden;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-on-background text-inverse-on-surface h-screen w-screen relative select-none">
+<!-- Top Overlay Controls -->
+<div class="absolute top-0 left-0 w-full z-50 flex justify-between items-start p-margin-mobile md:p-margin-tablet bg-gradient-to-b from-black/60 to-transparent pt-safe">
+<!-- Image Info / Counter (Optional, adds to premium feel) -->
+<div class="flex flex-col gap-baseline">
+<span class="font-label-lg text-label-lg text-inverse-on-surface drop-shadow-md">Finca El Origen</span>
+<span class="font-body-md text-body-md text-surface-variant drop-shadow-md">2 de 12</span>
+</div>
+<!-- Close Button -->
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-variant/20 hover:bg-surface-variant/40 backdrop-blur-md transition-colors border border-outline-variant/30 text-inverse-on-surface active:scale-95">
+<span class="material-symbols-outlined text-[28px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Main Image Canvas -->
+<div class="w-full h-full flex items-center justify-center relative group cursor-zoom-in">
+<!-- Interactive Zones for Previous/Next (Desktop) -->
+<div class="absolute left-0 top-0 w-1/3 h-full z-40 hidden md:block cursor-w-resize" title="Anterior"></div>
+<div class="absolute right-0 top-0 w-1/3 h-full z-40 hidden md:block cursor-e-resize" title="Siguiente"></div>
+<!-- The Image -->
+<img alt="Detalle de viñedo" class="w-full h-full object-contain max-w-7xl mx-auto transition-transform duration-500 ease-out transform" data-alt="A stunning, high-resolution close-up photograph of vibrant, mature purple grapes hanging heavily from a lush green vine in a sun-drenched vineyard. The lighting is dramatic golden hour, casting warm, long shadows and creating striking highlights on the dew-kissed skin of the fruit. The background is deeply blurred (bokeh), isolating the grapes perfectly. The overall aesthetic is rich, organic, and intensely premium, reflecting a high-end agricultural identity." draggable="false" id="gallery-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeI0X8rOvya1BWE-xtyhtB2-SRBcBzIFs_80cB7hVqDV9xhNQsA2PM90OodBmpU8DHiOEbMa4WglmXBX501vFRhf2h0lX-SZIu-F4a4etSyDOzZolgH2_z0Whji7rWO7b7idtel7_b3r8LVeHHUoOl67uvd2BI2FixYuIlFATlG9c7H0Lk5a9WHAyLbjNyWJEi1mMeEtv8sbffIpps1fBPyxJESQDEfaDxLcg3qDBDU3C3-xRbAac9H2rTeemMLwv-et43OY7vj-TV"/>
+<!-- Subtle Zoom Hint (Fades out via JS or CSS animation conceptually) -->
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-black/40 backdrop-blur-sm rounded-full p-3 flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="zoom_in">zoom_in</span>
+<span class="font-label-lg text-label-lg">Doble tap para zoom</span>
+</div>
+</div>
+</div>
+<!-- Bottom Overlay Controls (Pagination) -->
+<div class="absolute bottom-0 left-0 w-full z-50 flex justify-center p-margin-mobile md:p-margin-tablet bg-gradient-to-t from-black/80 to-transparent pb-safe">
+<!-- Pagination Dots -->
+<div class="flex items-center gap-stack-sm h-12">
+<button aria-label="Ir a imagen 1" class="w-2 h-2 rounded-full bg-surface-variant/40 transition-all duration-300 hover:bg-surface-variant/80 focus:outline-none"></button>
+<button aria-current="true" aria-label="Imagen actual 2" class="w-8 h-2 rounded-full bg-primary-fixed transition-all duration-300 shadow-[0_0_8px_rgba(200,241,122,0.4)] focus:outline-none"></button>
+<button aria-label="Ir a imagen 3" class="w-2 h-2 rounded-full bg-surface-variant/40 transition-all duration-300 hover:bg-surface-variant/80 focus:outline-none"></button>
+<button aria-label="Ir a imagen 4" class="w-2 h-2 rounded-full bg-surface-variant/40 transition-all duration-300 hover:bg-surface-variant/80 focus:outline-none"></button>
+<button aria-label="Ir a imagen 5" class="w-2 h-2 rounded-full bg-surface-variant/40 transition-all duration-300 hover:bg-surface-variant/80 focus:outline-none"></button>
+</div>
+</div>
+<script>
+        // Simple vanilla JS for double-tap zoom effect demonstration
+        const img = document.getElementById('gallery-image');
+        let isZoomed = false;
+
+        img.addEventListener('dblclick', () => {
+            if (!isZoomed) {
+                img.classList.add('scale-150');
+                img.classList.remove('cursor-zoom-in');
+                img.classList.add('cursor-zoom-out');
+                isZoomed = true;
+            } else {
+                img.classList.remove('scale-150');
+                img.classList.remove('cursor-zoom-out');
+                img.classList.add('cursor-zoom-in');
+                isZoomed = false;
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil de Usuario - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#5d7f13",
+                        "on-secondary-fixed": "#40000d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "surface-dim": "#dadad7",
+                        "on-primary-fixed-variant": "#364e00",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-surface": "#2f312f",
+                        "tertiary-container": "#956e00",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "inverse-primary": "#add461",
+                        "tertiary": "#765700",
+                        "secondary-container": "#fd7f8a",
+                        "on-background": "#1a1c1b",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "on-tertiary-fixed": "#261900",
+                        "primary": "#476500",
+                        "surface-container-low": "#f4f4f1",
+                        "surface": "#f9f9f6",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#496800",
+                        "surface-variant": "#e2e3e0",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eeeeeb",
+                        "on-primary-fixed": "#131f00",
+                        "primary-fixed": "#c8f17a",
+                        "on-surface-variant": "#444939",
+                        "on-surface": "#1a1c1b",
+                        "outline": "#747967",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#fffbff",
+                        "secondary-fixed": "#ffdadb",
+                        "outline-variant": "#c4c9b4",
+                        "on-secondary-container": "#741627",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-primary-container": "#faffe7",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#842231",
+                        "primary-fixed-dim": "#add461",
+                        "surface-container-high": "#e8e8e5",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "background": "#f9f9f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px",
+                        "gutter": "16px",
+                        "baseline": "4px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low docked full-width top-0 bg-surface-container-low flat no shadows flex justify-between items-center px-margin-mobile h-24 w-full sticky z-40">
+<button aria-label="Menu" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="menu">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">gondolApp</h1>
+<button aria-label="User profile photo" class="w-12 h-12 flex items-center justify-center rounded-full overflow-hidden hover:bg-surface-variant/50 transition-colors border-2 border-transparent focus:border-primary-container">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual with a warm smile, set against a blurred, bright agricultural landscape. The lighting is natural and sun-kissed, conveying a sense of approachability and heritage. The overall color palette features earthy greens and soft natural tones, aligning perfectly with a modern, farm-to-table corporate aesthetic. The image exudes dependability and premium quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvNxOROeQwhMvohMc_4TU7Klj6Zw9vLhyr1vWlI14d83feaTsMzcP9iPEwaMpN0E8CmKNAJdX3E-iItBLu8E9KzU7CByeS5CNevScQjpeJSNrhqpJK15JfGGD7ki1X2CXp9Oe7GsYogfFcT3ckgH7PBXaL9WdEWQzZv9o9LJDqtaP-JNteiLkY3mt7aDv4-9JjWzaVjy-YJCgpoR1vvjqrbooW0nXL-FfpHjIt3BwhXLdGF-F7f9JukKmsaFvyMUZFqUiJrQwqB4gE"/>
+</button>
+</header>
+<main class="px-margin-mobile md:px-margin-tablet py-stack-md max-w-4xl mx-auto space-y-stack-lg">
+<!-- Profile Header -->
+<section class="flex flex-col items-center text-center mt-stack-sm space-y-stack-md">
+<div class="relative">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-low shadow-sm relative z-10">
+<img alt="User profile photo large" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual with a warm smile, set against a blurred, bright agricultural landscape. The lighting is natural and sun-kissed, conveying a sense of approachability and heritage. The overall color palette features earthy greens and soft natural tones, aligning perfectly with a modern, farm-to-table corporate aesthetic. The image exudes dependability and premium quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsYxqY-GkGV_XqXtir4v4FrrmeqaImxmd_BzJwowePsaYjQA-kg4un8QkG0WWoNnWTK3-qNboLHILeRTDzgDnML9-O6H-BhVe_mMZdQXN4DLZi7n3LfWOxKtmDc6uWr1O1VOMc19rOh77Wrb_5vNz68_rh_MFtb7mMAZoBsKGsy8wg10DDRmndQab-kF9r8tZ_yRp_2qysKnnTEh4vUktSnfPy6MrnZSy92d_8Dbxc1zp8NVBMb4M8jY2bKUKTTEQRg-9EzG2m9JNt"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center shadow-md z-20 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-background">Martín Navarro</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-1">Socio Viticultor</p>
+</div>
+</section>
+<!-- Points Card (Bento/Glassmorphism style) -->
+<section class="bg-surface-container/50 backdrop-blur-md rounded-xl p-stack-lg relative overflow-hidden border border-outline-variant/30 shadow-sm">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary-fixed/20 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -bottom-10 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex flex-col sm:flex-row justify-between items-center sm:items-start gap-stack-md text-center sm:text-left">
+<div>
+<h3 class="text-label-lg font-label-lg text-on-surface-variant uppercase tracking-wider mb-baseline">Saldo Acumulado</h3>
+<div class="flex items-baseline justify-center sm:justify-start gap-2">
+<span class="text-display-lg font-display-lg text-primary">12,450</span>
+<span class="text-title-lg font-title-lg text-primary-container">pts</span>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full text-label-lg font-label-lg font-medium hover:bg-primary/90 transition-transform active:scale-95 shadow-sm mt-stack-sm sm:mt-0 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+                    Canjear
+                </button>
+</div>
+</section>
+<!-- Navigation Menu Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-stack-sm md:gap-stack-md mt-stack-lg">
+<a class="bg-surface-container rounded-lg p-stack-md flex items-center gap-stack-md hover:bg-surface-container-high transition-colors group border border-transparent hover:border-outline-variant/50" href="#">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+</div>
+<div class="flex-1">
+<h3 class="text-title-lg font-title-lg text-on-background">Mis Datos</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-baseline">Información personal y contacto</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="bg-surface-container rounded-lg p-stack-md flex items-center gap-stack-md hover:bg-surface-container-high transition-colors group border border-transparent hover:border-outline-variant/50" href="#">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+<div class="flex-1">
+<h3 class="text-title-lg font-title-lg text-on-background">Notificaciones</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-baseline">Avisos y alertas de vendimia</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="bg-surface-container rounded-lg p-stack-md flex items-center gap-stack-md hover:bg-surface-container-high transition-colors group border border-transparent hover:border-outline-variant/50" href="#">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+</div>
+<div class="flex-1">
+<h3 class="text-title-lg font-title-lg text-on-background">Soporte</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-baseline">Ayuda y contacto técnico</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="bg-surface-container rounded-lg p-stack-md flex items-center gap-stack-md hover:bg-error-container/30 transition-colors group border border-transparent hover:border-error/30 mt-stack-md md:mt-0" href="#">
+<div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error group-hover:bg-error group-hover:text-on-error transition-colors">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</div>
+<div class="flex-1">
+<h3 class="text-title-lg font-title-lg text-error">Cerrar sesión</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-baseline">Salir de la cuenta de forma segura</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-error transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden bg-surface-container dark:bg-surface-container fixed bottom-0 w-full z-50 rounded-t-lg shadow-sm fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-lg p-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="map">map</span>
+<span class="text-label-lg font-label-lg">Explorar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-lg p-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="wine_bar">wine_bar</span>
+<span class="text-label-lg font-label-lg">Bodegas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-lg p-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="favorite">favorite</span>
+<span class="text-label-lg font-label-lg">Favoritos</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="person" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-lg font-label-lg font-bold">Perfil</span>
+</a>
+</nav>
+</body></html>

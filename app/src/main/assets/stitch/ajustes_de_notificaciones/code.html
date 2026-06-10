@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ajustes de Notificaciones - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#ffdadb",
+                    "outline": "#747967",
+                    "primary-container": "#5d7f13",
+                    "secondary-container": "#fd7f8a",
+                    "outline-variant": "#c4c9b4",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e2e3e0",
+                    "on-secondary-fixed-variant": "#842231",
+                    "error-container": "#ffdad6",
+                    "surface": "#f9f9f6",
+                    "surface-dim": "#dadad7",
+                    "on-primary-container": "#faffe7",
+                    "on-primary-fixed-variant": "#364e00",
+                    "surface-container": "#eeeeeb",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-primary-fixed": "#131f00",
+                    "primary-fixed": "#c8f17a",
+                    "on-secondary-fixed": "#40000d",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#f1f1ee",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#f6be3b",
+                    "tertiary": "#765700",
+                    "tertiary-container": "#956e00",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#f9f9f6",
+                    "on-surface-variant": "#444939",
+                    "on-background": "#1a1c1b",
+                    "tertiary-fixed": "#ffdea0",
+                    "surface-container-high": "#e8e8e5",
+                    "on-tertiary-fixed": "#261900",
+                    "on-secondary-container": "#741627",
+                    "surface-container-low": "#f4f4f1",
+                    "background": "#f9f9f6",
+                    "inverse-surface": "#2f312f",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#add461",
+                    "secondary": "#a33a47",
+                    "secondary-fixed-dim": "#ffb2b7",
+                    "surface-container-highest": "#e2e3e0",
+                    "on-tertiary-container": "#fffbff",
+                    "inverse-primary": "#add461",
+                    "on-surface": "#1a1c1b",
+                    "surface-tint": "#496800",
+                    "primary": "#476500",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-tablet": "24px",
+                    "baseline": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "title-lg": ["Manrope"],
+                    "label-lg": ["Manrope"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "headline-sm": ["Be Vietnam Pro"],
+                    "body-lg": ["Manrope"],
+                    "display-lg": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom Switch Styles for Primary Olive */
+        .switch-checkbox:checked {
+            right: 0;
+            border-color: #476500; /* primary */
+        }
+        .switch-checkbox:checked + .switch-label {
+            background-color: #476500; /* primary */
+        }
+        .switch-checkbox:checked + .switch-label:after {
+            transform: translateX(100%);
+            background-color: #ffffff; /* on-primary */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container flex flex-col">
+<!-- TopAppBar (Medium) -->
+<header class="bg-surface-container-low dark:bg-surface-container-low flex justify-between items-center px-margin-mobile h-24 w-full sticky top-0 z-40 transition-shadow duration-300" id="top-app-bar">
+<div class="flex items-center gap-stack-sm w-12 cursor-pointer hover:bg-surface-variant/50 transition-colors rounded-full p-2" onclick="history.back()">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="arrow_back" data-weight="fill" style="font-variation-settings: 'FILL' 1;">arrow_back</span>
+</div>
+<div class="flex flex-col items-center">
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed text-center">Ajustes de Notificaciones</h1>
+</div>
+<div class="w-12"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile md:px-margin-tablet py-stack-lg max-w-4xl mx-auto w-full pb-32 md:pb-stack-lg">
+<!-- Intro text -->
+<div class="mb-stack-lg px-4">
+<p class="text-body-lg font-body-lg text-on-surface-variant">Controla qué información quieres recibir para personalizar tu experiencia gondolApp. Guardaremos tus preferencias automáticamente.</p>
+</div>
+<!-- Settings Cards Container -->
+<div class="flex flex-col gap-stack-md">
+<!-- Setting Item 1 -->
+<div class="bg-surface rounded-lg shadow-[0_4px_12px_rgba(45,54,21,0.08)] p-stack-md flex items-start gap-stack-md transition-all duration-300 hover:shadow-[0_8px_16px_rgba(45,54,21,0.12)]">
+<div class="bg-surface-container rounded-full p-3 flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="local_offer" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+</div>
+<div class="flex-grow">
+<h2 class="text-title-lg font-title-lg text-on-surface mb-baseline">Nuevas Ofertas</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Recibe notificaciones sobre descuentos especiales en bodegas, catas y productos exclusivos de la región.</p>
+</div>
+<div class="flex-shrink-0 pt-1">
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="switch-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 checked:right-1 checked:left-auto border-surface-variant transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-1 focus:ring-offset-surface" id="toggle_ofertas" name="toggle_ofertas" type="checkbox"/>
+<label class="switch-label block overflow-hidden h-8 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="toggle_ofertas"></label>
+</div>
+</div>
+</div>
+<!-- Setting Item 2 -->
+<div class="bg-surface rounded-lg shadow-[0_4px_12px_rgba(45,54,21,0.08)] p-stack-md flex items-start gap-stack-md transition-all duration-300 hover:shadow-[0_8px_16px_rgba(45,54,21,0.12)]">
+<div class="bg-surface-container rounded-full p-3 flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="tour" data-weight="fill" style="font-variation-settings: 'FILL' 1;">tour</span>
+</div>
+<div class="flex-grow">
+<h2 class="text-title-lg font-title-lg text-on-surface mb-baseline">Eventos de Turismo</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Mantente al día con los próximos festivales de vendimia, rutas guiadas y eventos culturales en la zona.</p>
+</div>
+<div class="flex-shrink-0 pt-1">
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="switch-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 checked:right-1 checked:left-auto border-surface-variant transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-1 focus:ring-offset-surface" id="toggle_eventos" name="toggle_eventos" type="checkbox"/>
+<label class="switch-label block overflow-hidden h-8 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="toggle_eventos"></label>
+</div>
+</div>
+</div>
+<!-- Setting Item 3 -->
+<div class="bg-surface rounded-lg shadow-[0_4px_12px_rgba(45,54,21,0.08)] p-stack-md flex items-start gap-stack-md transition-all duration-300 hover:shadow-[0_8px_16px_rgba(45,54,21,0.12)]">
+<div class="bg-surface-container rounded-full p-3 flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="notifications_active" data-weight="fill" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div class="flex-grow">
+<h2 class="text-title-lg font-title-lg text-on-surface mb-baseline">Alertas del Sistema</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Avisos importantes sobre tu cuenta, confirmaciones de reservas y cambios en nuestras políticas.</p>
+</div>
+<div class="flex-shrink-0 pt-1">
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="switch-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 checked:right-1 checked:left-auto border-surface-variant transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-1 focus:ring-offset-surface" id="toggle_sistema" name="toggle_sistema" type="checkbox"/>
+<label class="switch-label block overflow-hidden h-8 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="toggle_sistema"></label>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- App Bar Scroll Effect -->
+<script>
+        const topAppBar = document.getElementById('top-app-bar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                topAppBar.classList.add('shadow-sm');
+                topAppBar.classList.replace('bg-surface-container-low', 'bg-surface-container');
+            } else {
+                topAppBar.classList.remove('shadow-sm');
+                topAppBar.classList.replace('bg-surface-container', 'bg-surface-container-low');
+            }
+        });
+    </script>
+</body></html>
