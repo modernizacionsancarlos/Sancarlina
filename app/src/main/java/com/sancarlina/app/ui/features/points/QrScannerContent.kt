@@ -22,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,7 +101,7 @@ fun QrScannerContent(
                 .padding(16.dp)
                 .background(Color.Black.copy(alpha = 0.5f), CircleShape)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = Color.White)
         }
 
         if (uiState.isLoading) {

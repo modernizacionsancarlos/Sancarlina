@@ -66,7 +66,12 @@ fun HomeContent(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.Search, null, tint = SancarlinaOutline, modifier = Modifier.size(24.dp))
+                Icon(
+                    Icons.Default.Search,
+                    stringResource(R.string.cd_search),
+                    tint = SancarlinaOutline,
+                    modifier = Modifier.size(24.dp)
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     "¿Qué estás buscando?",

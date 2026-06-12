@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -59,7 +60,7 @@ fun RegisterContent(
                     onClick = onBack,
                     modifier = Modifier.align(Alignment.CenterStart).padding(start = 8.dp)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = SancarlinaPrimary)
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
                 }
                 Image(
                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),

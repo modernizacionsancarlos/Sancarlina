@@ -4,4 +4,14 @@
     <!-- Reemplazar antes de publicar en Play Console -->
     <string name="privacy_policy_url">https://REEMPLAZAR-POR-URL-MUNICIPAL/privacidad</string>
     <string name="legal_open_privacy_online">Ver política completa en línea</string>
+
+    <!-- Accesibilidad: contentDescription para controles interactivos -->
+    <string name="cd_back">Volver</string>
+    <string name="cd_search">Buscar</string>
+    <string name="cd_close">Cerrar</string>
+    <string name="cd_filters">Filtros</string>
+    <string name="cd_favorite">Favorito</string>
+    <string name="cd_open_qr">Escanear código QR</string>
+    <string name="cd_settings">Ajustes</string>
+    <string name="cd_menu">Menú</string>
 </resources>

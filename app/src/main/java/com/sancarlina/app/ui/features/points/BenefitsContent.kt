@@ -13,7 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.ui.theme.*
@@ -75,7 +77,7 @@ fun BenefitsContent(
                     colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
                     shape = RoundedCornerShape(28.dp)
                 ) {
-                    Icon(Icons.Default.QrCodeScanner, null)
+                    Icon(Icons.Default.QrCodeScanner, stringResource(R.string.cd_open_qr))
                     Spacer(modifier = Modifier.width(12.dp))
                     Text("ESCANEAR PARA SUMAR", fontWeight = FontWeight.Bold)
                 }

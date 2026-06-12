@@ -21,7 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -109,7 +111,7 @@ fun ProductDetailContent(
                             IconButton(onClick = { isFav = !isFav }) {
                                 Icon(
                                     if (isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                    null,
+                                    stringResource(R.string.cd_favorite),
                                     tint = SancarlinaSecondary,
                                     modifier = Modifier.size(28.dp)
                                 )
@@ -215,7 +217,7 @@ fun ProductDetailContent(
                 .padding(16.dp)
                 .background(Color.Black.copy(alpha = 0.3f), CircleShape)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = Color.White)
         }
     }
 }

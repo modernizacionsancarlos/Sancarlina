@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.sancarlina.app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -121,7 +123,12 @@ fun CommerceProfileContent(
                             
                             // Favorite Toggle
                             IconButton(onClick = { /* Favorite */ }) {
-                                Icon(Icons.Default.FavoriteBorder, null, tint = SancarlinaSecondary, modifier = Modifier.size(28.dp))
+                                Icon(
+                                    Icons.Default.FavoriteBorder,
+                                    stringResource(R.string.cd_favorite),
+                                    tint = SancarlinaSecondary,
+                                    modifier = Modifier.size(28.dp)
+                                )
                             }
                         }
 
@@ -201,7 +208,7 @@ fun CommerceProfileContent(
                 .padding(8.dp)
                 .background(Color.Black.copy(alpha = 0.3f), CircleShape)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = Color.White)
         }
     }
 }

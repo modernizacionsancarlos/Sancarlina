@@ -136,7 +136,11 @@ fun MainScaffold() {
                             },
                             navigationIcon = {
                                 IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                    Icon(Icons.Default.Menu, "Menu", tint = SancarlinaPrimary)
+                                    Icon(
+                                        Icons.Default.Menu,
+                                        stringResource(R.string.cd_menu),
+                                        tint = SancarlinaPrimary
+                                    )
                                 }
                             },
                             actions = {
@@ -201,9 +205,9 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
-                            screen.icon ?: Icons.Default.Circle, 
-                            null, 
-                            tint = contentColor, 
+                            screen.icon ?: Icons.Default.Circle,
+                            screen.title,
+                            tint = contentColor,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(

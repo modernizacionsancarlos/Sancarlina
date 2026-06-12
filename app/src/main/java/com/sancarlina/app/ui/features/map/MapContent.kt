@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -70,7 +72,7 @@ fun MapContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onOpenDrawer) {
-                    Icon(Icons.Default.Menu, null, tint = SancarlinaPrimary)
+                    Icon(Icons.Default.Menu, stringResource(R.string.cd_menu), tint = SancarlinaPrimary)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -80,7 +82,7 @@ fun MapContent(
                     color = SancarlinaOnSurface
                 )
                 IconButton(onClick = { viewModel.toggleFilterPanel(true) }) {
-                    Icon(Icons.Default.Tune, null, tint = SancarlinaPrimary)
+                    Icon(Icons.Default.Tune, stringResource(R.string.cd_filters), tint = SancarlinaPrimary)
                 }
             }
         }

@@ -18,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +56,7 @@ fun CategoryListContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = SancarlinaPrimary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
                     }
                     Text(
                         text = uiState.categoryName,
@@ -64,7 +66,7 @@ fun CategoryListContent(
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(onClick = { showFilters = true }) {
-                        Icon(Icons.Default.Tune, null, tint = SancarlinaPrimary)
+                        Icon(Icons.Default.Tune, stringResource(R.string.cd_filters), tint = SancarlinaPrimary)
                     }
                 }
             }
@@ -194,7 +196,7 @@ fun CommerceCard(commerce: CommerceMarker, onClick: () -> Unit) {
             }
             
             IconButton(onClick = { /* Favorite */ }) {
-                Icon(Icons.Default.FavoriteBorder, null, tint = SancarlinaSecondary)
+                Icon(Icons.Default.FavoriteBorder, stringResource(R.string.cd_favorite), tint = SancarlinaSecondary)
             }
         }
     }
