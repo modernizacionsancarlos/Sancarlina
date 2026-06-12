@@ -114,6 +114,10 @@ class EditProfileViewModel : ViewModel() {
         _uiState.update { it.copy(deletePassword = password) }
     }
 
+    fun clearError() {
+        _uiState.update { it.copy(error = null) }
+    }
+
     /**
      * Elimina cuenta tras re-autenticación (solo email/password).
      * Si en el futuro se agrega Google Sign-In, requiere flujo con GoogleAuthProvider.
@@ -132,8 +136,9 @@ class EditProfileViewModel : ViewModel() {
             return
         }
 
+        // Mantener el diálogo abierto para que el loading del botón sea visible
         _uiState.update {
-            it.copy(isDeletingAccount = true, showDeletePasswordDialog = false, error = null)
+            it.copy(isDeletingAccount = true, error = null)
         }
 
         viewModelScope.launch {
@@ -151,6 +156,8 @@ class EditProfileViewModel : ViewModel() {
                 _uiState.update {
                     it.copy(
                         isDeletingAccount = false,
+                        showDeletePasswordDialog = false,
+                        deletePassword = "",
                         error = "Por seguridad, cerrá sesión, volvé a iniciar sesión e intentá de nuevo."
                     )
                 }
@@ -168,6 +175,8 @@ class EditProfileViewModel : ViewModel() {
                 _uiState.update {
                     it.copy(
                         isDeletingAccount = false,
+                        showDeletePasswordDialog = false,
+                        deletePassword = "",
                         error = "Error al eliminar usuario. Re-inicie sesión e intente de nuevo."
                     )
                 }

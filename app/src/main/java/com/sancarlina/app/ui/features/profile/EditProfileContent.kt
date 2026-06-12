@@ -73,6 +73,31 @@ fun EditProfileContent(
                     CircularProgressIndicator(color = SancarlinaPrimary)
                 }
             } else {
+                // Errores de delete (sesión antigua, genérico) visibles fuera del diálogo
+                uiState.error?.takeIf { !uiState.showDeletePasswordDialog }?.let { message ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = SancarlinaSecondary.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = message,
+                                modifier = Modifier.weight(1f),
+                                color = SancarlinaSecondary,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            TextButton(onClick = { viewModel.clearError() }) {
+                                Text("Cerrar", color = SancarlinaPrimary)
+                            }
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -166,7 +191,11 @@ fun EditProfileContent(
 
     if (uiState.showDeletePasswordDialog) {
         AlertDialog(
-            onDismissRequest = { viewModel.setShowDeletePasswordDialog(false) },
+            onDismissRequest = {
+                if (!uiState.isDeletingAccount) {
+                    viewModel.setShowDeletePasswordDialog(false)
+                }
+            },
             confirmButton = {
                 Button(
                     onClick = { viewModel.deleteAccount { onLogout() } },
@@ -205,6 +234,7 @@ fun EditProfileContent(
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("Contraseña actual") },
                         singleLine = true,
+                        enabled = !uiState.isDeletingAccount,
                         visualTransformation = PasswordVisualTransformation(),
                         shape = RoundedCornerShape(16.dp)
                     )

@@ -64,7 +64,7 @@ fun SplashContent(onTimeout: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
-                contentDescription = "Sancarlina Isologo",
+                contentDescription = "GondolApp Isologo",
                 modifier = Modifier
                     .fillMaxWidth(0.8f) // Takes 80% of screen width
                     .aspectRatio(1f)    // Keeps it square/proportional
@@ -104,7 +104,7 @@ fun SplashContent(onTimeout: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_sancarlina_logo),
-                contentDescription = "Sancarlina Logotipo",
+                contentDescription = "GondolApp Logotipo",
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Fit,
                 alpha = 0.9f
