@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,13 +25,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sancarlina.app.R
-import coil.compose.AsyncImage
 import com.sancarlina.app.navigation.SancarlinaNavGraph
 import com.sancarlina.app.navigation.Screen
 import com.sancarlina.app.navigation.bottomNavItems
 import com.sancarlina.app.ui.theme.*
-import com.sancarlina.app.utils.PrefsManager
-import com.google.firebase.auth.FirebaseAuth
+import com.sancarlina.app.utils.ConnectivityObserver
+import com.sancarlina.app.utils.NetworkConnectivityObserver
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,10 +39,43 @@ fun MainScaffold() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
     val isMainView = bottomNavItems.any { it.route == currentDestination }
+
+    // Observador de red: una instancia por composición (no recrear en cada recomposición)
+    val connectivityObserver = remember { NetworkConnectivityObserver(context) }
+    val offlineExcludedRoutes = remember {
+        setOf(
+            Screen.SplashScreen.route,
+            Screen.Login.route,
+            Screen.Register.route,
+            Screen.Onboarding.route,
+            Screen.ForgotPassword.route,
+            Screen.Offline.route
+        )
+    }
+
+    // Navegación automática a Offline / restauración al recuperar conexión
+    LaunchedEffect(navController, connectivityObserver) {
+        connectivityObserver.observe().collect { status ->
+            val route = navController.currentBackStackEntry?.destination?.route
+            val isOffline = status == ConnectivityObserver.Status.Lost ||
+                status == ConnectivityObserver.Status.Unavailable
+
+            if (isOffline && route != null && route !in offlineExcludedRoutes) {
+                navController.navigate(Screen.Offline.route) {
+                    launchSingleTop = true
+                }
+            } else if (status == ConnectivityObserver.Status.Available &&
+                route == Screen.Offline.route
+            ) {
+                navController.popBackStack()
+            }
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -63,7 +96,12 @@ fun MainScaffold() {
                         modifier = Modifier.size(80.dp)
                     )
                     Spacer(Modifier.height(16.dp))
-                    Text("GONDOLAPP", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = SancarlinaPrimary)
+                    Text(
+                        stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = SancarlinaPrimary
+                    )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp), color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
@@ -92,7 +130,7 @@ fun MainScaffold() {
                             title = {
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),
-                                    contentDescription = "Gondolapp",
+                                    contentDescription = stringResource(R.string.app_name),
                                     modifier = Modifier.height(28.dp)
                                 )
                             },

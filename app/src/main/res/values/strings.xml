@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Gondolapp</string>
+    <string name="app_name">GondolApp</string>
+    <string name="home_explore_section">Explorar San Carlos</string>
+    <!-- Reemplazar antes de publicar en Play Console -->
+    <string name="privacy_policy_url">https://REEMPLAZAR-POR-URL-MUNICIPAL/privacidad</string>
+    <string name="legal_open_privacy_online">Ver política completa en línea</string>
 </resources>

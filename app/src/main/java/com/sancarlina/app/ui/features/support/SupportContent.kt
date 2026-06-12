@@ -18,12 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sancarlina.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SupportContent(onBack: () -> Unit, onOpenDrawer: () -> Unit = {}) {
+fun SupportContent(
+    onBack: () -> Unit,
+    onOpenDrawer: () -> Unit = {},
+    onNavigateToLegal: () -> Unit = {},
+    onOpenPrivacyPolicy: () -> Unit = {}
+) {
     Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Surface(
@@ -57,55 +61,60 @@ fun SupportContent(onBack: () -> Unit, onOpenDrawer: () -> Unit = {}) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = SancarlinaOnSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 SupportCard(
-                    Icons.Default.QuestionAnswer, 
-                    "Preguntas Frecuentes", 
+                    Icons.Default.QuestionAnswer,
+                    "Preguntas Frecuentes",
                     "Resuelve tus dudas rápidamente con nuestra guía.",
                     SancarlinaPrimary
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SupportCard(
-                    Icons.AutoMirrored.Filled.Chat, 
-                    "Soporte en Vivo", 
+                    Icons.AutoMirrored.Filled.Chat,
+                    "Soporte en Vivo",
                     "Habla directamente con un operador municipal.",
                     SancarlinaSecondary
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SupportCard(
-                    Icons.Default.Mail, 
-                    "Correo Electrónico", 
+                    Icons.Default.Mail,
+                    "Correo Electrónico",
                     "Envíanos tus sugerencias o reclamos detallados.",
                     SancarlinaTertiary
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))
-                
+
                 Text(
                     "Información Institucional",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = SancarlinaOnSurface
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                LegalMenuItem("Términos y Condiciones")
-                LegalMenuItem("Política de Privacidad")
-                LegalMenuItem("Acerca de GondolApp")
+
+                LegalMenuItem("Términos y Condiciones", onClick = onNavigateToLegal)
+                LegalMenuItem("Política de Privacidad", onClick = onOpenPrivacyPolicy)
+                LegalMenuItem("Acerca de GondolApp", onClick = onNavigateToLegal)
             }
         }
     }
 }
 
 @Composable
-fun SupportCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, color: androidx.compose.ui.graphics.Color) {
+fun SupportCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String,
+    color: androidx.compose.ui.graphics.Color
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,11 +144,11 @@ fun SupportCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: St
 }
 
 @Composable
-fun LegalMenuItem(text: String) {
+fun LegalMenuItem(text: String, onClick: () -> Unit = {}) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { },
+            .clickable(onClick = onClick),
         color = Color.Transparent
     ) {
         Row(

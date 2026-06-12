@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -145,10 +146,10 @@ fun EditProfileContent(
             onDismissRequest = { viewModel.setShowDeleteDialog(false) },
             confirmButton = {
                 Button(
-                    onClick = { viewModel.deleteAccount { onLogout() } },
+                    onClick = { viewModel.proceedToDeletePassword() },
                     colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
                 ) {
-                    Text("SÍ, ELIMINAR")
+                    Text("CONTINUAR")
                 }
             },
             dismissButton = {
@@ -158,6 +159,61 @@ fun EditProfileContent(
             },
             title = { Text("¿Eliminar cuenta?") },
             text = { Text("Esta acción es irreversible y perderás todos tus datos y puntos.") },
+            containerColor = SancarlinaSurface,
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
+
+    if (uiState.showDeletePasswordDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.setShowDeletePasswordDialog(false) },
+            confirmButton = {
+                Button(
+                    onClick = { viewModel.deleteAccount { onLogout() } },
+                    enabled = !uiState.isDeletingAccount && uiState.deletePassword.isNotBlank(),
+                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
+                ) {
+                    if (uiState.isDeletingAccount) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Text("ELIMINAR DEFINITIVAMENTE")
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { viewModel.setShowDeletePasswordDialog(false) },
+                    enabled = !uiState.isDeletingAccount
+                ) {
+                    Text("CANCELAR", color = SancarlinaOutline)
+                }
+            },
+            title = { Text("Confirmá tu contraseña") },
+            text = {
+                Column {
+                    Text(
+                        "Por seguridad, ingresá tu contraseña actual para eliminar la cuenta.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = uiState.deletePassword,
+                        onValueChange = { viewModel.onDeletePasswordChange(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Contraseña actual") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    uiState.error?.let { message ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(message, color = SancarlinaSecondary, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            },
             containerColor = SancarlinaSurface,
             shape = RoundedCornerShape(28.dp)
         )

@@ -70,7 +70,7 @@ fun ConnectionErrorDialog(
                     Spacer(Modifier.height(12.dp))
                     
                     Text(
-                        text = "No pudimos conectar con los servidores de Sancarlina. Por favor, verificá tu conexión a internet e intentá de nuevo.",
+                        text = "No pudimos conectar con los servidores de GondolApp. Por favor, verificá tu conexión a internet e intentá de nuevo.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray,
                         textAlign = TextAlign.Center

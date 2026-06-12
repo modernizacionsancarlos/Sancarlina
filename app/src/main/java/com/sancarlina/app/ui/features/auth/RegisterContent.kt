@@ -63,7 +63,7 @@ fun RegisterContent(
                 }
                 Image(
                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),
-                    contentDescription = "Sancarlina Logo",
+                    contentDescription = "GondolApp",
                     modifier = Modifier.height(40.dp).align(Alignment.Center)
                 )
             }

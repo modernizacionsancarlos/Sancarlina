@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -43,6 +44,8 @@ import com.sancarlina.app.ui.features.product.ProductDetailContent
 import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
 import com.sancarlina.app.ui.features.support.SupportContent
 import com.sancarlina.app.ui.features.splash.SplashContent
+import com.sancarlina.app.R
+import com.sancarlina.app.utils.BrowserUtils
 import com.sancarlina.app.utils.ViewModelFactory
 
 @Composable
@@ -242,9 +245,15 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Support.route) {
+            val context = LocalContext.current
+            val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
             SupportContent(
                 onBack = { navController.popBackStack() },
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToLegal = { navController.navigate(Screen.Legal.route) },
+                onOpenPrivacyPolicy = {
+                    BrowserUtils.openCustomTab(context, privacyPolicyUrl)
+                }
             )
         }
         composable(Screen.Favorites.route) {
@@ -296,9 +305,8 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Offline.route) {
             OfflineContent(onRetry = {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Offline.route) { inclusive = true }
-                }
+                // Volver atrás; MainScaffold re-dirige a Offline si la red sigue caída
+                navController.popBackStack()
             })
         }
     }

@@ -59,7 +59,7 @@ fun LoginContent(
             Box(contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),
-                    contentDescription = "Sancarlina Logo",
+                    contentDescription = "GondolApp",
                     modifier = Modifier.height(48.dp)
                 )
             }
