@@ -6,6 +6,23 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+// Maps SDK: la key se lee de local.properties (MAPS_API_KEY). No commitear local.properties.
+// Seguridad real en Google Cloud Console → Credentials: restringir por app Android
+// (package com.sancarlina.app + SHA-1 upload/release/Play App Signing) y API "Maps SDK for Android".
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")?.trim().orEmpty()
+if (mapsApiKey.isEmpty()) {
+    throw GradleException(
+        "MAPS_API_KEY no está definida en local.properties. " +
+            "Agregá la línea MAPS_API_KEY=<tu-key> en la raíz del proyecto. " +
+            "Restringí la key en Google Cloud Console (Android app, com.sancarlina.app, SHA-1, Maps SDK for Android)."
+    )
+}
+
 android {
     namespace = "com.sancarlina.app"
     compileSdk {
@@ -18,10 +35,11 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 57
-        versionName = "8.1.0"
+        versionCode = 59
+        versionName = "8.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {

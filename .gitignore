@@ -20,6 +20,12 @@ build/
 # Local properties (sensitive info like SDK paths)
 local.properties
 
+# Signing and secrets (no commitear)
+keystore.properties
+*.jks
+*.keystore
+secrets.properties
+
 # Log files
 *.log
 
