@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.viewmodel.LoginAuthViewModel
 import com.sancarlina.app.viewmodel.AuthViewModel
 import com.sancarlina.app.viewmodel.AuthUiState
 
@@ -34,7 +35,7 @@ import com.sancarlina.app.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContent(
-    viewModel: AuthViewModel = viewModel(),
+    viewModel: LoginAuthViewModel = viewModel<AuthViewModel>(),
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit

@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -42,14 +43,19 @@ import java.util.concurrent.Executors
 fun QrScannerContent(
     viewModel: QrScannerViewModel = viewModel(),
     onBack: () -> Unit,
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
+    forceNoCameraPermission: Boolean = false
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     
     var hasCameraPermission by remember {
         mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+            if (forceNoCameraPermission) {
+                false
+            } else {
+                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+            }
         )
     }
 
@@ -59,7 +65,7 @@ fun QrScannerContent(
     )
 
     LaunchedEffect(Unit) {
-        if (!hasCameraPermission) {
+        if (!forceNoCameraPermission && !hasCameraPermission) {
             launcher.launch(Manifest.permission.CAMERA)
         }
     }
@@ -86,6 +92,7 @@ fun QrScannerContent(
                 Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = { launcher.launch(Manifest.permission.CAMERA) },
+                    modifier = Modifier.testTag("qr_grant_permission"),
                     colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
                 ) {
                     Text("CONCEDER PERMISO")

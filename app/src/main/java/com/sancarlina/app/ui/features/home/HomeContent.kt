@@ -29,12 +29,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.HomeViewModel
+import com.sancarlina.app.viewmodel.HomeUiState
 import com.sancarlina.app.viewmodel.BannerItem
 import com.sancarlina.app.viewmodel.CategoryItem
 
 @Composable
 fun HomeContent(
     viewModel: HomeViewModel = viewModel(),
+    uiStateOverride: HomeUiState? = null,
     onNavigateToCategory: (String) -> Unit = {},
     onNavigateToSearch: () -> Unit = {},
     onNavigateToNews: () -> Unit = {},
@@ -42,7 +44,8 @@ fun HomeContent(
     onNavigateToLogin: () -> Unit = {},
     onOpenDrawer: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val collectedState by viewModel.uiState.collectAsState()
+    val uiState = uiStateOverride ?: collectedState
 
     Column(
         modifier = Modifier

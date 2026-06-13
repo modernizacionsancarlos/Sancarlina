@@ -10,15 +10,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** Contrato mínimo para inyectar auth en LoginContent (prod + tests). */
+interface LoginAuthViewModel {
+    val uiState: StateFlow<AuthUiState>
+    fun login(email: String, password: String, onSuccess: () -> Unit)
+}
+
 class AuthViewModel(
     private val auth: FirebaseAuth,
     private val userRepository: UserRepository
-) : ViewModel() {
+) : ViewModel(), LoginAuthViewModel {
 
     private val _uiState = MutableStateFlow(AuthUiState())
-    val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+    override val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    fun login(email: String, password: String, onSuccess: () -> Unit) {
+    override fun login(email: String, password: String, onSuccess: () -> Unit) {
         if (email.isBlank() || password.isBlank()) {
             _uiState.update { it.copy(error = "Completa todos los campos") }
             return
