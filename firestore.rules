@@ -1,0 +1,100 @@
+// DRAFT — NO DEPLOY
+// GondolApp / Sancarlina — firestore.rules borrador local (Fase 2B-3.1)
+// Validar en Firebase Rules Simulator antes de cualquier deploy (Fase 2B-3.2).
+// Admin SDK y Cloud Functions bypass estas reglas.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // REQUIERE validar contra web admin: custom claim role o colección superAdmins
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.role == 'admin';
+    }
+
+    // --- userProfiles: perfil ciudadano (Android UserRepository, EditProfileViewModel) ---
+    match /userProfiles/{userId} {
+      allow read: if isOwner(userId);
+
+      // Registro: UserRepository.kt merge con role, points iniciales
+      allow create: if isOwner(userId)
+        && request.resource.data.role == 'citizen'
+        && request.resource.data.points == 0
+        && request.resource.data.points_balance == 0;
+
+      // Update perfil: solo campos básicos; bloquear puntos/rol (EditProfileViewModel.kt:72-76)
+      allow update: if isOwner(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['role', 'points', 'points_balance', 'uid']);
+
+      // Delete cuenta: EditProfileViewModel.kt:149
+      allow delete: if isOwner(userId);
+    }
+
+    // --- Submissions: create autenticado (SubmissionsRepository.kt:22-23) ---
+    match /Submissions/{docId} {
+      allow create: if isSignedIn()
+        && request.resource.data.created_by == request.auth.uid;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // --- Catálogo: lectura pública, escritura admin ---
+    match /tenants/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /areas/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /benefits/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /FormSchemas/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /banners/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /categories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /commerces/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /products/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Admin-only (web panel) ---
+    match /AuditLogs/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /Notifications/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /superAdmins/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Denegar todo lo no definido explícitamente
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
