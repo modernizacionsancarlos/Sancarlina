@@ -1,0 +1,15 @@
+{
+  "name": "sancarlina-firestore-rules-tests",
+  "private": true,
+  "scripts": {
+    "compare:rules": "node scripts/compare-firestore-rules.js",
+    "test:rules": "firebase emulators:exec --only firestore \"npm run test:rules:only\"",
+    "test:rules:only": "jest rules-tests --runInBand"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.0",
+    "firebase": "^11.0.0",
+    "firebase-tools": "^15.18.0",
+    "jest": "^29.7.0"
+  }
+}

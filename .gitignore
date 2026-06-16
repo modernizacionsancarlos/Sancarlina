@@ -47,3 +47,7 @@ Thumbs.db
 
 # Kotlin
 .kotlin/
+
+# Firestore Rules tests (npm)
+node_modules/
+coverage/
