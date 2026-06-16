@@ -1,6 +1,4 @@
-// DRAFT — NO DEPLOY
-// GondolApp / Sancarlina — firestore.rules borrador local (Fase 2B-3.1)
-// Validar en Firebase Rules Simulator antes de cualquier deploy (Fase 2B-3.2).
+// GondolApp / Sancarlina — firestore.rules (Fase 2B-3.3 hotfix: claim role seguro)
 // Admin SDK y Cloud Functions bypass estas reglas.
 
 rules_version = '2';
@@ -15,9 +13,18 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // REQUIERE validar contra web admin: custom claim role o colección superAdmins
+    // Claim role opcional: sin claim → '' (no admin, sin error en Simulator)
+    function authRole() {
+      return isSignedIn() ? request.auth.token.get('role', '') : '';
+    }
+
+    function hasRole(r) {
+      return authRole() == r;
+    }
+
+    // Solo role == 'admin' (GondolApp). No se incluye 'estado' del backup foro previo.
     function isAdmin() {
-      return isSignedIn() && request.auth.token.role == 'admin';
+      return hasRole('admin');
     }
 
     // --- userProfiles: perfil ciudadano (Android UserRepository, EditProfileViewModel) ---
