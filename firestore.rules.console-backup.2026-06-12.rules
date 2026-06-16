@@ -1,0 +1,459 @@
+// Backup source: firestore.rules
+// Fetched: 2026-06-16T15:02:13.203Z
+// Project: sancarlina-99748
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Auth / roles ─────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userRole() {
+      return request.auth.token.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userRole() in ['admin', 'estado'];
+    }
+
+    function isModerator() {
+      return isSignedIn() && userRole() in ['admin', 'estado', 'moderator'];
+    }
+
+    function canReadLogs() {
+      return isSignedIn() && userRole() in ['admin', 'estado'];
+    }
+
+    function canReadDemoAdmin() {
+      return isSignedIn() && userRole() == 'admin';
+    }
+
+    function canReadFlagsAdmin() {
+      return isSignedIn() && userRole() == 'admin';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isCommunityMember(communityId) {
+      return exists(
+        /databases/$(database)/documents/communityMembers/$(request.auth.uid + '_' + communityId)
+      );
+    }
+
+    function threadData(threadId) {
+      return get(/databases/$(database)/documents/threads/$(threadId)).data;
+    }
+
+    function communityData(communityId) {
+      return get(/databases/$(database)/documents/communities/$(communityId)).data;
+    }
+
+    // ─── Validación de texto ───────────────────────────────────
+    function validText(field, minLen, maxLen) {
+      return field is string && field.size() >= minLen && field.size() <= maxLen;
+    }
+
+    function validOptionalUrl(field) {
+      return !(field is string) || field.size() <= 2048;
+    }
+
+    function validVisibility(v) {
+      return v in ['public', 'private', 'school_only'];
+    }
+
+    function validThreadType(t) {
+      return t in ['discussion', 'question', 'debate', 'poll', 'announcement'];
+    }
+
+    function authorDenormMatchesUser() {
+      let u = userDoc();
+      return request.resource.data.authorUsername == u.username
+        && request.resource.data.authorName == u.displayName;
+    }
+
+    function contentIsVisible(d) {
+      return !('moderationStatus' in d) || d.moderationStatus == 'visible';
+    }
+
+    function userCanPost() {
+      let u = userDoc();
+      return (!('status' in u) || u.status == 'active' || u.status == null)
+        || (u.status == 'suspended'
+          && ('suspendedUntil' in u)
+          && u.suspendedUntil != null
+          && u.suspendedUntil <= request.time);
+    }
+
+    function canReadThreadData(t) {
+      return contentIsVisible(t)
+        && (t.visibility == 'public'
+        || (isSignedIn() && (
+          isCommunityMember(t.communityId)
+          || isModerator()
+          || (t.visibility == 'school_only'
+            && userDoc().schoolId == communityData(t.communityId).schoolId)
+        )));
+    }
+
+    function canReadThreadById(threadId) {
+      return exists(/databases/$(database)/documents/threads/$(threadId))
+        && canReadThreadData(threadData(threadId));
+    }
+
+    // ─── Hilos ────────────────────────────────────────────────
+    function validThreadCreate() {
+      let d = request.resource.data;
+      return d.authorId == request.auth.uid
+        && authorDenormMatchesUser()
+        && validText(d.title, 1, 200)
+        && d.body is string && d.body.size() <= 10000
+        && validThreadType(d.type)
+        && validVisibility(d.visibility)
+        && d.communityId is string && d.communityId.size() > 0
+        && exists(/databases/$(database)/documents/communities/$(d.communityId))
+        && (isCommunityMember(d.communityId) || isModerator())
+        && userCanPost()
+        && d.voteScore == 0
+        && d.commentCount == 0
+        && d.pinned == false
+        && d.locked == false
+        && d.tags is list && d.tags.size() <= 10
+        && (!('imageUrl' in d) || validOptionalUrl(d.imageUrl))
+        && (!('isDemo' in d) || d.isDemo == false);
+    }
+
+    function threadImmutableKeys() {
+      return [
+        'voteScore', 'commentCount', 'authorId', 'communityId',
+        'createdAt', 'type', 'visibility', 'authorName', 'authorUsername'
+      ];
+    }
+
+    function validThreadAuthorUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return resource.data.authorId == request.auth.uid
+        && !diff.affectedKeys().hasAny(threadImmutableKeys())
+        && (!diff.affectedKeys().hasAny(['title'])
+          || validText(request.resource.data.title, 1, 200))
+        && (!diff.affectedKeys().hasAny(['body'])
+          || (request.resource.data.body is string
+            && request.resource.data.body.size() <= 10000))
+        && (!diff.affectedKeys().hasAny(['tags'])
+          || (request.resource.data.tags is list
+            && request.resource.data.tags.size() <= 10));
+    }
+
+    // ─── Comentarios ──────────────────────────────────────────
+    function validCommentCreate() {
+      let d = request.resource.data;
+      let thread = threadData(d.threadId);
+      return d.authorId == request.auth.uid
+        && authorDenormMatchesUser()
+        && d.threadId is string && d.threadId.size() > 0
+        && canReadThreadData(thread)
+        && thread.locked != true
+        && userCanPost()
+        && validText(d.body, 1, 5000)
+        && d.voteScore == 0
+        && d.depth is int && d.depth >= 0 && d.depth <= 5
+        && (d.parentId == null || d.parentId is string)
+        && (!('isDemo' in d) || d.isDemo == false);
+    }
+
+    function commentImmutableKeys() {
+      return [
+        'voteScore', 'authorId', 'threadId', 'createdAt',
+        'depth', 'parentId', 'authorName', 'authorUsername'
+      ];
+    }
+
+    function validCommentAuthorUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return resource.data.authorId == request.auth.uid
+        && !diff.affectedKeys().hasAny(commentImmutableKeys())
+        && (diff.affectedKeys().hasOnly(['body'])
+          || diff.affectedKeys().hasOnly(['body', 'updatedAt']))
+        && validText(request.resource.data.body, 1, 5000);
+    }
+
+    // ─── Perfil privado / público ─────────────────────────────
+    function validUserSelfUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return !diff.affectedKeys().hasAny(['role', 'schoolId', 'karma', 'uid', 'email', 'createdAt', 'status', 'suspendedUntil', 'suspendedReason'])
+        && (!diff.affectedKeys().hasAny(['displayName'])
+          || validText(request.resource.data.displayName, 2, 50))
+        && (!diff.affectedKeys().hasAny(['bio'])
+          || (request.resource.data.bio is string
+            && request.resource.data.bio.size() <= 500))
+        && (!diff.affectedKeys().hasAny(['avatarUrl'])
+          || validOptionalUrl(request.resource.data.avatarUrl))
+        && (!diff.affectedKeys().hasAny(['onboardingComplete'])
+          || request.resource.data.onboardingComplete is bool);
+    }
+
+    function validPublicProfileWrite() {
+      let d = request.resource.data;
+      return d.uid == request.auth.uid
+        && validText(d.displayName, 2, 50)
+        && validText(d.username, 3, 20)
+        && d.bio is string && d.bio.size() <= 500
+        && validOptionalUrl(d.avatarUrl)
+        && d.role == resource.data.role
+        && d.karma == resource.data.karma
+        && d.schoolId == resource.data.schoolId
+        && d.createdAt == resource.data.createdAt;
+    }
+
+    function validPublicProfileCreate() {
+      let d = request.resource.data;
+      return d.uid == request.auth.uid
+        && validText(d.displayName, 2, 50)
+        && validText(d.username, 3, 20)
+        && d.bio is string && d.bio.size() <= 500
+        && validOptionalUrl(d.avatarUrl)
+        && d.role == 'student'
+        && d.karma == 0
+        && d.schoolId == null;
+    }
+
+    // ─── Comunidades ──────────────────────────────────────────
+    function validCommunityCreate() {
+      let d = request.resource.data;
+      return d.createdBy == request.auth.uid
+        && validText(d.name, 3, 80)
+        && validText(d.slug, 3, 40)
+        && d.description is string && d.description.size() <= 500
+        && validVisibility(d.visibility)
+        && d.memberCount == 0
+        && d.moderatorIds is list && d.moderatorIds.size() == 1
+        && d.moderatorIds[0] == request.auth.uid
+        && (d.visibility != 'school_only' || d.schoolId == userDoc().schoolId);
+    }
+
+    function isMemberCountDelta(delta) {
+      return request.resource.data.memberCount == resource.data.memberCount + delta;
+    }
+
+    function validCommunityMemberCreate() {
+      let d = request.resource.data;
+      let comm = communityData(d.communityId);
+      return d.userId == request.auth.uid
+        && memberId == request.auth.uid + '_' + d.communityId
+        && d.communityId is string
+        && exists(/databases/$(database)/documents/communities/$(d.communityId))
+        && (
+          d.role == 'member'
+          || (d.role == 'moderator' && request.auth.uid in comm.moderatorIds)
+        );
+    }
+
+    // ─── Encuestas ────────────────────────────────────────────
+    function validPollCreate() {
+      let d = request.resource.data;
+      let thread = threadData(d.threadId);
+      return d.threadId is string
+        && thread.authorId == request.auth.uid
+        && thread.type == 'poll'
+        && d.totalVotes == 0
+        && d.options is list && d.options.size() >= 2 && d.options.size() <= 6
+        && d.allowMultiple is bool;
+    }
+
+    // ─── Reportes ─────────────────────────────────────────────
+    function validReportCreate() {
+      let d = request.resource.data;
+      return d.reporterId == request.auth.uid
+        && d.targetType in ['thread', 'comment', 'user']
+        && d.targetId is string && d.targetId.size() > 0 && d.targetId.size() <= 128
+        && validText(d.reason, 5, 500)
+        && d.status == 'pending'
+        && (!('category' in d) || d.category is string && d.category.size() <= 32);
+    }
+
+    // Rate limits — solo Cloud Functions (Admin SDK)
+    match /rateLimits/{docId} {
+      allow read, write: if false;
+    }
+
+    // Escuelas: catálogo público de solo lectura
+    match /schools/{schoolId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Códigos de invitación: solo personal autorizado
+    match /inviteCodes/{codeId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Perfil privado — email y datos sensibles
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isModerator();
+      allow create: if false;
+      allow update: if isOwner(userId) && validUserSelfUpdate();
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    // Perfil público — sin email, lectura abierta para perfiles y búsqueda
+    match /publicProfiles/{userId} {
+      allow read: if true;
+      allow create: if isOwner(userId) && validPublicProfileCreate();
+      allow update: if isOwner(userId) && validPublicProfileWrite();
+      allow delete: if isAdmin();
+    }
+
+    // Comunidades / foros
+    match /communities/{communityId} {
+      allow read: if resource.data.visibility == 'public'
+        || (isSignedIn() && (
+          resource.data.visibility == 'school_only'
+            && userDoc().schoolId == resource.data.schoolId
+          || isCommunityMember(communityId)
+          || isModerator()
+        ));
+      allow create: if isSignedIn() && validCommunityCreate();
+      allow update: if isAdmin()
+        || (isSignedIn() && request.auth.uid in resource.data.moderatorIds)
+        || (isSignedIn()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberCount'])
+          && (isMemberCountDelta(1) || isMemberCountDelta(-1)));
+      allow delete: if isAdmin()
+        || (isSignedIn() && request.auth.uid in resource.data.moderatorIds);
+    }
+
+    // Miembros de comunidad
+    match /communityMembers/{memberId} {
+      allow read: if isSignedIn()
+        && (resource.data.userId == request.auth.uid || isModerator());
+      allow create: if isSignedIn() && validCommunityMemberCreate();
+      allow delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isModerator()
+      );
+      allow update: if isModerator();
+    }
+
+    // Hilos
+    match /threads/{threadId} {
+      allow read: if canReadThreadData(resource.data);
+      allow create: if isSignedIn()
+        && validThreadCreate()
+        && (request.resource.data.type != 'announcement' || isAdmin());
+      allow update: if isSignedIn() && (
+        validThreadAuthorUpdate() || isModerator()
+      );
+      allow delete: if isSignedIn() && (
+        resource.data.authorId == request.auth.uid || isModerator()
+      );
+    }
+
+    // Comentarios — lectura acoplada a visibilidad del hilo
+    match /comments/{commentId} {
+      allow read: if canReadThreadById(resource.data.threadId)
+        && (contentIsVisible(resource.data) || isModerator());
+      allow create: if isSignedIn() && validCommentCreate();
+      allow update: if isSignedIn() && (
+        validCommentAuthorUpdate() || isModerator()
+      );
+      allow delete: if isSignedIn() && (
+        resource.data.authorId == request.auth.uid || isModerator()
+      );
+    }
+
+    // Votos — solo Cloud Function (Admin SDK)
+    match /votes/{voteId} {
+      allow read: if isSignedIn()
+        && voteId.matches('^' + request.auth.uid + '_.*');
+      allow write: if false;
+    }
+
+    // Encuestas — creación por autor del hilo; votos vía Cloud Function
+    match /polls/{pollId} {
+      allow read: if canReadThreadById(resource.data.threadId);
+      allow create: if isSignedIn() && validPollCreate();
+      allow update, delete: if isAdmin() || isModerator();
+    }
+
+    match /pollVotes/{pollVoteId} {
+      allow read: if isSignedIn()
+        && pollVoteId.matches('^' + request.auth.uid + '_.*');
+      allow create, update: if false;
+      allow delete: if false;
+    }
+
+    // Notificaciones — solo Cloud Functions crean; usuario solo marca leídas
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if false;
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read is bool;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Reportes de moderación
+    match /reports/{reportId} {
+      allow read: if isModerator();
+      allow create: if isSignedIn() && validReportCreate();
+      allow update: if isModerator();
+      allow delete: if isAdmin();
+    }
+
+    // Config global — lectura pública del doc global; escritura solo Functions
+    match /platformConfig/{docId} {
+      allow read: if docId == 'global';
+      allow write: if false;
+    }
+
+    // Audit logs — solo staff autorizado
+    match /auditLogs/{logId} {
+      allow read: if canReadLogs();
+      allow write: if false;
+    }
+
+    // Perfiles demo — solo admin
+    match /demoProfiles/{profileId} {
+      allow read: if canReadDemoAdmin();
+      allow write: if false;
+    }
+
+    // Plantillas demo — lectura pública para feed demo
+    match /demoTemplates/{templateId} {
+      allow read: if resource.data.active == true;
+      allow write: if false;
+    }
+
+    // Tendencias demo — lectura pública
+    match /demoTrends/{trendId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Historial de ejecuciones demo
+    match /demoActivityRuns/{runId} {
+      allow read: if canReadDemoAdmin();
+      allow write: if false;
+    }
+
+    // Métricas agregadas admin
+    match /adminMetrics/{metricId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Denegar cualquier colección no declarada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
