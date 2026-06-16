@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_ID = 'sancarlina-99748';
+/** Release activo de Firestore (default DB), sin sufijos de DB nombrada. */
+const DEFAULT_FIRESTORE_RELEASE = `projects/${PROJECT_ID}/releases/cloud.firestore`;
 const LOCAL_RULES_PATH = path.join(__dirname, '..', 'firestore.rules');
 
 /** Normaliza saltos de línea y espacios para comparación justa. */
@@ -14,6 +16,15 @@ function normalizeRules(content) {
     .replace(/\r\n/g, '\n')
     .trim()
     .replace(/\n{3,}/g, '\n\n');
+}
+
+/** Obtiene el release exacto cloud.firestore (DB default), no DBs nombradas tipo /estudiantina. */
+function getDefaultFirestoreRelease(releases) {
+  const release = releases.find((r) => r.name === DEFAULT_FIRESTORE_RELEASE);
+  if (!release) {
+    throw new Error(`No se encontró release exacto: ${DEFAULT_FIRESTORE_RELEASE}`);
+  }
+  return release;
 }
 
 /** Obtiene el contenido del ruleset Firestore activo vía Firebase Rules API. */
@@ -25,14 +36,11 @@ async function fetchActiveFirestoreRules() {
   await requireAuth(options);
 
   const releases = await rulesApi.listAllReleases(PROJECT_ID);
-  const rulesetName = await rulesApi.getLatestRulesetName(
-    PROJECT_ID,
-    'cloud.firestore',
-    releases
-  );
+  const release = getDefaultFirestoreRelease(releases);
+  const rulesetName = release.rulesetName;
 
   if (!rulesetName) {
-    throw new Error('No se encontró release activo para cloud.firestore');
+    throw new Error('Release cloud.firestore sin rulesetName');
   }
 
   const files = await rulesApi.getRulesetContent(rulesetName);
@@ -41,7 +49,7 @@ async function fetchActiveFirestoreRules() {
     throw new Error('Ruleset sin contenido legible');
   }
 
-  return { content: firestoreFile.content, rulesetName };
+  return { content: firestoreFile.content, rulesetName, releaseName: release.name };
 }
 
 /** Resumen corto de diferencias línea a línea. */
@@ -85,6 +93,7 @@ async function main() {
 
   if (localNorm === remoteNorm) {
     console.log('COMPARE_STATUS=match');
+    console.log(`RELEASE=${remoteInfo.releaseName}`);
     console.log(`RULESET=${remoteInfo.rulesetName}`);
     console.log(`LOCAL_BYTES=${localRaw.length}`);
     console.log(`REMOTE_BYTES=${remoteInfo.content.length}`);
@@ -92,6 +101,7 @@ async function main() {
   }
 
   console.log('COMPARE_STATUS=diff');
+  console.log(`RELEASE=${remoteInfo.releaseName}`);
   console.log(`RULESET=${remoteInfo.rulesetName}`);
   console.log('--- DIFF (primeras diferencias) ---');
   console.log(summarizeDiff(localNorm, remoteNorm));
