@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class PointsViewModel(
     private val auth: FirebaseAuth,
@@ -71,7 +72,7 @@ class PointsViewModel(
             override fun onTick(millisUntilFinished: Long) {
                 val minutes = (millisUntilFinished / 1000) / 60
                 val seconds = (millisUntilFinished / 1000) % 60
-                val time = String.format("%02d:%02d", minutes, seconds)
+                val time = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
                 _uiState.update { it.copy(qrTimeRemaining = time) }
             }
 

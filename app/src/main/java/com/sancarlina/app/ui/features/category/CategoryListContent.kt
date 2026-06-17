@@ -264,7 +264,7 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
             
             Text("Distancia", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-            var sliderValue by remember { mutableStateOf(5f) }
+            var sliderValue by remember { mutableFloatStateOf(5f) }
             Slider(
                 value = sliderValue,
                 onValueChange = { sliderValue = it },

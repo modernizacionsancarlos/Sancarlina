@@ -51,7 +51,7 @@ fun QuickGuide(onFinish: () -> Unit) {
         )
     )
 
-    var currentStep by remember { mutableStateOf(0) }
+    var currentStep by remember { mutableIntStateOf(0) }
 
     Dialog(
         onDismissRequest = { },
