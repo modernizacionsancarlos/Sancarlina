@@ -98,6 +98,8 @@ fun CategoryListContent(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
                 }
+            } else if (uiState.filteredCommerces.isEmpty()) {
+                CategoryListEmptyState(hasLoadError = uiState.hasLoadError)
             } else {
                 LazyColumn(
                     contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
@@ -120,6 +122,42 @@ fun CategoryListContent(
                 onApply = { /* Apply logic */ }
             )
         }
+    }
+}
+
+@Composable
+fun CategoryListEmptyState(hasLoadError: Boolean) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            Icons.Default.Storefront,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = SancarlinaSecondary.copy(alpha = 0.4f)
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.category_list_empty_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = SancarlinaOnSurface,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+        Text(
+            text = stringResource(
+                if (hasLoadError) R.string.category_list_error_message
+                else R.string.category_list_empty_message
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = SancarlinaOnSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp)
+        )
     }
 }
 

@@ -17,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -102,16 +104,52 @@ fun TurismoContent(
             }
         }
 
-        // Points List
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp, 0.dp, 16.dp, 100.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(uiState.points) { point ->
-                TurismoCard(point) { onNavigateToPoint(point.id) }
+        // Puntos turísticos o empty state (2B-4.1)
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = SancarlinaPrimary)
+            }
+        } else if (uiState.points.isEmpty()) {
+            TurismoEmptyState()
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp, 0.dp, 16.dp, 100.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(uiState.points) { point ->
+                    TurismoCard(point) { onNavigateToPoint(point.id) }
+                }
             }
         }
+    }
+}
+
+@Composable
+fun TurismoEmptyState() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.turismo_empty_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = SancarlinaPrimary
+        )
+        Text(
+            text = stringResource(R.string.turismo_empty_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = SancarlinaOnSurfaceVariant,
+            modifier = Modifier.padding(top = 12.dp),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
     }
 }
 

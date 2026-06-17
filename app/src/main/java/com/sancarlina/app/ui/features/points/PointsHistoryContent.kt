@@ -24,12 +24,8 @@ import com.sancarlina.app.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointsHistoryContent(onBack: () -> Unit) {
-    val movements = listOf(
-        PointMovement("1", "Compra en Almacén Regional", "20 Mayo", 150, true),
-        PointMovement("2", "Descuento en Bodega La Celia", "15 Mayo", -500, false),
-        PointMovement("3", "Compra en Artesanías del Valle", "10 Mayo", 200, true),
-        PointMovement("4", "Cafetería Plaza Central", "5 Mayo", 50, true)
-    )
+    // Historial real pendiente de backend; sin movimientos demo en producción (2B-4.1)
+    val movements = emptyList<PointMovement>()
 
     Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -53,26 +49,30 @@ fun PointsHistoryContent(onBack: () -> Unit) {
                 }
             }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    Text(
-                        text = "Actividad Reciente",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 12.dp)
-                    )
+            if (movements.isEmpty()) {
+                PointsHistoryEmptyState()
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    item {
+                        Text(
+                            text = "Actividad Reciente",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = SancarlinaOnSurface,
+                            modifier = Modifier.padding(bottom = 8.dp, top = 12.dp)
+                        )
+                    }
+
+                    items(movements) { movement ->
+                        MovementCard(movement)
+                    }
+
+                    item { Spacer(Modifier.height(100.dp)) }
                 }
-                
-                items(movements) { movement ->
-                    MovementCard(movement)
-                }
-                
-                item { Spacer(Modifier.height(100.dp)) }
             }
         }
     }
@@ -128,6 +128,38 @@ fun MovementCard(movement: PointMovement) {
                 color = if (movement.isEarned) SancarlinaPrimary else SancarlinaSecondary
             )
         }
+    }
+}
+
+@Composable
+fun PointsHistoryEmptyState() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            Icons.Default.History,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = SancarlinaSecondary.copy(alpha = 0.4f)
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.points_history_empty_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = SancarlinaOnSurface
+        )
+        Text(
+            text = stringResource(R.string.points_history_empty_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = SancarlinaOnSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp)
+        )
     }
 }
 

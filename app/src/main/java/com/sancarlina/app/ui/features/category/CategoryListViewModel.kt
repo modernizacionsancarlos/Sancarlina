@@ -2,6 +2,7 @@ package com.sancarlina.app.ui.features.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sancarlina.app.BuildConfig
 import com.sancarlina.app.viewmodel.CommerceMarker
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,8 +22,8 @@ class CategoryListViewModel : ViewModel() {
 
     fun loadCategory(categoryId: String) {
         if (categoryId.isBlank()) return
-        
-        _uiState.update { it.copy(isLoading = true, categoryName = categoryId.uppercase()) }
+
+        _uiState.update { it.copy(isLoading = true, categoryName = categoryId.uppercase(), hasLoadError = false) }
 
         viewModelScope.launch {
             try {
@@ -30,7 +31,7 @@ class CategoryListViewModel : ViewModel() {
                     .whereEqualTo("category", categoryId)
                     .get()
                     .await()
-                
+
                 val commerceList = result.documents.map { doc ->
                     val pos = doc.getGeoPoint("position")
                     CommerceMarker(
@@ -47,30 +48,60 @@ class CategoryListViewModel : ViewModel() {
                 }
 
                 if (commerceList.isEmpty()) {
-                    loadMockData(categoryId)
+                    if (BuildConfig.DEBUG) {
+                        loadMockData(categoryId)
+                    } else {
+                        showEmptyCategory()
+                    }
                 } else {
                     val locations = listOf("Todas") + commerceList.map { it.locationName }.distinct()
-                    _uiState.update { 
+                    _uiState.update {
                         it.copy(
                             commerces = commerceList,
                             filteredCommerces = commerceList,
                             locations = locations,
-                            isLoading = false
+                            isLoading = false,
+                            hasLoadError = false
                         )
                     }
                 }
             } catch (e: Exception) {
                 Logger.e("Error loading category commerces", e)
-                loadMockData(categoryId)
+                if (BuildConfig.DEBUG) {
+                    loadMockData(categoryId)
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            commerces = emptyList(),
+                            filteredCommerces = emptyList(),
+                            locations = listOf("Todas"),
+                            isLoading = false,
+                            hasLoadError = true
+                        )
+                    }
+                }
             }
         }
     }
 
+    private fun showEmptyCategory() {
+        _uiState.update {
+            it.copy(
+                commerces = emptyList(),
+                filteredCommerces = emptyList(),
+                locations = listOf("Todas"),
+                isLoading = false,
+                hasLoadError = false
+            )
+        }
+    }
+
+    /** Solo builds DEBUG — no visible en release. */
     private fun loadMockData(categoryId: String) {
         val mockList = listOf(
             CommerceMarker(
                 id = "1",
-                name = "Bodega O. Fournier",
+                name = "Bodega O. Fournier (Debug)",
                 locationName = "La Consulta",
                 position = LatLng(-33.7333, -69.1167),
                 category = categoryId,
@@ -81,7 +112,7 @@ class CategoryListViewModel : ViewModel() {
             ),
             CommerceMarker(
                 id = "2",
-                name = "Finca La Celia",
+                name = "Finca La Celia (Debug)",
                 locationName = "Eugenio Bustos",
                 position = LatLng(-33.7667, -69.1000),
                 category = categoryId,
@@ -92,12 +123,13 @@ class CategoryListViewModel : ViewModel() {
             )
         )
         val locations = listOf("Todas") + mockList.map { it.locationName }.distinct()
-        _uiState.update { 
+        _uiState.update {
             it.copy(
                 commerces = mockList,
                 filteredCommerces = mockList,
                 locations = locations,
-                isLoading = false
+                isLoading = false,
+                hasLoadError = false
             )
         }
     }

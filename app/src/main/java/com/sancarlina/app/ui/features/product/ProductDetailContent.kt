@@ -49,6 +49,8 @@ fun ProductDetailContent(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = SancarlinaPrimary)
             }
+        } else if (uiState.notFound) {
+            ProductNotFoundState(onBack = onBack)
         } else {
             val product = uiState.product ?: return@Box
 
@@ -218,6 +220,44 @@ fun ProductDetailContent(
                 .background(Color.Black.copy(alpha = 0.3f), CircleShape)
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = Color.White)
+        }
+    }
+}
+
+@Composable
+fun ProductNotFoundState(onBack: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            Icons.Default.Inventory2,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = SancarlinaSecondary.copy(alpha = 0.4f)
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.product_not_found_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = SancarlinaOnSurface
+        )
+        Text(
+            text = stringResource(R.string.product_not_found_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = SancarlinaOnSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp, bottom = 32.dp)
+        )
+        Button(
+            onClick = onBack,
+            colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+        ) {
+            Text(stringResource(R.string.cd_back))
         }
     }
 }

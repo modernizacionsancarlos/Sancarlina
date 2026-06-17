@@ -32,29 +32,8 @@ fun FavoritesContent(
     onBack: () -> Unit,
     onNavigateToDetail: (String) -> Unit
 ) {
-    // Mocking favorites for now based on stitch/favoritos
-    val favorites = remember {
-        listOf(
-            CommerceMarker(
-                id = "1",
-                name = "Bodega La Celia",
-                locationName = "Eugenio Bustos",
-                category = "Bodegas",
-                imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuDqRRXzgOsXEGjd7hU4sp0ogAWj6ziCETn5orGxGaxDrds4rajh2-Oq1xI_zo1E6Qbw39ZiwJRXQaViytdfnpj-iK57JI5Ka57vnmIGZ-5c-mS0RysfSO68JxDxhTxpuUzsW-j1a8Huvco3qhtfIncJdyjjH3EDvM5RY2ssw5MAaPOedn84EqcOryHb0VYn46dXKzbqDPuf8uOqHKEJoKMqmcZ0D18ZaDlFHbVRT2v-e9a-KR2pSkHDBfgKF9ril7fFuLfhytDtyPw",
-                rating = 4.9f,
-                distance = "A 1.2 km"
-            ),
-            CommerceMarker(
-                id = "2",
-                name = "Miel de la Región",
-                locationName = "San Carlos",
-                category = "Productores",
-                imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCnRCqegozoJa59a1jH6WxldD6GuLGJoHEXDiukl1ZfA9XQf53RyNzXCcQfHi01RTKmvQp17R1VKsyJKgPyLaDxyo6OvGxkAkVHNSxVynC8PjwKR4qU2NMNKkJY6FuNLJ0HSyKk3vghFKFG1m8ygnWOaG5D-WiyLDH_HcHsV3jQah9G34mumg-2f9K-twlGyY53M_5SexZT5Li5kJSmczTlY690bL61FWFREj6vYpMgd6L0x2i3zycYwzZj-vV1b4DyFyEmF8BDXz8",
-                rating = 5.0f,
-                distance = "A 0.5 km"
-            )
-        )
-    }
+    // Sin favoritos reales hasta integrar userProfiles.favoriteTenantIds (2B-4.1)
+    val favorites = remember { emptyList<CommerceMarker>() }
 
     Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
         Column(modifier = Modifier.fillMaxSize()) {

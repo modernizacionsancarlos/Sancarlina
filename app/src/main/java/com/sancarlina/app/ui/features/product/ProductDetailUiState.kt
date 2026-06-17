@@ -2,7 +2,8 @@ package com.sancarlina.app.ui.features.product
 
 data class ProductDetailUiState(
     val product: ProductDetail? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val notFound: Boolean = false
 )
 
 data class ProductDetail(

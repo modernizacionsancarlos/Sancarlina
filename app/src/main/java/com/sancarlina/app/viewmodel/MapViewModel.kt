@@ -2,6 +2,7 @@ package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sancarlina.app.BuildConfig
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.AreasRepository
 import com.sancarlina.app.data.repository.TenantsRepository
@@ -70,16 +71,34 @@ class MapViewModel(
                             locations = locations
                         )
                     }
-                } else {
+                } else if (BuildConfig.DEBUG) {
                     loadMockMarkers()
+                } else {
+                    clearMarkers()
                 }
             } catch (e: Exception) {
                 Logger.e("Error loading map markers", e)
-                loadMockMarkers()
+                if (BuildConfig.DEBUG) {
+                    loadMockMarkers()
+                } else {
+                    clearMarkers()
+                }
             }
         }
     }
 
+    private fun clearMarkers() {
+        _uiState.update {
+            it.copy(
+                markers = emptyList(),
+                filteredMarkers = emptyList(),
+                categories = listOf("Todos"),
+                locations = listOf("Todas")
+            )
+        }
+    }
+
+    /** Solo builds DEBUG — no visible en release. */
     private fun loadMockMarkers() {
         val markers = listOf(
             CommerceMarker(

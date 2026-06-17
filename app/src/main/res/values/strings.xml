@@ -14,4 +14,15 @@
     <string name="cd_open_qr">Escanear código QR</string>
     <string name="cd_settings">Ajustes</string>
     <string name="cd_menu">Menú</string>
+
+    <!-- Empty states (2B-4.1: sin datos demo en producción) -->
+    <string name="points_history_empty_title">Aún no hay movimientos</string>
+    <string name="points_history_empty_message">Cuando uses tus puntos o acumules beneficios, verás el historial acá.</string>
+    <string name="turismo_empty_title">Próximamente</string>
+    <string name="turismo_empty_message">Estamos preparando los puntos turísticos de San Carlos para mostrarte en la app.</string>
+    <string name="category_list_empty_title">Sin comercios en esta categoría</string>
+    <string name="category_list_empty_message">No encontramos comercios para mostrar. Probá más tarde o explorá otras categorías.</string>
+    <string name="category_list_error_message">No pudimos cargar los comercios. Revisá tu conexión e intentá de nuevo.</string>
+    <string name="product_not_found_title">Producto no encontrado</string>
+    <string name="product_not_found_message">El producto que buscás no está disponible o ya no existe.</string>
 </resources>

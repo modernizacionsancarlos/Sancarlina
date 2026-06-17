@@ -8,5 +8,6 @@ data class CategoryListUiState(
     val filteredCommerces: List<CommerceMarker> = emptyList(),
     val locations: List<String> = emptyList(),
     val selectedLocation: String = "Todas",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val hasLoadError: Boolean = false
 )
