@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import com.sancarlina.app.R
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -241,50 +240,55 @@ fun ScannerFrame() {
 
 @Composable
 fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = SancarlinaSurface
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SancarlinaBackground),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Surface(
-                modifier = Modifier.size(120.dp),
-                color = SancarlinaPrimary.copy(alpha = 0.1f),
-                shape = CircleShape
+        SancarlinaCard(modifier = Modifier.padding(24.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        Icons.Default.CheckCircle, 
-                        contentDescription = null, 
-                        tint = SancarlinaPrimary, 
-                        modifier = Modifier.size(80.dp)
-                    )
+                Surface(
+                    modifier = Modifier.size(96.dp),
+                    color = SancarlinaPrimary.copy(alpha = 0.12f),
+                    shape = CircleShape
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = SancarlinaPrimary,
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = stringResource(R.string.qr_success_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = SancarlinaOnSurface,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.qr_success_message, points),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = SancarlinaOnSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                SancarlinaPrimaryButton(
+                    text = stringResource(R.string.qr_success_continue),
+                    onClick = onFinish,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = "¡Escaneo Exitoso!",
-                style = MaterialTheme.typography.headlineMedium,
-                color = SancarlinaOnSurface,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "Has sumado $points puntos a tu cuenta.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = SancarlinaOnSurfaceVariant,
-                textAlign = TextAlign.Center,
-                lineHeight = 24.sp
-            )
-            Spacer(modifier = Modifier.height(48.dp))
-            SancarlinaPrimaryButton(
-                text = stringResource(R.string.qr_success_continue),
-                onClick = onFinish,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
     }
 }
