@@ -7,6 +7,10 @@
     <string name="home_offers_section">Ofertas y Novedades</string>
     <string name="home_see_all">Ver todo</string>
     <string name="home_banners_empty">No hay novedades por ahora. Volvé a consultar más tarde.</string>
+    <string name="news_detail_title">Novedad</string>
+    <string name="news_detail_unavailable_title">Novedad no disponible</string>
+    <string name="news_detail_unavailable_message">Esta sección estará disponible próximamente.</string>
+    <string name="news_detail_back">Volver</string>
     <string name="home_categories_empty">Las categorías se cargarán cuando estén disponibles.</string>
     <string name="home_featured_section">Destacado cerca tuyo</string>
     <!-- Reemplazar antes de publicar en Play Console -->
