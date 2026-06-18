@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,11 +16,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.sancarlina.app.R
+import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -63,8 +65,7 @@ fun OnboardingContent(onFinish: () -> Unit) {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                
-                // Gradient Overlay
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -80,26 +81,21 @@ fun OnboardingContent(onFinish: () -> Unit) {
                         )
                 )
 
-                Column(
+                Text(
+                    text = page.title,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = SancarlinaSurfaceContainerLowest,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 34.sp,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(horizontal = 24.dp)
-                        .padding(bottom = 140.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = page.title,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = SancarlinaSurfaceContainerLowest,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 34.sp
-                    )
-                }
+                        .padding(bottom = 140.dp)
+                )
             }
         }
 
-        // Bottom Controls
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -107,15 +103,18 @@ fun OnboardingContent(onFinish: () -> Unit) {
                 .padding(bottom = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Page Indicators
             Row(
                 modifier = Modifier.height(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 repeat(pages.size) { iteration ->
-                    val color = if (pagerState.currentPage == iteration) 
-                        SancarlinaSurfaceContainerLowest else SancarlinaSurfaceContainerLowest.copy(alpha = 0.4f)
-                    val width = if (pagerState.currentPage == iteration) 32.dp else 8.dp
+                    val isActive = pagerState.currentPage == iteration
+                    val color = if (isActive) {
+                        SancarlinaPrimaryFixedDim
+                    } else {
+                        SancarlinaSurfaceContainerLowest.copy(alpha = 0.4f)
+                    }
+                    val width = if (isActive) 32.dp else 8.dp
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -127,35 +126,20 @@ fun OnboardingContent(onFinish: () -> Unit) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            Button(
+            SancarlinaPrimaryButton(
+                text = if (pagerState.currentPage == pages.size - 1) {
+                    stringResource(R.string.onboarding_start).uppercase()
+                } else {
+                    stringResource(R.string.onboarding_next).uppercase()
+                },
                 onClick = {
                     if (pagerState.currentPage < pages.size - 1) {
                         scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                     } else {
                         onFinish()
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaOnSecondaryContainer),
-                shape = RoundedCornerShape(28.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = if (pagerState.currentPage == pages.size - 1) "COMENZAR" else "SIGUIENTE",
-                        fontWeight = FontWeight.Medium,
-                        color = SancarlinaSurfaceContainerLowest
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = SancarlinaSurfaceContainerLowest
-                    )
                 }
-            }
+            )
         }
     }
 }

@@ -1,35 +1,32 @@
 package com.sancarlina.app.ui.features.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.R
+import com.sancarlina.app.ui.components.SancarlinaElevatedCard
+import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
+import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.auth.components.AuthLogoHeader
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.AuthViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterContent(
     viewModel: AuthViewModel = viewModel(),
@@ -41,221 +38,128 @@ fun RegisterContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaSurface)
+            .background(SancarlinaBackground)
     ) {
-        // Top Header
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(96.dp),
-            color = SancarlinaSurfaceContainerLow
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier.align(Alignment.CenterStart).padding(start = 8.dp)
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
-                }
-                Image(
-                    painter = painterResource(id = R.drawable.ic_sancarlina_logo),
-                    contentDescription = "GondolApp",
-                    modifier = Modifier.height(40.dp).align(Alignment.Center)
-                )
-            }
-        }
+        AuthLogoHeader(onBack = onBack)
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 96.dp)
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Crear Cuenta",
+                text = stringResource(R.string.register_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = SancarlinaPrimary
             )
-            
             Text(
-                text = "Únete a la comunidad de San Carlos",
+                text = stringResource(R.string.register_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = SancarlinaOnSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Form Container
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaSurfaceContainerLowest,
-                shape = RoundedCornerShape(16.dp),
-                shadowElevation = 2.dp
-            ) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    // Name
-                    Text(
-                        "Nombre Completo",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = SancarlinaOnSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
+            SancarlinaElevatedCard {
+                SancarlinaTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = stringResource(R.string.register_name_label),
+                    placeholder = stringResource(R.string.register_name_hint)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SancarlinaTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = stringResource(R.string.login_email_label),
+                    placeholder = stringResource(R.string.login_email_hint),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SancarlinaTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = stringResource(R.string.login_password_label),
+                    placeholder = "••••••••",
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SancarlinaTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = stringResource(R.string.register_confirm_label),
+                    placeholder = "••••••••",
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (uiState.isLoading) {
+                    Box(
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Nombre y Apellido") },
-                        leadingIcon = { Icon(Icons.Default.Person, null, tint = SancarlinaOutline) },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = SancarlinaSurfaceContainer,
-                            focusedContainerColor = SancarlinaSurfaceContainer,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = SancarlinaPrimary
-                        ),
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Email
-                    Text(
-                        "Email",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = SancarlinaOnSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("tu@email.com") },
-                        leadingIcon = { Icon(Icons.Default.Mail, null, tint = SancarlinaOutline) },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = SancarlinaSurfaceContainer,
-                            focusedContainerColor = SancarlinaSurfaceContainer,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = SancarlinaPrimary
-                        ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Password
-                    Text(
-                        "Contraseña",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = SancarlinaOnSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("••••••••") },
-                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = SancarlinaOutline) },
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    null,
-                                    tint = SancarlinaOutline
-                                )
-                            }
-                        },
-                        shape = RoundedCornerShape(24.dp),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = SancarlinaSurfaceContainer,
-                            focusedContainerColor = SancarlinaSurfaceContainer,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = SancarlinaPrimary
-                        ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Confirm Password
-                    Text(
-                        "Confirmar Contraseña",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = SancarlinaOnSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("••••••••") },
-                        leadingIcon = { Icon(Icons.Default.LockReset, null, tint = SancarlinaOutline) },
-                        shape = RoundedCornerShape(24.dp),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = SancarlinaSurfaceContainer,
-                            focusedContainerColor = SancarlinaSurfaceContainer,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = SancarlinaPrimary
-                        ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // Register Button
-                    Button(
-                        onClick = { viewModel.register(name, email, password, confirmPassword, onRegisterSuccess) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary),
-                        shape = RoundedCornerShape(28.dp),
-                        enabled = !uiState.isLoading
+                        contentAlignment = Alignment.Center
                     ) {
-                        if (uiState.isLoading) {
-                            CircularProgressIndicator(color = SancarlinaOnSecondary, modifier = Modifier.size(24.dp))
-                        } else {
-                            Text("Registrarme", fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                        }
-                    }
-
-                    if (uiState.error != null) {
-                        Text(
-                            text = uiState.error ?: "",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
-                            textAlign = TextAlign.Center
+                        CircularProgressIndicator(
+                            color = SancarlinaPrimary,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
+                } else {
+                    SancarlinaPrimaryButton(
+                        text = stringResource(R.string.register_cta),
+                        onClick = {
+                            viewModel.register(name, email, password, confirmPassword, onRegisterSuccess)
+                        }
+                    )
+                }
+
+                if (uiState.error != null) {
+                    Text(
+                        text = uiState.error ?: "",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "¿Ya tienes cuenta?", color = SancarlinaOnSurfaceVariant)
+                Text(
+                    text = stringResource(R.string.register_has_account),
+                    color = SancarlinaOnSurfaceVariant
+                )
                 TextButton(onClick = onBack) {
-                    Text(text = "Inicia sesión", color = SancarlinaPrimary, fontWeight = FontWeight.Bold)
+                    Text(
+                        stringResource(R.string.register_login),
+                        color = SancarlinaPrimary,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(40.dp))
         }
     }

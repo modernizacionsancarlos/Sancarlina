@@ -4,25 +4,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
+import com.sancarlina.app.R
+import com.sancarlina.app.ui.components.SancarlinaCard
+import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SupportContent(
     onBack: () -> Unit,
@@ -30,81 +30,80 @@ fun SupportContent(
     onNavigateToLegal: () -> Unit = {},
     onOpenPrivacyPolicy: () -> Unit = {}
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaSurfaceContainerLow
-            ) {
-                Row(
-                    modifier = Modifier.statusBarsPadding().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
-                    }
-                    Text(
-                        text = "Ayuda y Soporte",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
-                    )
-                }
-            }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SancarlinaBackground)
+    ) {
+        SancarlinaTopBar(
+            title = stringResource(R.string.support_title),
+            onBack = onBack
+        )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp)
-            ) {
-                Text(
-                    "Estamos aquí para ayudarte. Selecciona el canal de comunicación que prefieras.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
+        ) {
+            Text(
+                stringResource(R.string.support_intro),
+                style = MaterialTheme.typography.bodyMedium,
+                color = SancarlinaOnSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            SupportCard(
+                icon = Icons.Default.QuestionAnswer,
+                title = stringResource(R.string.support_faq_title),
+                subtitle = stringResource(R.string.support_faq_subtitle),
+                color = SancarlinaPrimary
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SupportCard(
+                icon = Icons.AutoMirrored.Filled.Chat,
+                title = stringResource(R.string.support_live_title),
+                subtitle = stringResource(R.string.support_live_subtitle),
+                color = SancarlinaSecondary
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SupportCard(
+                icon = Icons.Default.Mail,
+                title = stringResource(R.string.support_email_title),
+                subtitle = stringResource(R.string.support_email_subtitle),
+                color = SancarlinaTertiary
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                stringResource(R.string.support_institutional),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = SancarlinaOnSurface
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SancarlinaCard {
+                LegalMenuItem(
+                    text = stringResource(R.string.support_terms),
+                    onClick = onNavigateToLegal
                 )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                SupportCard(
-                    Icons.Default.QuestionAnswer,
-                    "Preguntas Frecuentes",
-                    "Resuelve tus dudas rápidamente con nuestra guía.",
-                    SancarlinaPrimary
+                LegalMenuItem(
+                    text = stringResource(R.string.support_privacy),
+                    onClick = onOpenPrivacyPolicy
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SupportCard(
-                    Icons.AutoMirrored.Filled.Chat,
-                    "Soporte en Vivo",
-                    "Habla directamente con un operador municipal.",
-                    SancarlinaSecondary
+                LegalMenuItem(
+                    text = stringResource(R.string.support_about),
+                    onClick = onNavigateToLegal,
+                    showDivider = false
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SupportCard(
-                    Icons.Default.Mail,
-                    "Correo Electrónico",
-                    "Envíanos tus sugerencias o reclamos detallados.",
-                    SancarlinaTertiary
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                Text(
-                    "Información Institucional",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = SancarlinaOnSurface
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                LegalMenuItem("Términos y Condiciones", onClick = onNavigateToLegal)
-                LegalMenuItem("Política de Privacidad", onClick = onOpenPrivacyPolicy)
-                LegalMenuItem("Acerca de GondolApp", onClick = onNavigateToLegal)
             }
         }
     }
@@ -112,55 +111,68 @@ fun SupportContent(
 
 @Composable
 fun SupportCard(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     title: String,
     subtitle: String,
-    color: androidx.compose.ui.graphics.Color
+    color: Color
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { },
-        color = SancarlinaSurfaceContainerLowest,
-        shape = RoundedCornerShape(24.dp),
-        shadowElevation = 2.dp
-    ) {
-        Row(modifier = Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
+    SancarlinaCard {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Surface(
-                modifier = Modifier.size(56.dp),
-                color = color.copy(alpha = 0.1f),
-                shape = RoundedCornerShape(16.dp)
+                modifier = Modifier.size(52.dp),
+                color = color.copy(alpha = 0.12f),
+                shape = MaterialTheme.shapes.medium
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(icon, null, tint = color)
+                    Icon(icon, contentDescription = null, tint = color)
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
-                Text(text = subtitle, style = MaterialTheme.typography.bodySmall, color = SancarlinaOutline)
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = SancarlinaOnSurface
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = SancarlinaOutline
+                )
             }
-            Icon(Icons.Default.ChevronRight, null, tint = SancarlinaOutlineVariant)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = SancarlinaOutlineVariant)
         }
     }
 }
 
 @Composable
-fun LegalMenuItem(text: String, onClick: () -> Unit = {}) {
-    Surface(
+fun LegalMenuItem(
+    text: String,
+    onClick: () -> Unit = {},
+    showDivider: Boolean = true
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        color = Color.Transparent
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier.padding(vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = text, style = MaterialTheme.typography.bodyMedium, color = SancarlinaOnSurface)
-            Icon(Icons.AutoMirrored.Filled.OpenInNew, null, tint = SancarlinaOutlineVariant, modifier = Modifier.size(16.dp))
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = SancarlinaOnSurface
+        )
+        Icon(
+            Icons.AutoMirrored.Filled.OpenInNew,
+            contentDescription = null,
+            tint = SancarlinaOutlineVariant,
+            modifier = Modifier.size(16.dp)
+        )
     }
-    HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
+    if (showDivider) {
+        HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
+    }
 }

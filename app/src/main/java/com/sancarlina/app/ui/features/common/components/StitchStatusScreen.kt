@@ -1,10 +1,8 @@
-package com.sancarlina.app.ui.features.common
+package com.sancarlina.app.ui.features.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,45 +10,52 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
-import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.ui.theme.SancarlinaBackground
+import com.sancarlina.app.ui.theme.SancarlinaOnSurface
+import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
+import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
-fun EmptyStateContent(
-    title: String = "No encontramos resultados",
-    description: String = "Probá cambiando los filtros o revisá la ortografía de tu búsqueda.",
-    icon: ImageVector = Icons.Default.SearchOff,
-    primaryButtonText: String? = "Volver",
-    onPrimaryClick: () -> Unit = {}
+fun StitchStatusScreen(
+    icon: ImageVector,
+    title: String,
+    message: String,
+    buttonText: String,
+    onButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    iconTint: Color = SancarlinaPrimary,
+    buttonTestTag: String? = null
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
-            .padding(24.dp),
+            .background(SancarlinaBackground),
         contentAlignment = Alignment.Center
     ) {
-        SancarlinaCard {
+        SancarlinaCard(modifier = Modifier.padding(24.dp)) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Surface(
                     modifier = Modifier.size(96.dp),
-                    color = SancarlinaSurfaceContainer,
-                    shape = CircleShape
+                    shape = CircleShape,
+                    color = iconTint.copy(alpha = 0.12f)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = icon,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp),
-                            tint = SancarlinaOutline
+                            tint = iconTint
                         )
                     }
                 }
@@ -59,7 +64,7 @@ fun EmptyStateContent(
 
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = SancarlinaOnSurface,
                     textAlign = TextAlign.Center
@@ -68,19 +73,19 @@ fun EmptyStateContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = description,
+                    text = message,
                     style = MaterialTheme.typography.bodyLarge,
                     color = SancarlinaOnSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
-                if (primaryButtonText != null) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    SancarlinaPrimaryButton(
-                        text = primaryButtonText,
-                        onClick = onPrimaryClick
-                    )
-                }
+                Spacer(modifier = Modifier.height(32.dp))
+
+                SancarlinaPrimaryButton(
+                    text = buttonText,
+                    onClick = onButtonClick,
+                    modifier = buttonTestTag?.let { Modifier.testTag(it) } ?: Modifier
+                )
             }
         }
     }
