@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.CommerceMarker
-import com.sancarlina.app.ui.features.category.CommerceCard
+import com.sancarlina.app.ui.features.category.components.CommerceCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

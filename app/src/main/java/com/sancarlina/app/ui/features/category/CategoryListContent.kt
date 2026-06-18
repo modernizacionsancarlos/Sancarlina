@@ -1,35 +1,29 @@
 package com.sancarlina.app.ui.features.category
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.sancarlina.app.R
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-import com.sancarlina.app.viewmodel.CommerceMarker
+import com.sancarlina.app.R
+import com.sancarlina.app.ui.components.SancarlinaCard
+import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
+import com.sancarlina.app.ui.features.category.components.CategoryFilterBar
+import com.sancarlina.app.ui.features.category.components.CategoryHeader
+import com.sancarlina.app.ui.features.category.components.CommerceListCard
 import com.sancarlina.app.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryListContent(
     categoryId: String,
@@ -44,84 +38,66 @@ fun CategoryListContent(
         viewModel.loadCategory(categoryId)
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // App Bar
-            Surface(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SancarlinaBackground)
+    ) {
+        CategoryHeader(
+            title = uiState.categoryName.ifBlank { categoryId },
+            onBack = onBack,
+            onOpenFilters = { showFilters = true }
+        )
+
+        if (uiState.isLoading) {
+            LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaSurfaceContainerLow
-            ) {
-                Row(
-                    modifier = Modifier.statusBarsPadding().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                color = SancarlinaPrimary
+            )
+        }
+
+        CategoryFilterBar(
+            locations = uiState.locations,
+            selectedLocation = uiState.selectedLocation,
+            onLocationSelected = viewModel::onLocationSelected,
+            modifier = Modifier.padding(vertical = 12.dp)
+        )
+
+        when {
+            uiState.isLoading && uiState.filteredCommerces.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
-                    }
-                    Text(
-                        text = uiState.categoryName,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface,
-                        modifier = Modifier.weight(1f)
-                    )
-                    IconButton(onClick = { showFilters = true }) {
-                        Icon(Icons.Default.Tune, stringResource(R.string.cd_filters), tint = SancarlinaPrimary)
-                    }
-                }
-            }
-
-            // Quick Location Chips
-            LazyRow(
-                modifier = Modifier.padding(vertical = 12.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(uiState.locations) { location ->
-                    FilterChip(
-                        selected = uiState.selectedLocation == location,
-                        onClick = { viewModel.onLocationSelected(location) },
-                        label = { Text(location) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = SancarlinaPrimary,
-                            selectedLabelColor = Color.White,
-                            containerColor = SancarlinaSurfaceContainer,
-                            labelColor = SancarlinaOnSurfaceVariant
-                        ),
-                        shape = RoundedCornerShape(20.dp),
-                        border = null
-                    )
-                }
-            }
-
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
                 }
-            } else if (uiState.filteredCommerces.isEmpty()) {
+            }
+            uiState.filteredCommerces.isEmpty() -> {
                 CategoryListEmptyState(hasLoadError = uiState.hasLoadError)
-            } else {
+            }
+            else -> {
                 LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(uiState.filteredCommerces) { commerce ->
-                        CommerceCard(commerce) {
-                            onNavigateToDetail(commerce.id)
-                        }
+                    items(uiState.filteredCommerces, key = { it.id }) { commerce ->
+                        CommerceListCard(
+                            commerce = commerce,
+                            onClick = { onNavigateToDetail(commerce.id) }
+                        )
                     }
-                    item { Spacer(modifier = Modifier.height(100.dp)) }
+                    item { Spacer(modifier = Modifier.height(88.dp)) }
                 }
             }
         }
+    }
 
-        if (showFilters) {
-            AdvancedFiltersBottomSheet(
-                onDismiss = { showFilters = false },
-                onApply = { /* Apply logic */ }
-            )
-        }
+    if (showFilters) {
+        AdvancedFiltersBottomSheet(
+            onDismiss = { showFilters = false },
+            onApply = { showFilters = false }
+        )
     }
 }
 
@@ -130,111 +106,41 @@ fun CategoryListEmptyState(hasLoadError: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            Icons.Default.Storefront,
-            contentDescription = null,
-            modifier = Modifier.size(64.dp),
-            tint = SancarlinaSecondary.copy(alpha = 0.4f)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.category_list_empty_title),
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            color = SancarlinaOnSurface,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-        )
-        Text(
-            text = stringResource(
-                if (hasLoadError) R.string.category_list_error_message
-                else R.string.category_list_empty_message
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-            color = SancarlinaOnSurfaceVariant,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            modifier = Modifier.padding(top = 12.dp)
-        )
-    }
-}
-
-@Composable
-fun CommerceCard(commerce: CommerceMarker, onClick: () -> Unit) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
-        color = SancarlinaSurfaceContainerLowest,
-        shadowElevation = 2.dp
-    ) {
-        Row(modifier = Modifier.padding(12.dp)) {
-            AsyncImage(
-                model = commerce.imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
-            )
-            
+        SancarlinaCard {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp, end = 4.dp)
-                    .align(Alignment.CenterVertically)
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = commerce.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = SancarlinaOnSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                Icon(
+                    Icons.Default.Storefront,
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp),
+                    tint = SancarlinaSecondary.copy(alpha = 0.5f)
                 )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 4.dp)
-                ) {
-                    Icon(Icons.Default.LocationOn, null, tint = SancarlinaOutline, modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = commerce.locationName,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = SancarlinaOnSurfaceVariant,
-                        maxLines = 1
-                    )
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.category_list_empty_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = SancarlinaOnSurface,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = stringResource(
+                        if (hasLoadError) R.string.category_list_error_message
+                        else R.string.category_list_empty_message
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SancarlinaOnSurfaceVariant,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Icon(Icons.Default.Star, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = commerce.rating.toString(),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    if (commerce.distance.isNotEmpty()) {
-                        Text(
-                            text = commerce.distance,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = SancarlinaOutline
-                        )
-                    }
-                }
-            }
-            
-            IconButton(onClick = { /* Favorite */ }) {
-                Icon(Icons.Default.FavoriteBorder, stringResource(R.string.cd_favorite), tint = SancarlinaSecondary)
+                )
             }
         }
     }
@@ -246,37 +152,58 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         containerColor = SancarlinaSurface,
+        shape = SancarlinaSheetShape,
         dragHandle = { BottomSheetDefaults.DragHandle(color = SancarlinaOutlineVariant) }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .padding(horizontal = 24.dp)
                 .padding(bottom = 32.dp)
         ) {
             Text(
-                "Filtros Avanzados",
+                stringResource(R.string.category_filters_title),
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 color = SancarlinaPrimary
             )
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
-            Text("Distancia", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+
+            Text(
+                "Distancia",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = SancarlinaOnSurface
+            )
             var sliderValue by remember { mutableFloatStateOf(5f) }
             Slider(
                 value = sliderValue,
                 onValueChange = { sliderValue = it },
                 valueRange = 0f..20f,
-                colors = SliderDefaults.colors(thumbColor = SancarlinaPrimary, activeTrackColor = SancarlinaPrimary)
+                colors = SliderDefaults.colors(
+                    thumbColor = SancarlinaPrimary,
+                    activeTrackColor = SancarlinaPrimary
+                )
             )
-            Text("${sliderValue.toInt()} km", style = MaterialTheme.typography.bodySmall, color = SancarlinaOutline)
-            
+            Text(
+                "${sliderValue.toInt()} km",
+                style = MaterialTheme.typography.bodySmall,
+                color = SancarlinaOutline
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
-            
-            Text("Calificación mínima", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+
+            Text(
+                "Calificación mínima",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = SancarlinaOnSurface
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
                 repeat(5) { index ->
                     val starIndex = index + 1
                     FilterChip(
@@ -288,16 +215,12 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
-                onClick = { onApply(); onDismiss() },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
-                shape = RoundedCornerShape(28.dp)
-            ) {
-                Text("Aplicar Filtros", fontWeight = FontWeight.Bold)
-            }
+            SancarlinaPrimaryButton(
+                text = stringResource(R.string.category_filters_apply),
+                onClick = onApply
+            )
         }
     }
 }

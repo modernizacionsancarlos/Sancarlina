@@ -33,4 +33,16 @@
     <string name="category_list_error_message">No pudimos cargar los comercios. Revisá tu conexión e intentá de nuevo.</string>
     <string name="product_not_found_title">Producto no encontrado</string>
     <string name="product_not_found_message">El producto que buscás no está disponible o ya no existe.</string>
+    <string name="product_description_title">Descripción</string>
+    <string name="product_description_empty">Sin descripción disponible por el momento.</string>
+    <string name="product_gallery_title">Galería de fotos</string>
+    <string name="product_consult_cta">Consultar disponibilidad</string>
+    <string name="commerce_about_title">Acerca de</string>
+    <string name="commerce_about_empty">Este comercio aún no cargó una descripción.</string>
+    <string name="commerce_products_title">Nuestros productos</string>
+    <string name="commerce_products_empty">No hay productos publicados para mostrar.</string>
+    <string name="commerce_forms_title">Gestiones disponibles</string>
+    <string name="commerce_load_error">No pudimos cargar el perfil del comercio.</string>
+    <string name="category_filters_title">Filtros avanzados</string>
+    <string name="category_filters_apply">Aplicar filtros</string>
 </resources>
