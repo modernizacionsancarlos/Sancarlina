@@ -4,7 +4,8 @@
   "scripts": {
     "compare:rules": "node scripts/compare-firestore-rules.js",
     "test:rules": "firebase emulators:exec --only firestore \"npm run test:rules:only\"",
-    "test:rules:only": "jest rules-tests --runInBand"
+    "test:rules:only": "jest rules-tests --runInBand",
+    "preview:stitch": "npx --yes http-server docs/stitch -p 8765 -c-1 --cors"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^4.0.0",

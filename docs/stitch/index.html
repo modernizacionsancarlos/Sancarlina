@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GondolApp — Stitch Preview</title>
+  <style>
+    :root {
+      --bg: #f9f9f6;
+      --surface: #eeeeeb;
+      --primary: #476500;
+      --text: #1a1c1b;
+      --muted: #444939;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 20px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid #c4c9b4;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.25rem; color: var(--primary); }
+    p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+    main { padding: 16px; max-width: 480px; margin: 0 auto; }
+    section { margin-bottom: 24px; }
+    h2 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    ul { list-style: none; margin: 0; padding: 0; }
+    li { margin-bottom: 6px; }
+    a {
+      display: block;
+      padding: 12px 14px;
+      background: #fff;
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid #e2e3e0;
+    }
+    a:hover { border-color: var(--primary); color: var(--primary); }
+    code { font-size: 0.85em; background: var(--surface); padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Stitch — referencia visual</h1>
+    <p>Para <strong>Mobile Preview</strong> en Cursor: <code>http://localhost:8765/</code></p>
+    <p style="margin-top:8px">La app Android nativa (Compose) no se ve aquí; solo diseños HTML de referencia.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Arranque</h2>
+      <ul>
+        <li><a href="splash_screen/code.html">Splash</a></li>
+        <li><a href="onboarding_descubre/code.html">Onboarding</a></li>
+        <li><a href="home/code.html">Home</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Auth</h2>
+      <ul>
+        <li><a href="login/code.html">Login</a></li>
+        <li><a href="registro/code.html">Registro</a></li>
+        <li><a href="recuperar_contrase_a/code.html">Recuperar contraseña</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Catálogo</h2>
+      <ul>
+        <li><a href="buscador_avanzado/code.html">Buscador avanzado</a></li>
+        <li><a href="filtros_avanzados/code.html">Filtros avanzados</a></li>
+        <li><a href="artesan_as/code.html">Categoría (artesanías)</a></li>
+        <li><a href="detalle_de_producto/code.html">Detalle producto</a></li>
+        <li><a href="galer_a_de_fotos/code.html">Galería fotos</a></li>
+        <li><a href="novedades/code.html">Novedades</a></li>
+        <li><a href="detalle_de_noticia/code.html">Detalle noticia</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Mapa y turismo</h2>
+      <ul>
+        <li><a href="mapa_interactivo/code.html">Mapa interactivo</a></li>
+        <li><a href="detalle_en_mapa_bottom_sheet/code.html">Detalle en mapa (sheet)</a></li>
+        <li><a href="explora_turismo/code.html">Explora turismo</a></li>
+        <li><a href="perfil_de_comercio/code.html">Perfil comercio</a></li>
+        <li><a href="calificar_comercio/code.html">Calificar comercio</a></li>
+        <li><a href="rese_as_de_usuarios/code.html">Reseñas</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Puntos y QR</h2>
+      <ul>
+        <li><a href="panel_de_puntos/code.html">Panel de puntos</a></li>
+        <li><a href="historial_de_puntos/code.html">Historial de puntos</a></li>
+        <li><a href="esc_ner_qr/code.html">Escáner QR</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Perfil y cuenta</h2>
+      <ul>
+        <li><a href="favoritos/code.html">Favoritos</a></li>
+        <li><a href="perfil_de_usuario/code.html">Perfil usuario</a></li>
+        <li><a href="editar_perfil/code.html">Editar perfil</a></li>
+        <li><a href="notificaciones/code.html">Notificaciones</a></li>
+        <li><a href="ajustes_de_notificaciones/code.html">Ajustes notificaciones</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Legal y soporte</h2>
+      <ul>
+        <li><a href="legal_y_privacidad/code.html">Legal y privacidad</a></li>
+        <li><a href="ayuda_y_soporte/code.html">Ayuda y soporte</a></li>
+        <li><a href="informaci_n_institucional/code.html">Información institucional</a></li>
+        <li><a href="servicios_sello_de_calidad/code.html">Servicios sello de calidad</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Flujos especiales</h2>
+      <ul>
+        <li><a href="sumar_emprendimiento/code.html">Sumar emprendimiento</a></li>
+        <li><a href="pantalla_de_xito/code.html">Pantalla de éxito</a></li>
+        <li><a href="di_logos_de_confirmaci_n/code.html">Diálogos confirmación</a></li>
+        <li><a href="offline_error/code.html">Offline / error</a></li>
+        <li><a href="gu_a_r_pida/code.html">Guía rápida</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

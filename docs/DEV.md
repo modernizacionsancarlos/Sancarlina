@@ -105,6 +105,75 @@ adb shell monkey -p com.sancarlina.app -c android.intent.category.LAUNCHER 1
 
 ---
 
+## Mobile Preview (extensión Cursor / VS Code)
+
+La extensión **Mobile Preview — Phone & Tablet Simulator** (`lirobi.phone-preview`) muestra **páginas web** en un marco de celular. **No** puede ejecutar el APK ni Compose nativo directamente.
+
+### Qué sí puedes previsualizar en vivo
+
+| Objetivo | Cómo |
+|----------|------|
+| **Diseños Stitch** (referencia al implementar UI) | Servidor local + Mobile Preview |
+| **App Android real** (Compose) | Emulador, celular USB o `installDebug` — ver sección anterior |
+
+### Stitch en Mobile Preview (3 pasos)
+
+1. **Arrancar servidor** (terminal en la raíz del repo):
+
+```powershell
+npm run preview:stitch
+```
+
+Queda en `http://localhost:8765/` con índice de todas las pantallas Stitch.
+
+2. **Abrir Mobile Preview:** `Ctrl+Shift+P` → `Mobile Preview: Show`.
+
+3. **URL en la barra del panel** (si no auto-detecta):
+
+```
+http://localhost:8765/
+```
+
+Pantallas directas, por ejemplo Home Stitch:
+
+```
+http://localhost:8765/home/code.html
+```
+
+**Atajo en Cursor:** `Terminal` → `Run Task…` → **Stitch Preview (Mobile Preview)** (tarea en `.vscode/tasks.json`).
+
+### App nativa en vivo (Compose)
+
+Mobile Preview **no** sustituye esto. Flujo recomendado:
+
+1. Tener `adb` en PATH (`Android SDK\platform-tools`).
+2. Emulador o celular con depuración USB (`adb devices`).
+3. Tras cada cambio visual:
+
+```powershell
+.\gradlew.bat :app:installDebug
+```
+
+4. La app se actualiza en el dispositivo; abrís GondolApp manualmente o con:
+
+```powershell
+adb shell monkey -p com.sancarlina.app -c android.intent.category.LAUNCHER 1
+```
+
+**Tip:** dejá el emulador o el celular al lado del editor; Mobile Preview a la derecha con Stitch para comparar pixel a pixel mientras codificás Compose.
+
+### Si `adb` no se reconoce
+
+Añadir al PATH de Windows (ajustar ruta si el SDK está en otro sitio):
+
+```
+%LOCALAPPDATA%\Android\Sdk\platform-tools
+```
+
+Cerrar y reabrir la terminal de Cursor. Verificar con `adb devices`.
+
+---
+
 ## Logs y crashes
 
 Filtrar logcat por paquete, runtime y Firebase:
