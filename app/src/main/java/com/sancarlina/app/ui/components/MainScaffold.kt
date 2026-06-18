@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -173,25 +172,38 @@ fun MainScaffold() {
 
 @Composable
 fun GondolappBottomBar(navController: NavHostController, currentDestination: String?) {
+    // Bottom nav Stitch: surface-container, esquinas superiores redondeadas, pill olive activo
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = SancarlinaSurfaceContainerLowest,
-        shadowElevation = 16.dp
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = SancarlinaBottomBarShape,
+        tonalElevation = 3.dp,
+        shadowElevation = 8.dp
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(80.dp).navigationBarsPadding().padding(horizontal = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .navigationBarsPadding()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             bottomNavItems.forEach { screen ->
                 val isSelected = currentDestination == screen.route
-                val contentColor = if (isSelected) SancarlinaPrimary else SancarlinaOutline
-                
+                val contentColor = if (isSelected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(if (isSelected) SancarlinaPrimary.copy(alpha = 0.1f) else Color.Transparent)
-                        .clickable { 
+                        .clip(RoundedCornerShape(percent = 50))
+                        .background(
+                            if (isSelected) SancarlinaNavIndicator else Color.Transparent
+                        )
+                        .clickable {
                             if (!isSelected) {
                                 navController.navigate(screen.route) {
                                     popUpTo(Screen.Home.route) { saveState = true }
@@ -200,7 +212,7 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                                 }
                             }
                         }
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -211,10 +223,10 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            screen.title, 
-                            fontSize = 11.sp, 
-                            color = contentColor, 
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                            text = screen.title,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = contentColor,
+                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
                         )
                     }
                 }

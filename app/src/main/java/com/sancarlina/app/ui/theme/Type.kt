@@ -6,55 +6,97 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Temporary font families using system defaults until .ttf files are added to res/font
-val WorkSans = FontFamily.SansSerif
-val DMSans = FontFamily.SansSerif
+// Headlines: Be Vietnam Pro — Body/labels: Manrope (DESIGN.md)
+// Sin TTF locales en el repo; fallback temporal hasta UI-STITCH-1+fonts.
+val BeVietnamPro = FontFamily.SansSerif
+val Manrope = FontFamily.SansSerif
 
 val Typography = Typography(
-    headlineLarge = TextStyle(
-        fontFamily = WorkSans,
+    displayLarge = TextStyle(
+        fontFamily = BeVietnamPro,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp,
-        lineHeight = 40.sp,
-        letterSpacing = (-0.02).sp
+        fontSize = 57.sp,
+        lineHeight = 64.sp,
+        letterSpacing = (-0.25).sp
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = BeVietnamPro,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp,
+        lineHeight = 34.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = WorkSans,
-        fontWeight = FontWeight.Bold,
+        fontFamily = BeVietnamPro,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
-        lineHeight = 32.sp,
-        letterSpacing = (-0.01).sp
+        lineHeight = 32.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = WorkSans,
+        fontFamily = BeVietnamPro,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
         lineHeight = 28.sp
     ),
-    bodyLarge = TextStyle(
-        fontFamily = DMSans,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
+    titleLarge = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Medium,
+        fontSize = 22.sp,
         lineHeight = 28.sp
     ),
-    bodyMedium = TextStyle(
-        fontFamily = DMSans,
-        fontWeight = FontWeight.Normal,
+    titleMedium = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        lineHeight = 24.sp
+        lineHeight = 24.sp,
+        letterSpacing = 0.15.sp
     ),
-    labelMedium = TextStyle(
-        fontFamily = WorkSans,
+    titleSmall = TextStyle(
+        fontFamily = Manrope,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.01.sp
+        letterSpacing = 0.1.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = WorkSans,
+    bodyLarge = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.25.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.4.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = Manrope,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.02.sp
+        letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = Manrope,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
     )
 )
