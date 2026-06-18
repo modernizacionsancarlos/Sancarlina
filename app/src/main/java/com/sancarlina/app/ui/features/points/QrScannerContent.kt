@@ -33,6 +33,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sancarlina.app.ui.components.SancarlinaCard
+import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.theme.*
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
@@ -83,19 +85,30 @@ fun QrScannerContent(
                 ScannerFrame()
             }
         } else {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Necesitamos permiso de cámara para escanear el código QR.", textAlign = TextAlign.Center, color = Color.White)
-                Spacer(Modifier.height(16.dp))
-                Button(
-                    onClick = { launcher.launch(Manifest.permission.CAMERA) },
-                    modifier = Modifier.testTag("qr_grant_permission"),
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
-                ) {
-                    Text("CONCEDER PERMISO")
+                SancarlinaCard {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.qr_permission_message),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(20.dp))
+                        SancarlinaPrimaryButton(
+                            text = stringResource(R.string.qr_permission_cta),
+                            onClick = { launcher.launch(Manifest.permission.CAMERA) },
+                            modifier = Modifier.testTag("qr_grant_permission")
+                        )
+                    }
                 }
             }
         }
@@ -205,20 +218,19 @@ fun ScannerFrame() {
             Box(
                 modifier = Modifier
                     .size(260.dp)
-                    .border(2.dp, Color.White.copy(alpha = 0.8f), RoundedCornerShape(32.dp))
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(Color.Transparent)
+                    .border(3.dp, SancarlinaPrimaryFixedDim, RoundedCornerShape(28.dp))
+                    .clip(RoundedCornerShape(28.dp))
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Escanea el código QR",
+                text = stringResource(R.string.qr_scan_title),
                 color = Color.White,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Ubícalo dentro del recuadro",
+                text = stringResource(R.string.qr_scan_subtitle),
                 color = Color.White.copy(alpha = 0.7f),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
@@ -268,14 +280,11 @@ fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
                 lineHeight = 24.sp
             )
             Spacer(modifier = Modifier.height(48.dp))
-            Button(
+            SancarlinaPrimaryButton(
+                text = stringResource(R.string.qr_success_continue),
                 onClick = onFinish,
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
-                shape = RoundedCornerShape(28.dp),
-                modifier = Modifier.fillMaxWidth().height(56.dp)
-            ) {
-                Text("CONTINUAR", fontWeight = FontWeight.Bold)
-            }
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

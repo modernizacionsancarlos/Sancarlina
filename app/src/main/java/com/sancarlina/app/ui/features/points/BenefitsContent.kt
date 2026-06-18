@@ -5,22 +5,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ConfirmationNumber
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.sancarlina.app.R
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sancarlina.app.R
+import com.sancarlina.app.ui.components.SancarlinaCard
+import com.sancarlina.app.ui.features.points.components.PointsBalanceCard
+import com.sancarlina.app.ui.features.points.components.QrActionCard
 import com.sancarlina.app.ui.theme.*
-import com.sancarlina.app.viewmodel.PointsViewModel
 import com.sancarlina.app.viewmodel.BenefitItem
+import com.sancarlina.app.viewmodel.PointsViewModel
 
 @Composable
 fun BenefitsContent(
@@ -34,78 +35,54 @@ fun BenefitsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaSurface)
+            .background(SancarlinaBackground)
+            .padding(horizontal = 16.dp)
     ) {
-        // Header Card (Points Balance)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = SancarlinaSurfaceContainerLow
-        ) {
-            Column(
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Tus Puntos",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = SancarlinaOnSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Stars,
-                        contentDescription = null,
-                        tint = Color(0xFFF59E0B),
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = uiState.balance.toString(),
-                        style = MaterialTheme.typography.displayMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
-                    )
-                }
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                Button(
-                    onClick = onNavigateToScanner,
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
-                    shape = RoundedCornerShape(28.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PointsBalanceCard(balance = uiState.balance)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        QrActionCard(onScanClick = onNavigateToScanner)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = stringResource(R.string.points_benefits_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = SancarlinaOnSurface
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.QrCodeScanner, stringResource(R.string.cd_open_qr))
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text("ESCANEAR PARA SUMAR", fontWeight = FontWeight.Bold)
-                }
-            }
-        }
-
-        // Benefits List
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(
-                text = "Beneficios Disponibles",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = SancarlinaOnSurface
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
                 }
-            } else {
+            }
+            uiState.benefits.isEmpty() -> {
+                SancarlinaCard {
+                    Text(
+                        text = stringResource(R.string.points_benefits_empty),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = SancarlinaOnSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+            else -> {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 100.dp)
                 ) {
-                    items(uiState.benefits) { benefit ->
+                    items(uiState.benefits, key = { it.id }) { benefit ->
                         BenefitCard(benefit = benefit)
                     }
                 }
@@ -119,8 +96,8 @@ fun BenefitCard(benefit: BenefitItem) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = SancarlinaSurfaceContainerLowest,
-        shape = RoundedCornerShape(24.dp),
-        shadowElevation = 2.dp
+        shape = SancarlinaCardShape,
+        shadowElevation = 3.dp
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -135,31 +112,29 @@ fun BenefitCard(benefit: BenefitItem) {
                     Icon(Icons.Default.ConfirmationNumber, null, tint = SancarlinaSecondary)
                 }
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = benefit.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     color = SancarlinaOnSurface
                 )
                 Text(
                     text = "${benefit.cost} puntos",
                     style = MaterialTheme.typography.labelLarge,
                     color = SancarlinaPrimary,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Medium
                 )
             }
-            
-            Button(
-                onClick = { /* Exchange */ },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSurfaceContainer),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                shape = RoundedCornerShape(12.dp)
+
+            OutlinedButton(
+                onClick = { /* canje pendiente */ },
+                shape = SancarlinaChipShape
             ) {
-                Text("CANJEAR", color = SancarlinaPrimary, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                Text("Canjear", style = MaterialTheme.typography.labelMedium)
             }
         }
     }
