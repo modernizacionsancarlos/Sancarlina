@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">GondolApp</string>
-    <string name="home_explore_section">Explorar San Carlos</string>
+    <string name="home_explore_section">Explorar Sancarlina</string>
+    <string name="home_welcome_title">Bienvenido</string>
+    <string name="home_welcome_subtitle">Descubrí comercios, productos y experiencias de San Carlos de Cuyo.</string>
+    <string name="home_search_hint">¿Qué estás buscando?</string>
+    <string name="home_offers_section">Ofertas y Novedades</string>
+    <string name="home_see_all">Ver todo</string>
+    <string name="home_banners_empty">No hay novedades por ahora. Volvé a consultar más tarde.</string>
+    <string name="home_categories_empty">Las categorías se cargarán cuando estén disponibles.</string>
+    <string name="home_featured_section">Destacado cerca tuyo</string>
     <!-- Reemplazar antes de publicar en Play Console -->
     <string name="privacy_policy_url">https://REEMPLAZAR-POR-URL-MUNICIPAL/privacidad</string>
     <string name="legal_open_privacy_online">Ver política completa en línea</string>

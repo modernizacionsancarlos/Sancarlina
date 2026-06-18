@@ -126,11 +126,12 @@ fun MainScaffold() {
                         color = SancarlinaSurfaceContainerLow
                     ) {
                         CenterAlignedTopAppBar(
+                            modifier = Modifier.height(72.dp),
                             title = {
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),
                                     contentDescription = stringResource(R.string.app_name),
-                                    modifier = Modifier.height(28.dp)
+                                    modifier = Modifier.height(32.dp)
                                 )
                             },
                             navigationIcon = {
