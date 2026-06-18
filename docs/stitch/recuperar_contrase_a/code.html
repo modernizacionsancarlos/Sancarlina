@@ -1,0 +1,215 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>05. Recuperar Contraseña - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdadb",
+                        "outline": "#747967",
+                        "primary-container": "#5d7f13",
+                        "secondary-container": "#fd7f8a",
+                        "outline-variant": "#c4c9b4",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-fixed-variant": "#842231",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9f9f6",
+                        "surface-dim": "#dadad7",
+                        "on-primary-container": "#faffe7",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-container": "#eeeeeb",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-fixed": "#131f00",
+                        "primary-fixed": "#c8f17a",
+                        "on-secondary-fixed": "#40000d",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "tertiary": "#765700",
+                        "tertiary-container": "#956e00",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "on-surface-variant": "#444939",
+                        "on-background": "#1a1c1b",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "on-secondary-container": "#741627",
+                        "surface-container-low": "#f4f4f1",
+                        "background": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "secondary": "#a33a47",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-tertiary-container": "#fffbff",
+                        "inverse-primary": "#add461",
+                        "on-surface": "#1a1c1b",
+                        "surface-tint": "#496800",
+                        "primary": "#476500",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-tablet": "24px",
+                        "baseline": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-tablet py-stack-lg relative overflow-hidden">
+<!-- Subtle Ambient Background Decor -->
+<div class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-20">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary-fixed-dim blur-3xl opacity-30"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-secondary-fixed-dim blur-3xl opacity-30"></div>
+</div>
+<!-- Recovery Card -->
+<div class="w-full max-w-md bg-surface-container-low rounded-xl shadow-sm border border-outline-variant/30 p-stack-lg flex flex-col items-center relative z-10">
+<!-- Logo Section -->
+<div class="mb-stack-lg w-full flex justify-center">
+<img alt="gondolApp Logotipo" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYFuQXK7gmbWI2F5ufAAmk5lGbxhSh5ZzJlY8FoCkPgsfEkBKxwdsCaaeyJy1-RtgrlmFr4aP8JvwGSPHgpT7NTXXmjo8gmdjwk0chzoiQyHqazQHa3OFmEzA_bgoqCmr8qDXrI_sKhjsRsTSE5JLGVJfQSYPO1bZmIn3KuFtBk_LyBTB3C8N9S481fe0qhFZFR2kJBlfR9m_WDvJgyWm5yca__wymcN17sVqzNCZjT9S2TVbpRc8EXTXpG6KgzpnLtttKT47xo2VJ">
+</div>
+<!-- Illustration & Icon Integration -->
+<div class="relative mb-stack-lg w-48 h-48 flex items-center justify-center">
+<!-- Isologo Background -->
+<img alt="gondolApp Isologo" class="absolute inset-0 w-full h-full object-contain opacity-40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlJ5oie8xSrXq42YQa44dAYGSwgVkKWTzC73sMsQ-5nTJUPmq7j3aeFl7vqe7M0oz55sQNkI3KwB8CPFy8DCl5wRzc7U6qnsGo_eIBq3BGnSoy6nYXBLVVtMe6dXXeYX_W7KZgXQWpbBkY5OxfktJcpnlFJkhHvmyZ4RjhqFhmE1HJKmBxNlrC53cvmqAjknwFARfDY_g_xOzBxR4YbMBia_VImkYwDLybGAFJl5ChrlhF7_5pgfPgbpUZvbFdZlys4KUlGU-H5tx0">
+<!-- Floating Envelope Icon -->
+<div class="relative z-10 bg-surface rounded-full p-4 shadow-sm border border-outline-variant/20 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
+<span class="material-symbols-outlined filled text-primary text-[48px]">mail</span>
+</div>
+</div>
+<!-- Headers -->
+<div class="text-center mb-stack-lg w-full">
+<h1 class="text-headline-md font-headline-md text-on-surface mb-stack-sm">Recuperar Contraseña</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Ingresa tu correo electrónico y te enviaremos las instrucciones para restablecer tu contraseña.
+                </p>
+</div>
+<!-- Form -->
+<form class="w-full flex flex-col gap-stack-md" id="recoveryForm" onsubmit="handleRecoverySubmit(event)">
+<!-- Email Input (Material 3 Filled Style variant) -->
+<div class="relative w-full">
+<input class="peer w-full bg-surface-container-highest text-on-surface border-0 border-b-2 border-outline hover:border-on-surface focus:border-primary focus:ring-0 rounded-t-[12px] px-4 pt-6 pb-2 text-body-lg font-body-lg transition-colors placeholder-transparent" id="emailInput" placeholder="Correo Electrónico" required="" type="email">
+<label class="absolute left-4 top-2 text-label-lg font-label-lg text-on-surface-variant transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-body-lg peer-placeholder-shown:font-body-lg peer-focus:top-2 peer-focus:text-label-lg peer-focus:font-label-lg peer-focus:text-primary pointer-events-none" for="emailInput">
+                        Correo Electrónico
+                    </label>
+</div>
+<!-- Submit Button (Secondary Burgundy Style as requested for priority action) -->
+<button class="w-full bg-secondary text-on-secondary rounded-lg py-3 px-6 text-label-lg font-label-lg flex items-center justify-center gap-2 hover:bg-secondary/90 transition-colors shadow-sm mt-stack-sm active:scale-[0.98]" type="submit">
+<span class="">Enviar Instrucciones</span>
+<span class="material-symbols-outlined">send</span>
+</button>
+</form>
+<!-- Success Message (Hidden by default) -->
+<div class="hidden w-full mt-stack-md p-4 bg-primary-container text-on-primary-container rounded-lg flex items-start gap-3 transform translate-y-4 opacity-0 transition-all duration-300" id="successMessage">
+<span class="material-symbols-outlined shrink-0">check_circle</span>
+<p class="text-body-md font-body-md">
+                    Instrucciones enviadas. Por favor, revisa tu bandeja de entrada.
+                </p>
+</div>
+<!-- Back to Login Link -->
+<div class="mt-stack-lg w-full text-center">
+<a class="text-label-lg font-label-lg text-primary hover:text-primary-fixed-dim transition-colors flex items-center justify-center gap-1" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Volver al inicio de sesión
+                </a>
+</div>
+</div>
+</main>
+<!-- TopAppBar & BottomNavBar Suppressed -->
+<!-- Rationale: As a transactional/linear screen (Password Recovery), the global navigation shell is suppressed to focus user attention on the task. -->
+<script>
+        function handleRecoverySubmit(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('emailInput');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const successMessage = document.getElementById('successMessage');
+
+            // Simulate loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span><span>Enviando...</span>';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                // Restore button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Clear input
+                emailInput.value = '';
+
+                // Show success message
+                successMessage.classList.remove('hidden');
+                // Trigger reflow for animation
+                void successMessage.offsetWidth;
+                successMessage.classList.remove('translate-y-4', 'opacity-0');
+
+                // Hide message after a few seconds
+                setTimeout(() => {
+                    successMessage.classList.add('translate-y-4', 'opacity-0');
+                    setTimeout(() => {
+                        successMessage.classList.add('hidden');
+                    }, 300);
+                }, 5000);
+
+            }, 1500);
+        }
+    </script>
+
+
+</body></html>

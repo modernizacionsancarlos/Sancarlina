@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>06. Guía Rápida</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f312f",
+                        "background": "#f9f9f6",
+                        "surface-container-highest": "#e2e3e0",
+                        "outline": "#747967",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-container": "#faffe7",
+                        "outline-variant": "#c4c9b4",
+                        "surface-dim": "#dadad7",
+                        "on-background": "#1a1c1b",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "tertiary-container": "#956e00",
+                        "primary": "#476500",
+                        "on-surface": "#1a1c1b",
+                        "inverse-on-surface": "#f1f1ee",
+                        "surface-tint": "#496800",
+                        "primary-fixed": "#c8f17a",
+                        "on-surface-variant": "#444939",
+                        "on-primary-fixed": "#131f00",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffdadb",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#fd7f8a",
+                        "primary-fixed-dim": "#add461",
+                        "on-secondary-fixed-variant": "#842231",
+                        "inverse-primary": "#add461",
+                        "tertiary-fixed": "#ffdea0",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "surface-container-low": "#f4f4f1",
+                        "tertiary": "#765700",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-container": "#741627",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface": "#f9f9f6",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eeeeeb",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary-fixed": "#40000d",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#5d7f13",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "baseline": "4px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Subtle pulse animation for indicators */
+        @keyframes subtlePulse {
+            0% { box-shadow: 0 0 0 0 rgba(253, 127, 138, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(253, 127, 138, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(253, 127, 138, 0); }
+        }
+        .indicator-pulse {
+            animation: subtlePulse 2s infinite;
+        }
+        
+        /* Mock background styles */
+        .bg-mock-map {
+            background-color: #e2e3e0;
+            background-image: radial-gradient(#c4c9b4 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen w-full overflow-hidden relative selection:bg-primary-container selection:text-on-primary-container">
+<!-- FAKE BACKGROUND LAYER (To simulate app UI behind the overlay) -->
+<div class="absolute inset-0 z-0 bg-mock-map flex flex-col pointer-events-none opacity-40">
+<!-- Fake TopAppBar -->
+<header class="bg-surface-container-low flex justify-between items-center px-margin-mobile h-24 w-full">
+<button class="p-2 text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="text-headline-md font-headline-md font-bold text-primary">gondolApp</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant"></div>
+</header>
+<!-- Fake Map Content Area -->
+<div class="flex-1 w-full relative">
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-on-primary">location_on</span>
+</div>
+</div>
+<!-- Fake BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4 bg-surface-container rounded-t-lg shadow-sm">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1">
+<span class="material-symbols-outlined fill-icon">map</span>
+<span class="text-label-lg font-label-lg mt-1">Explorar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1">
+<span class="material-symbols-outlined">wine_bar</span>
+<span class="text-label-lg font-label-lg mt-1">Bodegas</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-label-lg font-label-lg mt-1">Favoritos</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-lg font-label-lg mt-1">Perfil</span>
+</div>
+</nav>
+</div>
+<!-- COACHMARKS OVERLAY -->
+<!-- Dark semi-transparent overlay to focus attention -->
+<div class="absolute inset-0 z-40 bg-inverse-surface/80 backdrop-blur-sm transition-opacity duration-300 flex flex-col justify-between" id="coachmarks-overlay">
+<!-- Top Section Focus (Menu) -->
+<div class="relative w-full h-24 px-margin-mobile pt-8">
+<!-- Indicator for Menu -->
+<div class="absolute left-4 top-8 w-10 h-10 border-2 border-secondary-container rounded-full indicator-pulse z-50"></div>
+<!-- Coachmark Bubble for Menu -->
+<div class="absolute left-16 top-12 bg-surface-container-highest text-on-surface rounded-2xl rounded-tl-none p-4 shadow-lg max-w-[240px] z-50">
+<p class="text-body-lg font-body-lg text-on-surface">Accede a tu perfil y ajustes aquí</p>
+</div>
+</div>
+<!-- Center Section (Character) -->
+<div class="flex-1 flex items-center justify-center relative pointer-events-none">
+<img alt="GondolApp Guide Character" class="h-48 md:h-64 object-contain animate-[bounce_3s_ease-in-out_infinite] drop-shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyJUxTCh_qeS5DuYgWuIWKDpgqA0pCczBcEs95I0ztRORK4CuKFvenMIgRc4MW7Ip6o3_CSRyxptw4m2QkOpvjLe9QT4i3RgCYOlzLOyYss2el645cPBbUJBWH-nGqNfHl0JBU1axBqoRfQHBu-YzL-90E1sZEc7fKsq8sRbKbOIwjw1tW0dIc_CFX9Azk-5mjmY9P1Wp9RdNedH3FQqJPXTv_rGR-t1H8Cc-iKk_1nC6ZCnDNju09zGvuacYn9YZO84OzsDIrD1zP">
+</div>
+<!-- Bottom Section Focus (Map/Explore) -->
+<div class="relative w-full pb-28 px-4 flex flex-col items-center">
+<!-- Coachmark Bubble for Map Tab -->
+<div class="relative bg-surface-container-highest text-on-surface rounded-2xl rounded-br-none p-4 mb-8 shadow-lg max-w-[260px] z-50 self-start ml-4 md:ml-12">
+<p class="text-body-lg font-body-lg">Explora San Carlos desde el mapa</p>
+</div>
+<!-- Indicator for Map Tab -->
+<!-- Positioning roughly over the first tab of the fake bottom nav -->
+<div class="absolute bottom-6 left-[12%] md:left-[20%] w-20 h-16 border-2 border-secondary-container rounded-full indicator-pulse z-50"></div>
+<!-- Action Button -->
+<div class="mt-4 mb-safe w-full px-margin-mobile flex justify-center z-50">
+<button class="bg-secondary text-on-secondary px-8 py-4 rounded-full text-title-lg font-title-lg font-medium shadow-md hover:bg-secondary/90 transition-colors w-full max-w-xs flex items-center justify-center gap-2" onclick="document.getElementById('coachmarks-overlay').style.display='none'">
+                    Entendido
+                    <span class="material-symbols-outlined text-on-secondary">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+
+
+</body></html>

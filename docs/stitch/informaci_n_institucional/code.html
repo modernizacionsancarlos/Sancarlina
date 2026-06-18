@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>34. Información Institucional</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-surface": "#2f312f",
+                      "background": "#f9f9f6",
+                      "surface-container-highest": "#e2e3e0",
+                      "outline": "#747967",
+                      "on-tertiary-container": "#fffbff",
+                      "on-primary-container": "#faffe7",
+                      "outline-variant": "#c4c9b4",
+                      "surface-dim": "#dadad7",
+                      "on-background": "#1a1c1b",
+                      "tertiary-fixed-dim": "#f6be3b",
+                      "tertiary-container": "#956e00",
+                      "primary": "#476500",
+                      "on-surface": "#1a1c1b",
+                      "inverse-on-surface": "#f1f1ee",
+                      "surface-tint": "#496800",
+                      "primary-fixed": "#c8f17a",
+                      "on-surface-variant": "#444939",
+                      "on-primary-fixed": "#131f00",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed": "#ffdadb",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#fd7f8a",
+                      "primary-fixed-dim": "#add461",
+                      "on-secondary-fixed-variant": "#842231",
+                      "inverse-primary": "#add461",
+                      "tertiary-fixed": "#ffdea0",
+                      "on-primary-fixed-variant": "#364e00",
+                      "surface-container-high": "#e8e8e5",
+                      "on-tertiary-fixed": "#261900",
+                      "surface-container-low": "#f4f4f1",
+                      "tertiary": "#765700",
+                      "surface-variant": "#e2e3e0",
+                      "on-secondary-container": "#741627",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#ffb2b7",
+                      "surface": "#f9f9f6",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eeeeeb",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#f9f9f6",
+                      "secondary": "#a33a47",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-secondary-fixed": "#40000d",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#5d7f13",
+                      "on-error": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "baseline": "4px",
+                      "stack-lg": "24px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "margin-tablet": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Be Vietnam Pro"],
+                      "body-md": ["Manrope"],
+                      "display-lg": ["Be Vietnam Pro"],
+                      "body-lg": ["Manrope"],
+                      "title-lg": ["Manrope"],
+                      "headline-sm": ["Be Vietnam Pro"],
+                      "label-lg": ["Manrope"],
+                      "headline-md": ["Be Vietnam Pro"],
+                      "headline-lg": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                      "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                      "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                      "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                      "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                      "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                      "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                      "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+              }
+            }
+          }
+        }
+    </script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #f9f9f6; /* bg-background */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom gentle entry animation */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fade-up 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- Back Navigation (Contextual) -->
+<nav class="w-full px-margin-mobile py-stack-md flex justify-between items-center z-10 relative">
+<button aria-label="Volver" class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-surface-variant transition-colors" onclick="history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</nav>
+<!-- Main Canvas -->
+<main class="flex-grow max-w-4xl mx-auto w-full pb-stack-lg">
+<!-- Hero Section -->
+<header class="flex flex-col items-center text-center px-margin-mobile md:px-margin-tablet pt-stack-sm pb-stack-lg animate-fade-up">
+<div class="relative mb-stack-lg">
+<!-- Soft glow behind logo -->
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-xl scale-150"></div>
+<img alt="Logo Municipalidad de San Carlos" class="w-32 md:w-40 h-auto relative z-10 drop-shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyJUxTCh_qeS5DuYgWuIWKDpgqA0pCczBcEs95I0ztRORK4CuKFvenMIgRc4MW7Ip6o3_CSRyxptw4m2QkOpvjLe9QT4i3RgCYOlzLOyYss2el645cPBbUJBWH-nGqNfHl0JBU1axBqoRfQHBu-YzL-90E1sZEc7fKsq8sRbKbOIwjw1tW0dIc_CFX9Azk-5mjmY9P1Wp9RdNedH3FQqJPXTv_rGR-t1H8Cc-iKk_1nC6ZCnDNju09zGvuacYn9YZO84OzsDIrD1zP">
+</div>
+<h1 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary tracking-tight">
+                Municipalidad de San Carlos
+            </h1>
+<p class="text-title-lg font-title-lg text-on-surface-variant mt-stack-sm max-w-lg">
+                Dirección de Modernización
+            </p>
+</header>
+<!-- Institutional Mission (Bento Style Card) -->
+<section class="px-margin-mobile md:px-margin-tablet mb-stack-lg animate-fade-up" style="animation-delay: 0.1s; opacity: 0;">
+<div class="bg-surface-container-low rounded-xl p-stack-lg md:p-[32px] shadow-sm relative overflow-hidden group">
+<!-- Decorative subtle texture/gradient -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary-container/20 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:scale-110 transition-transform duration-700"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-stack-lg items-start">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assured_workload</span>
+</div>
+<div>
+<h2 class="text-headline-sm font-headline-sm text-primary mb-stack-sm">Nuestra Misión</h2>
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed">
+                            Impulsar la transformación digital y la innovación en la gestión pública local. Nos dedicamos a acercar los servicios municipales a los vecinos de manera eficiente, transparente y accesible, consolidando a San Carlos como una ciudad inteligente que honra sus raíces y su patrimonio.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Team Section -->
+<section class="px-margin-mobile md:px-margin-tablet mb-stack-lg animate-fade-up" style="animation-delay: 0.2s; opacity: 0;">
+<div class="flex items-center gap-stack-sm mb-stack-lg">
+<span class="material-symbols-outlined text-primary">groups</span>
+<h2 class="text-headline-md font-headline-md text-primary">Nuestro Equipo</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter md:gap-stack-lg">
+<!-- Team Member 1 -->
+<div class="flex flex-col items-center group cursor-default">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-stack-sm ring-4 ring-surface-container shadow-sm group-hover:ring-primary-container group-hover:-translate-y-1 transition-all duration-300">
+<div class="w-full h-full bg-cover bg-center" data-alt="A professional headshot of a smiling woman in her 40s in a bright, modern municipal office. She wears a professional earth-toned blouse. Soft natural lighting highlights her approachability. The background is slightly blurred showing subtle architectural details. Corporate modern aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLi5u9Hu9P8Yh6fCjpKXIy96qJZPzLTxWdJlYXCvTPoSBM3O5eSWoYzSi2cbU015mpqbI-g0I77WN64iaLYWwKR_Ia_6MifWgQ-nvqMKb2_HiIx2kgVgQsQD1OgMEwCK5yfrqxT-7TWhFOcDNgfqWDTankpwImEzL-wAx9UqqjGK7ZIalehIuljpZJagKD9CPMIB5HDk729Cvr9yylW_abfZLUWxd8Mi01XRNKxqyyoiOh4ShWCvEJf0TjwQ7Y0QUgC43KDIUth7Z3')"></div>
+</div>
+<h3 class="text-label-lg font-label-lg text-on-surface text-center">Valeria Ruiz</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-center">Directora</p>
+</div>
+<!-- Team Member 2 -->
+<div class="flex flex-col items-center group cursor-default">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-stack-sm ring-4 ring-surface-container shadow-sm group-hover:ring-primary-container group-hover:-translate-y-1 transition-all duration-300">
+<div class="w-full h-full bg-cover bg-center" data-alt="A portrait of a confident young man in a smart casual olive green shirt, standing in a brightly lit corridor. He has a warm, professional smile. The lighting is crisp and the background features clean, minimalist lines typical of a modern civic building. Dependable mood." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDMw3sRrl4FmtUabZnYM1C7nNOtrk8r38eNzbwqflLl8keH_BKiVEcHyQjXGLGxEVHAds29RQVsAAlZvFGyvaYPVjB2sB-bEdfws_lWyhK9kf_IM67pUKyTSturmugzWBfSwAhrDfkI8fAkZrzWk07UT3WKdlmmI9Kn1_qCOoqtEI1207d1KlVXuMEfTJXPOP6wU5zwIW8MuUfhvH6ivMDnsyouO9Xtg0AFwf512LCIMf3ySmoijnZemrlLq_NTmQvtjVaGZLxKyUG6')"></div>
+</div>
+<h3 class="text-label-lg font-label-lg text-on-surface text-center">Martín Silva</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-center">Líder de Proyectos</p>
+</div>
+<!-- Team Member 3 -->
+<div class="flex flex-col items-center group cursor-default">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-stack-sm ring-4 ring-surface-container shadow-sm group-hover:ring-primary-container group-hover:-translate-y-1 transition-all duration-300">
+<div class="w-full h-full bg-cover bg-center" data-alt="Headshot of a creative professional woman with glasses, smiling genuinely. She is in an open-plan office setting with warm sunlight streaming in. Wearing a casual yet smart outfit. The color palette emphasizes warm earth tones and creamy whites. High-utility design vibe." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAY1Vt0cqXX3W-jH-JEHmmNr1s4FsfoD3k8ACs39wQalNPM0CcOwC9j6l3Jquzqwo4kUuCuJXoErpRhrdUWdGV1L1rwWK5Cg1o5ZbIg1xVb4XkFmBUXb_Z_UUngFO8_kliHJkS8nnDevz63tJFDA-iPjcbsO4y-gi3ord8fGPt4B3QdPtz2Xwp1FjLe59YqwsUzPIGPJ4eI-Q00JUbkXrgindimJ5to6AnIuRPBSC13wyrmUDxKlrKtrvt3SXwAjiRLNQNP8_Sa_UDY')"></div>
+</div>
+<h3 class="text-label-lg font-label-lg text-on-surface text-center">Laura Gómez</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-center">UX/UI Design</p>
+</div>
+<!-- Team Member 4 -->
+<div class="flex flex-col items-center group cursor-default">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-stack-sm ring-4 ring-surface-container shadow-sm group-hover:ring-primary-container group-hover:-translate-y-1 transition-all duration-300">
+<div class="w-full h-full bg-cover bg-center" data-alt="Professional portrait of a middle-aged man in a tailored dark jacket over a light shirt. He looks directly at the camera with a reassuring, competent expression. The environment is a well-lit, contemporary workspace with subtle greenery out of focus. Premium, dependable aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDxYHm10kLW8VfSMnyuVvZdHlanf_cx9UJ9hlk05GG6CbtbtXrEclqbCbtMKP7Bio4Mz8X4NLXMr7ICbfQoklwoG2E6kVPNJUhbdDNiyNh9MW8NIzzz3XGhqOefPLISoDQsShkS0TR-j8W5LxCsFcrMuZrJetoN17q82aHapuy-sEb-EX60zsmkYRrQydYnDnk2U99-Wp7IFlMQrxYr_lhh85jqeE0x-G73wW8vp4hy0m9VDzY0eeFGwaTC6qm24PnSqNstQ7Bw7F3U')"></div>
+</div>
+<h3 class="text-label-lg font-label-lg text-on-surface text-center">Diego Vega</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-center">Desarrollo</p>
+</div>
+</div>
+</section>
+<!-- Social Connections -->
+<section class="px-margin-mobile md:px-margin-tablet animate-fade-up" style="animation-delay: 0.3s; opacity: 0;">
+<div class="bg-surface-container rounded-xl p-stack-md flex flex-col items-center text-center">
+<p class="text-title-lg font-title-lg text-on-surface mb-stack-md">Conéctate con nosotros</p>
+<div class="flex gap-stack-md">
+<!-- Web -->
+<a aria-label="Sitio Web" class="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary shadow-sm transition-all duration-200 hover:-translate-y-1" href="#">
+<span class="material-symbols-outlined">language</span>
+</a>
+<!-- Facebook (Represented by generic social icon or text if specific icon missing, using thumb_up as a proxy for engagement/FB) -->
+<a aria-label="Facebook" class="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary shadow-sm transition-all duration-200 hover:-translate-y-1" href="#">
+<span class="material-symbols-outlined">thumb_up</span>
+</a>
+<!-- Instagram (Represented by photo camera) -->
+<a aria-label="Instagram" class="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary shadow-sm transition-all duration-200 hover:-translate-y-1" href="#">
+<span class="material-symbols-outlined">photo_camera</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+
+
+</body></html>

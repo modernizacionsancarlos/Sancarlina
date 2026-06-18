@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diálogos de Confirmación</title>
+<!-- Google Fonts: Be Vietnam Pro & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#5d7f13",
+                "on-secondary-fixed-variant": "#842231",
+                "tertiary-fixed": "#ffdea0",
+                "tertiary-container": "#956e00",
+                "tertiary-fixed-dim": "#f6be3b",
+                "primary-fixed": "#c8f17a",
+                "on-tertiary": "#ffffff",
+                "surface-variant": "#e2e3e0",
+                "on-tertiary-fixed-variant": "#5c4300",
+                "secondary-fixed-dim": "#ffb2b7",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#add461",
+                "on-error": "#ffffff",
+                "error-container": "#ffdad6",
+                "primary": "#476500",
+                "surface": "#f9f9f6",
+                "surface-dim": "#dadad7",
+                "on-primary-container": "#faffe7",
+                "secondary": "#a33a47",
+                "on-tertiary-container": "#fffbff",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#741627",
+                "inverse-on-surface": "#f1f1ee",
+                "background": "#f9f9f6",
+                "on-secondary-fixed": "#40000d",
+                "inverse-surface": "#2f312f",
+                "on-surface-variant": "#444939",
+                "on-background": "#1a1c1b",
+                "secondary-container": "#fd7f8a",
+                "surface-tint": "#496800",
+                "surface-container-highest": "#e2e3e0",
+                "surface-container-high": "#e8e8e5",
+                "on-primary-fixed-variant": "#364e00",
+                "on-tertiary-fixed": "#261900",
+                "error": "#ba1a1a",
+                "outline": "#747967",
+                "inverse-primary": "#add461",
+                "tertiary": "#765700",
+                "on-primary-fixed": "#131f00",
+                "outline-variant": "#c4c9b4",
+                "secondary-fixed": "#ffdadb",
+                "surface-container": "#eeeeeb",
+                "surface-container-lowest": "#ffffff",
+                "surface-container-low": "#f4f4f1",
+                "on-surface": "#1a1c1b",
+                "surface-bright": "#f9f9f6",
+                "on-primary": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-lg": "24px",
+                "stack-sm": "8px",
+                "stack-md": "16px",
+                "gutter": "16px",
+                "baseline": "4px",
+                "margin-tablet": "24px",
+                "margin-mobile": "16px"
+        },
+        "fontFamily": {
+                "headline-sm": [
+                        "Be Vietnam Pro"
+                ],
+                "title-lg": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Be Vietnam Pro"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg-mobile": [
+                        "Be Vietnam Pro"
+                ],
+                "display-lg": [
+                        "Be Vietnam Pro"
+                ],
+                "label-lg": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Be Vietnam Pro"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "title-lg": [
+                        "22px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.25px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "34px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "57px",
+                        {
+                                "lineHeight": "64px",
+                                "letterSpacing": "-0.25px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-lg": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.1px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0.5px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+          font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for demo purposes */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e3e0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c4c9b4; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-background font-body-lg min-h-screen relative overflow-y-auto">
+<div class="flex flex-col items-center justify-start py-margin-tablet px-margin-mobile gap-stack-lg w-full max-w-md mx-auto h-full">
+<!-- Header to explain the view -->
+<div class="text-center mt-8 mb-4">
+<h1 class="font-headline-md text-headline-md text-on-surface">Diálogos de Confirmación</h1>
+</div>
+<!-- Modal 1: Cerrar Sesión -->
+<div class="bg-surface rounded-xl shadow-lg w-full flex flex-col overflow-hidden ring-1 ring-black/5 transform transition-all hover:scale-[1.02]">
+<div class="p-6">
+<!-- Icon -->
+<div class="flex items-center justify-center mb-4">
+<img alt="Sancarlina Logo" class="w-12 h-12 object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXMDjUSbld4nCM3py2XSTAGUt1vMDSfFYHMrYMBrP2cSXetJ8Ccf26qW-M2-PvsCzQuQ_vpMzJRq6XJ6SUDTF5XzE140ecv3fBMe2hdGkfcof52i4tjlUVi_KkO_IjWtQttQNavM00pUhR2_V_XYfjsOgN9jNosF98m7hLhHF58SFNMINW9NprXA8PfJCUxaEVv6ySFCw7dqf0fmdbN21AaOpxIS9WiQBVLrQ_KRhRiziadmoGm0-zpgUj1Xq8JuT9IwtUSyMi1yVO"/>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2 text-center">¿Cerrar sesión?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">
+                    Estás a punto de salir de tu cuenta.
+                </p>
+</div>
+<!-- Actions -->
+<div class="px-6 pb-6 pt-2 flex flex-col gap-3">
+<button class="w-full px-5 py-3 rounded-full font-label-lg text-label-lg bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors shadow-sm">
+                    Cerrar Sesión
+                </button>
+<button class="w-full px-5 py-3 rounded-full font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/10 transition-colors">
+                    Cancelar
+                </button>
+</div>
+</div>
+<!-- Modal 2: Eliminar Favorito -->
+<div class="bg-surface rounded-xl shadow-lg w-full flex flex-col overflow-hidden ring-1 ring-black/5 transform transition-all hover:scale-[1.02]">
+<div class="p-6">
+<div class="flex items-center justify-center mb-4">
+<img alt="Sancarlina Logo" class="w-12 h-12 object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXMDjUSbld4nCM3py2XSTAGUt1vMDSfFYHMrYMBrP2cSXetJ8Ccf26qW-M2-PvsCzQuQ_vpMzJRq6XJ6SUDTF5XzE140ecv3fBMe2hdGkfcof52i4tjlUVi_KkO_IjWtQttQNavM00pUhR2_V_XYfjsOgN9jNosF98m7hLhHF58SFNMINW9NprXA8PfJCUxaEVv6ySFCw7dqf0fmdbN21AaOpxIS9WiQBVLrQ_KRhRiziadmoGm0-zpgUj1Xq8JuT9IwtUSyMi1yVO"/>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2 text-center">¿Eliminar favorito?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">
+                    Esta acción quitará el comercio de tu lista guardada.
+                </p>
+</div>
+<!-- Actions -->
+<div class="px-6 pb-6 pt-2 flex flex-col gap-3">
+<button class="w-full px-5 py-3 rounded-full font-label-lg text-label-lg bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors shadow-sm">
+                    Eliminar
+                </button>
+<button class="w-full px-5 py-3 rounded-full font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/10 transition-colors">
+                    Mantener
+                </button>
+</div>
+</div>
+<!-- Modal 3: Error de Conexión -->
+<div class="bg-surface rounded-xl shadow-lg w-full flex flex-col overflow-hidden ring-1 ring-black/5 transform transition-all hover:scale-[1.02] mb-12">
+<div class="p-6">
+<div class="flex items-center justify-center mb-4">
+<img alt="Sancarlina Logo" class="w-12 h-12 object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXMDjUSbld4nCM3py2XSTAGUt1vMDSfFYHMrYMBrP2cSXetJ8Ccf26qW-M2-PvsCzQuQ_vpMzJRq6XJ6SUDTF5XzE140ecv3fBMe2hdGkfcof52i4tjlUVi_KkO_IjWtQttQNavM00pUhR2_V_XYfjsOgN9jNosF98m7hLhHF58SFNMINW9NprXA8PfJCUxaEVv6ySFCw7dqf0fmdbN21AaOpxIS9WiQBVLrQ_KRhRiziadmoGm0-zpgUj1Xq8JuT9IwtUSyMi1yVO"/>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2 text-center">Error de Conexión</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">
+                    No pudimos conectar con el servidor. Por favor, intenta de nuevo.
+                </p>
+</div>
+<!-- Actions -->
+<div class="px-6 pb-6 pt-2 flex flex-col gap-3">
+<button class="w-full px-5 py-3 rounded-full font-label-lg text-label-lg bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+                    Reintentar
+                </button>
+</div>
+</div>
+</div>
+</body></html>

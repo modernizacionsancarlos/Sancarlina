@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sumar Emprendimiento - GondolApp</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from Style Guidance -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#5d7f13",
+                        "on-secondary-fixed": "#40000d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "surface-dim": "#dadad7",
+                        "on-primary-fixed-variant": "#364e00",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-surface": "#2f312f",
+                        "tertiary-container": "#956e00",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "inverse-primary": "#add461",
+                        "tertiary": "#765700",
+                        "secondary-container": "#fd7f8a",
+                        "on-background": "#1a1c1b",
+                        "surface-container-highest": "#e2e3e0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "on-tertiary-fixed": "#261900",
+                        "primary": "#476500",
+                        "surface-container-low": "#f4f4f1",
+                        "surface": "#f9f9f6",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#496800",
+                        "surface-variant": "#e2e3e0",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eeeeeb",
+                        "on-primary-fixed": "#131f00",
+                        "primary-fixed": "#c8f17a",
+                        "on-surface-variant": "#444939",
+                        "on-surface": "#1a1c1b",
+                        "outline": "#747967",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#fffbff",
+                        "secondary-fixed": "#ffdadb",
+                        "outline-variant": "#c4c9b4",
+                        "on-secondary-container": "#741627",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-primary-container": "#faffe7",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#842231",
+                        "primary-fixed-dim": "#add461",
+                        "surface-container-high": "#e8e8e5",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "background": "#f9f9f6"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "margin-tablet": "24px",
+                        "gutter": "16px",
+                        "baseline": "4px"
+                    },
+                    fontFamily: {
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"]
+                    },
+                    fontSize: {
+                        "title-lg": ["22px", { lineHeight: "28px", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "display-lg": ["57px", { lineHeight: "64px", letterSpacing: "-0.25px", fontWeight: "700" }],
+                        "headline-md": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.1px", fontWeight: "500" }],
+                        "headline-lg-mobile": ["28px", { lineHeight: "34px", fontWeight: "600" }],
+                        "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0.25px", fontWeight: "400" }],
+                        "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "0.5px", fontWeight: "400" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base styles to support Material Symbols */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Safe area padding for mobile */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+        .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+        /* Custom Input Styling matching Style Guidance */
+        .m3-input {
+            border-radius: 12px 12px 0 0;
+            border-bottom-width: 2px;
+            transition: all 0.2s ease;
+        }
+        .m3-input:focus {
+            box-shadow: none;
+            outline: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface min-h-screen flex flex-col font-body-lg antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- 
+        Navigation Shell Suppressed:
+        As per the "Automatic Suppression" rule, this is a linear/transactional flow (Onboarding/Adding Entity).
+        The global TopAppBar and BottomNavBar are deliberately omitted to focus the user on the task.
+    -->
+<!-- Custom Transactional Header -->
+<header class="pt-safe flex items-center px-margin-mobile h-16 bg-surface-bright sticky top-0 z-20">
+<button aria-label="Cancelar" class="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors text-on-surface">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="ml-4 text-title-lg font-title-lg text-on-surface">29. Sumar Emprendimiento</h1>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col w-full max-w-2xl mx-auto">
+<!-- Stepper Component -->
+<div class="px-margin-mobile py-stack-md w-full">
+<div class="flex items-center justify-between relative">
+<!-- Progress Line Background -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-surface-container-high rounded-full z-0"></div>
+<!-- Progress Line Active -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-[0%] h-1 bg-primary rounded-full z-0 transition-all duration-300"></div>
+<!-- Step 1 (Active) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-label-lg font-label-lg shadow-sm">
+                        1
+                    </div>
+<span class="text-label-lg font-label-lg text-primary text-center whitespace-nowrap">Datos básicos</span>
+</div>
+<!-- Step 2 (Inactive) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-label-lg font-label-lg">
+                        2
+                    </div>
+<span class="text-label-lg font-label-lg text-on-surface-variant text-center whitespace-nowrap">Ubicación</span>
+</div>
+<!-- Step 3 (Inactive) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-label-lg font-label-lg">
+                        3
+                    </div>
+<span class="text-label-lg font-label-lg text-on-surface-variant text-center whitespace-nowrap">Fotos</span>
+</div>
+</div>
+</div>
+<!-- Form Area -->
+<div class="px-margin-mobile py-stack-md flex-1 flex flex-col gap-stack-lg">
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-2">
+                Comencemos con la información principal de tu proyecto para que los visitantes puedan encontrarte.
+            </p>
+<!-- Field: Nombre del Negocio -->
+<div class="relative group">
+<label class="absolute text-label-lg font-label-lg text-on-surface-variant top-2 left-4 transition-all group-focus-within:text-primary group-focus-within:text-[12px] group-focus-within:-translate-y-1" for="businessName">
+                    Nombre del Negocio
+                </label>
+<input class="m3-input w-full bg-surface-container-low border-primary text-on-surface text-body-lg font-body-lg pt-7 pb-3 px-4 focus:bg-surface-container" id="businessName" name="businessName" placeholder="Ej. Finca Las Moras" type="text">
+</div>
+<!-- Field: Rubro -->
+<div class="relative group">
+<label class="absolute text-label-lg font-label-lg text-on-surface-variant top-2 left-4 transition-all group-focus-within:text-primary group-focus-within:text-[12px] group-focus-within:-translate-y-1 z-10" for="category">
+                    Rubro principal
+                </label>
+<div class="relative">
+<select class="m3-input w-full bg-surface-container-low border-primary text-on-surface text-body-lg font-body-lg pt-7 pb-3 px-4 appearance-none focus:bg-surface-container cursor-pointer" id="category" name="category">
+<option disabled="" selected="" value="">Selecciona una opción</option>
+<option value="bodega">Bodega / Viñedo</option>
+<option value="alojamiento">Alojamiento Rural</option>
+<option value="gastronomia">Gastronomía Regional</option>
+<option value="experiencia">Experiencia / Turismo</option>
+<option value="producto">Venta de Productos</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Field: Descripción -->
+<div class="relative group flex-1 flex flex-col">
+<label class="absolute text-label-lg font-label-lg text-on-surface-variant top-2 left-4 transition-all group-focus-within:text-primary group-focus-within:text-[12px] group-focus-within:-translate-y-1" for="description">
+                    Descripción
+                </label>
+<textarea class="m3-input w-full flex-1 bg-surface-container-low border-primary text-on-surface text-body-lg font-body-lg pt-7 pb-3 px-4 focus:bg-surface-container resize-none" id="description" name="description" placeholder="Describe brevemente qué hace especial a tu emprendimiento..." rows="5"></textarea>
+<p class="text-[12px] text-on-surface-variant mt-1 ml-4 flex justify-between">
+<span class="">Procura ser claro y atractivo.</span>
+<span class="">0 / 300</span>
+</p>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="p-margin-mobile pb-safe bg-surface-bright border-t border-surface-variant/30 sticky bottom-0 z-20">
+<!-- Secondary (Burgundy) button as requested for 'Siguiente' -->
+<button class="w-full bg-secondary text-on-secondary rounded-[24px] py-4 px-6 text-label-lg font-label-lg flex items-center justify-center gap-2 hover:bg-secondary/90 transition-colors shadow-sm active:scale-[0.98]">
+<span class="">Siguiente</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</main>
+<script>
+        // Simple interaction script to handle input floating labels if values are pre-filled
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                // Initial check
+                if(input.value) {
+                    const label = input.parentElement.querySelector('label');
+                    if(label) {
+                        label.classList.add('text-[12px]', '-translate-y-1');
+                    }
+                }
+                
+                // Add blur event to keep label up if there is text
+                input.addEventListener('blur', (e) => {
+                    const label = e.target.parentElement.querySelector('label');
+                    if(e.target.value && label) {
+                        label.classList.add('text-[12px]', '-translate-y-1');
+                    } else if (label) {
+                        label.classList.remove('text-[12px]', '-translate-y-1');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

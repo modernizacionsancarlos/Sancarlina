@@ -1,0 +1,332 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>12. Buscador Avanzado</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f4f4f1",
+                      "surface-bright": "#f9f9f6",
+                      "inverse-on-surface": "#f1f1ee",
+                      "surface-container-high": "#e8e8e5",
+                      "secondary": "#a33a47",
+                      "on-surface-variant": "#444939",
+                      "on-background": "#1a1c1b",
+                      "secondary-fixed-dim": "#ffb2b7",
+                      "tertiary-fixed": "#ffdea0",
+                      "tertiary-fixed-dim": "#f6be3b",
+                      "on-tertiary-fixed": "#261900",
+                      "tertiary": "#765700",
+                      "surface-container-highest": "#e2e3e0",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#c8f17a",
+                      "on-primary-fixed": "#131f00",
+                      "secondary-container": "#fd7f8a",
+                      "inverse-surface": "#2f312f",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dadad7",
+                      "outline-variant": "#c4c9b4",
+                      "on-secondary-fixed": "#40000d",
+                      "tertiary-container": "#956e00",
+                      "error-container": "#ffdad6",
+                      "primary": "#476500",
+                      "on-secondary-fixed-variant": "#842231",
+                      "on-secondary-container": "#741627",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#add461",
+                      "surface": "#f9f9f6",
+                      "surface-container": "#eeeeeb",
+                      "on-surface": "#1a1c1b",
+                      "error": "#ba1a1a",
+                      "on-tertiary-container": "#fffbff",
+                      "on-primary": "#ffffff",
+                      "background": "#f9f9f6",
+                      "surface-variant": "#e2e3e0",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-container": "#faffe7",
+                      "outline": "#747967",
+                      "primary-fixed-dim": "#add461",
+                      "primary-container": "#5d7f13",
+                      "secondary-fixed": "#ffdadb",
+                      "on-primary-fixed-variant": "#364e00",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#496800"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "stack-lg": "24px",
+                      "baseline": "4px",
+                      "stack-sm": "8px",
+                      "gutter": "16px",
+                      "stack-md": "16px",
+                      "margin-tablet": "24px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-lg-mobile": [
+                              "Be Vietnam Pro"
+                      ],
+                      "display-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ],
+                      "title-lg": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "headline-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-lg": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean carousels */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface min-h-screen flex flex-col font-body-md selection:bg-primary/20 selection:text-primary pb-[90px] md:pb-0 md:pl-[240px]">
+<!-- Active Search Header Area -->
+<header class="sticky top-0 z-40 bg-surface-bright/95 backdrop-blur-md pt-6 pb-4 px-margin-mobile md:px-margin-tablet">
+<div class="max-w-3xl mx-auto w-full relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</div>
+<input autofocus="" class="w-full bg-surface-container-low text-on-surface font-body-lg text-body-lg rounded-full py-4 pl-12 pr-12 border-2 border-primary outline-none shadow-[0_4px_16px_rgba(45,54,21,0.08)] transition-all placeholder:text-on-surface-variant" placeholder="Buscar en Sancarlina..." type="text">
+<div class="absolute inset-y-0 right-4 flex items-center text-on-surface-variant hover:text-primary cursor-pointer transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">mic</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-3xl mx-auto px-margin-mobile md:px-margin-tablet flex flex-col gap-stack-lg py-4">
+<!-- Búsquedas recientes -->
+<section class="flex flex-col gap-stack-sm animate-[fadeIn_0.3s_ease-out]">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-title-lg text-title-lg text-on-surface">Búsquedas recientes</h2>
+<button class="font-label-lg text-label-lg text-primary hover:text-primary-container transition-colors">Limpiar</button>
+</div>
+<ul class="flex flex-col rounded-DEFAULT bg-surface-container-low overflow-hidden shadow-[0_4px_12px_rgba(45,54,21,0.04)]">
+<li class="flex items-center gap-4 px-4 py-3 hover:bg-surface-variant/30 cursor-pointer transition-colors border-b border-surface-container-highest last:border-0 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-body-lg text-body-lg text-on-surface flex-1 truncate">Viñedos para visitar hoy</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</li>
+<li class="flex items-center gap-4 px-4 py-3 hover:bg-surface-variant/30 cursor-pointer transition-colors border-b border-surface-container-highest last:border-0 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-body-lg text-body-lg text-on-surface flex-1 truncate">Restaurantes de campo</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</li>
+<li class="flex items-center gap-4 px-4 py-3 hover:bg-surface-variant/30 cursor-pointer transition-colors border-b border-surface-container-highest last:border-0 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-body-lg text-body-lg text-on-surface flex-1 truncate">Comprar aceite de oliva local</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</li>
+<li class="flex items-center gap-4 px-4 py-3 hover:bg-surface-variant/30 cursor-pointer transition-colors border-b border-surface-container-highest last:border-0 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-body-lg text-body-lg text-on-surface flex-1 truncate">Horarios Finca El Mirador</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]" style="font-variation-settings: 'FILL' 0;">north_west</span>
+</li>
+</ul>
+</section>
+<!-- Sugeridos Carrusel -->
+<section class="flex flex-col gap-stack-sm pt-4 animate-[fadeIn_0.5s_ease-out]">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Sugeridos cerca de ti</h2>
+<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2 -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+<!-- Item 1 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] snap-start cursor-pointer group">
+<div class="w-[72px] h-[72px] rounded-full overflow-hidden shadow-[0_4px_12px_rgba(45,54,21,0.1)] group-hover:shadow-[0_8px_16px_rgba(45,54,21,0.15)] group-hover:scale-105 transition-all duration-300 border-2 border-transparent group-hover:border-primary-fixed">
+<img alt="Finca El Sol" class="w-full h-full object-cover" data-alt="A close-up, high-quality photograph of a rustic yet elegant vineyard estate entrance under warm afternoon sunlight. The scene reflects a premium farm-to-table aesthetic with natural textures like stone and wood. The color palette features earthy olive greens, deep burgundy accents from nearby grapevines, and a soft cream ambient light. The mood is welcoming and professional, fitting a high-end corporate modern agricultural brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdWb2qBZhXyi5UJa_7Dcl46FMUtfChhnke6JEz28NKGCT527a-0LZTDDx61ThAv8XiHWY4y8BsNdl4U88pqBNJLeFflxwQoD8f7yI2-QUZpfO5K8Iw_4Hx96oniQIroPwSz1IKSHHHmCluVfE66UpxNO3Smp6CYXgbMXSiIouELNSRFVN_wPucfdLw_pwsV072VIiSaTwHbJ1qdaapntQ7cOsLqnnsk9XQ0g3mMw1ItFTZzx87US8_rxtylqjCFbQgIfu2N7L_RDse">
+</div>
+<span class="font-label-lg text-label-lg text-on-surface text-center leading-tight max-w-[80px] group-hover:text-primary transition-colors">Finca El Sol</span>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] snap-start cursor-pointer group">
+<div class="w-[72px] h-[72px] rounded-full overflow-hidden shadow-[0_4px_12px_rgba(45,54,21,0.1)] group-hover:shadow-[0_8px_16px_rgba(45,54,21,0.15)] group-hover:scale-105 transition-all duration-300 border-2 border-transparent group-hover:border-primary-fixed">
+<img alt="Cava Alta" class="w-full h-full object-cover" data-alt="An inviting interior shot of a boutique wine cellar or tasting room. Wooden barrels and carefully arranged bottles are visible in the softly lit background. The lighting is warm and tactile, emphasizing rich earthy tones, subtle burgundy highlights, and deep olive shadows. The overall composition is clean, organized, and sophisticated, reflecting a modern heritage brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj_tTPGvLdCo0S0l3ujDmdD7ID_NMK4yXHXYDmFzUO40kBZM1Qtizz07Y2_jKwI2oA2Mlu0GGJO9-Y-8Hqdkjhi7O6E7nz9jc0SE0C7lmJP9zsYJAkrvDp6jjvQOlUS30cBSQWzRVsaeTSdHScrpCOGw80WO9fEbPaJDBzQNDGlAnPF8NuclD0VT09PZuuJvdu5Vn7MnIsWqdtPSaITRNthM66vD0aY0qgnffkjYu5SblwKav8kDY0OvK58CFt4VmAsXj8JpGpjewG">
+</div>
+<span class="font-label-lg text-label-lg text-on-surface text-center leading-tight max-w-[80px] group-hover:text-primary transition-colors">Cava Alta</span>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] snap-start cursor-pointer group">
+<div class="w-[72px] h-[72px] rounded-full overflow-hidden shadow-[0_4px_12px_rgba(45,54,21,0.1)] group-hover:shadow-[0_8px_16px_rgba(45,54,21,0.15)] group-hover:scale-105 transition-all duration-300 border-2 border-transparent group-hover:border-primary-fixed">
+<img alt="Pan de Campo" class="w-full h-full object-cover" data-alt="A close-up view of freshly baked artisanal bread displayed on a clean, light wood counter. The aesthetic is organic and warm, capturing the essence of local, high-quality food production. Soft, natural daylight washes over the scene, highlighting the textures of the crust. The background is slightly blurred but maintains a consistent palette of creamy whites, warm tans, and subtle olive green hints." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCztdm2v0nxsc36sYCRuUM97QTIDM-ykr-THWU7i3qoeesRewzshWKV0kR9K-YQMkNDxvtqpa3lcQjNu-HEOaG4FZ3isf2uu0TEfX2zhO2pXHK7iZtRWhmoV4tC2x_cNTdetyDviJZV8YlJOUJOJa0braAz_J3BqJTMOX7MDZrQcW8Th5z-49uQuLM0H3Xdn3WaRZOtfd1q3iI5BzxrjCrF07Pl7NjerSMwerJDvMa7T3myMTyPR3rhNdUc5UnqX9zItLYo4rgrP-0S">
+</div>
+<span class="font-label-lg text-label-lg text-on-surface text-center leading-tight max-w-[80px] group-hover:text-primary transition-colors">Pan de Campo</span>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] snap-start cursor-pointer group">
+<div class="w-[72px] h-[72px] rounded-full overflow-hidden shadow-[0_4px_12px_rgba(45,54,21,0.1)] group-hover:shadow-[0_8px_16px_rgba(45,54,21,0.15)] group-hover:scale-105 transition-all duration-300 border-2 border-transparent group-hover:border-primary-fixed">
+<img alt="Quesería Sur" class="w-full h-full object-cover" data-alt="A beautifully styled shot of artisan cheeses arranged on a slate board, accompanied by a few grapes and rustic crackers. The lighting creates a tactile, premium feel with soft, ambient warmth. The color scheme is sophisticated, utilizing deep olive greens in the background to contrast with the creamy textures of the cheese and the pop of burgundy from the grapes, aligning perfectly with a modern, high-utility agricultural brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk6Y2TnjmB__LW0SJ2vcL8INkt6AmJWAdIg1O88HUYwj9lmkdkdCYnGkeqGkcktFLDrehcXA7Titfp-isRd4Hs6AW4Fw3WW4oKKk3z-bpal65vcSjengw3YxOOgxkpWcxcKrRHOgkT1WuyVyz98p5YlUY48VR0_8BvZxjD2v2OY0fIpG9psQ4YH5pN3EQRGE4m2BzPdBgWTXuMo5ebSr8JkzFpIciNyAJhC8RdJMOvT_5NsKjo3KtE0psylcoKDja8i5pIfH_StrUo">
+</div>
+<span class="font-label-lg text-label-lg text-on-surface text-center leading-tight max-w-[80px] group-hover:text-primary transition-colors">Quesería Sur</span>
+</div>
+<!-- Item 5 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] snap-start cursor-pointer group pr-4 md:pr-0">
+<div class="w-[72px] h-[72px] rounded-full flex items-center justify-center bg-surface-container-high shadow-[0_4px_12px_rgba(45,54,21,0.05)] group-hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[28px]" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant text-center leading-tight max-w-[80px]">Ver más</span>
+</div>
+</div>
+</section>
+<!-- Categories Bento (Extra detail to avoid standard lists) -->
+<section class="flex flex-col gap-stack-sm pt-4 animate-[fadeIn_0.6s_ease-out]">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Explorar por categoría</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low rounded-DEFAULT p-4 flex flex-col justify-between aspect-square relative overflow-hidden group cursor-pointer shadow-[0_4px_12px_rgba(45,54,21,0.04)]">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-primary text-[32px] z-10" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="font-title-lg text-title-lg text-on-surface z-10">Gastronomía Local</span>
+</div>
+<div class="bg-surface-container-low rounded-DEFAULT p-4 flex flex-col justify-between aspect-square relative overflow-hidden group cursor-pointer shadow-[0_4px_12px_rgba(45,54,21,0.04)]">
+<div class="absolute inset-0 bg-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-secondary text-[32px] z-10" style="font-variation-settings: 'FILL' 1;">agriculture</span>
+<span class="font-title-lg text-title-lg text-on-surface z-10">Productores</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface-container dark:bg-surface-container fixed bottom-0 w-full z-50 rounded-t-lg shadow-sm fixed bottom-0 left-0 w-full flex justify-around items-center py-3 pb-safe px-4">
+<!-- Active: Explorar -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90 duration-150 relative group">
+<span class="material-symbols-outlined text-[24px] mb-1" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-lg text-label-lg">Explorar</span>
+</button>
+<!-- Inactive: Bodegas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-xl px-4 py-2 group">
+<span class="material-symbols-outlined text-[24px] mb-1 group-hover:text-on-surface transition-colors" style="font-variation-settings: 'FILL' 0;">wine_bar</span>
+<span class="font-label-lg text-label-lg group-hover:text-on-surface transition-colors">Bodegas</span>
+</button>
+<!-- Inactive: Favoritos -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-xl px-4 py-2 group">
+<span class="material-symbols-outlined text-[24px] mb-1 group-hover:text-on-surface transition-colors" style="font-variation-settings: 'FILL' 0;">favorite</span>
+<span class="font-label-lg text-label-lg group-hover:text-on-surface transition-colors">Favoritos</span>
+</button>
+<!-- Inactive: Perfil -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors rounded-xl px-4 py-2 group">
+<span class="material-symbols-outlined text-[24px] mb-1 group-hover:text-on-surface transition-colors" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-lg text-label-lg group-hover:text-on-surface transition-colors">Perfil</span>
+</button>
+</nav>
+<!-- Basic animations -->
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+
+</body></html>

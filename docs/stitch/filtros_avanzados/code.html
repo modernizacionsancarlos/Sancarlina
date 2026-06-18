@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>13. Filtros Avanzados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#496800",
+                        "on-primary-container": "#faffe7",
+                        "surface-container": "#eeeeeb",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#f9f9f6",
+                        "secondary-fixed": "#ffdadb",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e3e0",
+                        "primary-fixed": "#c8f17a",
+                        "primary": "#476500",
+                        "on-error": "#ffffff",
+                        "surface": "#f9f9f6",
+                        "inverse-surface": "#2f312f",
+                        "tertiary-fixed": "#ffdea0",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#40000d",
+                        "surface-variant": "#e2e3e0",
+                        "primary-fixed-dim": "#add461",
+                        "on-primary-fixed-variant": "#364e00",
+                        "inverse-primary": "#add461",
+                        "surface-dim": "#dadad7",
+                        "on-primary-fixed": "#131f00",
+                        "surface-container-high": "#e8e8e5",
+                        "tertiary": "#765700",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#fffbff",
+                        "secondary-container": "#fd7f8a",
+                        "surface-container-low": "#f4f4f1",
+                        "outline": "#747967",
+                        "on-surface-variant": "#444939",
+                        "secondary": "#a33a47",
+                        "on-background": "#1a1c1b",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary-fixed-variant": "#842231",
+                        "inverse-on-surface": "#f1f1ee",
+                        "outline-variant": "#c4c9b4",
+                        "surface-bright": "#f9f9f6",
+                        "primary-container": "#5d7f13",
+                        "on-tertiary-fixed": "#261900",
+                        "tertiary-container": "#956e00",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "on-surface": "#1a1c1b",
+                        "on-secondary-container": "#741627"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "baseline": "4px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom range slider styling for webkit */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #476500; /* primary */
+            cursor: pointer;
+            margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e3e0; /* surface-variant */
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen relative overflow-hidden">
+<!-- Blurred background to simulate being on top of content -->
+<div class="absolute inset-0 bg-surface/80 backdrop-blur-sm z-0">
+<div class="h-full w-full bg-cover bg-center opacity-30" data-alt="A lush, sunlit vineyard stretching across rolling hills. Rows of green grapevines converge towards the horizon under a clear blue sky. The lighting is warm and bright, capturing a serene, agricultural landscape typical of wine country. The aesthetic is natural, earthy, and inviting, perfectly aligning with a premium farm-to-table brand identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAjZB25YxDjwYcTMbdz1bNPYDp6yhs5FcM2tYcfq7AiXzQoZYQxYHZmzvmd-NwwueuhuxJdG_KAMBJInLs-JAOqPS6o7MczmnW1l9y4T9w5ZUxGQHrthvEHuJQfXC8qbDdaNPdQ9BVZBEHvLyC9Umn5AyEfWMyrPJuL_7hr400AvrrCLhz6CXg9RUoBsmO0pfove3qHChkg8ea1mUdmpmQ1zg2r5rvHkx-KRZ_iOYbm-3GCYMpl6S6aXxclvF9DuiF71s3GxaYHpQA-');"></div>
+</div>
+<!-- Filter Overlay/Drawer -->
+<div class="absolute inset-x-0 bottom-0 top-16 md:top-0 md:right-0 md:left-auto md:w-[400px] bg-background shadow-[-8px_0_24px_rgba(45,54,21,0.15)] rounded-t-[2rem] md:rounded-l-[2rem] md:rounded-tr-none z-10 flex flex-col transition-transform transform translate-y-0 md:translate-x-0">
+<!-- Header -->
+<div class="flex items-center justify-between px-margin-tablet py-stack-md border-b border-surface-variant">
+<h2 class="text-title-lg font-title-lg text-on-surface">Filtros Avanzados</h2>
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-margin-tablet py-stack-lg space-y-stack-lg">
+<!-- Distancia -->
+<section>
+<div class="flex justify-between items-center mb-stack-sm">
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface">Distancia</h3>
+<span class="text-label-lg font-label-lg text-primary font-bold" id="distance-val">15 km</span>
+</div>
+<div class="pt-4 pb-2 relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-1 bg-primary rounded-l-full pointer-events-none"></div>
+<input class="w-full appearance-none bg-transparent outline-none z-10 relative" max="50" min="1" oninput="document.getElementById('distance-val').innerText = this.value + ' km'" type="range" value="15">
+</div>
+<div class="flex justify-between text-label-lg font-label-lg text-on-surface-variant mt-2">
+<span class="">1 km</span>
+<span class="">50+ km</span>
+</div>
+</section>
+<!-- Rango de precios -->
+<section>
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface mb-stack-md">Rango de precios</h3>
+<div class="flex space-x-2">
+<button class="flex-1 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors text-label-lg font-label-lg">$</button>
+<button class="flex-1 py-2 rounded-lg bg-primary-container text-on-primary-container font-bold border border-primary-container shadow-sm text-label-lg font-label-lg">$$</button>
+<button class="flex-1 py-2 rounded-lg bg-primary-container text-on-primary-container font-bold border border-primary-container shadow-sm text-label-lg font-label-lg">$$$</button>
+<button class="flex-1 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors text-label-lg font-label-lg">$$$$</button>
+</div>
+</section>
+<!-- Servicios -->
+<section>
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface mb-stack-md">Servicios</h3>
+<div class="grid grid-cols-2 gap-stack-sm">
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant hover:bg-surface-variant transition-colors text-left">
+<span class="material-symbols-outlined text-on-surface-variant">wifi</span>
+<span class="text-label-lg font-label-lg text-on-surface">Wifi</span>
+</button>
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-primary-container border border-primary-container shadow-sm text-left">
+<span class="material-symbols-outlined text-on-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+<span class="text-label-lg font-label-lg text-on-primary-container font-bold">Estacionamiento</span>
+</button>
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-primary-container border border-primary-container shadow-sm text-left">
+<span class="material-symbols-outlined text-on-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">accessible</span>
+<span class="text-label-lg font-label-lg text-on-primary-container font-bold">Accesibilidad</span>
+</button>
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant hover:bg-surface-variant transition-colors text-left">
+<span class="material-symbols-outlined text-on-surface-variant">restaurant</span>
+<span class="text-label-lg font-label-lg text-on-surface">Restaurante</span>
+</button>
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant hover:bg-surface-variant transition-colors text-left">
+<span class="material-symbols-outlined text-on-surface-variant">pets</span>
+<span class="text-label-lg font-label-lg text-on-surface">Pet Friendly</span>
+</button>
+<button class="flex items-center space-x-2 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant hover:bg-surface-variant transition-colors text-left">
+<span class="material-symbols-outlined text-on-surface-variant">local_bar</span>
+<span class="text-label-lg font-label-lg text-on-surface">Degustación</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Sticky Footer Actions -->
+<div class="px-margin-tablet py-stack-md bg-surface-bright border-t border-surface-variant flex gap-stack-md mt-auto pb-safe">
+<button class="flex-1 py-3 px-4 rounded-full text-primary border border-primary font-label-lg text-label-lg hover:bg-surface-variant/50 transition-colors">
+                Limpiar
+            </button>
+<button class="flex-[2] py-3 px-4 rounded-full bg-primary text-on-primary font-label-lg text-label-lg font-bold shadow-sm hover:opacity-90 transition-opacity">
+                Aplicar filtros
+            </button>
+</div>
+</div>
+
+
+</body></html>

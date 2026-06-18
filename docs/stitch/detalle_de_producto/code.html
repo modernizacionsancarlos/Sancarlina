@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>20. Detalle de Producto</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&amp;family=Manrope:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f4f4f1",
+                    "on-primary-fixed-variant": "#364e00",
+                    "surface-bright": "#f9f9f6",
+                    "secondary": "#a33a47",
+                    "surface-variant": "#e2e3e0",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#5d7f13",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#fd7f8a",
+                    "on-secondary-fixed": "#40000d",
+                    "tertiary-fixed": "#ffdea0",
+                    "on-surface-variant": "#444939",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#add461",
+                    "surface-tint": "#496800",
+                    "secondary-fixed-dim": "#ffb2b7",
+                    "surface-container-highest": "#e2e3e0",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1b",
+                    "on-primary-fixed": "#131f00",
+                    "on-secondary-container": "#741627",
+                    "primary-fixed-dim": "#add461",
+                    "on-secondary-fixed-variant": "#842231",
+                    "surface-container-high": "#e8e8e5",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "inverse-surface": "#2f312f",
+                    "primary": "#476500",
+                    "outline-variant": "#c4c9b4",
+                    "tertiary": "#765700",
+                    "on-tertiary-container": "#fffbff",
+                    "on-primary-container": "#faffe7",
+                    "background": "#f9f9f6",
+                    "tertiary-fixed-dim": "#f6be3b",
+                    "surface-container": "#eeeeeb",
+                    "outline": "#747967",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f6",
+                    "on-tertiary-fixed": "#261900",
+                    "surface-dim": "#dadad7",
+                    "primary-fixed": "#c8f17a",
+                    "on-surface": "#1a1c1b",
+                    "secondary-fixed": "#ffdadb",
+                    "inverse-on-surface": "#f1f1ee",
+                    "tertiary-container": "#956e00",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "24px",
+                    "stack-md": "16px",
+                    "margin-tablet": "24px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "baseline": "4px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Manrope"],
+                    "headline-sm": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Manrope"],
+                    "label-lg": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Safe area utilities for modern mobile browsers */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+        
+        /* Hide scrollbar for gallery */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface antialiased text-on-surface">
+<!-- Top App Bar (Contextual overlay for detail screen) -->
+<header class="fixed top-0 w-full z-50 pt-safe px-margin-mobile py-4 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+<button aria-label="Volver" class="w-12 h-12 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface shadow-sm pointer-events-auto active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button aria-label="Añadir a favoritos" class="w-12 h-12 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface shadow-sm pointer-events-auto active:scale-95 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</header>
+<main class="pb-[120px]"> <!-- Padding bottom ensures content isn't hidden behind sticky button -->
+<!-- Image Gallery Hero -->
+<section class="relative w-full h-[486px] bg-surface-variant overflow-hidden">
+<!-- Gallery Container -->
+<div class="flex w-full h-full overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+<!-- Image 1 -->
+<div class="min-w-full h-full snap-center relative">
+<img alt="Malbec Wine Bottle" class="w-full h-full object-cover" data-alt="A close-up, high-quality photograph of a premium Malbec wine bottle, placed elegantly against a textured, dark background. The lighting is moody and dramatic, highlighting the rich, deep ruby colors of the wine label and the sleek silhouette of the glass. The aesthetic is strictly modern corporate blended with organic agricultural heritage, utilizing deep shadows and crisp, pristine highlights to convey a premium, dependable farm-to-table product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmmOQUs64E5R37IYDp4-smX3Hugk2-v1qOH6mOac4MPlBAbGYbLNKMkCYpCRos37yhAqTkDiQ2LEWZUUrPRjYhUABLc6LodfVavETPyXFjvZRX1EEPS-aoKP_03IHFESitP8Fj8Dm4gun__j1iqM7FCzoIvCtY6vnShs9gS-_462QCzFYYFlaUga7FD-dygsvaLRAJs-H_h79k-kvUeLdvlqdWzSee5Q3tGO3_WSpm0xL8MagAoDLDUPfkxDEws9wIaHN6nwxruTZ8">
+</div>
+<!-- Image 2 (Placeholder structure for swipe capability) -->
+<div class="min-w-full h-full snap-center relative bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-display-lg text-outline">wine_bar</span>
+</div>
+</div>
+<!-- Dots Indicator -->
+<div class="absolute bottom-10 left-0 w-full flex justify-center gap-2 z-10">
+<div class="w-6 h-2 rounded-full bg-surface-container-lowest shadow-sm"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-lowest/50 backdrop-blur-sm"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-lowest/50 backdrop-blur-sm"></div>
+</div>
+<!-- Soft gradient overlay at the bottom to transition to content -->
+<div class="absolute bottom-0 w-full h-24 bg-gradient-to-t from-surface to-transparent"></div>
+</section>
+<!-- Product Details Container -->
+<section class="px-margin-mobile -mt-6 relative z-20">
+<!-- Header Info -->
+<div class="mb-stack-lg">
+<div class="flex items-center gap-2 mb-baseline">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-label-lg font-label-lg text-on-surface-variant">Tinto</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-label-lg font-label-lg text-on-surface-variant">Mendoza, Arg</span>
+</div>
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-on-background leading-tight">
+                    Malbec Reserva 2022
+                </h1>
+<div class="mt-stack-sm flex items-end gap-2">
+<span class="text-display-lg font-display-lg text-primary tracking-tight">$15.500</span>
+</div>
+</div>
+<hr class="border-outline-variant/30 mb-stack-lg">
+<!-- Description -->
+<div class="mb-stack-lg">
+<h2 class="text-title-lg font-title-lg text-on-background mb-stack-sm">
+                    Descripción
+                </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+                    Un exponente clásico de la vitivinicultura de altura. Este Malbec Reserva presenta intensas notas de frutos rojos maduros, ciruelas y un sutil toque floral a violetas. Su crianza en barricas de roble durante 12 meses le aporta elegantes matices de vainilla, tabaco y chocolate amargo. En boca es robusto, de taninos suaves y un final largo y persistente, ideal para acompañar carnes rojas y pastas con salsas intensas.
+                </p>
+</div>
+<!-- Additional Details (Bento Grid Style) -->
+<div class="grid grid-cols-2 gap-gutter mb-stack-lg">
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-2">
+<span class="material-symbols-outlined text-outline">local_drink</span>
+<span class="text-label-lg font-label-lg text-on-surface-variant">Crianza</span>
+<span class="text-body-lg font-body-lg text-on-surface font-medium">12 meses Roble</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-2">
+<span class="material-symbols-outlined text-outline">water_drop</span>
+<span class="text-label-lg font-label-lg text-on-surface-variant">Graduación</span>
+<span class="text-body-lg font-body-lg text-on-surface font-medium">14.5% Vol</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-xl border-t border-surface-container px-margin-mobile py-4 pb-safe z-50">
+<!-- Using on-secondary-container to match the requested Burgundy intent within the provided M3 color palette constraints -->
+<button class="w-full bg-on-secondary-container text-on-primary h-14 rounded-lg flex items-center justify-center shadow-[0_4px_12px_rgba(45,54,21,0.15)] active:scale-[0.98] transition-transform">
+<span class="text-title-lg font-title-lg">Consultar disponibilidad</span>
+</button>
+</div>
+
+
+</body></html>

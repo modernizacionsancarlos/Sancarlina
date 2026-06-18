@@ -1,0 +1,248 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>18. Reseñas de Usuarios - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f312f",
+                        "background": "#f9f9f6",
+                        "surface-container-highest": "#e2e3e0",
+                        "outline": "#747967",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-container": "#faffe7",
+                        "outline-variant": "#c4c9b4",
+                        "surface-dim": "#dadad7",
+                        "on-background": "#1a1c1b",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "tertiary-container": "#956e00",
+                        "primary": "#476500",
+                        "on-surface": "#1a1c1b",
+                        "inverse-on-surface": "#f1f1ee",
+                        "surface-tint": "#496800",
+                        "primary-fixed": "#c8f17a",
+                        "on-surface-variant": "#444939",
+                        "on-primary-fixed": "#131f00",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffdadb",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#fd7f8a",
+                        "primary-fixed-dim": "#add461",
+                        "on-secondary-fixed-variant": "#842231",
+                        "inverse-primary": "#add461",
+                        "tertiary-fixed": "#ffdea0",
+                        "on-primary-fixed-variant": "#364e00",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "surface-container-low": "#f4f4f1",
+                        "tertiary": "#765700",
+                        "surface-variant": "#e2e3e0",
+                        "on-secondary-container": "#741627",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "surface": "#f9f9f6",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eeeeeb",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary-fixed": "#40000d",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#5d7f13",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "baseline": "4px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low docked full-width top-0 z-40 sticky">
+<div class="flex justify-between items-center px-margin-mobile h-24 w-full">
+<button aria-label="Menu" class="text-primary dark:text-primary-fixed hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">18. Reseñas de Usuarios</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual with a warm, welcoming expression. The lighting is soft and natural, emphasizing a high-utility, dependable aesthetic. Earth-toned clothing and a clean, unobtrusive background ensure the image blends seamlessly with a corporate modern app interface prioritizing reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkYqK9l2yUKmUwXJ-zqQOSEjDMauYOg0rauMNB4rKGrCquc8_6K96GIJtPizG25tfmDpdVSoCCMscZ9aam0MvKDbkjGSMCAPw3uABoZgeFoHBQ8j3KXCM_Qv26M4EpLPpklqF1j4IhiXXveSxaCPKOT4fid5x9kl-6bhcdDb9_UOPAGLwGWZ3FF2neKUCPwDpEurag9IawFvlLFbdgEoIcQ_yy9L16fAsIxW_3jSGGp8WW5GaJuhysMN7rIC94iOMjVahCoaHrkm2M">
+</div>
+</div>
+</header>
+<main class="flex-1 px-margin-mobile md:px-margin-tablet py-stack-md max-w-4xl mx-auto w-full flex flex-col gap-stack-lg">
+<!-- Summary Section -->
+<section class="bg-surface rounded-lg shadow-[0_4px_16px_rgba(45,54,21,0.05)] p-stack-lg flex flex-col md:flex-row items-center gap-stack-lg relative overflow-hidden">
+<!-- Decorative Background Element -->
+<div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex flex-col items-center justify-center flex-shrink-0 z-10">
+<span class="text-display-lg font-display-lg text-primary">4.8</span>
+<div class="flex items-center text-tertiary-fixed-dim gap-1 mt-stack-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="text-label-lg font-label-lg text-on-surface-variant mt-baseline">Basado en 124 reseñas</span>
+</div>
+<div class="flex-1 w-full space-y-2 z-10">
+<!-- Progress Bars -->
+<div class="flex items-center gap-stack-sm text-body-md font-body-md text-on-surface-variant">
+<span class="w-2">5</span>
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[85%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm text-body-md font-body-md text-on-surface-variant">
+<span class="w-2">4</span>
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary/70 rounded-full w-[10%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm text-body-md font-body-md text-on-surface-variant">
+<span class="w-2">3</span>
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary/50 rounded-full w-[3%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm text-body-md font-body-md text-on-surface-variant">
+<span class="w-2">2</span>
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary/30 rounded-full w-[1%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm text-body-md font-body-md text-on-surface-variant">
+<span class="w-2">1</span>
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary/10 rounded-full w-[1%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters -->
+<section class="flex gap-stack-sm overflow-x-auto pb-baseline scrollbar-hide -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-label-lg font-label-lg flex-shrink-0 flex items-center gap-2 border border-transparent shadow-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+                Más recientes
+            </button>
+<button class="px-4 py-2 rounded-full bg-surface text-on-surface-variant border border-outline-variant text-label-lg font-label-lg flex-shrink-0 hover:bg-surface-variant/50 transition-colors">
+                Mejor puntuadas
+            </button>
+<button class="px-4 py-2 rounded-full bg-surface text-on-surface-variant border border-outline-variant text-label-lg font-label-lg flex-shrink-0 hover:bg-surface-variant/50 transition-colors">
+                Con fotos
+            </button>
+</section>
+<!-- Reviews List -->
+<section class="flex flex-col gap-stack-md">
+<!-- Review Card 1 -->
+<article class="bg-surface rounded-lg p-stack-md shadow-[0_4px_16px_rgba(45,54,21,0.05)] border border-surface-container-highest relative group hover:shadow-[0_8px_24px_rgba(45,54,21,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-stack-sm">
+<div class="flex items-center gap-stack-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
+<img alt="Avatar de Carlos M." class="w-full h-full object-cover" data-alt="A warm, candid portrait of a young man outdoors, suggesting approachability and reliability. He is wearing earth-toned, slightly textured clothing. The background is softly out of focus, featuring subtle hints of green foliage and soft sunlight, fitting an agricultural or farm-to-table corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYuo41r3zkpZ7uwbcoDXdjMcC7N1hZCVvT7ChpR-IgJwQpTyZhinHPz0PCklrP2_aQPz-73JeqziaqvBpJcA-Uh3kC6oq9J6TQf9zlmI4PFBZK3-iEiceivOqsH-kifYXYOcXDt_zVqJQS9h24pJksM2lsZN72eOx9T61ZXmXMJN1Vkt-WetRONxDBXX730fFVsSt8HmZ43u8OllfLi63-nRrtXKemwMkGEXkfunHH0MbzQOJufB3E-Ihva1QXq_mGrArbEn3inNOa">
+</div>
+<div>
+<h3 class="text-title-lg font-title-lg text-on-surface text-[16px] leading-tight">Carlos M.</h3>
+<span class="text-body-md font-body-md text-on-surface-variant text-[12px]">Hace 2 días</span>
+</div>
+</div>
+<div class="flex text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface">Excelente experiencia. La visita a la bodega fue muy informativa y los vinos degustados superaron mis expectativas. El entorno es inmejorable, definitivamente volveremos en la próxima cosecha.</p>
+</article>
+<!-- Review Card 2 -->
+<article class="bg-surface rounded-lg p-stack-md shadow-[0_4px_16px_rgba(45,54,21,0.05)] border border-surface-container-highest relative group hover:shadow-[0_8px_24px_rgba(45,54,21,0.08)] transition-shadow">
+<div class="flex justify-between items-start mb-stack-sm">
+<div class="flex items-center gap-stack-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0 text-primary flex items-center justify-center font-title-lg bg-primary-container">
+                             MR
+                        </div>
+<div>
+<h3 class="text-title-lg font-title-lg text-on-surface text-[16px] leading-tight">María R.</h3>
+<span class="text-body-md font-body-md text-on-surface-variant text-[12px]">Hace 1 semana</span>
+</div>
+</div>
+<div class="flex text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface">Muy buen servicio y atención. Los viñedos están preciosos en esta época del año. Un poco de espera al principio, pero valió la pena.</p>
+</article>
+<!-- Loading Indicator -->
+<div class="py-stack-lg flex justify-center">
+<button class="px-6 py-2 rounded-full border border-outline text-primary text-label-lg font-label-lg hover:bg-surface-variant/50 transition-colors">
+                    Cargar más reseñas
+                 </button>
+</div>
+</section>
+</main>
+
+
+</body></html>

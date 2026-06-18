@@ -1,0 +1,176 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>33. Legal y Privacidad - gondolApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#c8f17a",
+                        "on-surface-variant": "#444939",
+                        "on-primary-fixed": "#131f00",
+                        "surface-tint": "#496800",
+                        "on-surface": "#1a1c1b",
+                        "inverse-on-surface": "#f1f1ee",
+                        "tertiary-container": "#956e00",
+                        "primary": "#476500",
+                        "tertiary-fixed-dim": "#f6be3b",
+                        "on-background": "#1a1c1b",
+                        "surface-dim": "#dadad7",
+                        "outline-variant": "#c4c9b4",
+                        "outline": "#747967",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-container": "#faffe7",
+                        "surface-container-highest": "#e2e3e0",
+                        "inverse-surface": "#2f312f",
+                        "background": "#f9f9f6",
+                        "on-secondary-fixed-variant": "#842231",
+                        "inverse-primary": "#add461",
+                        "secondary-container": "#fd7f8a",
+                        "primary-fixed-dim": "#add461",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdadb",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f6",
+                        "secondary-fixed-dim": "#ffb2b7",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#741627",
+                        "surface-variant": "#e2e3e0",
+                        "tertiary": "#765700",
+                        "surface-container-low": "#f4f4f1",
+                        "surface-container-high": "#e8e8e5",
+                        "on-tertiary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#364e00",
+                        "tertiary-fixed": "#ffdea0",
+                        "primary-container": "#5d7f13",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#40000d",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "surface-bright": "#f9f9f6",
+                        "secondary": "#a33a47",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eeeeeb",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "baseline": "4px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Manrope"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "title-lg": ["Manrope"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "label-lg": ["Manrope"],
+                        "headline-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #c4c9b4; border-radius: 4px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased h-screen flex flex-col overflow-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top App Bar (Adapted for transactional flow - minimal) -->
+<header class="bg-surface-container-low flex justify-between items-center px-margin-mobile h-24 w-full flex-shrink-0 z-10 relative">
+<button aria-label="Volver" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">gondolApp</h1>
+<div class="w-12 h-12"></div> <!-- Balancing spacer -->
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto custom-scrollbar relative">
+<div class="max-w-3xl mx-auto px-margin-mobile md:px-margin-tablet pt-stack-md pb-[140px]">
+<header class="mb-stack-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-stack-sm">Acuerdo Legal y Privacidad</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Por favor, lee detenidamente los siguientes términos antes de continuar utilizando la plataforma.</p>
+</header>
+<article class="bg-surface-container-lowest rounded-DEFAULT p-stack-md md:p-stack-lg shadow-[0_4px_16px_rgba(45,54,21,0.04)] mb-stack-lg border border-surface-container-high">
+<section class="mb-stack-lg">
+<div class="flex items-center gap-3 mb-stack-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<h3 class="font-title-lg text-title-lg text-on-surface">Términos y Condiciones</h3>
+</div>
+<div class="space-y-4 font-body-md text-body-md text-on-surface-variant">
+<p class="">Al acceder y utilizar gondolApp, usted acepta estar sujeto a estos términos y condiciones. Nuestra plataforma facilita la conexión entre entusiastas del vino y bodegas locales, promoviendo una experiencia agrícola y enológica responsable.</p>
+<p class=""><strong>Uso de la Plataforma:</strong> El usuario se compromete a utilizar los servicios de manera lícita, respetando la propiedad intelectual de las bodegas y la integridad de la información proporcionada. Cualquier uso indebido, incluyendo la extracción de datos no autorizada, resultará en la suspensión de la cuenta.</p>
+<p class=""><strong>Reservas y Transacciones:</strong> Las reservas realizadas a través de gondolApp están sujetas a la disponibilidad y políticas de cancelación específicas de cada bodega asociada. gondolApp actúa como intermediario y no se responsabiliza por cambios de última hora ajenos a nuestro control operativo.</p>
+</div>
+</section>
+<hr class="border-t border-surface-variant my-stack-md">
+<section>
+<div class="flex items-center gap-3 mb-stack-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+<h3 class="font-title-lg text-title-lg text-on-surface">Política de Privacidad</h3>
+</div>
+<div class="space-y-4 font-body-md text-body-md text-on-surface-variant">
+<p class="">En gondolApp, valoramos y protegemos su privacidad como si fuera nuestra propia cosecha. Esta política describe cómo recopilamos, utilizamos y salvaguardamos su información personal.</p>
+<p class=""><strong>Recopilación de Datos:</strong> Recopilamos información básica de registro (nombre, correo electrónico) y datos de ubicación (solo cuando la app está en uso y con su consentimiento expreso) para recomendarle las mejores experiencias enológicas cercanas.</p>
+<p class=""><strong>Uso y Compartición:</strong> Sus datos no serán vendidos a terceros. Solo compartimos la información estrictamente necesaria con las bodegas al momento de concretar una reserva para asegurar su correcta atención. Utilizamos cifrado de extremo a extremo para proteger su historial de visitas y preferencias.</p>
+<p class="">Puede solicitar la eliminación total de sus datos en cualquier momento desde la sección de configuración de su perfil.</p>
+</div>
+</section>
+</article>
+</div>
+</main>
+<!-- Fixed Action Bottom Bar (Replaces BottomNavBar for this transactional intent) -->
+<div class="absolute bottom-0 left-0 w-full bg-surface-container/95 backdrop-blur-md pt-stack-md pb-stack-lg px-margin-mobile border-t border-surface-variant shadow-[0_-8px_24px_rgba(45,54,21,0.06)] z-20">
+<div class="max-w-3xl mx-auto flex flex-col sm:flex-row gap-stack-md sm:justify-end">
+<button class="w-full sm:w-auto px-8 py-3 rounded-full border border-outline text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant/50 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">close</span>
+                Rechazar
+            </button>
+<button class="w-full sm:w-auto px-8 py-3 rounded-full bg-secondary text-on-secondary font-label-lg text-label-lg hover:bg-secondary/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">check</span>
+                Aceptar
+            </button>
+</div>
+</div>
+
+
+</body></html>
