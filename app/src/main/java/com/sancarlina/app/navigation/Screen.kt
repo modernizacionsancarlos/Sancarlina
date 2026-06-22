@@ -31,6 +31,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object NewsDetail : Screen("news_detail", "Novedad")
     object Legal : Screen("legal", "Legal")
     object PointsHistory : Screen("points_history", "Historial")
+    object InstitutionalInfo : Screen("institutional_info", "Institucional")
     
     object ProductDetail : Screen("product_detail/{productId}", "Detalle") {
         fun createRoute(productId: String) = "product_detail/$productId"
@@ -43,6 +44,9 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     }
     object RateCommerce : Screen("rate_commerce/{commerceId}", "Calificar") {
         fun createRoute(commerceId: String) = "rate_commerce/$commerceId"
+    }
+    object UserReviews : Screen("commerce_reviews/{commerceId}", "Reseñas") {
+        fun createRoute(commerceId: String) = "commerce_reviews/$commerceId"
     }
     object ServiciosSello : Screen("servicios_sello", "Servicios")
 }

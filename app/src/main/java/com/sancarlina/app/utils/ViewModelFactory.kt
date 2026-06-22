@@ -49,6 +49,9 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             modelClass.isAssignableFrom(QrScannerViewModel::class.java) -> {
                 QrScannerViewModel() as T
             }
+            modelClass.isAssignableFrom(ReviewsViewModel::class.java) -> {
+                ReviewsViewModel(container.tenantsRepository) as T
+            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

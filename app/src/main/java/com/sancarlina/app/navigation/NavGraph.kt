@@ -35,6 +35,7 @@ import com.sancarlina.app.ui.features.home.NewsDetailContent
 import com.sancarlina.app.ui.features.legal.LegalContent
 import com.sancarlina.app.ui.features.map.CommerceProfileContent
 import com.sancarlina.app.ui.features.map.RateCommerceContent
+import com.sancarlina.app.ui.features.map.UserReviewsContent
 import com.sancarlina.app.ui.features.notifications.NotificationsContent
 import com.sancarlina.app.ui.features.notifications.NotificationSettingsContent
 import com.sancarlina.app.ui.features.points.BenefitsContent
@@ -43,6 +44,7 @@ import com.sancarlina.app.ui.features.points.QrScannerContent
 import com.sancarlina.app.ui.features.product.ProductDetailContent
 import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
 import com.sancarlina.app.ui.features.support.SupportContent
+import com.sancarlina.app.ui.features.support.InstitutionalInfoContent
 import com.sancarlina.app.ui.features.splash.SplashContent
 import com.sancarlina.app.R
 import com.sancarlina.app.utils.BrowserUtils
@@ -289,7 +291,8 @@ fun SancarlinaNavGraph(
                 onNavigateToLegal = { navController.navigate(Screen.Legal.route) },
                 onOpenPrivacyPolicy = {
                     BrowserUtils.openCustomTab(context, privacyPolicyUrl)
-                }
+                },
+                onNavigateToInstitutional = { navController.navigate(Screen.InstitutionalInfo.route) }
             )
         }
         composable(Screen.Favorites.route) {
@@ -310,6 +313,12 @@ fun SancarlinaNavGraph(
                 onBack = { navController.popBackStack() },
                 onNavigateToProduct = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
+                },
+                onNavigateToReviews = { id ->
+                    navController.navigate(Screen.UserReviews.createRoute(id))
+                },
+                onNavigateToRate = { id ->
+                    navController.navigate(Screen.RateCommerce.createRoute(id))
                 }
             )
         }
@@ -320,8 +329,20 @@ fun SancarlinaNavGraph(
                 onBack = { navController.popBackStack() }
             )
         }
+        composable(Screen.UserReviews.route) { backStackEntry ->
+            val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
+            val reviewsViewModel: ReviewsViewModel = viewModel(factory = factory)
+            UserReviewsContent(
+                commerceId = commerceId,
+                viewModel = reviewsViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
         composable(Screen.Legal.route) {
             LegalContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.InstitutionalInfo.route) {
+            InstitutionalInfoContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.ProductDetail.route) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""

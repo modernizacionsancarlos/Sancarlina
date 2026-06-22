@@ -162,4 +162,22 @@
     <string name="servicios_categories">Rubros destacados</string>
     <string name="guide_continue">Tocá para continuar</string>
     <string name="guide_done">¡Entendido!</string>
+
+    <!-- Institutional Info Screen -->
+    <string name="institutional_title">Información Institucional</string>
+    <string name="institutional_modernizacion">Dirección de Modernización</string>
+    <string name="institutional_mision_title">Nuestra Misión</string>
+    <string name="institutional_mision_body">Impulsar la transformación digital y la innovación en la gestión pública local. Nos dedicamos a acercar los servicios municipales a los vecinos de manera eficiente, transparente y accesible, consolidando a San Carlos como una ciudad inteligente que honra sus raíces y su patrimonio.</string>
+    <string name="institutional_team_title">Nuestro Equipo</string>
+    <string name="institutional_connect_title">Conéctate con nosotros</string>
+
+    <!-- User Reviews Screen -->
+    <string name="reviews_title">Reseñas de Usuarios</string>
+    <string name="reviews_summary_based_on">Basado en %1$d reseñas</string>
+    <string name="reviews_filter_recent">Más recientes</string>
+    <string name="reviews_filter_top">Mejor puntuadas</string>
+    <string name="reviews_filter_photos">Con fotos</string>
+    <string name="reviews_load_more">Cargar más reseñas</string>
+    <string name="reviews_empty_title">Sin reseñas aún</string>
+    <string name="reviews_empty_message">Este comercio todavía no tiene reseñas de usuarios. ¡Sé el primero en dejar una calificación!</string>
 </resources>

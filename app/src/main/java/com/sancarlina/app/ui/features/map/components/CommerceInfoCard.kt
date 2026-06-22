@@ -10,6 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,7 +28,8 @@ import com.sancarlina.app.ui.theme.SancarlinaPrimary
 @Composable
 fun CommerceInfoCard(
     tenant: Tenant,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRatingClick: () -> Unit = {}
 ) {
     SancarlinaCard(modifier = modifier) {
         Text(
@@ -54,8 +59,14 @@ fun CommerceInfoCard(
 
         if (tenant.rating > 0.0) {
             Spacer(modifier = Modifier.height(12.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Star, null, tint = SancarlinaPrimary, modifier = Modifier.size(18.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { onRatingClick() }
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+            ) {
+                Icon(Icons.Default.Star, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
                 val reviewsSuffix = if (tenant.reviewsCount > 0) {
                     " (${tenant.reviewsCount})"
@@ -63,7 +74,8 @@ fun CommerceInfoCard(
                 Text(
                     text = "${tenant.rating}$reviewsSuffix",
                     style = MaterialTheme.typography.labelLarge,
-                    color = SancarlinaOnSurface
+                    color = SancarlinaPrimary,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }

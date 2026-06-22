@@ -7,8 +7,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.runtime.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +26,17 @@ fun ProductInfoSection(
     product: ProductDetail,
     modifier: Modifier = Modifier
 ) {
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
+
+    if (selectedImageIndex != null) {
+        ImageGalleryDialog(
+            images = product.galleryImages,
+            initialIndex = selectedImageIndex!!,
+            productName = product.name,
+            onDismiss = { selectedImageIndex = null }
+        )
+    }
+
     Column(modifier = modifier.fillMaxWidth()) {
         if (product.tags.isNotEmpty()) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -94,7 +107,8 @@ fun ProductInfoSection(
                         contentDescription = null,
                         modifier = Modifier
                             .size(140.dp)
-                            .clip(SancarlinaCardShape),
+                            .clip(SancarlinaCardShape)
+                            .clickable { selectedImageIndex = product.galleryImages.indexOf(imageUrl) },
                         contentScale = ContentScale.Crop
                     )
                 }

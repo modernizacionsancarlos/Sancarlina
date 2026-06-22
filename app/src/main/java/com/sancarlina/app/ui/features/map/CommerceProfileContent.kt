@@ -31,6 +31,7 @@ import com.sancarlina.app.R
 import com.sancarlina.app.data.models.FormSchema
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.ui.components.SancarlinaCard
+import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.features.map.components.CommerceInfoCard
 import com.sancarlina.app.ui.features.map.components.CommerceProfileHero
 import com.sancarlina.app.ui.theme.*
@@ -42,7 +43,9 @@ fun CommerceProfileContent(
     commerceId: String,
     viewModel: CommerceProfileViewModel,
     onBack: () -> Unit,
-    onNavigateToProduct: (String) -> Unit
+    onNavigateToProduct: (String) -> Unit,
+    onNavigateToReviews: (String) -> Unit = {},
+    onNavigateToRate: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -86,7 +89,18 @@ fun CommerceProfileContent(
                             .offset(y = (-24).dp)
                             .padding(horizontal = 16.dp)
                     ) {
-                        CommerceInfoCard(tenant = tenant)
+                        CommerceInfoCard(
+                            tenant = tenant,
+                            onRatingClick = { onNavigateToReviews(tenant.id) }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        SancarlinaPrimaryButton(
+                            text = "Calificar comercio",
+                            onClick = { onNavigateToRate(tenant.id) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 

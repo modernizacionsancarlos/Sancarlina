@@ -28,7 +28,8 @@ fun SupportContent(
     onBack: () -> Unit,
     onOpenDrawer: () -> Unit = {},
     onNavigateToLegal: () -> Unit = {},
-    onOpenPrivacyPolicy: () -> Unit = {}
+    onOpenPrivacyPolicy: () -> Unit = {},
+    onNavigateToInstitutional: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -101,7 +102,7 @@ fun SupportContent(
                 )
                 LegalMenuItem(
                     text = stringResource(R.string.support_about),
-                    onClick = onNavigateToLegal,
+                    onClick = onNavigateToInstitutional,
                     showDivider = false
                 )
             }
