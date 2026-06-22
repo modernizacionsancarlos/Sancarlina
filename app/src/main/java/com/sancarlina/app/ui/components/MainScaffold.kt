@@ -467,7 +467,9 @@ private fun DrawerItem(
 @Composable
 fun GondolappBottomBar(navController: NavHostController, currentDestination: String?) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding(),
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = SancarlinaBottomBarShape,
         tonalElevation = 3.dp,
@@ -477,7 +479,6 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .navigationBarsPadding()
                 .padding(horizontal = 4.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
