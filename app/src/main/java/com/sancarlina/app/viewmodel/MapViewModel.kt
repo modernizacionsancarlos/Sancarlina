@@ -158,12 +158,23 @@ class MapViewModel(
         }
     }
 
+    fun onSearchQueryChanged(query: String) {
+        _uiState.update { state ->
+            val updatedState = state.copy(searchQuery = query)
+            updatedState.copy(filteredMarkers = applyFilters(updatedState))
+        }
+    }
+
     private fun applyFilters(state: MapUiState): List<CommerceMarker> {
         return state.markers.filter { marker ->
-            val categoryMatch = state.selectedCategory == "Todos" || marker.category == state.selectedCategory
-            val locationMatch = state.selectedLocation == "Todas" || marker.locationName == state.selectedLocation
+            val categoryMatch = state.selectedCategory == "Todos" || marker.category.equals(state.selectedCategory, ignoreCase = true)
+            val locationMatch = state.selectedLocation == "Todas" || marker.locationName.equals(state.selectedLocation, ignoreCase = true)
+            val queryMatch = state.searchQuery.isBlank() || 
+                marker.name.contains(state.searchQuery, ignoreCase = true) || 
+                marker.category.contains(state.searchQuery, ignoreCase = true) ||
+                marker.locationName.contains(state.searchQuery, ignoreCase = true)
             val selloMatch = !state.onlyWithSello
-            categoryMatch && locationMatch && selloMatch
+            categoryMatch && locationMatch && queryMatch && selloMatch
         }
     }
 
@@ -176,7 +187,8 @@ class MapViewModel(
             val updatedState = state.copy(
                 selectedCategory = "Todos",
                 selectedLocation = "Todas",
-                onlyWithSello = false
+                onlyWithSello = false,
+                searchQuery = ""
             )
             updatedState.copy(filteredMarkers = updatedState.markers)
         }

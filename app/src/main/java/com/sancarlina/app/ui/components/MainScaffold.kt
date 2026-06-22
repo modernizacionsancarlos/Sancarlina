@@ -281,7 +281,7 @@ fun MainScaffold() {
             Scaffold(
                 containerColor = SancarlinaSurface,
                 topBar = {
-                    if (isMainView) {
+                    if (isMainView && currentDestination != Screen.Map.route) {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = SancarlinaSurfaceContainerLow

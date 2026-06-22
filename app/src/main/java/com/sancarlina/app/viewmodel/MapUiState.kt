@@ -13,7 +13,8 @@ data class MapUiState(
     val selectedMarker: CommerceMarker? = null,
     val isBottomSheetVisible: Boolean = false,
     val isFilterPanelVisible: Boolean = false,
-    val isLocationPermissionGranted: Boolean = false
+    val isLocationPermissionGranted: Boolean = false,
+    val searchQuery: String = ""
 )
 
 data class CommerceMarker(
