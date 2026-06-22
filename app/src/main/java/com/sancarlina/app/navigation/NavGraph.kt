@@ -137,6 +137,15 @@ fun SancarlinaNavGraph(
                 onNavigateToNews = { navController.navigate(Screen.NewsDetail.route) }
             )
         }
+        composable(Screen.BodegasTab.route) {
+            CategoryListContent(
+                categoryId = "BODEGAS",
+                onBack = { navController.popBackStack() },
+                onNavigateToDetail = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                }
+            )
+        }
         composable(Screen.Search.route) {
             SearchContent(
                 onBack = { navController.popBackStack() },

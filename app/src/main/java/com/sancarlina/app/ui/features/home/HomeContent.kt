@@ -78,9 +78,6 @@ internal fun HomeContentBody(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            HomeWelcomeHeader()
-            Spacer(modifier = Modifier.height(16.dp))
-
             HomeSearchBar(onClick = onNavigateToSearch)
             Spacer(modifier = Modifier.height(24.dp))
 

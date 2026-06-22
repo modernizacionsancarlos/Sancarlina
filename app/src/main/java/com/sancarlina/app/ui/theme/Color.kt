@@ -63,8 +63,8 @@ val SancarlinaOnError = Color(0xFFFFFFFF)
 val SancarlinaErrorContainer = Color(0xFFFFDAD6)
 val SancarlinaOnErrorContainer = Color(0xFF93000A)
 
-// Indicador pill bottom nav — tinte olive suave Stitch
-val SancarlinaNavIndicator = SancarlinaPrimaryFixedDim.copy(alpha = 0.35f)
+// Indicador pill bottom nav — tinte burgundy/rosa suave Stitch
+val SancarlinaNavIndicator = Color(0xFFFFB2B7)
 
 // Legacy compatibility
 val SancarlinaAccent = SancarlinaSecondary

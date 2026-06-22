@@ -12,6 +12,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Points : Screen("points", "Puntos", Icons.Default.Stars)
     object QrScanner : Screen("qr_scanner", "Escanear QR")
     object Profile : Screen("profile", "Perfil", Icons.Default.Person)
+    object BodegasTab : Screen("bodegas_tab", "Bodegas", Icons.Default.WineBar)
 
     // Other screens
     object SplashScreen : Screen("splash", "Splash")
@@ -20,7 +21,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Register : Screen("register", "Registro")
     object ForgotPassword : Screen("forgot_password", "Recuperar")
     object Offline : Screen("offline", "Offline")
-    object Favorites : Screen("favorites", "Favoritos")
+    object Favorites : Screen("favorites", "Favoritos", Icons.Default.FavoriteBorder)
     object EditProfile : Screen("edit_profile", "Mis Datos")
     object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")
     object Notifications : Screen("notifications", "Notificaciones")
