@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeoutOrNull
 
 class HomeViewModel(
     private val tenantsRepository: TenantsRepository
@@ -34,13 +35,13 @@ class HomeViewModel(
 
         viewModelScope.launch {
             try {
-                // 1. Fetch Tenants
-                val tenants = tenantsRepository.getActiveTenants()
+                // 1. Fetch Tenants con timeout
+                val tenants = withTimeoutOrNull(5000) { tenantsRepository.getActiveTenants() } ?: emptyList()
                 _uiState.update { it.copy(tenants = tenants) }
 
                 // 2. Fetch Banners
-                val bannerSnapshot = firestore.collection("banners").get().await()
-                if (!bannerSnapshot.isEmpty) {
+                val bannerSnapshot = withTimeoutOrNull(5000) { firestore.collection("banners").get().await() }
+                if (bannerSnapshot != null && !bannerSnapshot.isEmpty) {
                     val banners = bannerSnapshot.documents.map { doc ->
                         BannerItem(
                             title = doc.getString("title") ?: "",
@@ -52,8 +53,8 @@ class HomeViewModel(
                 }
 
                 // 3. Fetch Categories
-                val categorySnapshot = firestore.collection("categories").orderBy("order").get().await()
-                if (!categorySnapshot.isEmpty) {
+                val categorySnapshot = withTimeoutOrNull(5000) { firestore.collection("categories").orderBy("order").get().await() }
+                if (categorySnapshot != null && !categorySnapshot.isEmpty) {
                     val categories = categorySnapshot.documents.map { doc ->
                         CategoryItem(
                             name = doc.getString("name") ?: "",
@@ -64,13 +65,15 @@ class HomeViewModel(
                 }
 
                 // 4. Fetch Featured Product (Nearby)
-                val productSnapshot = firestore.collection("products")
-                    .whereEqualTo("featured", true)
-                    .limit(1)
-                    .get()
-                    .await()
+                val productSnapshot = withTimeoutOrNull(5000) {
+                    firestore.collection("products")
+                        .whereEqualTo("featured", true)
+                        .limit(1)
+                        .get()
+                        .await()
+                }
                     
-                val productDoc = productSnapshot.documents.firstOrNull()
+                val productDoc = productSnapshot?.documents?.firstOrNull()
                 if (productDoc != null) {
                     val product = ProductItem(
                         id = productDoc.id,

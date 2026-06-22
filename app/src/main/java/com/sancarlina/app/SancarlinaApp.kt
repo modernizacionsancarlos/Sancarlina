@@ -18,7 +18,13 @@ class SancarlinaApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        container = AppContainer()
+        android.util.Log.i("GondolApp", "SancarlinaApp: Iniciando aplicación...")
+        try {
+            container = AppContainer()
+            android.util.Log.i("GondolApp", "SancarlinaApp: Contenedor de dependencias inicializado.")
+        } catch (e: Exception) {
+            android.util.Log.e("GondolApp", "SancarlinaApp: ERROR al inicializar AppContainer", e)
+        }
         
         // Rastreador de estado de la aplicación (Primer plano / Segundo plano)
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {

@@ -1,6 +1,8 @@
 package com.sancarlina.app.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -60,11 +62,16 @@ fun SancarlinaTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = SancarlinaBackground.toArgb()
-            window.navigationBarColor = SancarlinaSurfaceContainer.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
-            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = true
+            val context = view.context
+            val activity = context as? Activity 
+                ?: (context as? ContextWrapper)?.baseContext as? Activity
+            
+            activity?.window?.let { window ->
+                window.statusBarColor = SancarlinaBackground.toArgb()
+                window.navigationBarColor = SancarlinaSurfaceContainer.toArgb()
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = true
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 class SplashViewModel(
     private val tenantsRepository: TenantsRepository,
@@ -25,13 +26,15 @@ class SplashViewModel(
     private fun prepareData() {
         viewModelScope.launch {
             try {
-                // Pre-fetch critical data with a timeout or error handling
-                tenantsRepository.getActiveTenants()
-                areasRepository.getAreas()
-                _isReady.value = true
+                // Pre-fetch critical data with a timeout to avoid hanging the splash screen (max 5s)
+                withTimeoutOrNull(5000) {
+                    tenantsRepository.getActiveTenants()
+                    areasRepository.getAreas()
+                }
             } catch (e: Exception) {
                 Logger.e("Splash data pre-fetch failed", e)
-                // If it fails, we still allow entry to avoid blocking the user
+            } finally {
+                // Always set to ready to allow entry even if fetch failed or timed out
                 _isReady.value = true
             }
         }

@@ -17,10 +17,18 @@ import com.sancarlina.app.ui.theme.SancarlinaTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        android.util.Log.i("GondolApp", "MainActivity: onCreate iniciado.")
+        try {
+            enableEdgeToEdge()
+            android.util.Log.i("GondolApp", "MainActivity: edgeToEdge habilitado.")
+        } catch (e: Exception) {
+            android.util.Log.e("GondolApp", "MainActivity: ERROR en enableEdgeToEdge", e)
+        }
+        
         setContent {
+            android.util.Log.i("GondolApp", "MainActivity: setContent ejecutándose.")
             val permissionLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestPermission()
+                ActivityResultContracts.RequestPermission(),
             ) { }
 
             LaunchedEffect(Unit) {

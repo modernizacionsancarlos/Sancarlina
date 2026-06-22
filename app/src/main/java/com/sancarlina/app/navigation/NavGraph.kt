@@ -3,9 +3,9 @@ package com.sancarlina.app.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,8 +55,36 @@ fun SancarlinaNavGraph(
     onOnboardingFinished: () -> Unit = {},
     onOpenDrawer: () -> Unit = {}
 ) {
-    val app = LocalContext.current.applicationContext as SancarlinaApp
-    val factory = ViewModelFactory(app.container)
+    LaunchedEffect(Unit) {
+        android.util.Log.i("GondolApp", "SancarlinaNavGraph: Composición iniciada.")
+    }
+
+    val context = LocalContext.current
+    val app = remember(context) { context.applicationContext as? SancarlinaApp }
+    
+    if (app == null) {
+        // Fallback simple si por alguna razón no podemos acceder al Application personalizado
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Error: Application Context is null or invalid")
+        }
+        return
+    }
+
+    val factory = remember(app) { 
+        try {
+            ViewModelFactory(app.container)
+        } catch (e: Exception) {
+            android.util.Log.e("GondolApp", "NavGraph: Error accessing app.container", e)
+            null
+        }
+    }
+
+    if (factory == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Error: Dependency container not initialized")
+        }
+        return
+    }
 
     NavHost(
         navController = navController,
@@ -66,16 +94,24 @@ fun SancarlinaNavGraph(
         composable(Screen.SplashScreen.route) {
             val splashViewModel: SplashViewModel = viewModel(factory = factory)
             val isReady by splashViewModel.isReady.collectAsState()
+            var timeoutFinished by remember { mutableStateOf(false) }
 
             SplashContent(
                 onTimeout = {
-                    if (isReady) {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.SplashScreen.route) { inclusive = true }
-                        }
-                    }
+                    timeoutFinished = true
                 }
             )
+
+            // Navegar solo cuando AMBOS están listos: datos pre-cargados y tiempo de splash cumplido
+            LaunchedEffect(isReady, timeoutFinished) {
+                android.util.Log.d("GondolApp", "SplashState: isReady=$isReady, timeoutFinished=$timeoutFinished")
+                if (isReady && timeoutFinished) {
+                    android.util.Log.i("GondolApp", "Navigating to Home from Splash")
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
+                }
+            }
         }
         composable(Screen.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = factory)

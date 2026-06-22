@@ -25,16 +25,12 @@ if (mapsApiKey.isEmpty()) {
 
 android {
     namespace = "com.sancarlina.app"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.sancarlina.app"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 59
         versionName = "8.1.2"
 
