@@ -32,7 +32,7 @@
     <string name="points_history_empty_message">Cuando uses tus puntos o acumules beneficios, verás el historial acá.</string>
     <string name="turismo_title">Explora San Carlos</string>
     <string name="turismo_subtitle">Descubre paisajes y cultura en el corazón del Valle de Uco.</string>
-    <string name="turismo_search_hint">Buscar lugares…</string>
+    <string name="turismo_search_hint">Buscar en San Carlos…</string>
     <string name="turismo_empty_title">Próximamente</string>
     <string name="turismo_empty_message">Estamos preparando los puntos turísticos de San Carlos para mostrarte en la app.</string>
     <string name="map_title">Mapa Sancarlino</string>

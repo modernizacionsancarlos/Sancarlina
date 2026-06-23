@@ -51,12 +51,14 @@ fun SancarlinaFilterChip(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null
 ) {
     FilterChip(
         selected = selected,
         onClick = onClick,
         label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        leadingIcon = leadingIcon,
         modifier = modifier,
         shape = SancarlinaChipShape,
         colors = FilterChipDefaults.filterChipColors(

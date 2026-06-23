@@ -3,8 +3,12 @@ package com.sancarlina.app.ui.features.turismo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,31 +50,43 @@ fun TurismoContent(
             .fillMaxSize()
             .background(SancarlinaBackground)
     ) {
-        Column(
+        TurismoSearchBar(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(SancarlinaSurfaceContainerLow)
-        ) {
-            TurismoHeroSection()
-            TurismoSearchBar(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp, bottom = 4.dp)
+        )
 
         if (categoryChips.isNotEmpty()) {
-            Row(
+            LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .padding(horizontal = 16.dp),
+                    .padding(vertical = 8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                categoryChips.forEach { category ->
+                items(categoryChips) { category ->
+                    val icon = when (category.lowercase(java.util.Locale.ROOT)) {
+                        "todos" -> Icons.Default.Explore
+                        "bodegas", "bodegas y vinos", "vino", "vinos" -> Icons.Default.WineBar
+                        "gastronomía", "gastronomia", "comida", "restaurante", "restaurantes" -> Icons.Default.Restaurant
+                        "historia", "cultura", "museo", "museos" -> Icons.Default.AccountBalance
+                        "naturaleza", "paisaje", "paisajes", "parque", "parques", "aventura" -> Icons.Default.Landscape
+                        else -> null
+                    }
+
                     SancarlinaFilterChip(
                         label = category,
                         selected = uiState.selectedCategory == category,
-                        onClick = { viewModel.onCategorySelected(category) }
+                        onClick = { viewModel.onCategorySelected(category) },
+                        leadingIcon = if (icon != null) {
+                            {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        } else null
                     )
                 }
             }

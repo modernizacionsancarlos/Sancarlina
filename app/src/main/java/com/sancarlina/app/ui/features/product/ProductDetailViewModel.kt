@@ -30,33 +30,12 @@ class ProductDetailViewModel : ViewModel() {
                         phone = doc.getString("phone") ?: "5492622000000"
                     )
                     _uiState.update { it.copy(product = item, isLoading = false, notFound = false) }
-                } else if (BuildConfig.DEBUG) {
-                    loadMockProduct(productId)
                 } else {
                     _uiState.update { it.copy(product = null, isLoading = false, notFound = true) }
                 }
             }
             .addOnFailureListener {
-                if (BuildConfig.DEBUG) {
-                    loadMockProduct(productId)
-                } else {
-                    _uiState.update { it.copy(product = null, isLoading = false, notFound = true) }
-                }
+                _uiState.update { it.copy(product = null, isLoading = false, notFound = true) }
             }
-    }
-
-    /** Solo builds DEBUG — no visible en release. */
-    private fun loadMockProduct(id: String) {
-        val mock = ProductDetail(
-            id = id,
-            name = "Miel Sancarlina (Debug)",
-            location = "Eugenio Bustos",
-            description = "Nuestra miel es recolectada de las flores autóctonas del Valle de Uco, garantizando un sabor puro y natural.",
-            imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAw8yHTSfDNpOTxDnxzX1zQwB-zC4n_GoYRCOiJ9kDgy6JO-Mfi8wUELdjCqs1PD0RZ5rgMJQmWWTLKSeEZ5s9J6SuJuMf5wvcA-qBwpFgILnIurTUzqV6UHsl4IHcDN3v44YYf7tLACr0xnXhKm2e1UJe0mAbntvBcLEj3MrrM07MlyaibnOAdaAIdEBckuCO1s9B_Sy3C-y9b8SGELmQvO1IVAJAaXaJjo_gzlhpFWEUVcRS6dZU2dKaLZJCciPPaLQHK-kanZug",
-            galleryImages = emptyList(),
-            tags = listOf("Orgánico", "Local"),
-            phone = "5492622000000"
-        )
-        _uiState.update { it.copy(product = mock, isLoading = false, notFound = false) }
     }
 }
