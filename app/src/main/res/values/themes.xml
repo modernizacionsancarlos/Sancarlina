@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- Tema normal de la aplicación -->
     <style name="Theme.Sancarlina" parent="android:Theme.Material.Light.NoActionBar" />
+    
+    <!-- Tema para la pantalla de carga nativa del sistema Android -->
+    <style name="Theme.Sancarlina.Launcher" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:statusBarColor">@color/splash_background</item>
+        <item name="android:navigationBarColor">@color/splash_background</item>
+    </style>
 </resources>

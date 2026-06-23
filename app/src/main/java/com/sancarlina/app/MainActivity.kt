@@ -16,6 +16,7 @@ import com.sancarlina.app.ui.theme.SancarlinaTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Sancarlina)
         super.onCreate(savedInstanceState)
         android.util.Log.i("GondolApp", "MainActivity: onCreate iniciado.")
         try {

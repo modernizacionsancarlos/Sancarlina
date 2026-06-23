@@ -62,21 +62,22 @@ fun SplashContent(onTimeout: () -> Unit) {
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
+                painter = painterResource(id = R.drawable.ic_gondolapp_splash_logo),
                 contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .fillMaxWidth(0.6f) // Ajustar tamaño del pin transparente con soporte
                     .aspectRatio(1f)
                     .scale(pulseScale)
                     .alpha(pulseAlpha),
                 contentScale = ContentScale.Fit
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
             CircularProgressIndicator(
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(40.dp),
                 color = SancarlinaPrimary,
+                trackColor = SancarlinaPrimary.copy(alpha = 0.2f),
                 strokeWidth = 4.dp
             )
             Spacer(modifier = Modifier.height(16.dp))
