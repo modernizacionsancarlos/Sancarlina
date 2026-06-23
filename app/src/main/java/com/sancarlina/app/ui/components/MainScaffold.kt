@@ -2,6 +2,7 @@ package com.sancarlina.app.ui.components
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -486,15 +487,17 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
             bottomNavItems.forEach { screen ->
                 val isSelected = currentDestination == screen.route
                 if (screen == Screen.Map) {
-                    // Botón de Mapa Resaltado (FAB Docked)
-                    Box(
+                    val contentColor = if (isSelected) {
+                        MaterialTheme.colorScheme.secondary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
-                            .size(52.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (isSelected) MaterialTheme.colorScheme.secondary 
-                                else MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
-                            )
+                            .clip(RoundedCornerShape(percent = 50))
                             .clickable {
                                 if (!isSelected) {
                                     navController.navigate(screen.route) {
@@ -503,14 +506,41 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                                         restoreState = true
                                     }
                                 }
-                            },
-                        contentAlignment = Alignment.Center
+                            }
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Icon(
-                            imageVector = screen.icon ?: Icons.Default.Map,
-                            contentDescription = screen.title,
-                            tint = if (isSelected) Color.White else MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.size(26.dp)
+                        Surface(
+                            shape = CircleShape,
+                            color = Color.White,
+                            shadowElevation = if (isSelected) 4.dp else 1.dp,
+                            border = BorderStroke(
+                                width = if (isSelected) 2.dp else 1.dp,
+                                color = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                            ),
+                            modifier = Modifier.size(42.dp)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(if (isSelected) 4.dp else 6.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(3.dp))
+                        
+                        Text(
+                            text = screen.title,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = contentColor,
+                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
                         )
                     }
                 } else {
