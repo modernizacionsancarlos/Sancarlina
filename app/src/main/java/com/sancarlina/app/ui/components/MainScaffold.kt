@@ -509,29 +509,17 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                             }
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = Color.White,
-                            shadowElevation = if (isSelected) 4.dp else 1.dp,
-                            border = BorderStroke(
-                                width = if (isSelected) 2.dp else 1.dp,
-                                color = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                            ),
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier.size(42.dp)
                         ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(if (isSelected) 4.dp else 6.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_gondolapp_splash_logo),
+                                contentDescription = null,
+                                modifier = Modifier.size(if (isSelected) 40.dp else 34.dp),
+                                contentScale = ContentScale.Fit,
+                                alpha = if (isSelected) 1f else 0.6f
+                            )
                         }
                         
                         Spacer(modifier = Modifier.height(3.dp))
