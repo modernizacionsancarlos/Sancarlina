@@ -5,8 +5,15 @@
     
     <!-- Tema para la pantalla de carga nativa del sistema Android -->
     <style name="Theme.Sancarlina.Launcher" parent="Theme.SplashScreen">
+        <!-- Para API 31+ (Leído por el sistema de Android antes de iniciar el proceso de la app) -->
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_gondolapp_splash_logo</item>
+
+        <!-- Para API < 31 (Leído por la librería de compatibilidad androidx.core:core-splashscreen) -->
         <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_gondolapp_splash_logo</item>
+
+        <!-- Tema posterior a la pantalla de carga -->
         <item name="postSplashScreenTheme">@style/Theme.Sancarlina</item>
     </style>
 </resources>
