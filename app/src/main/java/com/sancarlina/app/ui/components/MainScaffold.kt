@@ -98,7 +98,7 @@ fun MainScaffold() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = isMainView,
+        gesturesEnabled = isMainView && currentDestination != Screen.Map.route,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = SancarlinaSurface,
