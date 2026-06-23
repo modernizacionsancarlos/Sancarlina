@@ -4,10 +4,9 @@
     <style name="Theme.Sancarlina" parent="android:Theme.Material.Light.NoActionBar" />
     
     <!-- Tema para la pantalla de carga nativa del sistema Android -->
-    <style name="Theme.Sancarlina.Launcher" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:statusBarColor">@color/splash_background</item>
-        <item name="android:navigationBarColor">@color/splash_background</item>
+    <style name="Theme.Sancarlina.Launcher" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_gondolapp_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Sancarlina</item>
     </style>
 </resources>

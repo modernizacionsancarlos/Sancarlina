@@ -11,12 +11,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sancarlina.app.ui.components.MainScaffold
 import com.sancarlina.app.ui.theme.SancarlinaTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_Sancarlina)
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         android.util.Log.i("GondolApp", "MainActivity: onCreate iniciado.")
         try {
