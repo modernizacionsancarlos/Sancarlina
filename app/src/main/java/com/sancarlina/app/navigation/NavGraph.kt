@@ -32,6 +32,7 @@ import com.sancarlina.app.ui.features.profile.ProfileContent
 import com.sancarlina.app.ui.features.profile.EditProfileContent
 import com.sancarlina.app.ui.features.home.HomeContent
 import com.sancarlina.app.ui.features.turismo.TurismoContent
+import com.sancarlina.app.ui.features.turismo.TurismoDetailContent
 import com.sancarlina.app.ui.features.map.MapContent
 import com.sancarlina.app.ui.features.home.SearchContent
 import com.sancarlina.app.ui.features.home.NewsDetailContent
@@ -178,7 +179,19 @@ fun SancarlinaNavGraph(
             val turismoViewModel: TurismoViewModel = viewModel(factory = factory)
             TurismoContent(
                 viewModel = turismoViewModel,
-                onOpenDrawer = onOpenDrawer
+                onOpenDrawer = onOpenDrawer,
+                onNavigateToPoint = { pointId ->
+                    navController.navigate(Screen.TurismoDetail.createRoute(pointId))
+                }
+            )
+        }
+        composable(Screen.TurismoDetail.route) { backStackEntry ->
+            val pointId = backStackEntry.arguments?.getString("pointId") ?: ""
+            val detailViewModel: TurismoDetailViewModel = viewModel(factory = factory)
+            TurismoDetailContent(
+                pointId = pointId,
+                viewModel = detailViewModel,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Screen.Login.route) {

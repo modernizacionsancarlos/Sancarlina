@@ -47,7 +47,11 @@ class TurismoViewModel(
                             imageUrl = doc.getString("imageUrl") ?: "",
                             category = doc.getString("category") ?: "",
                             location = doc.getString("location") ?: "San Carlos Centro",
-                            rating = doc.getDouble("rating") ?: 0.0
+                            rating = doc.getDouble("rating") ?: 0.0,
+                            phone = doc.getString("phone") ?: "",
+                            schedule = doc.getString("schedule") ?: "",
+                            latitude = doc.getDouble("latitude") ?: 0.0,
+                            longitude = doc.getDouble("longitude") ?: 0.0
                         )
                     }
                 } else {

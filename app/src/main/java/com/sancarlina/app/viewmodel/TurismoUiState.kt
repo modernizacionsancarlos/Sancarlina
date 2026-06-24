@@ -15,5 +15,9 @@ data class TurismoPoint(
     val imageUrl: String = "",
     val category: String = "",
     val location: String = "San Carlos",
-    val rating: Double = 0.0
+    val rating: Double = 0.0,
+    val phone: String = "",
+    val schedule: String = "",
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
 )

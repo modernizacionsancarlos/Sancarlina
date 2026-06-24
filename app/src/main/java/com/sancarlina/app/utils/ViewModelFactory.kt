@@ -31,6 +31,9 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             modelClass.isAssignableFrom(TurismoViewModel::class.java) -> {
                 TurismoViewModel(container.tenantsRepository, container.areasRepository) as T
             }
+            modelClass.isAssignableFrom(TurismoDetailViewModel::class.java) -> {
+                TurismoDetailViewModel(container.tenantsRepository, container.areasRepository) as T
+            }
             modelClass.isAssignableFrom(CommerceProfileViewModel::class.java) -> {
                 CommerceProfileViewModel(container.tenantsRepository, container.formsRepository) as T
             }
