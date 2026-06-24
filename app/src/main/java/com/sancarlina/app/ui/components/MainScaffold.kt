@@ -63,7 +63,7 @@ fun MainScaffold() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
-    val isMainView = bottomNavItems.any { it.route == currentDestination }
+    val isMainView = bottomNavItems.any { it.route == currentDestination } || currentDestination == Screen.Search.route
 
     // Observador de red: una instancia por composición (no recrear en cada recomposición)
     val connectivityObserver = remember { NetworkConnectivityObserver(context) }
@@ -99,7 +99,7 @@ fun MainScaffold() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = isMainView && currentDestination != Screen.Map.route,
+        gesturesEnabled = isMainView && currentDestination != Screen.Map.route && currentDestination != Screen.Search.route,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = SancarlinaSurface,
@@ -282,7 +282,7 @@ fun MainScaffold() {
             Scaffold(
                 containerColor = SancarlinaSurface,
                 topBar = {
-                    if (isMainView && currentDestination != Screen.Map.route) {
+                    if (isMainView && currentDestination != Screen.Map.route && currentDestination != Screen.Search.route) {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = SancarlinaSurfaceContainerLow
@@ -485,7 +485,8 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
             verticalAlignment = Alignment.CenterVertically
         ) {
             bottomNavItems.forEach { screen ->
-                val isSelected = currentDestination == screen.route
+                val isSelected = currentDestination == screen.route ||
+                    (screen == Screen.Home && currentDestination == Screen.Search.route)
                 if (screen == Screen.Map) {
                     val contentColor = if (isSelected) {
                         MaterialTheme.colorScheme.secondary

@@ -1,6 +1,8 @@
 package com.sancarlina.app.ui.features.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchContent(
     viewModel: SearchViewModel = viewModel(),
@@ -40,47 +41,52 @@ fun SearchContent(
             .fillMaxSize()
             .background(SancarlinaSurface)
     ) {
-        // Search Header
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = SancarlinaSurfaceContainerLow
+        // Search Header (Pill shaped directly on cream background, matching mockup)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            Row(
+            OutlinedTextField(
+                value = uiState.query,
+                onValueChange = { viewModel.onQueryChange(it) },
+                placeholder = { Text("Buscar en Sancarlina...", color = SancarlinaOutline) },
                 modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
-                }
-                
-                TextField(
-                    value = uiState.query,
-                    onValueChange = { viewModel.onQueryChange(it) },
-                    placeholder = { Text("¿Qué estás buscando?", color = SancarlinaOutline) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(56.dp),
-                    shape = RoundedCornerShape(28.dp),
-                    leadingIcon = { Icon(Icons.Default.Search, null, tint = SancarlinaOutline) },
-                    trailingIcon = {
-                        if (uiState.query.isNotEmpty()) {
-                            IconButton(onClick = { viewModel.onQueryChange("") }) {
-                                Icon(Icons.Default.Close, stringResource(R.string.cd_close), tint = SancarlinaOutline)
-                            }
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = CircleShape,
+                leadingIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Volver",
+                            tint = SancarlinaPrimary
+                        )
+                    }
+                },
+                trailingIcon = {
+                    if (uiState.query.isNotEmpty()) {
+                        IconButton(onClick = { viewModel.onQueryChange("") }) {
+                            Icon(Icons.Default.Close, stringResource(R.string.cd_close), tint = SancarlinaOutline)
                         }
-                    },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = SancarlinaSurfaceContainerLowest,
-                        unfocusedContainerColor = SancarlinaSurfaceContainerLowest,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = SancarlinaPrimary
-                    ),
-                    singleLine = true
-                )
-            }
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Mic,
+                            contentDescription = "Búsqueda por voz",
+                            tint = SancarlinaOutline
+                        )
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = SancarlinaPrimary,
+                    unfocusedBorderColor = SancarlinaPrimary,
+                    cursorColor = SancarlinaPrimary
+                ),
+                singleLine = true
+            )
         }
 
         Column(

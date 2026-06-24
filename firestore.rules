@@ -86,6 +86,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /turismo_points/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
 
     // --- Admin-only (web panel) ---
     match /AuditLogs/{id} {
