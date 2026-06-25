@@ -11,9 +11,17 @@ data class HomeUiState(
 )
 
 data class BannerItem(
+    val id: String = "",
     val title: String = "",
     val subtitle: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val content: String = "",
+    val date: String = "",
+    val tag: String = "",
+    val authorName: String = "",
+    val authorRole: String = "",
+    val authorImageUrl: String = "",
+    val readingTime: String = "3 min de lectura"
 )
 
 data class CategoryItem(

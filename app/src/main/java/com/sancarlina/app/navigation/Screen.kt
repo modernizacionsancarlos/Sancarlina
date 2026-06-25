@@ -29,7 +29,10 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Success : Screen("success", "Éxito")
     object Support : Screen("support", "Soporte")
     object Search : Screen("search", "Búsqueda")
-    object NewsDetail : Screen("news_detail", "Novedad")
+    object NewsList : Screen("news_list", "Revista", Icons.Default.Newspaper)
+    object NewsDetail : Screen("news_detail/{newsId}", "Novedad") {
+        fun createRoute(newsId: String) = "news_detail/$newsId"
+    }
     object Legal : Screen("legal", "Legal")
     object PointsHistory : Screen("points_history", "Historial")
     object InstitutionalInfo : Screen("institutional_info", "Institucional")

@@ -55,6 +55,12 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             modelClass.isAssignableFrom(ReviewsViewModel::class.java) -> {
                 ReviewsViewModel(container.tenantsRepository) as T
             }
+            modelClass.isAssignableFrom(NewsListViewModel::class.java) -> {
+                NewsListViewModel() as T
+            }
+            modelClass.isAssignableFrom(NewsDetailViewModel::class.java) -> {
+                NewsDetailViewModel() as T
+            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

@@ -36,6 +36,7 @@ import com.sancarlina.app.ui.features.turismo.TurismoDetailContent
 import com.sancarlina.app.ui.features.map.MapContent
 import com.sancarlina.app.ui.features.home.SearchContent
 import com.sancarlina.app.ui.features.home.NewsDetailContent
+import com.sancarlina.app.ui.features.home.NewsListContent
 import com.sancarlina.app.ui.features.legal.LegalContent
 import com.sancarlina.app.ui.features.map.CommerceProfileContent
 import com.sancarlina.app.ui.features.map.RateCommerceContent
@@ -142,7 +143,7 @@ fun SancarlinaNavGraph(
                 },
                 onOpenDrawer = onOpenDrawer,
                 onNavigateToSearch = { navController.navigate(Screen.Search.route) },
-                onNavigateToNews = { navController.navigate(Screen.NewsDetail.route) }
+                onNavigateToNews = { navController.navigate(Screen.NewsList.route) }
             )
         }
         composable(Screen.BodegasTab.route) {
@@ -380,10 +381,23 @@ fun SancarlinaNavGraph(
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(Screen.NewsDetail.route) {
-            NewsDetailContent(
+        composable(Screen.NewsList.route) {
+            val newsListViewModel: NewsListViewModel = viewModel(factory = factory)
+            NewsListContent(
+                viewModel = newsListViewModel,
                 onBack = { navController.popBackStack() },
-                onNavigateToMap = { navController.navigate(Screen.Map.route) }
+                onNavigateToDetail = { newsId ->
+                    navController.navigate(Screen.NewsDetail.createRoute(newsId))
+                }
+            )
+        }
+        composable(Screen.NewsDetail.route) { backStackEntry ->
+            val newsId = backStackEntry.arguments?.getString("newsId") ?: ""
+            val newsDetailViewModel: NewsDetailViewModel = viewModel(factory = factory)
+            NewsDetailContent(
+                newsId = newsId,
+                viewModel = newsDetailViewModel,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Screen.ServiciosSello.route) {

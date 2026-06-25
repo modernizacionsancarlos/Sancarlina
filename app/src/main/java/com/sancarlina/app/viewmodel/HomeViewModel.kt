@@ -44,9 +44,17 @@ class HomeViewModel(
                 val banners = if (bannerSnapshot != null && !bannerSnapshot.isEmpty) {
                     bannerSnapshot.documents.map { doc ->
                         BannerItem(
+                            id = doc.id,
                             title = doc.getString("title") ?: "",
                             subtitle = doc.getString("subtitle") ?: "",
-                            imageUrl = doc.getString("imageUrl") ?: ""
+                            imageUrl = doc.getString("imageUrl") ?: "",
+                            content = doc.getString("content") ?: "",
+                            date = doc.getString("date") ?: "",
+                            tag = doc.getString("tag") ?: "",
+                            authorName = doc.getString("authorName") ?: "",
+                            authorRole = doc.getString("authorRole") ?: "",
+                            authorImageUrl = doc.getString("authorImageUrl") ?: "",
+                            readingTime = doc.getString("readingTime") ?: "3 min de lectura"
                         )
                     }
                 } else {
