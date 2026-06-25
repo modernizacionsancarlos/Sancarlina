@@ -31,7 +31,7 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 59
+        versionCode = 58
         versionName = "8.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
