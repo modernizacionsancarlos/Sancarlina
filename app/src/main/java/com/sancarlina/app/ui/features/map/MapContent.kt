@@ -20,8 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaFilterChip
@@ -39,6 +41,9 @@ fun MapContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val fusedLocationClient = remember(context) {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 12f)
     }
@@ -68,11 +73,14 @@ fun MapContent(
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            properties = MapProperties(isMyLocationEnabled = uiState.isLocationPermissionGranted),
+            properties = MapProperties(
+                isMyLocationEnabled = uiState.isLocationPermissionGranted,
+                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
+            ),
             uiSettings = MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = false)
         ) {
             uiState.filteredMarkers.forEach { marker ->
-                val markerState = rememberMarkerState(position = marker.position)
+                val markerState = rememberUpdatedMarkerState(position = marker.position)
                 
                 // Mostrar InfoWindowContent personalizada en forma de popover flotante
                 MarkerInfoWindowContent(
@@ -159,7 +167,20 @@ fun MapContent(
             FloatingActionButton(
                 onClick = {
                     if (uiState.isLocationPermissionGranted) {
-                        cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 14f)
+                        try {
+                            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                                if (location != null) {
+                                    cameraPositionState.position = CameraPosition.fromLatLngZoom(
+                                        LatLng(location.latitude, location.longitude),
+                                        15f
+                                    )
+                                } else {
+                                    cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 14f)
+                                }
+                            }
+                        } catch (e: SecurityException) {
+                            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 14f)
+                        }
                     } else {
                         permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                     }

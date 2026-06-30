@@ -109,26 +109,38 @@ fun MainScaffold() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(SancarlinaPrimary.copy(alpha = 0.08f))
-                        .padding(top = 48.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
+                        .background(
+                            brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                colors = listOf(SancarlinaPrimary, SancarlinaSecondary)
+                            )
+                        )
+                        .padding(top = 56.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = Color.White,
+                        modifier = Modifier.size(72.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_gondolapp_symbol),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .fillMaxSize()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaPrimary
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Black,
+                        color = Color.White
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = currentUserEmail ?: "Modo Invitado",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SancarlinaOnSurfaceVariant,
+                        color = Color.White.copy(alpha = 0.8f),
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -142,11 +154,12 @@ fun MainScaffold() {
                         .padding(horizontal = 12.dp, vertical = 16.dp)
                 ) {
                     Text(
-                        text = "Explorar",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = SancarlinaPrimary,
-                        modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
-                        fontWeight = FontWeight.Bold
+                        text = "EXPLORAR",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = SancarlinaOutline,
+                        modifier = Modifier.padding(start = 24.dp, top = 8.dp, bottom = 8.dp),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified
                     )
                     DrawerItem(
                         label = "Inicio",
@@ -176,11 +189,12 @@ fun MainScaffold() {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = SancarlinaOutlineVariant.copy(alpha = 0.2f))
                     
                     Text(
-                        text = "Comunidad y Servicios",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = SancarlinaPrimary,
-                        modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
-                        fontWeight = FontWeight.Bold
+                        text = "COMUNIDAD Y SERVICIOS",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = SancarlinaOutline,
+                        modifier = Modifier.padding(start = 24.dp, bottom = 8.dp),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified
                     )
                     DrawerItem(
                         label = "Mis Favoritos",
@@ -210,11 +224,12 @@ fun MainScaffold() {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = SancarlinaOutlineVariant.copy(alpha = 0.2f))
 
                     Text(
-                        text = "Información",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = SancarlinaPrimary,
-                        modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
-                        fontWeight = FontWeight.Bold
+                        text = "INFORMACIÓN",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = SancarlinaOutline,
+                        modifier = Modifier.padding(start = 24.dp, bottom = 8.dp),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified
                     )
                     DrawerItem(
                         label = "Ayuda y Soporte",
@@ -449,19 +464,25 @@ private fun DrawerItem(
     onClick: () -> Unit
 ) {
     NavigationDrawerItem(
-        label = { Text(label, style = MaterialTheme.typography.bodyMedium) },
+        label = { 
+            Text(
+                label, 
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+            ) 
+        },
         selected = selected,
         onClick = onClick,
-        icon = { Icon(icon, contentDescription = null) },
+        icon = { Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp)) },
         colors = NavigationDrawerItemDefaults.colors(
-            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f),
-            selectedTextColor = MaterialTheme.colorScheme.secondary,
-            selectedIconColor = MaterialTheme.colorScheme.secondary,
-            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+            selectedContainerColor = SancarlinaPrimary.copy(alpha = 0.12f),
+            selectedTextColor = SancarlinaPrimary,
+            selectedIconColor = SancarlinaPrimary,
+            unselectedTextColor = SancarlinaOnSurface,
+            unselectedIconColor = SancarlinaOnSurfaceVariant
         ),
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.padding(vertical = 2.dp)
+        shape = RoundedCornerShape(percent = 50),
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
     )
 }
 
