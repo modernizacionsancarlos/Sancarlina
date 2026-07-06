@@ -20,11 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.widget.Toast
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
+import kotlinx.coroutines.launch
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaFilterChip
 import com.sancarlina.app.ui.features.home.FlowRow
@@ -41,15 +45,20 @@ fun MapContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val fusedLocationClient = remember(context) {
         LocationServices.getFusedLocationProviderClient(context)
     }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 12f)
+        position = CameraPosition.builder()
+            .target(LatLng(-33.7483, -69.0436))
+            .zoom(14f)
+            .tilt(45f)
+            .build()
     }
 
     // Lógica para comprobar y solicitar permisos de ubicación del usuario
-    val hasLocationPermission = remember(context) {
+    val hasLocationPermission = remember(context, uiState.isLocationPermissionGranted) {
         ContextCompat.checkSelfPermission(
             context,
             android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -65,7 +74,27 @@ fun MapContent(
     ) { isGranted ->
         viewModel.onPermissionResult(isGranted)
         if (isGranted) {
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 13f)
+            try {
+                fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener { location ->
+                        if (location != null) {
+                            scope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdateFactory.newCameraPosition(
+                                        CameraPosition.builder()
+                                            .target(LatLng(location.latitude, location.longitude))
+                                            .zoom(16f)
+                                            .tilt(45f)
+                                            .build()
+                                    ),
+                                    1000
+                                )
+                            }
+                        }
+                    }
+            } catch (e: SecurityException) {
+                // Ignore
+            }
         }
     }
 
@@ -75,9 +104,20 @@ fun MapContent(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 isMyLocationEnabled = uiState.isLocationPermissionGranted,
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
+                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style),
+                isBuildingEnabled = true,
+                isIndoorEnabled = true
             ),
-            uiSettings = MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = false)
+            uiSettings = MapUiSettings(
+                zoomControlsEnabled = false,
+                myLocationButtonEnabled = false,
+                compassEnabled = false,
+                mapToolbarEnabled = false,
+                tiltGesturesEnabled = true,
+                rotationGesturesEnabled = true,
+                zoomGesturesEnabled = true,
+                scrollGesturesEnabled = true
+            )
         ) {
             uiState.filteredMarkers.forEach { marker ->
                 val markerState = rememberUpdatedMarkerState(position = marker.position)
@@ -138,7 +178,7 @@ fun MapContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
         ) {
             MapFloatingTopBar(
                 searchQuery = uiState.searchQuery,
@@ -161,25 +201,63 @@ fun MapContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 96.dp, end = 16.dp),
+                .padding(bottom = 16.dp, end = 16.dp),
             contentAlignment = Alignment.BottomEnd
         ) {
             FloatingActionButton(
                 onClick = {
                     if (uiState.isLocationPermissionGranted) {
                         try {
-                            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                                if (location != null) {
-                                    cameraPositionState.position = CameraPosition.fromLatLngZoom(
-                                        LatLng(location.latitude, location.longitude),
-                                        15f
-                                    )
-                                } else {
-                                    cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 14f)
+                            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                                .addOnSuccessListener { location ->
+                                    if (location != null) {
+                                        scope.launch {
+                                            cameraPositionState.animate(
+                                                CameraUpdateFactory.newCameraPosition(
+                                                    CameraPosition.builder()
+                                                        .target(LatLng(location.latitude, location.longitude))
+                                                        .zoom(16f)
+                                                        .tilt(45f)
+                                                        .build()
+                                                ),
+                                                1000
+                                            )
+                                        }
+                                    } else {
+                                        // Fallback to lastLocation
+                                        fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                                            if (lastLoc != null) {
+                                                scope.launch {
+                                                    cameraPositionState.animate(
+                                                        CameraUpdateFactory.newCameraPosition(
+                                                            CameraPosition.builder()
+                                                                .target(LatLng(lastLoc.latitude, lastLoc.longitude))
+                                                                .zoom(16f)
+                                                                .tilt(45f)
+                                                                .build()
+                                                        ),
+                                                        1000
+                                                    )
+                                                }
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "No se pudo determinar tu ubicación actual.",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        }
+                                    }
                                 }
-                            }
+                                .addOnFailureListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Error al obtener ubicación. Verificá que el GPS esté activo.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                         } catch (e: SecurityException) {
-                            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(-33.7483, -69.0436), 14f)
+                            Toast.makeText(context, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
