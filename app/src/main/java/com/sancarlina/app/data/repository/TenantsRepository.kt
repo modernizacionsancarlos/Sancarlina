@@ -21,7 +21,12 @@ class TenantsRepository(
                 .await()
             
             val tenants = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Tenant::class.java)?.copy(id = doc.id)
+                try {
+                    doc.toObject(Tenant::class.java)?.copy(id = doc.id)
+                } catch (e: Exception) {
+                    Logger.e("Error deserializing tenant ${doc.id}", e)
+                    null
+                }
             }
             cachedTenants = tenants
             

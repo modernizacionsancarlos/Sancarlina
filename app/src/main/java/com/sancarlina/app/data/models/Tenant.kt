@@ -20,10 +20,18 @@ data class Tenant(
     var imageUrl: String = "",
     @get:PropertyName("photo_url") @set:PropertyName("photo_url")
     var photoUrl: String = "",
-    val rating: Double = 0.0,
+    @get:PropertyName("rating") @set:PropertyName("rating")
+    var ratingValue: Any = 0.0,
     @get:PropertyName("reviews_count") @set:PropertyName("reviews_count")
     var reviewsCount: Int = 0
-)
+) {
+    val rating: Double
+        get() = when (val r = ratingValue) {
+            is Number -> r.toDouble()
+            is String -> r.toDoubleOrNull() ?: 0.0
+            else -> 0.0
+        }
+}
 
 fun Tenant.displayImageUrl(): String {
     return imageUrl.ifBlank { coverUrl }.ifBlank { photoUrl }
