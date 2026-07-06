@@ -25,14 +25,26 @@ class AuthViewModel(
     override val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     override fun login(email: String, password: String, onSuccess: () -> Unit) {
-        if (email.isBlank() || password.isBlank()) {
+        val sanitizedEmail = com.sancarlina.app.utils.InputValidator.sanitizeText(email, 80)
+        if (sanitizedEmail.isBlank() || password.isBlank()) {
             _uiState.update { it.copy(error = "Completa todos los campos") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.InputValidator.isValidEmail(sanitizedEmail)) {
+            _uiState.update { it.copy(error = "Formato de correo electrónico inválido") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("login", 5000L)) {
+            val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("login", 5000L) / 1000) + 1
+            _uiState.update { it.copy(error = "Demasiados intentos de inicio de sesión. Reintenta en $remainingSecs segundos.") }
             return
         }
 
         _uiState.update { it.copy(isLoading = true, error = null) }
 
-        auth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(sanitizedEmail, password)
             .addOnSuccessListener {
                 _uiState.update { it.copy(isLoading = false) }
                 onSuccess()
@@ -43,8 +55,16 @@ class AuthViewModel(
     }
 
     fun register(name: String, email: String, password: String, confirm: String, onSuccess: () -> Unit) {
-        if (name.isBlank() || email.isBlank() || password.isBlank()) {
+        val sanitizedName = com.sancarlina.app.utils.InputValidator.sanitizeText(name, 50)
+        val sanitizedEmail = com.sancarlina.app.utils.InputValidator.sanitizeText(email, 80)
+
+        if (sanitizedName.isBlank() || sanitizedEmail.isBlank() || password.isBlank()) {
             _uiState.update { it.copy(error = "Completa todos los campos") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.InputValidator.isValidEmail(sanitizedEmail)) {
+            _uiState.update { it.copy(error = "Formato de correo electrónico inválido") }
             return
         }
 
@@ -53,14 +73,25 @@ class AuthViewModel(
             return
         }
 
+        if (password.length < 6) {
+            _uiState.update { it.copy(error = "La contraseña debe tener al menos 6 caracteres") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("register", 10000L)) {
+            val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("register", 10000L) / 1000) + 1
+            _uiState.update { it.copy(error = "Por favor espera $remainingSecs segundos antes de crear una cuenta.") }
+            return
+        }
+
         _uiState.update { it.copy(isLoading = true, error = null) }
 
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(sanitizedEmail, password)
             .addOnSuccessListener { result ->
                 val uid = result.user?.uid ?: ""
                 viewModelScope.launch {
                     try {
-                        userRepository.syncUserProfile(uid, email, name)
+                        userRepository.syncUserProfile(uid, sanitizedEmail, sanitizedName)
                         _uiState.update { it.copy(isLoading = false) }
                         onSuccess()
                     } catch (e: Exception) {

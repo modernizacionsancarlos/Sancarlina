@@ -67,12 +67,36 @@ class EditProfileViewModel : ViewModel() {
 
     fun saveProfile() {
         val user = auth.currentUser ?: return
-        _uiState.update { it.copy(isSaving = true, error = null) }
+        
+        val sanitizedName = com.sancarlina.app.utils.InputValidator.sanitizeText(_uiState.value.fullName, 50)
+        val sanitizedPhone = com.sancarlina.app.utils.InputValidator.sanitizeText(_uiState.value.phone, 20)
+        val sanitizedLocation = com.sancarlina.app.utils.InputValidator.sanitizeText(_uiState.value.location, 100)
+
+        if (sanitizedName.isBlank()) {
+            _uiState.update { it.copy(error = "El nombre no puede estar vacío.") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("save_profile", 10000L)) {
+            val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("save_profile", 10000L) / 1000) + 1
+            _uiState.update { it.copy(error = "Por favor espera $remainingSecs segundos antes de guardar otra vez.") }
+            return
+        }
+
+        _uiState.update { 
+            it.copy(
+                isSaving = true, 
+                error = null,
+                fullName = sanitizedName,
+                phone = sanitizedPhone,
+                location = sanitizedLocation
+            ) 
+        }
 
         val data = mapOf(
-            "user_name" to _uiState.value.fullName,
-            "phone" to _uiState.value.phone,
-            "location" to _uiState.value.location
+            "user_name" to sanitizedName,
+            "phone" to sanitizedPhone,
+            "location" to sanitizedLocation
         )
 
         viewModelScope.launch {
@@ -133,6 +157,12 @@ class EditProfileViewModel : ViewModel() {
         }
         if (password.isBlank()) {
             _uiState.update { it.copy(error = "Ingresá tu contraseña actual.") }
+            return
+        }
+
+        if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("delete_account", 10000L)) {
+            val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("delete_account", 10000L) / 1000) + 1
+            _uiState.update { it.copy(error = "Por favor espera $remainingSecs segundos.") }
             return
         }
 

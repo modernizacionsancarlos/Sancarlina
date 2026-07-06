@@ -47,19 +47,39 @@ class EmprendimientoViewModel : ViewModel() {
         }
 
         val state = _uiState.value
-        if (state.nombre.isBlank() || state.categoria.isBlank() || state.telefono.isBlank() || state.ubicacion.isBlank()) {
+        val sanitizedNombre = com.sancarlina.app.utils.InputValidator.sanitizeText(state.nombre, 100)
+        val sanitizedCategoria = com.sancarlina.app.utils.InputValidator.sanitizeText(state.categoria, 50)
+        val sanitizedTelefono = com.sancarlina.app.utils.InputValidator.sanitizeText(state.telefono, 25)
+        val sanitizedUbicacion = com.sancarlina.app.utils.InputValidator.sanitizeText(state.ubicacion, 150)
+
+        if (sanitizedNombre.isBlank() || sanitizedCategoria.isBlank() || sanitizedTelefono.isBlank() || sanitizedUbicacion.isBlank()) {
             _uiState.update { it.copy(error = "Por favor completa todos los campos obligatorios") }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true, error = null) }
+        if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("submit_emprendimiento", 60000L)) {
+            val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("submit_emprendimiento", 60000L) / 1000) + 1
+            _uiState.update { it.copy(error = "Debes esperar $remainingSecs segundos antes de enviar otra solicitud.") }
+            return
+        }
+
+        _uiState.update { 
+            it.copy(
+                isLoading = true, 
+                error = null,
+                nombre = sanitizedNombre,
+                categoria = sanitizedCategoria,
+                telefono = sanitizedTelefono,
+                ubicacion = sanitizedUbicacion
+            ) 
+        }
 
         val requestData = mapOf(
             "userEmail" to (user.email ?: ""),
-            "nombre" to state.nombre,
-            "categoria" to state.categoria,
-            "telefono" to state.telefono,
-            "ubicacion" to state.ubicacion,
+            "nombre" to sanitizedNombre,
+            "categoria" to sanitizedCategoria,
+            "telefono" to sanitizedTelefono,
+            "ubicacion" to sanitizedUbicacion,
             "status" to "pending"
         )
 

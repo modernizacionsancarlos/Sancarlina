@@ -94,7 +94,8 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
                         SancarlinaPrimaryButton(
                             text = stringResource(R.string.forgot_cta),
                             onClick = {
-                                if (email.isBlank()) {
+                                val sanitizedEmail = com.sancarlina.app.utils.InputValidator.sanitizeText(email, 80)
+                                if (sanitizedEmail.isBlank()) {
                                     Toast.makeText(
                                         context,
                                         forgotEmailBlankMessage,
@@ -102,8 +103,28 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
                                     ).show()
                                     return@SancarlinaPrimaryButton
                                 }
+                                
+                                if (!com.sancarlina.app.utils.InputValidator.isValidEmail(sanitizedEmail)) {
+                                    Toast.makeText(
+                                        context,
+                                        "Formato de correo electrónico inválido",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@SancarlinaPrimaryButton
+                                }
+
+                                if (!com.sancarlina.app.utils.RateLimiter.isActionAllowed("forgot_password", 30000L)) {
+                                    val remainingSecs = (com.sancarlina.app.utils.RateLimiter.getRemainingTime("forgot_password", 30000L) / 1000) + 1
+                                    Toast.makeText(
+                                        context,
+                                        "Espera $remainingSecs segundos antes de enviar otra solicitud.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    return@SancarlinaPrimaryButton
+                                }
+
                                 isLoading = true
-                                auth.sendPasswordResetEmail(email)
+                                auth.sendPasswordResetEmail(sanitizedEmail)
                                     .addOnSuccessListener {
                                         isLoading = false
                                         Toast.makeText(

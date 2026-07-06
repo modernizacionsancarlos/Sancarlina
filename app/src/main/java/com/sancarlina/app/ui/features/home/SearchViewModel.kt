@@ -30,10 +30,24 @@ class SearchViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
+    private var searchJob: kotlinx.coroutines.Job? = null
+
     fun onQueryChange(newQuery: String) {
         _uiState.update { it.copy(query = newQuery, error = null) }
-        if (newQuery.trim().length >= 3) {
-            performSearch(newQuery.trim())
+        
+        searchJob?.cancel()
+        
+        val trimmedQuery = newQuery.trim()
+        if (trimmedQuery.length >= 3) {
+            searchJob = viewModelScope.launch {
+                kotlinx.coroutines.delay(500)
+                val sanitizedQuery = com.sancarlina.app.utils.InputValidator.sanitizeText(trimmedQuery, 40)
+                if (sanitizedQuery.length >= 3) {
+                    performSearch(sanitizedQuery)
+                } else {
+                    _uiState.update { it.copy(results = emptyList()) }
+                }
+            }
         } else {
             _uiState.update { it.copy(results = emptyList()) }
         }
