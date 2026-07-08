@@ -43,6 +43,9 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 ProfileViewModel() as T
             }
+            modelClass.isAssignableFrom(PointsHistoryViewModel::class.java) -> {
+                PointsHistoryViewModel(container.auth, container.userRepository) as T
+            }
             modelClass.isAssignableFrom(EditProfileViewModel::class.java) -> {
                 EditProfileViewModel() as T
             }

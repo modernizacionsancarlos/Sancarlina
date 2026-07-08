@@ -10,19 +10,32 @@ import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.features.points.components.PointsHistoryEmptyState
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.data.models.PointMovement
+import com.sancarlina.app.viewmodel.PointsHistoryViewModel
 
 @Composable
-fun PointsHistoryContent(onBack: () -> Unit) {
-    val movements = emptyList<PointMovement>()
+fun PointsHistoryContent(
+    viewModel: PointsHistoryViewModel = viewModel(),
+    onBack: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMovements()
+    }
 
     Column(
         modifier = Modifier
@@ -34,27 +47,38 @@ fun PointsHistoryContent(onBack: () -> Unit) {
             onBack = onBack
         )
 
-        if (movements.isEmpty()) {
-            PointsHistoryEmptyState()
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    Text(
-                        text = "Actividad reciente",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = SancarlinaOnSurface,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
-                    )
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = SancarlinaPrimary)
                 }
-                items(movements) { movement ->
-                    MovementCard(movement)
+            }
+            uiState.movements.isEmpty() -> {
+                PointsHistoryEmptyState()
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    item {
+                        Text(
+                            text = "Actividad reciente",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = SancarlinaOnSurface,
+                            modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
+                        )
+                    }
+                    items(uiState.movements, key = { it.id }) { movement ->
+                        MovementCard(movement)
+                    }
+                    item { Spacer(Modifier.height(88.dp)) }
                 }
-                item { Spacer(Modifier.height(88.dp)) }
             }
         }
     }
@@ -120,11 +144,3 @@ fun MovementCard(movement: PointMovement) {
         }
     }
 }
-
-data class PointMovement(
-    val id: String,
-    val title: String,
-    val date: String,
-    val amount: Int,
-    val isEarned: Boolean
-)

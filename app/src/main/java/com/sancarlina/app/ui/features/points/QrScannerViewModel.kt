@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.sancarlina.app.data.repository.PointsRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sancarlina.app.utils.Logger
+import com.google.firebase.auth.FirebaseAuth
+import com.sancarlina.app.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,6 +68,15 @@ class QrScannerViewModel : ViewModel() {
                 )
 
                 if (result.isSuccess) {
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                    if (uid != null) {
+                        try {
+                            val userRepo = UserRepository(firestore)
+                            userRepo.addPointMovement(uid, "Escaneo: $tenantName", amount, true)
+                        } catch (e: Exception) {
+                            com.sancarlina.app.utils.Logger.e("Error logging earned points movement", e)
+                        }
+                    }
                     _uiState.update { it.copy(isLoading = false, successPoints = amount) }
                 } else {
                     _uiState.update { it.copy(isLoading = false, error = "Error al procesar puntos: ${result.exceptionOrNull()?.message}") }

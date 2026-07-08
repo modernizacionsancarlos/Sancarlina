@@ -112,6 +112,7 @@ class PointsViewModel(
             try {
                 val newBalance = _uiState.value.balance - benefit.cost
                 userRepository.updateUserBalance(uid, newBalance)
+                userRepository.addPointMovement(uid, "Canje: ${benefit.title}", -benefit.cost, false)
                 _uiState.update { 
                     it.copy(
                         balance = newBalance,
