@@ -7,7 +7,8 @@ data class PointsUiState(
     val isLoading: Boolean = false,
     val qrCodeActive: Boolean = false,
     val qrTimeRemaining: String = "10:00",
-    val showSuccessModal: Boolean = false
+    val showSuccessModal: Boolean = false,
+    val error: String? = null
 )
 
 data class BenefitItem(

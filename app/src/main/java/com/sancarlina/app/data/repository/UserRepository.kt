@@ -39,4 +39,38 @@ class UserRepository(
             0
         }
     }
+
+    suspend fun updateUserBalance(uid: String, newBalance: Int) {
+        val userDoc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid)
+        userDoc.update(
+            mapOf(
+                "points_balance" to newBalance,
+                "points" to newBalance
+            )
+        ).await()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getFavoriteTenantIds(uid: String): List<String> {
+        return try {
+            val doc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid).get().await()
+            doc.get("favoriteTenantIds") as? List<String> ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun toggleFavoriteTenant(uid: String, tenantId: String): Boolean {
+        val userDoc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid)
+        val currentFavs = getFavoriteTenantIds(uid).toMutableList()
+        val isNowFavorite = if (currentFavs.contains(tenantId)) {
+            currentFavs.remove(tenantId)
+            false
+        } else {
+            currentFavs.add(tenantId)
+            true
+        }
+        userDoc.update("favoriteTenantIds", currentFavs).await()
+        return isNowFavorite
+    }
 }

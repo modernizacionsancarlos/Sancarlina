@@ -94,25 +94,54 @@ class PointsViewModel(
     }
 
     fun onBenefitClick(benefit: BenefitItem) {
-        _uiState.update { it.copy(selectedBenefit = benefit) }
+        _uiState.update { it.copy(selectedBenefit = benefit, error = null) }
     }
 
     fun redeemBenefit() {
-        _uiState.value.selectedBenefit?.let { benefit ->
-            if (_uiState.value.balance >= benefit.cost) {
+        val uid = auth.currentUser?.uid ?: return
+        val benefit = _uiState.value.selectedBenefit ?: return
+        
+        if (_uiState.value.balance < benefit.cost) {
+            _uiState.update { it.copy(error = "No tenés suficientes puntos para canjear este beneficio") }
+            return
+        }
+
+        _uiState.update { it.copy(isLoading = true, error = null) }
+
+        viewModelScope.launch {
+            try {
+                val newBalance = _uiState.value.balance - benefit.cost
+                userRepository.updateUserBalance(uid, newBalance)
                 _uiState.update { 
                     it.copy(
-                        balance = it.balance - benefit.cost,
+                        balance = newBalance,
                         selectedBenefit = null,
-                        showSuccessModal = true
+                        showSuccessModal = true,
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                Logger.e("Error redeeming benefit", e)
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        error = "No se pudo realizar el canje. Comprobá tu conexión e intentá de nuevo."
                     )
                 }
             }
         }
     }
 
+    fun cancelBenefitSelection() {
+        _uiState.update { it.copy(selectedBenefit = null) }
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(error = null) }
+    }
+
     fun dismissModal() {
-        _uiState.update { it.copy(showSuccessModal = false, selectedBenefit = null, qrCodeActive = false) }
+        _uiState.update { it.copy(showSuccessModal = false, selectedBenefit = null, qrCodeActive = false, error = null) }
     }
 
     override fun onCleared() {

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Store
@@ -131,18 +132,37 @@ fun CommerceProfileContent(
             }
         }
 
-        IconButton(
-            onClick = onBack,
+        Row(
             modifier = Modifier
                 .statusBarsPadding()
                 .padding(12.dp)
-                .background(Color.Black.copy(alpha = 0.25f), CircleShape)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                stringResource(R.string.cd_back),
-                tint = Color.White
-            )
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.25f), CircleShape)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    stringResource(R.string.cd_back),
+                    tint = Color.White
+                )
+            }
+
+            IconButton(
+                onClick = { viewModel.toggleFavorite() },
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.25f), CircleShape)
+            ) {
+                Icon(
+                    imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = stringResource(R.string.cd_favorite),
+                    tint = if (uiState.isFavorite) Color.Red else Color.White
+                )
+            }
         }
     }
 }

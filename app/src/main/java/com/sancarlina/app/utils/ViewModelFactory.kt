@@ -35,7 +35,10 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
                 TurismoDetailViewModel(container.tenantsRepository, container.areasRepository) as T
             }
             modelClass.isAssignableFrom(CommerceProfileViewModel::class.java) -> {
-                CommerceProfileViewModel(container.tenantsRepository, container.formsRepository) as T
+                CommerceProfileViewModel(container.auth, container.userRepository, container.tenantsRepository, container.formsRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoritesViewModel::class.java) -> {
+                FavoritesViewModel(container.auth, container.userRepository, container.tenantsRepository, container.areasRepository) as T
             }
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 ProfileViewModel() as T
