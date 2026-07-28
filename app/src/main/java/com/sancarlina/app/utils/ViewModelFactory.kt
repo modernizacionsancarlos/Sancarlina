@@ -9,6 +9,8 @@ import com.sancarlina.app.ui.features.home.SearchViewModel
 import com.sancarlina.app.ui.features.points.QrScannerViewModel
 import com.sancarlina.app.ui.features.profile.EditProfileViewModel
 
+import com.sancarlina.app.ui.features.forms.PublicFormViewModel
+
 class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -72,6 +74,9 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             }
             modelClass.isAssignableFrom(AdminHomeViewModel::class.java) -> {
                 AdminHomeViewModel(container.adminRepository) as T
+            }
+            modelClass.isAssignableFrom(PublicFormViewModel::class.java) -> {
+                PublicFormViewModel(container.formsRepository, container.submissionsRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

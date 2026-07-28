@@ -56,6 +56,9 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
         fun createRoute(commerceId: String) = "commerce_reviews/$commerceId"
     }
     object ServiciosSello : Screen("servicios_sello", "Servicios")
+    object PublicForm : Screen("formulario/{formId}", "Formulario Público") {
+        fun createRoute(formId: String) = "formulario/$formId"
+    }
 
     // Admin Panel Screens
     object AdminLogin : Screen("admin_login", "Acceso Administración")

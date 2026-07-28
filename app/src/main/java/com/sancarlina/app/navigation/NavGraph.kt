@@ -54,6 +54,8 @@ import com.sancarlina.app.ui.features.splash.SplashContent
 import com.sancarlina.app.ui.features.admin.login.AdminLoginScreen
 import com.sancarlina.app.ui.features.admin.home.AdminHomeScreen
 import com.sancarlina.app.ui.features.admin.modules.AdminModulePlaceholderScreen
+import com.sancarlina.app.ui.features.forms.PublicFormContent
+import com.sancarlina.app.ui.features.forms.PublicFormViewModel
 import com.sancarlina.app.R
 import com.sancarlina.app.utils.BrowserUtils
 import com.sancarlina.app.utils.ViewModelFactory
@@ -406,6 +408,20 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.ServiciosSello.route) {
             ServiciosSelloContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.PublicForm.route) { backStackEntry ->
+            val formId = backStackEntry.arguments?.getString("formId") ?: ""
+            val publicFormViewModel: PublicFormViewModel = viewModel(factory = factory)
+            PublicFormContent(
+                formId = formId,
+                viewModel = publicFormViewModel,
+                onBack = { navController.popBackStack() },
+                onSuccess = { submissionId ->
+                    navController.navigate(Screen.Success.route) {
+                        popUpTo(Screen.Home.route)
+                    }
+                }
+            )
         }
         composable(Screen.Offline.route) {
             OfflineContent(onRetry = {

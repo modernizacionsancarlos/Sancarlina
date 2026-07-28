@@ -16,5 +16,14 @@ data class FormSchema(
     var isPublic: Boolean = false,
     @get:PropertyName("accepts_responses") @set:PropertyName("accepts_responses")
     var acceptsResponses: Boolean = false,
-    val status: String = "draft"
+    val status: String = "draft",
+    val fields: List<FormField> = emptyList(),
+    @get:PropertyName("form_purpose") @set:PropertyName("form_purpose")
+    var formPurpose: String? = null,
+    @get:PropertyName("template_source") @set:PropertyName("template_source")
+    var templateSource: String? = null,
+    @get:PropertyName("template_category") @set:PropertyName("template_category")
+    var templateCategory: String? = null,
+    @get:PropertyName("municipality_notes") @set:PropertyName("municipality_notes")
+    var municipalityNotes: String? = null
 )
