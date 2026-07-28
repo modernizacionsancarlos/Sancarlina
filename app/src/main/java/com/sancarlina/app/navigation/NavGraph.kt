@@ -51,6 +51,9 @@ import com.sancarlina.app.ui.features.servicios.ServiciosSelloContent
 import com.sancarlina.app.ui.features.support.SupportContent
 import com.sancarlina.app.ui.features.support.InstitutionalInfoContent
 import com.sancarlina.app.ui.features.splash.SplashContent
+import com.sancarlina.app.ui.features.admin.login.AdminLoginScreen
+import com.sancarlina.app.ui.features.admin.home.AdminHomeScreen
+import com.sancarlina.app.ui.features.admin.modules.AdminModulePlaceholderScreen
 import com.sancarlina.app.R
 import com.sancarlina.app.utils.BrowserUtils
 import com.sancarlina.app.utils.ViewModelFactory
@@ -201,6 +204,7 @@ fun SancarlinaNavGraph(
                 viewModel = authViewModel,
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },
                 onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) },
+                onNavigateToAdminLogin = { navController.navigate(Screen.AdminLogin.route) },
                 onLoginSuccess = { 
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
@@ -408,6 +412,56 @@ fun SancarlinaNavGraph(
                 // Volver atrás; MainScaffold re-dirige a Offline si la red sigue caída
                 navController.popBackStack()
             })
+        }
+        composable(Screen.AdminLogin.route) {
+            val adminAuthViewModel: AdminAuthViewModel = viewModel(factory = factory)
+            AdminLoginScreen(
+                viewModel = adminAuthViewModel,
+                onBack = { navController.popBackStack() },
+                onLoginSuccess = {
+                    navController.navigate(Screen.AdminHome.route) {
+                        popUpTo(Screen.AdminLogin.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(Screen.AdminHome.route) {
+            val adminHomeViewModel: AdminHomeViewModel = viewModel(factory = factory)
+            val adminAuthViewModel: AdminAuthViewModel = viewModel(factory = factory)
+            AdminHomeScreen(
+                viewModel = adminHomeViewModel,
+                onNavigateToModule = { route ->
+                    navController.navigate(route)
+                },
+                onLogout = {
+                    adminAuthViewModel.logoutAdmin {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.AdminHome.route) { inclusive = true }
+                        }
+                    }
+                }
+            )
+        }
+        composable(Screen.AdminComercios.route) {
+            AdminModulePlaceholderScreen(title = "Comercios", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminZonas.route) {
+            AdminModulePlaceholderScreen(title = "Zonas", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminBeneficios.route) {
+            AdminModulePlaceholderScreen(title = "Beneficios", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminUsuarios.route) {
+            AdminModulePlaceholderScreen(title = "Usuarios", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminFormularios.route) {
+            AdminModulePlaceholderScreen(title = "Formularios", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminNotificaciones.route) {
+            AdminModulePlaceholderScreen(title = "Notificaciones", onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminAdministradores.route) {
+            AdminModulePlaceholderScreen(title = "Administradores", onBack = { navController.popBackStack() })
         }
     }
 }

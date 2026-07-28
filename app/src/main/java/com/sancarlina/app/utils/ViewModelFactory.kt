@@ -67,6 +67,12 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             modelClass.isAssignableFrom(NewsDetailViewModel::class.java) -> {
                 NewsDetailViewModel() as T
             }
+            modelClass.isAssignableFrom(AdminAuthViewModel::class.java) -> {
+                AdminAuthViewModel(container.auth, container.firestore, container.adminRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminHomeViewModel::class.java) -> {
+                AdminHomeViewModel(container.adminRepository) as T
+            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

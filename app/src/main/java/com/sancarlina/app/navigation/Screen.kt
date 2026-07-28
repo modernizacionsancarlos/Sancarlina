@@ -56,6 +56,17 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
         fun createRoute(commerceId: String) = "commerce_reviews/$commerceId"
     }
     object ServiciosSello : Screen("servicios_sello", "Servicios")
+
+    // Admin Panel Screens
+    object AdminLogin : Screen("admin_login", "Acceso Administración")
+    object AdminHome : Screen("admin_home", "Panel Admin", Icons.Default.AdminPanelSettings)
+    object AdminComercios : Screen("admin_comercios", "Comercios", Icons.Default.Store)
+    object AdminZonas : Screen("admin_zonas", "Zonas", Icons.Default.Map)
+    object AdminBeneficios : Screen("admin_beneficios", "Beneficios", Icons.Default.CardGiftcard)
+    object AdminUsuarios : Screen("admin_usuarios", "Usuarios", Icons.Default.Group)
+    object AdminFormularios : Screen("admin_formularios", "Formularios", Icons.Default.Description)
+    object AdminNotificaciones : Screen("admin_notificaciones", "Notificaciones", Icons.Default.Notifications)
+    object AdminAdministradores : Screen("admin_administradores", "Administradores", Icons.Default.Security)
 }
 
 val bottomNavItems = listOf(

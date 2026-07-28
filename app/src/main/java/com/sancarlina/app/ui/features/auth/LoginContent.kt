@@ -35,6 +35,7 @@ fun LoginContent(
     viewModel: LoginAuthViewModel = viewModel<AuthViewModel>(),
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
+    onNavigateToAdminLogin: () -> Unit = {},
     onLoginSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -169,7 +170,20 @@ fun LoginContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(
+                onClick = onNavigateToAdminLogin,
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Text(
+                    text = "Acceso administración",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = SancarlinaOnSurfaceVariant.copy(alpha = 0.5f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

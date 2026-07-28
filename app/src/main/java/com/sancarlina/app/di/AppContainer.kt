@@ -40,4 +40,8 @@ class AppContainer {
     val formsRepository: FormsRepository by lazy {
         FormsRepository(firestore)
     }
+
+    val adminRepository: AdminRepository by lazy {
+        AdminRepository(firestore, auth)
+    }
 }

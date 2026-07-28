@@ -9,6 +9,8 @@ object FirestoreCollections {
     const val USER_PROFILES = "userProfiles"
     const val NOTIFICATIONS = "Notifications"
     const val BENEFITS = "benefits"
+    const val SUPER_ADMINS = "superAdmins"
+    const val FORM_TEMPLATES = "FormTemplates"
     
     const val DEFAULT_TENANT_ID = "tenant_sancarlos"
     const val FUNCTIONS_REGION = "southamerica-east1"
