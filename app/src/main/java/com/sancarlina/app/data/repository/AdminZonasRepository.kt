@@ -7,20 +7,19 @@ import kotlinx.coroutines.tasks.await
 class AdminZonasRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
+    private val areasRepo = AreasRepository(firestore)
 
     suspend fun getAllAreas(): Result<List<Area>> {
         return try {
-            val snapshot = firestore.collection(FirestoreCollections.AREAS)
-                .get()
-                .await()
-
-            val areas = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Area::class.java)?.copy(id = doc.id)
-            }
-            Result.success(areas)
+            val list = areasRepo.getAreas()
+            Result.success(list)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    suspend fun ensureSuggestedAreas(): Result<Int> {
+        return areasRepo.ensureSuggestedAreas()
     }
 
     suspend fun saveArea(area: Area): Result<String> {
@@ -34,7 +33,12 @@ class AdminZonasRepository(
 
             val data = mapOf(
                 "name" to area.name,
-                "description" to area.description
+                "slug" to area.slug.ifBlank { area.name.lowercase().replace(" ", "-") },
+                "description" to area.description,
+                "order" to area.order,
+                "category" to area.category,
+                "icon" to area.icon,
+                "active" to area.active
             )
             docRef.set(data).await()
             Result.success(docRef.id)

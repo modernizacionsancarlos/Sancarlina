@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -97,17 +100,54 @@ private fun DashboardTab(
     uiState: com.sancarlina.app.viewmodel.admin.AdminFormulariosUiState,
     viewModel: AdminFormulariosViewModel
 ) {
+    var previewingSchema by remember { mutableStateOf<FormSchema?>(null) }
+    var viewingSubmissionsSchema by remember { mutableStateOf<FormSchema?>(null) }
+
+    // Ordenar y agrupar esquemas
+    val sortedSchemas = remember(uiState.schemas, uiState.sortBy, uiState.sortDirection) {
+        val sorted = if (uiState.sortBy == "name") {
+            if (uiState.sortDirection == "asc") uiState.schemas.sortedBy { it.title.lowercase() }
+            else uiState.schemas.sortedByDescending { it.title.lowercase() }
+        } else {
+            uiState.schemas
+        }
+        sorted
+    }
+
+    val groupedSchemas = remember(sortedSchemas, uiState.sortBy) {
+        if (uiState.sortBy == "name") {
+            sortedSchemas.groupBy { schema ->
+                schema.title.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "#"
+            }
+        } else {
+            mapOf("Formularios Registrados" to sortedSchemas)
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
+        // Barra Superior de Controles (Lista/Grilla, Ordenamiento, Nuevo)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Esquemas de Formularios",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = { viewModel.toggleViewMode() }) {
+                    Icon(
+                        imageVector = if (uiState.isGridView) Icons.Default.ViewList else Icons.Default.GridView,
+                        contentDescription = "Cambiar vista",
+                        tint = SancarlinaPrimary
+                    )
+                }
+                IconButton(onClick = { viewModel.toggleSortDirection() }) {
+                    Icon(
+                        imageVector = if (uiState.sortDirection == "asc") Icons.Default.SortByAlpha else Icons.Default.Sort,
+                        contentDescription = "Cambiar orden",
+                        tint = SancarlinaPrimary
+                    )
+                }
+            }
+
             Button(
                 onClick = {
                     viewModel.selectSchemaForEditor(FormSchema(title = "Nuevo Formulario"))
@@ -127,64 +167,233 @@ private fun DashboardTab(
                 Text("No hay formularios creados aún.")
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(uiState.schemas, key = { it.id }) { schema ->
-                    Card(
-                        shape = SancarlinaCardShape,
-                        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = schema.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                IconButton(onClick = { viewModel.selectSchemaForEditor(schema) }) {
-                                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
-                                }
-                                IconButton(onClick = { viewModel.deleteSchema(schema.id) }) {
-                                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
-                                }
-                            }
-                            if (schema.description.isNotBlank()) {
-                                Text(
-                                    text = schema.description,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = SancarlinaOnSurfaceVariant
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Switch(
-                                        checked = schema.isPublic,
-                                        onCheckedChange = { viewModel.togglePublic(schema.id, schema.isPublic) }
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Público", style = MaterialTheme.typography.labelSmall)
-                                }
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Switch(
-                                        checked = schema.acceptsResponses,
-                                        onCheckedChange = { viewModel.toggleAcceptsResponses(schema.id, schema.acceptsResponses) }
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Acepta Respuestas", style = MaterialTheme.typography.labelSmall)
-                                }
-                            }
-                        }
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                groupedSchemas.forEach { (groupHeader, schemaGroup) ->
+                    item {
+                        Text(
+                            text = groupHeader,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = SancarlinaPrimary,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
+
+                    items(schemaGroup, key = { it.id }) { schema ->
+                        val submissionCount = uiState.submissions.count { it.form_id == schema.id }
+
+                        FormSchemaCard(
+                            schema = schema,
+                            submissionCount = submissionCount,
+                            onEdit = { viewModel.selectSchemaForEditor(schema) },
+                            onDelete = { viewModel.deleteSchema(schema.id) },
+                            onTogglePublic = { viewModel.togglePublic(schema.id, schema.isPublic) },
+                            onToggleAccepts = { viewModel.toggleAcceptsResponses(schema.id, schema.acceptsResponses) },
+                            onLivePreview = { previewingSchema = schema },
+                            onViewSubmissions = { viewingSubmissionsSchema = schema }
+                        )
                     }
                 }
             }
         }
     }
+
+    if (previewingSchema != null) {
+        FormLivePreviewDialog(
+            schema = previewingSchema!!,
+            onDismiss = { previewingSchema = null }
+        )
+    }
+
+    if (viewingSubmissionsSchema != null) {
+        SchemaSubmissionsDialog(
+            schema = viewingSubmissionsSchema!!,
+            submissions = uiState.submissions.filter { it.form_id == viewingSubmissionsSchema!!.id },
+            onDismiss = { viewingSubmissionsSchema = null },
+            onUpdateStatus = { subId, status -> viewModel.updateSubmissionStatus(subId, status) }
+        )
+    }
+}
+
+@Composable
+private fun FormSchemaCard(
+    schema: FormSchema,
+    submissionCount: Int,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onTogglePublic: (Boolean) -> Unit,
+    onToggleAccepts: (Boolean) -> Unit,
+    onLivePreview: () -> Unit,
+    onViewSubmissions: () -> Unit
+) {
+    Card(
+        shape = SancarlinaCardShape,
+        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = schema.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = onEdit) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
+                }
+            }
+            if (schema.description.isNotBlank()) {
+                Text(
+                    text = schema.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = SancarlinaOnSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Toggles
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(
+                        checked = schema.isPublic,
+                        onCheckedChange = onTogglePublic
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Público", style = MaterialTheme.typography.labelSmall)
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(
+                        checked = schema.acceptsResponses,
+                        onCheckedChange = onToggleAccepts
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Recepción", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Acciones Rápidas (Vista previa y Ver Respuestas)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(onClick = onLivePreview) {
+                    Icon(imageVector = Icons.Default.Visibility, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Vista Previa")
+                }
+
+                if (submissionCount > 0) {
+                    Button(
+                        onClick = onViewSubmissions,
+                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
+                    ) {
+                        Icon(imageVector = Icons.Default.Inbox, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Ver respuestas ($submissionCount)")
+                    }
+                }
+            }
+        }
+    }
+}
+
+// --- DIÁLOGOS DE PREVIEW Y RESPUESTAS ---
+@Composable
+private fun FormLivePreviewDialog(
+    schema: FormSchema,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Vista Previa: ${schema.title}", fontWeight = FontWeight.Bold) },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(text = schema.description.ifBlank { "Sin descripción." }, style = MaterialTheme.typography.bodyMedium)
+                HorizontalDivider()
+                schema.fields.forEachIndexed { index, field ->
+                    Column {
+                        Text(text = "${index + 1}. ${field.label} ${if (field.required) "*" else ""}", fontWeight = FontWeight.Bold)
+                        field.helpText?.let {
+                            Text(text = it, style = MaterialTheme.typography.labelSmall, color = SancarlinaOnSurfaceVariant)
+                        }
+                        OutlinedTextField(
+                            value = "",
+                            onValueChange = {},
+                            enabled = false,
+                            placeholder = { Text(field.type) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)) {
+                Text("Cerrar Vista Previa")
+            }
+        }
+    )
+}
+
+@Composable
+private fun SchemaSubmissionsDialog(
+    schema: FormSchema,
+    submissions: List<SubmissionAdmin>,
+    onDismiss: () -> Unit,
+    onUpdateStatus: (String, String) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Respuestas (${submissions.size}): ${schema.title}", fontWeight = FontWeight.Bold) },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                submissions.forEach { submission ->
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(text = "ID: ${submission.id.take(8)} | Estado: ${submission.status}", fontWeight = FontWeight.Bold)
+                            submission.data.forEach { (k, v) ->
+                                Text(text = "$k: $v", style = MaterialTheme.typography.bodySmall, maxLines = 1)
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                TextButton(onClick = { onUpdateStatus(submission.id, "approved") }) { Text("Aprobar") }
+                                TextButton(onClick = { onUpdateStatus(submission.id, "rejected") }) { Text("Rechazar") }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)) {
+                Text("Cerrar")
+            }
+        }
+    )
 }
 
 // --- TAB 1: PLANTILLAS ---
@@ -196,7 +405,8 @@ private fun PlantillasTab(
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(uiState.templates, key = { it.id }) { template ->
             Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = SancarlinaCardShape,
+                colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -402,7 +612,8 @@ private fun RespuestasTab(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(uiState.submissions, key = { it.id }) { submission ->
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = SancarlinaCardShape,
+                    colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -415,16 +626,17 @@ private fun RespuestasTab(
                                 modifier = Modifier.weight(1f)
                             )
                             Surface(
-                                shape = MaterialTheme.shapes.extraSmall,
+                                shape = SancarlinaChipShape,
                                 color = when (submission.status) {
-                                    "approved" -> Color(0xFF4CAF50).copy(alpha = 0.2f)
-                                    "rejected" -> Color.Red.copy(alpha = 0.2f)
-                                    else -> Color.Unspecified
+                                    "approved" -> Color(0xFF4CAF50).copy(alpha = 0.15f)
+                                    "rejected" -> Color.Red.copy(alpha = 0.15f)
+                                    else -> SancarlinaPrimary.copy(alpha = 0.15f)
                                 }
                             ) {
                                 Text(
                                     text = submission.status.uppercase(),
                                     style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                                 )
                             }
@@ -466,7 +678,8 @@ private fun AceptacionesTab(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(pendingApproved, key = { it.id }) { submission ->
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = SancarlinaCardShape,
+                    colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {

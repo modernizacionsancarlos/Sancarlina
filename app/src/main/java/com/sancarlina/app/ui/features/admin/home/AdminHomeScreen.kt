@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.navigation.Screen
+import com.sancarlina.app.ui.components.LiveClockGreeting
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.AdminHomeViewModel
@@ -56,14 +57,7 @@ fun AdminHomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Column {
-                        Text("Panel de Control", fontWeight = FontWeight.Bold)
-                        Text(
-                            "Municipalidad de San Carlos",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaOnSurfaceVariant
-                        )
-                    }
+                    LiveClockGreeting()
                 },
                 actions = {
                     IconButton(onClick = onLogout) {

@@ -20,6 +20,9 @@ data class AdminFormulariosUiState(
     val submissions: List<SubmissionAdmin> = emptyList(),
     val activeSchemaForEditor: FormSchema? = null,
     val selectedSubmission: SubmissionAdmin? = null,
+    val isGridView: Boolean = false,
+    val sortBy: String = "name", // "name" | "date"
+    val sortDirection: String = "asc", // "asc" | "desc"
     val error: String? = null,
     val successMessage: String? = null
 )
@@ -40,6 +43,18 @@ class AdminFormulariosViewModel(
         if (tabIndex == 0) loadSchemas()
         if (tabIndex == 1) loadTemplates()
         if (tabIndex == 3 || tabIndex == 4) loadSubmissions()
+    }
+
+    fun toggleViewMode() {
+        _uiState.update { it.copy(isGridView = !it.isGridView) }
+    }
+
+    fun setSortBy(sortBy: String) {
+        _uiState.update { it.copy(sortBy = sortBy) }
+    }
+
+    fun toggleSortDirection() {
+        _uiState.update { it.copy(sortDirection = if (it.sortDirection == "asc") "desc" else "asc") }
     }
 
     fun refreshAllData() {

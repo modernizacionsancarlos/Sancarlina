@@ -50,6 +50,30 @@ class AdminZonasViewModel(
         }
     }
 
+    fun ensureSuggestedAreas() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            val result = repository.ensureSuggestedAreas()
+            if (result.isSuccess) {
+                val added = result.getOrDefault(0)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        successMessage = if (added > 0) "Se cargaron $added zonas sugeridas." else "Todas las zonas sugeridas ya están creadas."
+                    )
+                }
+                loadAreas()
+            } else {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al sembrar zonas sugeridas."
+                    )
+                }
+            }
+        }
+    }
+
     fun saveArea(area: Area, onSuccess: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
