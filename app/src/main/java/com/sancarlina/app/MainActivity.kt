@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,14 +19,18 @@ import com.sancarlina.app.ui.theme.SancarlinaTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
+        )
         super.onCreate(savedInstanceState)
         android.util.Log.i("GondolApp", "MainActivity: onCreate iniciado.")
-        try {
-            enableEdgeToEdge()
-            android.util.Log.i("GondolApp", "MainActivity: edgeToEdge habilitado.")
-        } catch (e: Exception) {
-            android.util.Log.e("GondolApp", "MainActivity: ERROR en enableEdgeToEdge", e)
-        }
         
         setContent {
             android.util.Log.i("GondolApp", "MainActivity: setContent ejecutándose.")

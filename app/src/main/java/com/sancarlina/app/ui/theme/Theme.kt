@@ -67,10 +67,10 @@ fun SancarlinaTheme(
                 ?: (context as? ContextWrapper)?.baseContext as? Activity
             
             activity?.window?.let { window ->
-                window.statusBarColor = SancarlinaBackground.toArgb()
-                window.navigationBarColor = SancarlinaSurfaceContainer.toArgb()
-                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
-                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = true
+                WindowCompat.setDecorFitsSystemWindows(window, false)
+                val controller = WindowCompat.getInsetsController(window, view)
+                controller.isAppearanceLightStatusBars = !darkTheme
+                controller.isAppearanceLightNavigationBars = !darkTheme
             }
         }
     }

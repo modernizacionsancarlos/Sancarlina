@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Tema normal de la aplicación -->
-    <style name="Theme.Sancarlina" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tema normal de la aplicación (Edge-to-Edge nativo para Android 15 / API 35) -->
+    <style name="Theme.Sancarlina" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
     
     <!-- Tema para la pantalla de carga nativa del sistema Android -->
     <style name="Theme.Sancarlina.Launcher" parent="Theme.SplashScreen">
