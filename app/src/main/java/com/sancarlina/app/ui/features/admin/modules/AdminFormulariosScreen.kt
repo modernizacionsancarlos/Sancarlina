@@ -130,7 +130,8 @@ private fun DashboardTab(
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(uiState.schemas, key = { it.id }) { schema ->
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = SancarlinaCardShape,
+                        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {

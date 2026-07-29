@@ -104,7 +104,8 @@ private fun NotificationAdminItem(
     onDelete: () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = SancarlinaCardShape,
+        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {

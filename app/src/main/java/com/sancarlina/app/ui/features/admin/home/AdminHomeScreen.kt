@@ -196,7 +196,8 @@ private fun ModuleCard(
 ) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = SancarlinaCardShape,
+        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -207,16 +208,16 @@ private fun ModuleCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
-                shape = MaterialTheme.shapes.small,
-                color = SancarlinaPrimary.copy(alpha = 0.1f),
-                modifier = Modifier.size(40.dp)
+                shape = SancarlinaChipShape,
+                color = SancarlinaPrimary.copy(alpha = 0.12f),
+                modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = item.icon,
                         contentDescription = null,
                         tint = SancarlinaPrimary,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -227,7 +228,7 @@ private fun ModuleCard(
                 Text(
                     text = item.title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = item.description,
@@ -239,7 +240,7 @@ private fun ModuleCard(
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = SancarlinaOnSurfaceVariant
+                tint = SancarlinaPrimary
             )
         }
     }

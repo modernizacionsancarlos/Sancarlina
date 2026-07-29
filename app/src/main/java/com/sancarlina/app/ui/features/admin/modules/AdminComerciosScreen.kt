@@ -159,7 +159,8 @@ private fun TenantAdminItem(
     onDelete: () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = SancarlinaCardShape,
+        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -178,14 +179,15 @@ private fun TenantAdminItem(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Surface(
-                        shape = MaterialTheme.shapes.extraSmall,
-                        color = if (tenant.status == "active") Color(0xFF4CAF50).copy(alpha = 0.2f) else Color.Red.copy(alpha = 0.2f)
+                        shape = SancarlinaChipShape,
+                        color = if (tenant.status == "active") Color(0xFF4CAF50).copy(alpha = 0.15f) else Color.Red.copy(alpha = 0.15f)
                     ) {
                         Text(
                             text = if (tenant.status == "active") "Activo" else "Inactivo",
                             color = if (tenant.status == "active") Color(0xFF2E7D32) else Color.Red,
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                         )
                     }
                 }
