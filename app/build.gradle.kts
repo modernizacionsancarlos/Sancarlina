@@ -31,8 +31,8 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 64
-        versionName = "8.3.0"
+        versionCode = 65
+        versionName = "8.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
