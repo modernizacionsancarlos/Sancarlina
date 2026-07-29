@@ -44,4 +44,32 @@ class AppContainer {
     val adminRepository: AdminRepository by lazy {
         AdminRepository(firestore, auth)
     }
+
+    val adminComerciosRepository: AdminComerciosRepository by lazy {
+        AdminComerciosRepository(firestore)
+    }
+
+    val adminZonasRepository: AdminZonasRepository by lazy {
+        AdminZonasRepository(firestore)
+    }
+
+    val adminBeneficiosRepository: AdminBeneficiosRepository by lazy {
+        AdminBeneficiosRepository(firestore)
+    }
+
+    val adminUsuariosRepository: AdminUsuariosRepository by lazy {
+        AdminUsuariosRepository(firestore)
+    }
+
+    val adminFormulariosRepository: AdminFormulariosRepository by lazy {
+        AdminFormulariosRepository(firestore)
+    }
+
+    val adminNotificacionesRepository: AdminNotificacionesRepository by lazy {
+        AdminNotificacionesRepository(firestore)
+    }
+
+    val adminAdministradoresRepository: AdminAdministradoresRepository by lazy {
+        AdminAdministradoresRepository(firestore)
+    }
 }

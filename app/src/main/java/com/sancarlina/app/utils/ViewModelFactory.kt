@@ -9,6 +9,7 @@ import com.sancarlina.app.ui.features.home.SearchViewModel
 import com.sancarlina.app.ui.features.points.QrScannerViewModel
 import com.sancarlina.app.ui.features.profile.EditProfileViewModel
 
+import com.sancarlina.app.viewmodel.admin.*
 import com.sancarlina.app.ui.features.forms.PublicFormViewModel
 
 class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.Factory {
@@ -77,6 +78,27 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
             }
             modelClass.isAssignableFrom(PublicFormViewModel::class.java) -> {
                 PublicFormViewModel(container.formsRepository, container.submissionsRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminComerciosViewModel::class.java) -> {
+                AdminComerciosViewModel(container.adminComerciosRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminZonasViewModel::class.java) -> {
+                AdminZonasViewModel(container.adminZonasRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminBeneficiosViewModel::class.java) -> {
+                AdminBeneficiosViewModel(container.adminBeneficiosRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminUsuariosViewModel::class.java) -> {
+                AdminUsuariosViewModel(container.adminUsuariosRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminFormulariosViewModel::class.java) -> {
+                AdminFormulariosViewModel(container.adminFormulariosRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminNotificacionesViewModel::class.java) -> {
+                AdminNotificacionesViewModel(container.adminNotificacionesRepository) as T
+            }
+            modelClass.isAssignableFrom(AdminAdministradoresViewModel::class.java) -> {
+                AdminAdministradoresViewModel(container.adminAdministradoresRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

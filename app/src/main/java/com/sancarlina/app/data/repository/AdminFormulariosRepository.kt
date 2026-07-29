@@ -1,0 +1,260 @@
+package com.sancarlina.app.data.repository
+
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.data.models.FormSchema
+import com.sancarlina.app.data.models.FormTemplate
+import com.sancarlina.app.data.models.Tenant
+import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.data.templates.BuiltinFormTemplates
+import kotlinx.coroutines.tasks.await
+
+data class SubmissionAdmin(
+    val id: String = "",
+    val form_id: String = "",
+    val form_title: String = "",
+    val created_by: String = "",
+    val created_at: Timestamp? = null,
+    val status: String = "pending",
+    val data: Map<String, Any> = emptyMap()
+)
+
+class AdminFormulariosRepository(
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+) {
+
+    // --- FORM SCHEMAS ---
+    suspend fun getAllSchemas(): Result<List<FormSchema>> {
+        return try {
+            val snapshot = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .get()
+                .await()
+
+            val schemas = snapshot.documents.mapNotNull { doc ->
+                try {
+                    doc.toObject(FormSchema::class.java)?.copy(id = doc.id)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            Result.success(schemas)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun saveSchema(schema: FormSchema): Result<String> {
+        return try {
+            val collection = firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+            val docRef = if (schema.id.isNotBlank()) {
+                collection.document(schema.id)
+            } else {
+                collection.document()
+            }
+
+            val schemaData = mutableMapOf<String, Any?>(
+                "title" to schema.title,
+                "description" to schema.description,
+                "tenantId" to FirestoreCollections.DEFAULT_TENANT_ID,
+                "tenant_id" to FirestoreCollections.DEFAULT_TENANT_ID,
+                "submit_url" to schema.submitUrl,
+                "is_public" to schema.isPublic,
+                "accepts_responses" to schema.acceptsResponses,
+                "status" to schema.status,
+                "fields" to schema.fields,
+                "form_purpose" to schema.formPurpose,
+                "template_source" to schema.templateSource,
+                "template_category" to schema.templateCategory,
+                "municipality_notes" to schema.municipalityNotes
+            )
+
+            docRef.set(schemaData.filterValues { it != null }).await()
+            Result.success(docRef.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun togglePublic(schemaId: String, isPublic: Boolean): Result<Unit> {
+        return try {
+            firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .document(schemaId)
+                .update("is_public", isPublic)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun toggleAcceptsResponses(schemaId: String, acceptsResponses: Boolean): Result<Unit> {
+        return try {
+            firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .document(schemaId)
+                .update("accepts_responses", acceptsResponses)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteSchema(schemaId: String): Result<Unit> {
+        return try {
+            firestore.collection(FirestoreCollections.FORM_SCHEMAS)
+                .document(schemaId)
+                .delete()
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // --- FORM TEMPLATES ---
+    suspend fun getAllTemplates(): Result<List<FormTemplate>> {
+        return try {
+            val snapshot = firestore.collection(FirestoreCollections.FORM_TEMPLATES)
+                .get()
+                .await()
+
+            val remoteTemplates = snapshot.documents.mapNotNull { doc ->
+                try {
+                    doc.toObject(FormTemplate::class.java)?.copy(id = doc.id)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+
+            val combined = (BuiltinFormTemplates.ALL_TEMPLATES + remoteTemplates)
+                .distinctBy { it.id }
+
+            Result.success(combined)
+        } catch (e: Exception) {
+            Result.success(BuiltinFormTemplates.ALL_TEMPLATES)
+        }
+    }
+
+    // --- SUBMISSIONS & ACEPTACIONES ---
+    suspend fun getAllSubmissions(): Result<List<SubmissionAdmin>> {
+        return try {
+            val snapshot = firestore.collection(FirestoreCollections.SUBMISSIONS)
+                .get()
+                .await()
+
+            val submissions = snapshot.documents.mapNotNull { doc ->
+                try {
+                    @Suppress("UNCHECKED_CAST")
+                    val rawData = doc.get("data") as? Map<String, Any> ?: doc.data ?: emptyMap()
+                    SubmissionAdmin(
+                        id = doc.id,
+                        form_id = doc.getString("form_id") ?: "",
+                        form_title = doc.getString("form_title") ?: "",
+                        created_by = doc.getString("created_by") ?: "",
+                        created_at = doc.getTimestamp("created_at"),
+                        status = doc.getString("status") ?: "pending",
+                        data = rawData
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            Result.success(submissions)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateSubmissionStatus(submissionId: String, status: String): Result<Unit> {
+        return try {
+            firestore.collection(FirestoreCollections.SUBMISSIONS)
+                .document(submissionId)
+                .update("status", status)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Convierte una submission aprobada en un documento activo en `tenants`.
+     */
+    suspend fun publishSubmissionToTenant(
+        submission: SubmissionAdmin,
+        schema: FormSchema?
+    ): Result<String> {
+        return try {
+            val subData = submission.data
+            val fields = schema?.fields ?: emptyList()
+
+            var name = ""
+            var industry = ""
+            var areaId = ""
+            var description = ""
+            var contactEmail = ""
+            var contactPhone = ""
+            var address = ""
+            var geoCoordinates = ""
+            var coverUrl = ""
+            val galleryUrls = mutableListOf<String>()
+
+            for (field in fields) {
+                val rawVal = subData[field.id] ?: continue
+                when (field.tenantMapping) {
+                    "name" -> name = rawVal.toString().trim()
+                    "industry" -> industry = rawVal.toString().trim()
+                    "area_id" -> areaId = rawVal.toString().trim()
+                    "description" -> description = rawVal.toString().trim()
+                    "contact_email" -> contactEmail = rawVal.toString().trim()
+                    "contact_phone" -> contactPhone = rawVal.toString().trim()
+                    "address" -> address = rawVal.toString().trim()
+                    "geo_coordinates" -> geoCoordinates = rawVal.toString().trim()
+                    "cover_url", "image_url" -> coverUrl = rawVal.toString().trim()
+                    "gallery" -> {
+                        if (rawVal is List<*>) {
+                            galleryUrls.addAll(rawVal.mapNotNull { it?.toString() })
+                        } else {
+                            galleryUrls.add(rawVal.toString())
+                        }
+                    }
+                }
+            }
+
+            if (name.isBlank()) {
+                name = subData["field_nombre"]?.toString()
+                    ?: subData["name"]?.toString()
+                    ?: "Comercio desde Formulario ${submission.id.take(6)}"
+            }
+
+            val newTenantData = mapOf(
+                "name" to name,
+                "industry" to if (industry.isNotBlank()) industry else "General",
+                "status" to "active",
+                "tenantId" to FirestoreCollections.DEFAULT_TENANT_ID,
+                "tenant_id" to FirestoreCollections.DEFAULT_TENANT_ID,
+                "area_id" to areaId,
+                "description" to description,
+                "contact_email" to contactEmail,
+                "contact_phone" to contactPhone,
+                "address" to address,
+                "geo_coordinates" to geoCoordinates,
+                "cover_url" to coverUrl,
+                "image_url" to coverUrl,
+                "gallery" to galleryUrls.distinct(),
+                "rating" to 0.0,
+                "reviews_count" to 0
+            )
+
+            val tenantRef = firestore.collection(FirestoreCollections.TENANTS).document()
+            tenantRef.set(newTenantData).await()
+
+            // Marcar submission como aprobada
+            updateSubmissionStatus(submission.id, "approved")
+
+            Result.success(tenantRef.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+}

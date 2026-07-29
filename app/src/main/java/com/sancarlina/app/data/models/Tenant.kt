@@ -16,6 +16,10 @@ data class Tenant(
     val description: String = "",
     @get:PropertyName("contact_email") @set:PropertyName("contact_email")
     var contactEmail: String = "",
+    @get:PropertyName("contact_phone") @set:PropertyName("contact_phone")
+    var contactPhone: String = "",
+    val address: String = "",
+    val gallery: List<String> = emptyList(),
     @get:PropertyName("image_url") @set:PropertyName("image_url")
     var imageUrl: String = "",
     @get:PropertyName("photo_url") @set:PropertyName("photo_url")
@@ -31,6 +35,14 @@ data class Tenant(
             is String -> r.toDoubleOrNull() ?: 0.0
             else -> 0.0
         }
+
+    val area_id: String get() = areaId
+    val geo_coordinates: String get() = geoCoordinates
+    val cover_url: String get() = coverUrl
+    val contact_email: String get() = contactEmail
+    val contact_phone: String get() = contactPhone
+    val image_url: String get() = imageUrl
+    val reviews_count: Int get() = reviewsCount
 }
 
 fun Tenant.displayImageUrl(): String {

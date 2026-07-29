@@ -53,7 +53,8 @@ import com.sancarlina.app.ui.features.support.InstitutionalInfoContent
 import com.sancarlina.app.ui.features.splash.SplashContent
 import com.sancarlina.app.ui.features.admin.login.AdminLoginScreen
 import com.sancarlina.app.ui.features.admin.home.AdminHomeScreen
-import com.sancarlina.app.ui.features.admin.modules.AdminModulePlaceholderScreen
+import com.sancarlina.app.ui.features.admin.modules.*
+import com.sancarlina.app.viewmodel.admin.*
 import com.sancarlina.app.ui.features.forms.PublicFormContent
 import com.sancarlina.app.ui.features.forms.PublicFormViewModel
 import com.sancarlina.app.R
@@ -459,25 +460,32 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.AdminComercios.route) {
-            AdminModulePlaceholderScreen(title = "Comercios", onBack = { navController.popBackStack() })
+            val vm: AdminComerciosViewModel = viewModel(factory = factory)
+            AdminComerciosScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminZonas.route) {
-            AdminModulePlaceholderScreen(title = "Zonas", onBack = { navController.popBackStack() })
+            val vm: AdminZonasViewModel = viewModel(factory = factory)
+            AdminZonasScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminBeneficios.route) {
-            AdminModulePlaceholderScreen(title = "Beneficios", onBack = { navController.popBackStack() })
+            val vm: AdminBeneficiosViewModel = viewModel(factory = factory)
+            AdminBeneficiosScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminUsuarios.route) {
-            AdminModulePlaceholderScreen(title = "Usuarios", onBack = { navController.popBackStack() })
+            val vm: AdminUsuariosViewModel = viewModel(factory = factory)
+            AdminUsuariosScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminFormularios.route) {
-            AdminModulePlaceholderScreen(title = "Formularios", onBack = { navController.popBackStack() })
+            val vm: AdminFormulariosViewModel = viewModel(factory = factory)
+            AdminFormulariosScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminNotificaciones.route) {
-            AdminModulePlaceholderScreen(title = "Notificaciones", onBack = { navController.popBackStack() })
+            val vm: AdminNotificacionesViewModel = viewModel(factory = factory)
+            AdminNotificacionesScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminAdministradores.route) {
-            AdminModulePlaceholderScreen(title = "Administradores", onBack = { navController.popBackStack() })
+            val vm: AdminAdministradoresViewModel = viewModel(factory = factory)
+            AdminAdministradoresScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
     }
 }
