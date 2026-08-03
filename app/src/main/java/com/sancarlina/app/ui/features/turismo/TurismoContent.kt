@@ -50,10 +50,15 @@ fun TurismoContent(
             .fillMaxSize()
             .background(SancarlinaBackground)
     ) {
+        TurismoHeroSection(
+            banner = uiState.banners.firstOrNull(),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        )
+
         TurismoSearchBar(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 16.dp, bottom = 4.dp)
+                .padding(bottom = 4.dp)
         )
 
         if (categoryChips.isNotEmpty()) {
@@ -110,11 +115,20 @@ fun TurismoContent(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(displayedPoints, key = { it.id }) { point ->
-                        TurismoPointCard(
-                            point = point,
-                            onClick = { onNavigateToPoint(point.id) }
-                        )
+                    items(displayedPoints.chunked(2)) { rowPoints ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            rowPoints.forEach { point ->
+                                TurismoPointCard(
+                                    point = point,
+                                    onClick = { onNavigateToPoint(point.id) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (rowPoints.size == 1) Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }

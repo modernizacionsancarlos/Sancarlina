@@ -31,7 +31,7 @@ fun HomeCategoryGrid(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        for (i in categories.indices step 2) {
+        for (i in categories.indices step 3) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -50,6 +50,15 @@ fun HomeCategoryGrid(
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
+                if (i + 2 < categories.size) {
+                    HomeCategoryTile(
+                        category = categories[i + 2],
+                        modifier = Modifier.weight(1f),
+                        onClick = { onCategoryClick(categories[i + 2]) }
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
@@ -63,7 +72,7 @@ private fun HomeCategoryTile(
 ) {
     Surface(
         modifier = modifier
-            .aspectRatio(1f)
+            .aspectRatio(0.92f)
             .clickable(onClick = onClick),
         shape = SancarlinaCardShape,
         color = SancarlinaSurfaceContainerLow,
@@ -73,12 +82,12 @@ private fun HomeCategoryTile(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Surface(
-                modifier = Modifier.size(56.dp),
+                modifier = Modifier.size(44.dp),
                 color = SancarlinaPrimaryContainer.copy(alpha = 0.2f),
                 shape = CircleShape
             ) {
@@ -87,7 +96,7 @@ private fun HomeCategoryTile(
                         AsyncImage(
                             model = category.iconUrl,
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp),
+                            modifier = Modifier.size(26.dp),
                             contentScale = ContentScale.Fit
                         )
                     } else {
@@ -95,15 +104,15 @@ private fun HomeCategoryTile(
                             imageVector = categoryIconFor(category.name),
                             contentDescription = null,
                             tint = SancarlinaPrimary,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(26.dp)
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = category.name.formatCategoryLabel(),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
                 color = SancarlinaOnSurface,
                 textAlign = TextAlign.Center,

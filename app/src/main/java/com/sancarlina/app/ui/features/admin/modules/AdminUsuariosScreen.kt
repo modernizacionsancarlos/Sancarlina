@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.repository.UserProfileAdmin
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminSearchField
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminUsuariosViewModel
 
@@ -33,18 +37,7 @@ fun AdminUsuariosScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Usuarios", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            AdminScreenTopBar(title = "Gestión de Usuarios", onBack = onBack)
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -54,11 +47,27 @@ fun AdminUsuariosScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            SancarlinaTextField(
+            val activeUsers = uiState.users.count { it.status == "active" }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AdminMetricCard("Usuarios", uiState.users.size.toString(), Modifier.weight(1f), emphasized = true)
+                AdminMetricCard("Activos", activeUsers.toString(), Modifier.weight(1f))
+                AdminMetricCard(
+                    "Bloqueados",
+                    (uiState.users.size - activeUsers).toString(),
+                    Modifier.weight(1f),
+                    alert = uiState.users.size > activeUsers
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            AdminSearchField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
-                label = "Buscar usuario por nombre o correo",
-                placeholder = "Ej. Maria, admin@sancarlos..."
+                placeholder = "Buscar por nombre o correo..."
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -114,7 +123,8 @@ private fun UserAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -145,6 +155,11 @@ private fun UserAdminItem(
                     text = "Puntos: ${if (user.points_balance > 0) user.points_balance else user.points} | Rol: ${user.role}",
                     style = MaterialTheme.typography.labelSmall,
                     color = SancarlinaPrimary
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                AdminStatusPill(
+                    text = if (user.status == "active") "Activo" else "Bloqueado",
+                    active = user.status == "active"
                 )
             }
             IconButton(onClick = onResetPassword) {

@@ -19,6 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.repository.Area
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminAddFab
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminZonasViewModel
 
@@ -34,37 +38,26 @@ fun AdminZonasScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Zonas (${uiState.areas.size})", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
+            AdminScreenTopBar(
+                title = "Administrar Zonas",
+                onBack = onBack,
                 actions = {
                     IconButton(
                         onClick = { viewModel.ensureSuggestedAreas() }
                     ) {
                         Icon(imageVector = Icons.Default.AutoFixHigh, contentDescription = "Cargar sugeridas", tint = SancarlinaPrimary)
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
+                }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            AdminAddFab(
+                label = "Nueva zona",
                 onClick = {
                     editingArea = Area()
                     showDialog = true
-                },
-                containerColor = SancarlinaPrimary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nueva Zona")
-            }
+                }
+            )
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -74,6 +67,22 @@ fun AdminZonasScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            val activeAreas = uiState.areas.count { it.active }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AdminMetricCard("Total zonas", uiState.areas.size.toString(), Modifier.weight(1f))
+                AdminMetricCard("Activas", activeAreas.toString(), Modifier.weight(1f), emphasized = true)
+                AdminMetricCard(
+                    "Revisión",
+                    (uiState.areas.size - activeAreas).toString(),
+                    Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
             uiState.successMessage?.let { msg ->
                 Surface(
                     color = SancarlinaPrimary.copy(alpha = 0.15f),
@@ -153,7 +162,8 @@ private fun AreaAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -189,6 +199,11 @@ private fun AreaAdminItem(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(4.dp))
+                AdminStatusPill(
+                    text = if (area.active) "Activa" else "Inactiva",
+                    active = area.active
+                )
                 if (area.description.isNotBlank()) {
                     Text(
                         text = area.description,

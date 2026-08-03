@@ -36,8 +36,7 @@ fun TurismoPointCard(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .height(240.dp)
+            .aspectRatio(0.72f)
             .clickable(onClick = onClick),
         shape = SancarlinaCardShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -62,7 +61,7 @@ fun TurismoPointCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
+                    .height(112.dp)
                     .align(Alignment.BottomCenter)
                     .background(
                         Brush.verticalGradient(
@@ -106,7 +105,7 @@ fun TurismoPointCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomStart)
-                    .padding(16.dp),
+                    .padding(12.dp),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -114,7 +113,7 @@ fun TurismoPointCard(
                     Text(
                         text = point.name,
                         color = Color.White,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     if (point.location.isNotBlank()) {
@@ -122,7 +121,7 @@ fun TurismoPointCard(
                         Text(
                             text = point.location,
                             color = Color.White.copy(alpha = 0.85f),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -132,7 +131,7 @@ fun TurismoPointCard(
 
                 Box(
                     modifier = Modifier
-                        .size(36.dp)
+                        .size(30.dp)
                         .background(SancarlinaPrimary, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
@@ -140,7 +139,7 @@ fun TurismoPointCard(
                         imageVector = Icons.Default.ArrowForward,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(17.dp)
                     )
                 }
             }

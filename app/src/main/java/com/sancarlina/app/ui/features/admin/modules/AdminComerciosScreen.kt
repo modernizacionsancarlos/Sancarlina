@@ -19,6 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.models.Tenant
+import com.sancarlina.app.ui.features.admin.components.AdminAddFab
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminSearchField
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.components.SancarlinaTextField
@@ -37,30 +42,16 @@ fun AdminComerciosScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Comercios", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            AdminScreenTopBar(title = "Administrar Comercios", onBack = onBack)
         },
         floatingActionButton = {
-            FloatingActionButton(
+            AdminAddFab(
+                label = "Agregar comercio",
                 onClick = {
                     editingTenant = Tenant()
                     showDialog = true
-                },
-                containerColor = SancarlinaPrimary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nuevo Comercio")
-            }
+                }
+            )
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -70,37 +61,46 @@ fun AdminComerciosScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            SancarlinaTextField(
+            val activeCount = uiState.tenants.count { it.status == "active" }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AdminMetricCard("Total", uiState.tenants.size.toString(), Modifier.weight(1f))
+                AdminMetricCard("Activos", activeCount.toString(), Modifier.weight(1f), emphasized = true)
+                AdminMetricCard(
+                    "Inactivos",
+                    (uiState.tenants.size - activeCount).toString(),
+                    Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            AdminSearchField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
-                label = "Buscar comercio o rubro",
-                placeholder = "Ej. Almacén, Don Pedro..."
+                placeholder = "Buscar comercio o rubro..."
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                SegmentedButton(
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
                     selected = uiState.selectedStatusFilter == "all",
                     onClick = { viewModel.onStatusFilterChanged("all") },
-                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
-                ) {
-                    Text("Todos")
-                }
-                SegmentedButton(
+                    label = { Text("Todos") }
+                )
+                FilterChip(
                     selected = uiState.selectedStatusFilter == "active",
                     onClick = { viewModel.onStatusFilterChanged("active") },
-                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
-                ) {
-                    Text("Activos")
-                }
-                SegmentedButton(
+                    label = { Text("Activos") }
+                )
+                FilterChip(
                     selected = uiState.selectedStatusFilter == "inactive",
                     onClick = { viewModel.onStatusFilterChanged("inactive") },
-                    shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
-                ) {
-                    Text("Inactivos")
-                }
+                    label = { Text("Inactivos") }
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -161,7 +161,8 @@ private fun TenantAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -178,18 +179,10 @@ private fun TenantAdminItem(
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Surface(
-                        shape = SancarlinaChipShape,
-                        color = if (tenant.status == "active") Color(0xFF4CAF50).copy(alpha = 0.15f) else Color.Red.copy(alpha = 0.15f)
-                    ) {
-                        Text(
-                            text = if (tenant.status == "active") "Activo" else "Inactivo",
-                            color = if (tenant.status == "active") Color(0xFF2E7D32) else Color.Red,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                        )
-                    }
+                    AdminStatusPill(
+                        text = if (tenant.status == "active") "Activo" else "Inactivo",
+                        active = tenant.status == "active"
+                    )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(

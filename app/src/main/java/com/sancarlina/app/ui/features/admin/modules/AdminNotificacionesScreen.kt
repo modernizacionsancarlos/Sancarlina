@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.repository.NotificationAdmin
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminAddFab
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminNotificacionesViewModel
 
@@ -32,27 +35,10 @@ fun AdminNotificacionesScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Notificaciones", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            AdminScreenTopBar(title = "Administrar Notificaciones", onBack = onBack)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showDialog = true },
-                containerColor = SancarlinaPrimary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nueva Notificación")
-            }
+            AdminAddFab(label = "Nueva notificación", onClick = { showDialog = true })
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -62,6 +48,19 @@ fun AdminNotificacionesScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            AdminMetricCard(
+                label = "Notificaciones enviadas",
+                value = uiState.notifications.size.toString(),
+                modifier = Modifier.fillMaxWidth(),
+                emphasized = true
+            )
+            Text(
+                text = "Historial",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 18.dp, bottom = 10.dp)
+            )
+
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
@@ -106,7 +105,8 @@ private fun NotificationAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(

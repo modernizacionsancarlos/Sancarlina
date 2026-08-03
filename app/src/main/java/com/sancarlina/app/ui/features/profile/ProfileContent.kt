@@ -52,28 +52,28 @@ fun ProfileContent(
             profileImageUrl = uiState.profileImageUrl
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         ProfileSectionTitle(stringResource(R.string.profile_section_account))
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         ProfileActionCard(Icons.Default.Edit, "Editar perfil", onNavigateToEditProfile)
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         ProfileActionCard(Icons.Default.Favorite, "Mis favoritos", onNavigateToFavorites)
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         ProfileActionCard(Icons.Default.History, "Historial de puntos", onNavigateToHistory)
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         ProfileSectionTitle(stringResource(R.string.profile_section_community))
-        Spacer(modifier = Modifier.height(12.dp))
-        ProfileActionCard(Icons.Default.Store, "Sumá tu emprendimiento", onNavigateToEmprendimiento)
         Spacer(modifier = Modifier.height(8.dp))
+        ProfileActionCard(Icons.Default.Store, "Sumá tu emprendimiento", onNavigateToEmprendimiento)
+        Spacer(modifier = Modifier.height(4.dp))
         ProfileActionCard(Icons.Default.Notifications, "Notificaciones", onNavigateToNotifications)
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         ProfileSectionTitle(stringResource(R.string.profile_section_support))
-        Spacer(modifier = Modifier.height(12.dp))
-        ProfileActionCard(Icons.AutoMirrored.Filled.Help, "Ayuda y soporte", onNavigateToSupport)
         Spacer(modifier = Modifier.height(8.dp))
+        ProfileActionCard(Icons.AutoMirrored.Filled.Help, "Ayuda y soporte", onNavigateToSupport)
+        Spacer(modifier = Modifier.height(4.dp))
         ProfileActionCard(Icons.Default.Info, "Información legal", { /* ruta legal pendiente en NavGraph */ })
 
         Spacer(modifier = Modifier.height(32.dp))

@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.viewmodel.BannerItem
 
@@ -13,6 +14,7 @@ fun HomeBannerCarousel(
     banners: List<BannerItem>,
     modifier: Modifier = Modifier
 ) {
+    val cardWidth = LocalConfiguration.current.screenWidthDp.dp - 32.dp
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -21,7 +23,11 @@ fun HomeBannerCarousel(
         itemsIndexed(banners, key = { index, banner ->
             "${index}_${banner.title}_${banner.imageUrl}"
         }) { index, banner ->
-            HomeHeroCard(banner = banner, badgeIndex = index)
+            HomeHeroCard(
+                banner = banner,
+                badgeIndex = index,
+                modifier = Modifier.width(cardWidth)
+            )
         }
     }
 }

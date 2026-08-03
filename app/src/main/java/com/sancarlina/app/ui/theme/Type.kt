@@ -2,14 +2,16 @@ package com.sancarlina.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.sancarlina.app.R
 
 // Headlines: Be Vietnam Pro — Body/labels: Manrope (DESIGN.md)
 // Sin TTF locales en el repo; fallback temporal hasta UI-STITCH-1+fonts.
-val BeVietnamPro = FontFamily.SansSerif
-val Manrope = FontFamily.SansSerif
+val BeVietnamPro = FontFamily(Font(R.font.be_vietnam_pro, FontWeight.Normal))
+val Manrope = FontFamily(Font(R.font.manrope, FontWeight.Normal))
 
 val Typography = Typography(
     displayLarge = TextStyle(

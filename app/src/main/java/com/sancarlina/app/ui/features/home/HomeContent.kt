@@ -78,8 +78,11 @@ internal fun HomeContentBody(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
+            HomeWelcomeHeader()
+            Spacer(modifier = Modifier.height(16.dp))
+
             HomeSearchBar(onClick = onNavigateToSearch)
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             HomeSectionHeader(
                 title = stringResource(R.string.home_offers_section),
@@ -110,7 +113,7 @@ internal fun HomeContentBody(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             HomeSectionHeader(title = stringResource(R.string.home_explore_section))
             Spacer(modifier = Modifier.height(8.dp))
@@ -141,7 +144,7 @@ internal fun HomeContentBody(
             }
 
             uiState.nearbyProduct?.let { product ->
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
                 HomeSectionHeader(title = stringResource(R.string.home_featured_section))
                 Spacer(modifier = Modifier.height(8.dp))
                 HomeFeaturedProductCard(

@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.repository.Benefit
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminAddFab
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminBeneficiosViewModel
 
@@ -33,30 +37,16 @@ fun AdminBeneficiosScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Beneficios", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            AdminScreenTopBar(title = "Administrar Beneficios", onBack = onBack)
         },
         floatingActionButton = {
-            FloatingActionButton(
+            AdminAddFab(
+                label = "Nuevo beneficio",
                 onClick = {
                     editingBenefit = Benefit()
                     showDialog = true
-                },
-                containerColor = SancarlinaPrimary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nuevo Beneficio")
-            }
+                }
+            )
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -66,6 +56,26 @@ fun AdminBeneficiosScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            val activeBenefits = uiState.benefits.count { it.active }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                AdminMetricCard(
+                    "Total activos",
+                    activeBenefits.toString(),
+                    Modifier.weight(1.2f),
+                    emphasized = true
+                )
+                AdminMetricCard(
+                    "Pausados",
+                    (uiState.benefits.size - activeBenefits).toString(),
+                    Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
@@ -122,7 +132,8 @@ private fun BenefitAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -139,6 +150,11 @@ private fun BenefitAdminItem(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
+                AdminStatusPill(
+                    text = if (benefit.active) "Activo" else "Pausado",
+                    active = benefit.active
+                )
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = benefit.title,
                     style = MaterialTheme.typography.titleMedium,

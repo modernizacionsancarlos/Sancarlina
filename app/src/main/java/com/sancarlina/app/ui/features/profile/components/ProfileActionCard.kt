@@ -28,24 +28,24 @@ fun ProfileActionCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        color = SancarlinaSurfaceContainerLowest,
-        shape = SancarlinaCardShape,
-        shadowElevation = 2.dp
+        color = SancarlinaSurfaceContainerLow,
+        shape = RoundedCornerShape(14.dp),
+        shadowElevation = 0.dp
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
-                modifier = Modifier.size(44.dp),
+                modifier = Modifier.size(36.dp),
                 shape = RoundedCornerShape(12.dp),
                 color = SancarlinaSurfaceContainerLow
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(icon, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(22.dp))
+                    Icon(icon, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(20.dp))
                 }
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,

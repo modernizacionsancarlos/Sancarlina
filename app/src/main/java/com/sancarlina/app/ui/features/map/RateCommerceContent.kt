@@ -50,76 +50,69 @@ fun RateCommerceContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            SancarlinaCard(modifier = Modifier.fillMaxWidth()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "¿Qué te pareció tu experiencia?",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface,
-                        textAlign = TextAlign.Center
-                    )
+            Text(
+                text = "¿Cómo fue tu visita?",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
+                color = SancarlinaOnSurface,
+                textAlign = TextAlign.Center
+            )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // Stars Rating Row
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        repeat(5) { index ->
-                            val starIndex = index + 1
-                            IconButton(
-                                onClick = { rating = starIndex },
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (starIndex <= rating) Icons.Default.Star else Icons.Default.StarOutline,
-                                    contentDescription = null,
-                                    tint = if (starIndex <= rating) Color(0xFFF59E0B) else SancarlinaOutlineVariant,
-                                    modifier = Modifier.size(40.dp)
-                                )
-                            }
-                        }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                repeat(5) { index ->
+                    val starIndex = index + 1
+                    IconButton(onClick = { rating = starIndex }, modifier = Modifier.size(48.dp)) {
+                        Icon(
+                            imageVector = if (starIndex <= rating) Icons.Default.Star else Icons.Default.StarOutline,
+                            contentDescription = null,
+                            tint = if (starIndex <= rating) Color(0xFFF2B32A) else SancarlinaOutlineVariant,
+                            modifier = Modifier.size(40.dp)
+                        )
                     }
                 }
             }
 
-            SancarlinaCard(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Tu opinión (Opcional)",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = SancarlinaOnSurface,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
+            Text(
+                text = if (rating == 0) "Toca una estrella para calificar" else "$rating de 5 estrellas",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SancarlinaOnSurfaceVariant
+            )
 
-                    SancarlinaTextField(
-                        value = comment,
-                        onValueChange = { comment = it },
-                        placeholder = "Cuéntanos más detalles sobre tu experiencia...",
-                        singleLine = false,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(140.dp)
-                    )
-                }
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Detalles de la experiencia",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = SancarlinaOnSurface,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+                SancarlinaTextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    placeholder = "Cuéntanos tu experiencia...",
+                    singleLine = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            SancarlinaPrimaryButton(
-                text = "PUBLICAR RESEÑA",
-                onClick = onBack, // Vuelve atrás (lógica de guardado local o backend pendiente)
+            Button(
+                onClick = onBack,
                 enabled = rating > 0,
-                modifier = Modifier.fillMaxWidth()
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary),
+                shape = SancarlinaButtonShape
+            ) {
+                Text("Enviar calificación", fontWeight = FontWeight.SemiBold)
+            }
         }
     }
 }

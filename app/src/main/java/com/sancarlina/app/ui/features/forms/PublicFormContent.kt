@@ -36,6 +36,7 @@ import com.sancarlina.app.data.models.FormField
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.utils.SanCarlosDistricts
 
@@ -56,21 +57,7 @@ fun PublicFormContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(uiState.formSchema?.title ?: "Formulario", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            SancarlinaTopBar(title = "Formulario público", onBack = onBack)
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -104,18 +91,66 @@ fun PublicFormContent(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
+                color = SancarlinaPrimary
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = Color.White.copy(alpha = 0.16f)
+                    ) {
+                        Text(
+                            text = "GESTIÓN MUNICIPAL",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = schema.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White
+                    )
+                    if (!schema.description.isNullOrBlank()) {
+                        Text(
+                            text = schema.description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.86f),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "${schema.fields.count { it.type != "section" }} campos · Los marcados con * son obligatorios",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White.copy(alpha = 0.82f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (!schema.description.isNullOrBlank()) {
                 Text(
-                    text = schema.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Completá la información solicitada. Podés revisar todo antes de enviar.",
+                    style = MaterialTheme.typography.bodySmall,
                     color = SancarlinaOnSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                 )
             }
 
-            SancarlinaElevatedCard {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SancarlinaElevatedCard(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 schema.fields.forEach { field ->
                     RenderFormField(
                         field = field,
@@ -158,13 +193,22 @@ fun PublicFormContent(
                     }
                 } else {
                     SancarlinaPrimaryButton(
-                        text = "Enviar Formulario",
+                        text = "Enviar formulario",
                         onClick = {
                             viewModel.submitForm(context, onSuccess)
                         }
                     )
                 }
             }
+
+            Text(
+                text = "Tu información se utilizará únicamente para gestionar esta solicitud.",
+                style = MaterialTheme.typography.labelSmall,
+                color = SancarlinaOnSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 18.dp)
+            )
         }
     }
 }
@@ -186,14 +230,19 @@ private fun RenderFormField(
 
     when (field.type) {
         "section" -> {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = field.label,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary
-            )
-            HorizontalDivider(modifier = Modifier.padding(top = 4.dp), color = SancarlinaOutlineVariant)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                color = SancarlinaPrimary.copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = field.label,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = SancarlinaPrimary,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp)
+                )
+            }
         }
         "text", "email", "phone" -> {
             val kType = when (field.type) {
@@ -225,7 +274,10 @@ private fun RenderFormField(
                 placeholder = { Text(field.placeholder ?: "") },
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = SancarlinaSurfaceContainerLow,
+                    unfocusedContainerColor = SancarlinaSurfaceContainerLow,
                     focusedBorderColor = SancarlinaPrimary,
                     unfocusedBorderColor = SancarlinaOutlineVariant
                 )
@@ -271,7 +323,10 @@ private fun RenderFormField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = SancarlinaSurfaceContainerLow,
+                            unfocusedContainerColor = SancarlinaSurfaceContainerLow,
                             focusedBorderColor = SancarlinaPrimary,
                             unfocusedBorderColor = SancarlinaOutlineVariant
                         )
@@ -346,9 +401,9 @@ private fun RenderFormField(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(240.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, SancarlinaOutlineVariant, RoundedCornerShape(12.dp))
+                        .height(220.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .border(1.dp, SancarlinaOutlineVariant, RoundedCornerShape(18.dp))
                 ) {
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
@@ -482,7 +537,8 @@ private fun RenderFormField(
                                 )
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(999.dp)
                     ) {
                         Icon(imageVector = Icons.Default.AddAPhoto, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))

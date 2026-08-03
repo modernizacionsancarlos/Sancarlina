@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.sancarlina.app.data.models.SuperAdmin
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminAddFab
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminAdministradoresViewModel
 
@@ -36,27 +40,10 @@ fun AdminAdministradoresScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Gestión de Administradores", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
-            )
+            AdminScreenTopBar(title = "Administrar Administradores", onBack = onBack)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showDialog = true },
-                containerColor = SancarlinaPrimary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nuevo Administrador")
-            }
+            AdminAddFab(label = "Nuevo administrador", onClick = { showDialog = true })
         },
         containerColor = SancarlinaBackground
     ) { innerPadding ->
@@ -66,6 +53,47 @@ fun AdminAdministradoresScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = SancarlinaCardShape,
+                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f)
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Security,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                    Text(
+                        text = "Zona de acceso sensible. Verificá cada alta o cambio de estado.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            val activeAdmins = uiState.superAdmins.count { it.active }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                AdminMetricCard("Activos", activeAdmins.toString(), Modifier.weight(1f), emphasized = true)
+                AdminMetricCard(
+                    "Suspendidos",
+                    (uiState.superAdmins.size - activeAdmins).toString(),
+                    Modifier.weight(1f),
+                    alert = uiState.superAdmins.size > activeAdmins
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
@@ -112,7 +140,8 @@ private fun SuperAdminItem(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -135,6 +164,11 @@ private fun SuperAdminItem(
                     text = if (admin.active) "Cuenta Activa" else "Cuenta Suspendida",
                     style = MaterialTheme.typography.labelSmall,
                     color = if (admin.active) Color(0xFF2E7D32) else Color.Red
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                AdminStatusPill(
+                    text = if (admin.active) "Activo" else "Suspendido",
+                    active = admin.active
                 )
             }
             IconButton(onClick = onToggleActive) {

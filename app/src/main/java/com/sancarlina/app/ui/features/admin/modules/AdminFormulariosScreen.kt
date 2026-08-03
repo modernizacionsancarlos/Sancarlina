@@ -27,6 +27,9 @@ import com.sancarlina.app.data.repository.SubmissionAdmin
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.components.SancarlinaTextField
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
+import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminFormulariosViewModel
 
@@ -42,18 +45,7 @@ fun AdminFormulariosScreen(
     Scaffold(
         topBar = {
             Column {
-                TopAppBar(
-                    title = { Text("Gestión de Formularios", fontWeight = FontWeight.Bold) },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = SancarlinaBackground,
-                        titleContentColor = SancarlinaOnBackground
-                    )
-                )
+                AdminScreenTopBar(title = "Administrar Formularios", onBack = onBack)
                 TabRow(
                     selectedTabIndex = uiState.selectedTab,
                     containerColor = SancarlinaBackground,
@@ -125,6 +117,52 @@ private fun DashboardTab(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        val publicCount = uiState.schemas.count { it.isPublic }
+        val pendingCount = uiState.submissions.count { it.status == "pending" }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            AdminMetricCard("Total", uiState.schemas.size.toString(), Modifier.weight(1f))
+            AdminMetricCard("Publicados", publicCount.toString(), Modifier.weight(1f), emphasized = true)
+            AdminMetricCard(
+                "Pendientes",
+                pendingCount.toString(),
+                Modifier.weight(1f),
+                alert = pendingCount > 0
+            )
+        }
+
+        if (pendingCount > 0) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                shape = SancarlinaCardShape,
+                color = MaterialTheme.colorScheme.errorContainer
+            ) {
+                Row(
+                    modifier = Modifier.padding(13.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.NotificationsActive,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                    Text(
+                        text = "$pendingCount respuestas pendientes de revisión",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
         // Barra Superior de Controles (Lista/Grilla, Ordenamiento, Nuevo)
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -229,11 +267,17 @@ private fun FormSchemaCard(
     Card(
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                AdminStatusPill(
+                    text = if (schema.isPublic) "Publicado" else "Borrador",
+                    active = schema.isPublic
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = schema.title,
                     style = MaterialTheme.typography.titleMedium,

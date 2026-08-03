@@ -36,8 +36,8 @@ fun MapFloatingTopBar(
             .fillMaxWidth()
             .height(56.dp),
         color = SancarlinaSurfaceContainerLowest.copy(alpha = 0.94f),
-        shape = RoundedCornerShape(12.dp),
-        shadowElevation = 4.dp
+        shape = RoundedCornerShape(28.dp),
+        shadowElevation = 6.dp
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -73,7 +73,7 @@ fun MapFloatingTopBar(
                 ) {
                     if (searchQuery.isEmpty()) {
                         Text(
-                            text = "Buscar bodegas, vinos...",
+                            text = "Â¿A dÃ³nde quieres ir?",
                             style = MaterialTheme.typography.bodyLarge,
                             color = SancarlinaOnSurfaceVariant
                         )
@@ -105,13 +105,6 @@ fun MapFloatingTopBar(
                 }
             }
             
-            // Borde inferior de marca de color primario (Olive) como en el Stitch
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(2.5.dp)
-                    .background(SancarlinaPrimary)
-            )
         }
     }
 }

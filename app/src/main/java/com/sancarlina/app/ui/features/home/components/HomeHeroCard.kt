@@ -37,8 +37,7 @@ fun HomeHeroCard(
 
     Surface(
         modifier = modifier
-            .width(280.dp)
-            .height(180.dp),
+            .height(196.dp),
         shape = SancarlinaCardShape,
         shadowElevation = 4.dp,
         color = SancarlinaSurfaceContainerLow

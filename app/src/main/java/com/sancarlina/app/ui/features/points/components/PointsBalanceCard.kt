@@ -14,40 +14,82 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
-import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.theme.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Surface
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun PointsBalanceCard(
     balance: Int,
     modifier: Modifier = Modifier
 ) {
-    SancarlinaElevatedCard(modifier = modifier) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = SancarlinaPrimary,
+        contentColor = Color.White,
+        shape = SancarlinaCardShape,
+        shadowElevation = 6.dp
+    ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Icon(
+                imageVector = Icons.Default.Stars,
+                contentDescription = null,
+                tint = SancarlinaPrimaryFixed.copy(alpha = 0.16f),
+                modifier = Modifier
+                    .size(148.dp)
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 26.dp)
+            )
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
             Text(
                 text = stringResource(R.string.points_balance_label),
                 style = MaterialTheme.typography.titleMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Stars,
-                    contentDescription = null,
-                    tint = Color(0xFFF59E0B),
-                    modifier = Modifier.size(36.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.height(2.dp))
+            Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = balance.toString(),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
-                    color = SancarlinaOnSurface
+                    color = Color.White
+                )
+                Text(
+                    text = " pts",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White.copy(alpha = 0.82f),
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
+            Spacer(modifier = Modifier.height(18.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Nivel Plata", style = MaterialTheme.typography.labelLarge, color = Color.White)
+                Text(
+                    "Tu progreso",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White.copy(alpha = 0.72f)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { ((balance % 1000) / 1000f).coerceIn(0f, 1f) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(7.dp)
+                    .clip(CircleShape),
+                color = Color.White,
+                trackColor = Color.White.copy(alpha = 0.3f)
+            )
+        }
         }
     }
 }

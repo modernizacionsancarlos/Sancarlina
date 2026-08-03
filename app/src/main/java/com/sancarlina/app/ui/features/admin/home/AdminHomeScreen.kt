@@ -1,27 +1,67 @@
 package com.sancarlina.app.ui.features.admin.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.sancarlina.app.R
 import com.sancarlina.app.navigation.Screen
 import com.sancarlina.app.ui.components.LiveClockGreeting
-import com.sancarlina.app.ui.components.SancarlinaElevatedCard
-import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
+import com.sancarlina.app.ui.theme.SancarlinaBackground
+import com.sancarlina.app.ui.theme.SancarlinaCardShape
+import com.sancarlina.app.ui.theme.SancarlinaError
+import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
+import com.sancarlina.app.ui.theme.SancarlinaOutlineVariant
+import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
+import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLowest
 import com.sancarlina.app.viewmodel.AdminHomeViewModel
 
 data class AdminModuleItem(
@@ -31,7 +71,7 @@ data class AdminModuleItem(
     val route: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun AdminHomeScreen(
     viewModel: AdminHomeViewModel,
@@ -40,16 +80,15 @@ fun AdminHomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val stats = uiState.stats
-
     val modules = remember {
         listOf(
-            AdminModuleItem("Comercios", "Gestión de comercios y bodegas", Icons.Default.Store, Screen.AdminComercios.route),
-            AdminModuleItem("Zonas", "Administrar zonas turísticas", Icons.Default.Map, Screen.AdminZonas.route),
-            AdminModuleItem("Beneficios", "Catálogo de puntos y canjes", Icons.Default.CardGiftcard, Screen.AdminBeneficios.route),
-            AdminModuleItem("Usuarios", "Gestión de perfiles de usuario", Icons.Default.Group, Screen.AdminUsuarios.route),
-            AdminModuleItem("Formularios", "Esquemas y plantillas dinámicas", Icons.Default.Description, Screen.AdminFormularios.route),
-            AdminModuleItem("Notificaciones", "Alertas y comunicados", Icons.Default.Notifications, Screen.AdminNotificaciones.route),
-            AdminModuleItem("Administradores", "Gestión de permisos superAdmin", Icons.Default.Security, Screen.AdminAdministradores.route)
+            AdminModuleItem("Comercios", "Gestión de comercios", Icons.Default.Store, Screen.AdminComercios.route),
+            AdminModuleItem("Zonas", "Distritos y áreas", Icons.Default.Map, Screen.AdminZonas.route),
+            AdminModuleItem("Beneficios", "Catálogo de canjes", Icons.Default.CardGiftcard, Screen.AdminBeneficios.route),
+            AdminModuleItem("Usuarios", "Perfiles y puntos", Icons.Default.Group, Screen.AdminUsuarios.route),
+            AdminModuleItem("Formularios", "Esquemas dinámicos", Icons.Default.Description, Screen.AdminFormularios.route),
+            AdminModuleItem("Notificaciones", "Alertas municipales", Icons.Default.Notifications, Screen.AdminNotificaciones.route),
+            AdminModuleItem("Administradores", "Accesos del sistema", Icons.Default.Security, Screen.AdminAdministradores.route)
         )
     }
 
@@ -57,21 +96,24 @@ fun AdminHomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    LiveClockGreeting()
+                    Image(
+                        painter = painterResource(R.drawable.ic_gondolapp_splash_logo),
+                        contentDescription = "GondolApp",
+                        modifier = Modifier
+                            .width(116.dp)
+                            .height(34.dp)
+                    )
                 },
                 actions = {
                     IconButton(onClick = onLogout) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Salir del panel",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = SancarlinaError
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = SancarlinaBackground)
             )
         },
         containerColor = SancarlinaBackground
@@ -81,22 +123,23 @@ fun AdminHomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
+            LiveClockGreeting()
             Text(
-                text = "Resumen del Sistema",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary
+                text = "Panel de gestión municipal",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SancarlinaOnSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             if (uiState.isLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(100.dp),
+                        .height(136.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(color = SancarlinaPrimary)
@@ -104,81 +147,97 @@ fun AdminHomeScreen(
             } else {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    StatCard(
-                        title = "Comercios",
-                        value = "${stats.activeTenants} / ${stats.totalTenants}",
-                        icon = Icons.Default.Store,
+                    AdminMetricCard(
+                        label = "Comercios",
+                        value = stats.totalTenants.toString(),
                         modifier = Modifier.weight(1f)
                     )
-                    StatCard(
-                        title = "Respuestas",
-                        value = "${stats.pendingSubmissions}",
-                        icon = Icons.Default.Inbox,
+                    AdminMetricCard(
+                        label = "Activos",
+                        value = stats.activeTenants.toString(),
+                        modifier = Modifier.weight(1f),
+                        emphasized = true
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    AdminMetricCard(
+                        label = "Formularios",
+                        value = stats.activeForms.toString(),
                         modifier = Modifier.weight(1f)
                     )
-                    StatCard(
-                        title = "Formularios",
-                        value = "${stats.activeForms}",
-                        icon = Icons.Default.Description,
-                        modifier = Modifier.weight(1f)
+                    AdminMetricCard(
+                        label = "Pendientes",
+                        value = stats.pendingSubmissions.toString(),
+                        modifier = Modifier.weight(1f),
+                        alert = stats.pendingSubmissions > 0
                     )
+                }
+            }
+
+            if (stats.pendingSubmissions > 0) {
+                Spacer(modifier = Modifier.height(14.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    color = SancarlinaError
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Warning, contentDescription = null, tint = Color.White)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Requieren revisión",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "${stats.pendingSubmissions} respuestas pendientes",
+                                color = Color.White.copy(alpha = 0.86f),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Módulos de Gestión",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            modules.forEach { module ->
-                ModuleCard(
-                    item = module,
-                    onClick = { onNavigateToModule(module.route) }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun StatCard(
-    title: String,
-    value: String,
-    icon: ImageVector,
-    modifier: Modifier = Modifier
-) {
-    SancarlinaElevatedCard(modifier = modifier) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = SancarlinaPrimary,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = value,
+                text = "Módulos de gestión",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary
+                fontWeight = FontWeight.Bold
             )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelSmall,
-                color = SancarlinaOnSurfaceVariant
-            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            modules.chunked(2).forEach { rowItems ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    rowItems.forEach { module ->
+                        ModuleCard(
+                            item = module,
+                            onClick = { onNavigateToModule(module.route) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (rowItems.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -186,55 +245,52 @@ private fun StatCard(
 @Composable
 private fun ModuleCard(
     item: AdminModuleItem,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
         onClick = onClick,
+        modifier = modifier.height(128.dp),
         shape = SancarlinaCardShape,
         colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
+        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.45f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(14.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Surface(
-                shape = SancarlinaChipShape,
-                color = SancarlinaPrimary.copy(alpha = 0.12f),
-                modifier = Modifier.size(44.dp)
+                modifier = Modifier.size(42.dp),
+                shape = CircleShape,
+                color = SancarlinaPrimary
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = item.icon,
                         contentDescription = null,
-                        tint = SancarlinaPrimary,
-                        modifier = Modifier.size(24.dp)
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = item.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOnSurfaceVariant
-                )
-            }
-
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = SancarlinaPrimary
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = item.description,
+                style = MaterialTheme.typography.labelSmall,
+                color = SancarlinaOnSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

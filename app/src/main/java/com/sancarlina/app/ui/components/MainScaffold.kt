@@ -492,10 +492,10 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding(),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = SancarlinaSurfaceContainerLowest,
         shape = SancarlinaBottomBarShape,
-        tonalElevation = 3.dp,
-        shadowElevation = 8.dp
+        tonalElevation = 1.dp,
+        shadowElevation = 10.dp
     ) {
         Row(
             modifier = Modifier
@@ -509,11 +509,7 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                 val isSelected = currentDestination == screen.route ||
                     (screen == Screen.Home && currentDestination == Screen.Search.route)
                 if (screen == Screen.Map) {
-                    val contentColor = if (isSelected) {
-                        MaterialTheme.colorScheme.secondary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
+                    val contentColor = if (isSelected) SancarlinaPrimary else SancarlinaOnSurfaceVariant
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -538,7 +534,7 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                             Image(
                                 painter = painterResource(id = R.drawable.ic_gondolapp_splash_logo),
                                 contentDescription = null,
-                                modifier = Modifier.size(if (isSelected) 40.dp else 34.dp),
+                                modifier = Modifier.size(if (isSelected) 42.dp else 32.dp),
                                 contentScale = ContentScale.Fit,
                                 alpha = if (isSelected) 1f else 0.6f
                             )
@@ -554,17 +550,19 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                         )
                     }
                 } else {
-                    val contentColor = if (isSelected) {
-                        MaterialTheme.colorScheme.secondary
+                    val selectedColor = if (screen == Screen.Profile) SancarlinaSecondary else SancarlinaPrimary
+                    val selectedContainer = if (screen == Screen.Profile) {
+                        SancarlinaSecondaryFixed
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        SancarlinaPrimaryFixed.copy(alpha = 0.55f)
                     }
+                    val contentColor = if (isSelected) selectedColor else SancarlinaOnSurfaceVariant
 
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(percent = 50))
                             .background(
-                                if (isSelected) SancarlinaNavIndicator else Color.Transparent
+                                if (isSelected) selectedContainer else Color.Transparent
                             )
                             .clickable {
                                 if (!isSelected) {

@@ -16,7 +16,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.theme.*
 
 @Composable
@@ -27,19 +26,20 @@ fun ProfileHeroCard(
     profileImageUrl: String?,
     modifier: Modifier = Modifier
 ) {
-    SancarlinaElevatedCard(modifier = modifier) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
             ProfileAvatar(
                 name = userName,
                 imageUrl = profileImageUrl
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = userName,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = SancarlinaOnSurface
             )
@@ -51,19 +51,18 @@ fun ProfileHeroCard(
             if (pointsBalance > 0) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Surface(
-                    color = SancarlinaPrimaryContainer.copy(alpha = 0.25f),
+                    color = SancarlinaSecondaryFixed,
                     shape = CircleShape
                 ) {
                     Text(
                         text = "$pointsBalance puntos",
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
                         style = MaterialTheme.typography.labelLarge,
-                        color = SancarlinaPrimary,
+                        color = SancarlinaOnSecondaryFixedVariant,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
-        }
     }
 }
 
@@ -74,13 +73,13 @@ private fun ProfileAvatar(name: String, imageUrl: String?) {
             model = imageUrl,
             contentDescription = null,
             modifier = Modifier
-                .size(96.dp)
+                .size(88.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
     } else {
         Surface(
-            modifier = Modifier.size(96.dp),
+            modifier = Modifier.size(88.dp),
             shape = CircleShape,
             color = SancarlinaPrimary.copy(alpha = 0.12f)
         ) {
