@@ -9,10 +9,13 @@ import com.sancarlina.app.data.repository.TenantsRepository
 import com.sancarlina.app.utils.Logger
 import com.google.firebase.auth.FirebaseAuth
 import com.sancarlina.app.data.repository.UserRepository
+import com.sancarlina.app.data.repository.EngagementRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 data class CommerceProfileUiState(
@@ -27,11 +30,13 @@ class CommerceProfileViewModel(
     private val auth: FirebaseAuth,
     private val userRepository: UserRepository,
     private val tenantsRepository: TenantsRepository,
-    private val formsRepository: FormsRepository
+    private val formsRepository: FormsRepository,
+    private val engagementRepository: EngagementRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CommerceProfileUiState())
     val uiState: StateFlow<CommerceProfileUiState> = _uiState.asStateFlow()
+    private var syncJob: kotlinx.coroutines.Job? = null
 
     fun loadCommerce(commerceId: String) {
         if (commerceId.isBlank()) {
@@ -41,23 +46,24 @@ class CommerceProfileViewModel(
 
         _uiState.update { it.copy(isLoading = true, error = null) }
         
-        viewModelScope.launch {
-            try {
-                // 1. Fetch Tenant details (from cache if possible)
-                val tenants = tenantsRepository.getActiveTenants()
-                val tenant = tenants.find { it.id == commerceId }
-                
-                // 2. Fetch and filter associated forms
-                val allForms = formsRepository.getFormsByTenant(commerceId)
-                val filteredForms = allForms.filter { form ->
-                    form.isPublic && form.acceptsResponses && form.status != "archived"
-                }
-
-                // 3. Fetch favorite status
-                val uid = auth.currentUser?.uid
-                val favoriteTenantIds = uid?.let { userRepository.getFavoriteTenantIds(it) } ?: emptyList()
-                val isFav = favoriteTenantIds.contains(commerceId)
-                
+        syncJob?.cancel()
+        syncJob = viewModelScope.launch {
+            val favoriteIdsFlow = auth.currentUser?.uid
+                ?.let(userRepository::observeFavoriteTenantIds)
+                ?: flowOf(emptyList())
+            combine(
+                tenantsRepository.observeTenant(commerceId),
+                formsRepository.observeFormsByTenant(commerceId),
+                favoriteIdsFlow
+            ) { tenant, allForms, favoriteTenantIds ->
+                Triple(
+                    tenant,
+                    allForms.filter { form ->
+                        form.isPublic && form.acceptsResponses && form.status != "archived"
+                    },
+                    favoriteTenantIds.contains(commerceId)
+                )
+            }.collect { (tenant, filteredForms, isFav) ->
                 _uiState.update { 
                     it.copy(
                         tenant = tenant,
@@ -66,9 +72,6 @@ class CommerceProfileViewModel(
                         isLoading = false
                     )
                 }
-            } catch (e: Exception) {
-                Logger.e("Error loading commerce profile", e)
-                _uiState.update { it.copy(isLoading = false, error = "Error al cargar la información") }
             }
         }
     }
@@ -84,6 +87,15 @@ class CommerceProfileViewModel(
             } catch (e: Exception) {
                 Logger.e("Error toggling favorite", e)
             }
+        }
+    }
+
+    fun trackAction(action: String) {
+        val tenant = _uiState.value.tenant ?: return
+        viewModelScope.launch {
+            runCatching {
+                engagementRepository.trackTenantAction(tenant.id, tenant.name, action)
+            }.onFailure { Logger.e("Error tracking tenant action", it) }
         }
     }
 }

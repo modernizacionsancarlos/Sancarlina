@@ -34,7 +34,7 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.forgot_title),
@@ -56,13 +56,13 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
                     Surface(
                         modifier = Modifier.size(88.dp),
                         shape = CircleShape,
-                        color = SancarlinaPrimary.copy(alpha = 0.12f)
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
                                 Icons.Default.LockReset,
                                 contentDescription = null,
-                                tint = SancarlinaPrimary,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(44.dp)
                             )
                         }
@@ -73,7 +73,7 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
                     Text(
                         text = stringResource(R.string.forgot_message),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = SancarlinaOnSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
 
@@ -89,7 +89,7 @@ fun ForgotPasswordContent(onBack: () -> Unit) {
                     Spacer(modifier = Modifier.height(24.dp))
 
                     if (isLoading) {
-                        CircularProgressIndicator(color = SancarlinaPrimary)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     } else {
                         SancarlinaPrimaryButton(
                             text = stringResource(R.string.forgot_cta),

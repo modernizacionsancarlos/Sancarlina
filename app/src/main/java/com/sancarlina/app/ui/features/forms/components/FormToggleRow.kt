@@ -11,9 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.components.SancarlinaCard
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaOutline
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun FormToggleRow(
@@ -33,20 +30,20 @@ fun FormToggleRow(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOutline
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = SancarlinaPrimary,
-                    checkedTrackColor = SancarlinaPrimary.copy(alpha = 0.3f)
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
                 )
             )
         }

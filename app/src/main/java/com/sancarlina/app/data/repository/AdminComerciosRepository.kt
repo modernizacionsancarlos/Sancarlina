@@ -1,6 +1,7 @@
 package com.sancarlina.app.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.sancarlina.app.data.models.Tenant
 import com.sancarlina.app.data.remote.FirestoreCollections
 import kotlinx.coroutines.tasks.await
@@ -17,7 +18,7 @@ class AdminComerciosRepository(
 
             val tenants = snapshot.documents.mapNotNull { doc ->
                 try {
-                    doc.toObject(Tenant::class.java)?.copy(id = doc.id)
+                    Tenant.fromMap(doc.id, doc.data.orEmpty())
                 } catch (e: Exception) {
                     null
                 }
@@ -51,12 +52,14 @@ class AdminComerciosRepository(
                 "geo_coordinates" to tenant.geo_coordinates,
                 "cover_url" to tenant.cover_url,
                 "image_url" to tenant.image_url,
+                "photo_url" to tenant.photoUrl,
+                "logo_url" to tenant.logoUrl,
                 "gallery" to tenant.gallery,
                 "rating" to tenant.rating,
                 "reviews_count" to tenant.reviews_count
             )
 
-            docRef.set(tenantData.filterValues { it != null }).await()
+            docRef.set(tenantData.filterValues { it != null }, SetOptions.merge()).await()
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)

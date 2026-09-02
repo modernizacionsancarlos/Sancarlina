@@ -18,21 +18,21 @@ val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")?.trim().orEmpty()
 if (mapsApiKey.isEmpty()) {
     throw GradleException(
         "MAPS_API_KEY no está definida en local.properties. " +
-            "Agregá la línea MAPS_API_KEY=<tu-key> en la raíz del proyecto. " +
-            "Restringí la key en Google Cloud Console (Android app, com.sancarlina.app, SHA-1, Maps SDK for Android)."
+                "Agregá la línea MAPS_API_KEY=<tu-key> en la raíz del proyecto. " +
+                "Restringí la key en Google Cloud Console (Android app, com.sancarlina.app, SHA-1, Maps SDK for Android)."
     )
 }
 
 android {
     namespace = "com.sancarlina.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sancarlina.app"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 66
-        versionName = "8.4.0"
+        targetSdk = 36
+        versionCode = 77
+        versionName = "8.8.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
@@ -102,14 +102,14 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.security.crypto)
-    
+
     // CameraX & ML Kit
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.barcode.scanning)
-    
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
@@ -117,6 +117,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.functions)
+    implementation(libs.firebase.messaging)
 
     implementation(libs.coil.compose)
     testImplementation(libs.junit)

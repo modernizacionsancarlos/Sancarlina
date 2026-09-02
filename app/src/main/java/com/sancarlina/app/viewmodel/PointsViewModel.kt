@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -33,10 +35,10 @@ class PointsViewModel(
         _uiState.update { it.copy(isLoading = true) }
         
         viewModelScope.launch {
-            try {
-                val uid = auth.currentUser?.uid
-                val balance = uid?.let { userRepository.getUserBalance(it) } ?: 0
-                val benefits = benefitsRepository.getActiveBenefits().map { b ->
+            val uid = auth.currentUser?.uid
+            val balanceFlow = uid?.let(userRepository::observeUserBalance) ?: flowOf(0)
+            combine(balanceFlow, benefitsRepository.observeActiveBenefits()) { balance, remoteBenefits ->
+                balance to remoteBenefits.map { b ->
                     BenefitItem(
                         id = b.id,
                         title = b.title,
@@ -46,7 +48,7 @@ class PointsViewModel(
                         imageUrl = b.cover_url
                     )
                 }
-                
+            }.collect { (balance, benefits) ->
                 _uiState.update { 
                     it.copy(
                         balance = balance,
@@ -54,9 +56,6 @@ class PointsViewModel(
                         isLoading = false
                     )
                 }
-            } catch (e: Exception) {
-                Logger.e("Error loading points data", e)
-                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

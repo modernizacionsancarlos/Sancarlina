@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.sancarlina.app.data.models.PointMovement
 import com.sancarlina.app.data.repository.UserRepository
-import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,12 +39,8 @@ class PointsHistoryViewModel(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         viewModelScope.launch {
-            try {
-                val list = userRepository.getPointMovements(uid)
+            userRepository.observePointMovements(uid).collect { list ->
                 _uiState.update { it.copy(movements = list, isLoading = false) }
-            } catch (e: Exception) {
-                Logger.e("Error fetching point movements history", e)
-                _uiState.update { it.copy(error = "No se pudo cargar el historial", isLoading = false) }
             }
         }
     }

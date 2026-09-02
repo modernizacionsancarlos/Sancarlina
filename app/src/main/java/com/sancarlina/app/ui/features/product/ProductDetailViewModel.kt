@@ -19,14 +19,19 @@ class ProductDetailViewModel : ViewModel() {
         firestore.collection("products").document(productId).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
+                    fun stringList(field: String): List<String> =
+                        (doc.get(field) as? List<*>)
+                            ?.mapNotNull { value -> value as? String }
+                            ?.filter(String::isNotBlank)
+                            .orEmpty()
                     val item = ProductDetail(
                         id = doc.id,
                         name = doc.getString("name") ?: "",
                         location = doc.getString("location") ?: "San Carlos",
                         description = doc.getString("description") ?: "Producto de calidad sancarlina.",
                         imageUrl = doc.getString("imageUrl") ?: "",
-                        galleryImages = doc.get("galleryImages") as? List<String> ?: emptyList(),
-                        tags = doc.get("tags") as? List<String> ?: emptyList(),
+                        galleryImages = stringList("galleryImages"),
+                        tags = stringList("tags"),
                         phone = doc.getString("phone") ?: "5492622000000"
                     )
                     _uiState.update { it.copy(product = item, isLoading = false, notFound = false) }

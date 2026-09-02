@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -48,7 +50,7 @@ fun AdminBeneficiosScreen(
                 }
             )
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -78,7 +80,7 @@ fun AdminBeneficiosScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.benefits.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -131,8 +133,8 @@ private fun BenefitAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -145,7 +147,7 @@ private fun BenefitAdminItem(
             Icon(
                 imageVector = Icons.Default.CardGiftcard,
                 contentDescription = null,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -163,18 +165,18 @@ private fun BenefitAdminItem(
                 Text(
                     text = "Costo: ${if (benefit.points_cost > 0) benefit.points_cost else benefit.cost} Puntos",
                     style = MaterialTheme.typography.labelMedium,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
                 if (benefit.description.isNotBlank()) {
                     Text(
                         text = benefit.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
             IconButton(onClick = onEdit) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = onToggleActive) {
                 Icon(
@@ -252,7 +254,7 @@ private fun BenefitEditorDialog(
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Guardar")
             }

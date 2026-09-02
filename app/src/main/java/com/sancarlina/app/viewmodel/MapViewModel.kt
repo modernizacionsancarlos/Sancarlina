@@ -2,17 +2,17 @@ package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sancarlina.app.BuildConfig
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.AreasRepository
 import com.sancarlina.app.data.repository.TenantsRepository
-import com.sancarlina.app.utils.Logger
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class MapViewModel(
@@ -20,8 +20,6 @@ class MapViewModel(
     private val areasRepository: AreasRepository
 ) : ViewModel() {
 
-    private val firestore = FirebaseFirestore.getInstance()
-    
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
@@ -31,16 +29,14 @@ class MapViewModel(
 
     private fun loadMarkers() {
         viewModelScope.launch {
-            try {
-                val tenants = tenantsRepository.getActiveTenants()
-                val areas = areasRepository.getAreas()
-                
-                val markers = tenants.mapNotNull { tenant ->
+            combine(
+                tenantsRepository.observeActiveTenants(),
+                areasRepository.getAreasFlow()
+            ) { tenants, areas ->
+                tenants.mapNotNull { tenant ->
                     try {
-                        val coords = tenant.geoCoordinates.split(",")
-                        val lat = coords.getOrNull(0)?.toDoubleOrNull() ?: return@mapNotNull null
-                        val lng = coords.getOrNull(1)?.toDoubleOrNull() ?: return@mapNotNull null
-                        
+                        val lat = tenant.latitude ?: return@mapNotNull null
+                        val lng = tenant.longitude ?: return@mapNotNull null
                         val areaName = areas.find { it.id == tenant.areaId }?.name ?: "General"
                         
                         CommerceMarker(
@@ -49,7 +45,7 @@ class MapViewModel(
                             locationName = areaName,
                             position = LatLng(lat, lng),
                             category = tenant.industry,
-                            phone = tenant.contactEmail,
+                            phone = tenant.contactPhone,
                             imageUrl = tenant.displayImageUrl(),
                             rating = tenant.rating.toFloat(),
                             distance = "GondolApp"
@@ -58,10 +54,13 @@ class MapViewModel(
                         null // Skip invalid markers
                     }
                 }
-
+            }.catch { exception ->
+                Logger.e("Error loading map data", exception)
+                clearMarkers()
+            }.collect { markers ->
                 if (markers.isNotEmpty()) {
                     val categories = listOf("Todos") + markers.map { it.category }.distinct()
-                    val locations = listOf("Todas") + areas.map { it.name }.distinct()
+                    val locations = listOf("Todas") + markers.map { it.locationName }.distinct()
 
                     _uiState.update { 
                         it.copy(
@@ -74,9 +73,6 @@ class MapViewModel(
                 } else {
                     clearMarkers()
                 }
-            } catch (e: Exception) {
-                Logger.e("Error loading map markers", e)
-                clearMarkers()
             }
         }
     }

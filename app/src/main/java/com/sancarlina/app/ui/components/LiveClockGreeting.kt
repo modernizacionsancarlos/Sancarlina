@@ -11,23 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun LiveClockGreeting(
-    userName: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userName: String? = null
 ) {
     var currentTime by remember { mutableStateOf("") }
     var greeting by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         val timeZone = TimeZone.getTimeZone("America/Argentina/Buenos_Aires")
-        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale("es", "AR")).apply {
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.forLanguageTag("es-AR")).apply {
             this.timeZone = timeZone
         }
 
@@ -63,7 +61,7 @@ fun LiveClockGreeting(
                     text = displayName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -71,7 +69,7 @@ fun LiveClockGreeting(
             Text(
                 text = "Hora actual: $currentTime",
                 style = MaterialTheme.typography.labelMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.support
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,7 +36,7 @@ fun SupportContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.support_title),
@@ -50,7 +52,7 @@ fun SupportContent(
             Text(
                 stringResource(R.string.support_intro),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -59,7 +61,7 @@ fun SupportContent(
                 icon = Icons.Default.QuestionAnswer,
                 title = stringResource(R.string.support_faq_title),
                 subtitle = stringResource(R.string.support_faq_subtitle),
-                color = SancarlinaPrimary
+                color = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -68,7 +70,7 @@ fun SupportContent(
                 icon = Icons.AutoMirrored.Filled.Chat,
                 title = stringResource(R.string.support_live_title),
                 subtitle = stringResource(R.string.support_live_subtitle),
-                color = SancarlinaSecondary
+                color = MaterialTheme.colorScheme.secondary
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -77,7 +79,7 @@ fun SupportContent(
                 icon = Icons.Default.Mail,
                 title = stringResource(R.string.support_email_title),
                 subtitle = stringResource(R.string.support_email_subtitle),
-                color = SancarlinaTertiary
+                color = MaterialTheme.colorScheme.tertiary
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -86,7 +88,7 @@ fun SupportContent(
                 stringResource(R.string.support_institutional),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaOnSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -134,15 +136,15 @@ fun SupportCard(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOutline
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
-            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = SancarlinaOutlineVariant)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }
@@ -164,16 +166,16 @@ fun LegalMenuItem(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            color = SancarlinaOnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
         Icon(
             Icons.AutoMirrored.Filled.OpenInNew,
             contentDescription = null,
-            tint = SancarlinaOutlineVariant,
+            tint = MaterialTheme.colorScheme.outlineVariant,
             modifier = Modifier.size(16.dp)
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
     }
 }

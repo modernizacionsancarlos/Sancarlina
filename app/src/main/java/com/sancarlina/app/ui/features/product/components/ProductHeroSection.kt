@@ -22,9 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sancarlina.app.R
-import com.sancarlina.app.ui.theme.SancarlinaSecondary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerHigh
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceVariant
 
 @Composable
 fun ProductHeroSection(
@@ -50,7 +47,7 @@ fun ProductHeroSection(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(SancarlinaSurfaceVariant),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -94,7 +91,7 @@ fun ProductHeroSection(
                 Icon(
                     if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     stringResource(R.string.cd_favorite),
-                    tint = SancarlinaSecondary
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         }

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,7 +55,7 @@ fun AdminComerciosScreen(
                 }
             )
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -107,7 +109,7 @@ fun AdminComerciosScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.filteredTenants.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -160,8 +162,8 @@ private fun TenantAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -188,25 +190,25 @@ private fun TenantAdminItem(
                 Text(
                     text = "Rubro: ${tenant.industry.ifBlank { "General" }}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (tenant.address.isNotBlank()) {
                     Text(
                         text = "Dirección: ${tenant.address}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             IconButton(onClick = onEdit) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = onToggleStatus) {
                 Icon(
                     imageVector = if (tenant.status == "active") Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = "Cambiar Estado",
-                    tint = SancarlinaOnSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButton(onClick = onDelete) {
@@ -306,7 +308,7 @@ private fun TenantEditorDialog(
                         onSave(updated)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Guardar")
             }

@@ -1,10 +1,11 @@
 package com.sancarlina.app.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sancarlina.app.ui.features.home.HomeContent
+import com.sancarlina.app.ui.features.home.HomeContentBody
 import com.sancarlina.app.ui.theme.SancarlinaTheme
 import com.sancarlina.app.viewmodel.CategoryItem
 import com.sancarlina.app.viewmodel.HomeUiState
@@ -27,19 +28,16 @@ class HomeContentTest {
 
         composeTestRule.setContent {
             SancarlinaTheme {
-                HomeContent(
-                    uiStateOverride = fakeState,
+                HomeContentBody(
+                    uiState = fakeState,
                     onNavigateToCategory = {},
                     onNavigateToSearch = {},
                     onNavigateToNews = {},
-                    onNavigateToDetail = {},
-                    onNavigateToLogin = {},
-                    onOpenDrawer = {}
+                    onNavigateToDetail = {}
                 )
             }
         }
 
-        composeTestRule.onNodeWithText("Explorar San Carlos").assertExists()
-        composeTestRule.onNodeWithText("BODEGAS").assertExists()
+        composeTestRule.onAllNodesWithText("Bodegas").assertCountEquals(2)
     }
 }

@@ -1,54 +1,42 @@
 package com.sancarlina.app
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.content.Intent
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sancarlina.app.ui.components.MainScaffold
 import com.sancarlina.app.ui.theme.SancarlinaTheme
+import com.sancarlina.app.notifications.GondolMessagingService
 
 class MainActivity : ComponentActivity() {
+    private val notificationRoute = mutableStateOf<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.light(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT
-            )
-        )
+        // Uses the device theme during startup; SancarlinaTheme keeps icon
+        // appearance synchronized after Compose is attached.
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        notificationRoute.value = intent.getStringExtra(GondolMessagingService.EXTRA_ROUTE)
         android.util.Log.i("GondolApp", "MainActivity: onCreate iniciado.")
         
         setContent {
             android.util.Log.i("GondolApp", "MainActivity: setContent ejecutándose.")
-            val permissionLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestPermission(),
-            ) { }
-
-            LaunchedEffect(Unit) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                }
-            }
-
             SancarlinaTheme {
-                MainScaffold()
+                MainScaffold(
+                    initialRoute = notificationRoute.value,
+                    onInitialRouteConsumed = { notificationRoute.value = null }
+                )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        notificationRoute.value = intent.getStringExtra(GondolMessagingService.EXTRA_ROUTE)
     }
 }

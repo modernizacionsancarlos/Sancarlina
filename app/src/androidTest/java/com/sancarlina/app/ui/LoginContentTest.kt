@@ -33,7 +33,7 @@ class LoginContentTest {
         }
 
         composeTestRule.onNodeWithText("Bienvenido").assertExists()
-        composeTestRule.onNodeWithText("tu@email.com").assertExists()
+        composeTestRule.onNodeWithText("Email").assertExists()
         composeTestRule.onNodeWithText("Ingresar").assertExists()
     }
 }

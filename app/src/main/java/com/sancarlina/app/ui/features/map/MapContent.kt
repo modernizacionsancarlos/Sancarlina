@@ -1,6 +1,14 @@
 package com.sancarlina.app.ui.features.map
 
+import androidx.compose.material3.MaterialTheme
+
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Location
+import android.widget.Toast
+import android.content.Intent
+import androidx.core.net.toUri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -9,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,9 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import android.widget.Toast
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -34,9 +42,12 @@ import com.sancarlina.app.ui.components.SancarlinaFilterChip
 import com.sancarlina.app.ui.features.home.FlowRow
 import com.sancarlina.app.ui.features.map.components.*
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.utils.captureBestLocation
 import com.sancarlina.app.viewmodel.MapViewModel
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("MissingPermission")
 @Composable
 fun MapContent(
     viewModel: MapViewModel = viewModel(),
@@ -56,13 +67,73 @@ fun MapContent(
             .tilt(45f)
             .build()
     }
+    val mapStyleOptions = remember(context) {
+        runCatching { MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style) }
+            .getOrNull()
+    }
 
-    // Lógica para comprobar y solicitar permisos de ubicación del usuario
-    val hasLocationPermission = remember(context, uiState.isLocationPermissionGranted) {
-        ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    var hasFinePermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+    var hasCoarsePermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+    var isLocating by remember { mutableStateOf(false) }
+    var bestAccuracy by remember { mutableStateOf<Float?>(null) }
+    var locationError by remember { mutableStateOf<String?>(null) }
+    var cancelLocationCapture by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val hasLocationPermission = hasFinePermission || hasCoarsePermission
+
+    fun animateToLocation(location: Location) {
+        scope.launch {
+            cameraPositionState.animate(
+                CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.builder()
+                        .target(LatLng(location.latitude, location.longitude))
+                        .zoom(if (hasFinePermission) 17f else 15f)
+                        .tilt(45f)
+                        .build()
+                ),
+                1000
+            )
+        }
+    }
+
+    fun startLocationCapture(permissionAvailable: Boolean = hasLocationPermission) {
+        if (!permissionAvailable || isLocating) return
+        cancelLocationCapture?.invoke()
+        isLocating = true
+        bestAccuracy = null
+        locationError = null
+        cancelLocationCapture = captureBestLocation(
+            client = fusedLocationClient,
+            onProgress = { reading ->
+                bestAccuracy = reading.accuracy.takeIf {
+                    reading.hasAccuracy() && it.isFinite() && it >= 0f
+                }
+            },
+            onResult = { location ->
+                isLocating = false
+                cancelLocationCapture = null
+                animateToLocation(location)
+            },
+            onError = { message ->
+                isLocating = false
+                cancelLocationCapture = null
+                locationError = message
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }
+        )
     }
 
     LaunchedEffect(hasLocationPermission) {
@@ -70,32 +141,21 @@ fun MapContent(
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        viewModel.onPermissionResult(isGranted)
-        if (isGranted) {
-            try {
-                fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            scope.launch {
-                                cameraPositionState.animate(
-                                    CameraUpdateFactory.newCameraPosition(
-                                        CameraPosition.builder()
-                                            .target(LatLng(location.latitude, location.longitude))
-                                            .zoom(16f)
-                                            .tilt(45f)
-                                            .build()
-                                    ),
-                                    1000
-                                )
-                            }
-                        }
-                    }
-            } catch (e: SecurityException) {
-                // Ignore
-            }
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        hasFinePermission = result[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        hasCoarsePermission = result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        val granted = hasFinePermission || hasCoarsePermission
+        viewModel.onPermissionResult(granted)
+        if (granted) {
+            startLocationCapture(permissionAvailable = true)
+        } else {
+            locationError = "Permiso de ubicación denegado. Podés seguir usando el mapa sin tu posición."
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { cancelLocationCapture?.invoke() }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -103,8 +163,8 @@ fun MapContent(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
-                isMyLocationEnabled = uiState.isLocationPermissionGranted,
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style),
+                isMyLocationEnabled = hasLocationPermission,
+                mapStyleOptions = mapStyleOptions,
                 isBuildingEnabled = true,
                 isIndoorEnabled = true
             ),
@@ -135,7 +195,7 @@ fun MapContent(
                 ) {
                     // Selected Card Info Popover (Estilo Stitch)
                     Surface(
-                        color = SancarlinaSurface,
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(12.dp),
                         tonalElevation = 3.dp,
                         shadowElevation = 8.dp,
@@ -148,7 +208,7 @@ fun MapContent(
                                 text = marker.name,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = SancarlinaOnSurface
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Row(
@@ -164,7 +224,7 @@ fun MapContent(
                                 Text(
                                     text = "${marker.rating} (GondolApp)",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = SancarlinaOnSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -184,7 +244,12 @@ fun MapContent(
                 searchQuery = uiState.searchQuery,
                 onSearchQueryChange = viewModel::onSearchQueryChanged,
                 onOpenDrawer = onOpenDrawer,
-                onOpenFilters = { viewModel.toggleFilterPanel(true) }
+                onOpenFilters = { viewModel.toggleFilterPanel(true) },
+                activeFilterCount = listOf(
+                    uiState.selectedCategory != "Todos",
+                    uiState.selectedLocation != "Todas",
+                    uiState.onlyWithSello
+                ).count { it }
             )
 
             if (uiState.markers.isNotEmpty() && uiState.categories.size > 1) {
@@ -198,80 +263,110 @@ fun MapContent(
         }
 
         // FAB circular de Mi Ubicación (Estilo Stitch)
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 16.dp, end = 16.dp),
-            contentAlignment = Alignment.BottomEnd
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = if (uiState.filteredMarkers.isNotEmpty()) 178.dp else 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.End
         ) {
+            Surface(
+                shape = RoundedCornerShape(18.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                shadowElevation = 7.dp
+            ) {
+                Column {
+                    IconButton(onClick = {
+                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn(), 260) }
+                    }) {
+                        Icon(Icons.Default.Add, "Acercar mapa", tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                    HorizontalDivider(
+                        modifier = Modifier.width(32.dp).align(Alignment.CenterHorizontally),
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                    IconButton(onClick = {
+                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut(), 260) }
+                    }) {
+                        Icon(Icons.Default.Remove, "Alejar mapa", tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            }
             FloatingActionButton(
                 onClick = {
-                    if (uiState.isLocationPermissionGranted) {
-                        try {
-                            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                                .addOnSuccessListener { location ->
-                                    if (location != null) {
-                                        scope.launch {
-                                            cameraPositionState.animate(
-                                                CameraUpdateFactory.newCameraPosition(
-                                                    CameraPosition.builder()
-                                                        .target(LatLng(location.latitude, location.longitude))
-                                                        .zoom(16f)
-                                                        .tilt(45f)
-                                                        .build()
-                                                ),
-                                                1000
-                                            )
-                                        }
-                                    } else {
-                                        // Fallback to lastLocation
-                                        fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
-                                            if (lastLoc != null) {
-                                                scope.launch {
-                                                    cameraPositionState.animate(
-                                                        CameraUpdateFactory.newCameraPosition(
-                                                            CameraPosition.builder()
-                                                                .target(LatLng(lastLoc.latitude, lastLoc.longitude))
-                                                                .zoom(16f)
-                                                                .tilt(45f)
-                                                                .build()
-                                                        ),
-                                                        1000
-                                                    )
-                                                }
-                                            } else {
-                                                Toast.makeText(
-                                                    context,
-                                                    "No se pudo determinar tu ubicación actual.",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            }
-                                        }
-                                    }
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(
-                                        context,
-                                        "Error al obtener ubicación. Verificá que el GPS esté activo.",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                        } catch (e: SecurityException) {
-                            Toast.makeText(context, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
-                        }
+                    if (hasLocationPermission) {
+                        startLocationCapture()
                     } else {
-                        permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        permissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
                     }
                 },
-                containerColor = SancarlinaPrimary,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White,
                 shape = CircleShape,
                 modifier = Modifier.size(56.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.MyLocation,
-                    contentDescription = "Mi Ubicación",
-                    modifier = Modifier.size(24.dp)
+                if (isLocating) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color.White,
+                        strokeWidth = 2.5.dp
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.MyLocation,
+                        contentDescription = "Mi ubicación",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+        }
+
+        if (uiState.filteredMarkers.isNotEmpty() && !uiState.isBottomSheetVisible) {
+            MapExplorerDock(
+                markers = uiState.filteredMarkers,
+                selectedMarkerId = uiState.selectedMarker?.id,
+                onSelect = { marker ->
+                    viewModel.onMarkerClick(marker)
+                    scope.launch {
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(marker.position, 16.5f),
+                            650
+                        )
+                    }
+                },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+
+        if (isLocating || locationError != null) {
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(start = 16.dp, end = 88.dp, bottom = 20.dp),
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 4.dp,
+                shadowElevation = 4.dp
+            ) {
+                Text(
+                    text = if (isLocating) {
+                        bestAccuracy?.let { "Buscando mejor señal · ±${it.roundToInt()} m" }
+                            ?: "Buscando tu ubicación…"
+                    } else {
+                        locationError.orEmpty()
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (locationError != null) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
                 )
             }
         }
@@ -280,7 +375,7 @@ fun MapContent(
             MapEmptyHint(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 100.dp)
+                    .padding(start = 16.dp, end = 88.dp, bottom = 190.dp)
             )
         }
 
@@ -288,7 +383,18 @@ fun MapContent(
             MapTenantBottomSheetCard(
                 marker = uiState.selectedMarker!!,
                 onDismiss = { viewModel.onDismissBottomSheet() },
-                onNavigate = { onNavigateToCommerce(uiState.selectedMarker!!.id) }
+                onNavigate = { onNavigateToCommerce(uiState.selectedMarker!!.id) },
+                onDirections = {
+                    val marker = uiState.selectedMarker!!
+                    val uri = "google.navigation:q=${marker.position.latitude},${marker.position.longitude}".toUri()
+                    val googleMapsIntent = Intent(Intent.ACTION_VIEW, uri).setPackage("com.google.android.apps.maps")
+                    val fallbackIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://www.google.com/maps/dir/?api=1&destination=${marker.position.latitude},${marker.position.longitude}".toUri()
+                    )
+                    runCatching { context.startActivity(googleMapsIntent) }
+                        .onFailure { context.startActivity(fallbackIntent) }
+                }
             )
         }
 
@@ -309,7 +415,7 @@ fun MapFilterDialog(onDismiss: () -> Unit, viewModel: MapViewModel) {
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.map_filter_close), color = SancarlinaPrimary)
+                Text(stringResource(R.string.map_filter_close), color = MaterialTheme.colorScheme.primary)
             }
         },
         title = {
@@ -349,7 +455,7 @@ fun MapFilterDialog(onDismiss: () -> Unit, viewModel: MapViewModel) {
                 }
             }
         },
-        containerColor = SancarlinaSurface,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = SancarlinaCardShape
     )
 }

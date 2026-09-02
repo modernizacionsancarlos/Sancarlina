@@ -24,7 +24,7 @@ import com.sancarlina.app.ui.theme.*
 fun NotificationItemCard(notification: SancarlinaNotification) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = if (notification.isNew) SancarlinaPrimary.copy(alpha = 0.04f) else Color.Transparent
+        color = if (notification.isNew) MaterialTheme.colorScheme.primary.copy(alpha = 0.04f) else Color.Transparent
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -33,13 +33,13 @@ fun NotificationItemCard(notification: SancarlinaNotification) {
             Surface(
                 modifier = Modifier.size(48.dp),
                 shape = CircleShape,
-                color = if (notification.isNew) SancarlinaPrimary.copy(alpha = 0.12f) else SancarlinaSurfaceContainer
+                color = if (notification.isNew) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceContainer
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         if (notification.isNew) Icons.Default.NotificationsActive else Icons.Default.NotificationsNone,
                         contentDescription = null,
-                        tint = if (notification.isNew) SancarlinaPrimary else SancarlinaOutline
+                        tint = if (notification.isNew) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
                     )
                 }
             }
@@ -51,18 +51,18 @@ fun NotificationItemCard(notification: SancarlinaNotification) {
                     text = notification.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = if (notification.isNew) FontWeight.SemiBold else FontWeight.Medium,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = notification.body,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp)
                 )
                 Text(
                     text = notification.time,
                     style = MaterialTheme.typography.labelSmall,
-                    color = SancarlinaOutline,
+                    color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
@@ -72,13 +72,13 @@ fun NotificationItemCard(notification: SancarlinaNotification) {
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .size(8.dp)
-                        .background(SancarlinaSecondary, CircleShape)
+                        .background(MaterialTheme.colorScheme.secondary, CircleShape)
                 )
             }
         }
     }
     HorizontalDivider(
-        color = SancarlinaOutlineVariant.copy(alpha = 0.3f),
+        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
         thickness = 0.5.dp
     )
 }

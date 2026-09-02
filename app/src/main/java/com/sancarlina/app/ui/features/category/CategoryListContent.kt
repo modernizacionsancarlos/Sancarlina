@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.category
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,7 +43,7 @@ fun CategoryListContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         CategoryHeader(
             title = uiState.categoryName.ifBlank { categoryId },
@@ -52,7 +54,7 @@ fun CategoryListContent(
         if (uiState.isLoading) {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaPrimary
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -69,7 +71,7 @@ fun CategoryListContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.filteredCommerces.isEmpty() -> {
@@ -121,14 +123,14 @@ fun CategoryListEmptyState(hasLoadError: Boolean) {
                     Icons.Default.Storefront,
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
-                    tint = SancarlinaSecondary.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(R.string.category_list_empty_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Text(
@@ -137,7 +139,7 @@ fun CategoryListEmptyState(hasLoadError: Boolean) {
                         else R.string.category_list_empty_message
                     ),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -151,9 +153,9 @@ fun CategoryListEmptyState(hasLoadError: Boolean) {
 fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = SancarlinaSurface,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = SancarlinaSheetShape,
-        dragHandle = { BottomSheetDefaults.DragHandle(color = SancarlinaOutlineVariant) }
+        dragHandle = { BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outlineVariant) }
     ) {
         Column(
             modifier = Modifier
@@ -165,7 +167,7 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
                 stringResource(R.string.category_filters_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaPrimary
+                color = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -174,7 +176,7 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
                 "Distancia",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaOnSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             var sliderValue by remember { mutableFloatStateOf(5f) }
             Slider(
@@ -182,14 +184,14 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
                 onValueChange = { sliderValue = it },
                 valueRange = 0f..20f,
                 colors = SliderDefaults.colors(
-                    thumbColor = SancarlinaPrimary,
-                    activeTrackColor = SancarlinaPrimary
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    activeTrackColor = MaterialTheme.colorScheme.primary
                 )
             )
             Text(
                 "${sliderValue.toInt()} km",
                 style = MaterialTheme.typography.bodySmall,
-                color = SancarlinaOutline
+                color = MaterialTheme.colorScheme.outline
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -198,7 +200,7 @@ fun AdvancedFiltersBottomSheet(onDismiss: () -> Unit, onApply: () -> Unit) {
                 "Calificación mínima",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaOnSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

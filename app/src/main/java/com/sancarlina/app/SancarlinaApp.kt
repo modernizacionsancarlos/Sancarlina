@@ -9,8 +9,16 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import com.sancarlina.app.data.templates.BuiltinFormTemplates
+import com.sancarlina.app.work.FormSyncScheduler
 
 class SancarlinaApp : Application(), ImageLoaderFactory {
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
@@ -25,7 +33,9 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
                     .maxSizePercent(0.02) // 2% del almacenamiento para caché de disco
                     .build()
             }
-            .crossfade(true) // Animación suave de transición por defecto al cargar imágenes
+            // Evita una demora visual extra al mostrar una imagen ya disponible en caché.
+            .crossfade(false)
+            .allowHardware(true)
             .build()
     }
 
@@ -41,8 +51,20 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
         super.onCreate()
         android.util.Log.i("GondolApp", "SancarlinaApp: Iniciando aplicación...")
         try {
-            container = AppContainer()
+            container = AppContainer(applicationContext)
             android.util.Log.i("GondolApp", "SancarlinaApp: Contenedor de dependencias inicializado.")
+            applicationScope.launch {
+                BuiltinFormTemplates.ALL_TEMPLATES.forEach { template ->
+                    container.offlineFormsStore.cacheSchema(template.schema)
+                }
+            }
+            FormSyncScheduler.enqueue(this)
+            FormSyncScheduler.ensurePeriodicSync(this)
+            applicationScope.launch { container.pushPreferencesRepository.initialize() }
+            container.auth.addAuthStateListener {
+                applicationScope.launch { container.pushPreferencesRepository.registerCurrentToken() }
+                FormSyncScheduler.enqueue(this)
+            }
         } catch (e: Exception) {
             android.util.Log.e("GondolApp", "SancarlinaApp: ERROR al inicializar AppContainer", e)
         }

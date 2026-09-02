@@ -2,8 +2,7 @@ package com.sancarlina.app.ui.features.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Newspaper
@@ -19,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.features.home.components.*
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 import com.sancarlina.app.ui.theme.SancarlinaTheme
 import com.sancarlina.app.viewmodel.BannerItem
 import com.sancarlina.app.viewmodel.CategoryItem
@@ -60,100 +57,141 @@ internal fun HomeContentBody(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         if (uiState.isLoading) {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
             )
         }
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
+                .align(Alignment.CenterHorizontally)
+                .widthIn(max = 960.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            HomeWelcomeHeader()
-            Spacer(modifier = Modifier.height(16.dp))
-
-            HomeSearchBar(onClick = onNavigateToSearch)
-            Spacer(modifier = Modifier.height(20.dp))
-
-            HomeSectionHeader(
-                title = stringResource(R.string.home_offers_section),
-                actionLabel = stringResource(R.string.home_see_all),
-                onActionClick = onNavigateToNews
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            when {
-                uiState.isLoading && uiState.banners.isEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = SancarlinaPrimary)
+            val heroBanner = uiState.banners.firstOrNull()
+            item(key = "discovery_hero") {
+                HomeDiscoveryHero(
+                    banner = heroBanner,
+                    onClick = {
+                        heroBanner?.id?.takeIf { it.isNotBlank() }?.let(onNavigateToDetail)
                     }
-                }
-                uiState.banners.isEmpty() -> {
-                    HomeEmptySection(
-                        message = stringResource(R.string.home_banners_empty),
-                        icon = Icons.Outlined.Newspaper
-                    )
-                }
-                else -> {
-                    HomeBannerCarousel(banners = uiState.banners)
+                )
+            }
+
+            item(key = "search") {
+                HomeSearchBar(
+                    onClick = onNavigateToSearch,
+                    onFilterClick = onNavigateToSearch,
+                    modifier = Modifier.offset(y = (-28).dp)
+                )
+            }
+
+            if (uiState.categories.isNotEmpty()) {
+                item(key = "category_chips") {
+                    Column {
+                        HomeCategoryChips(
+                            categories = uiState.categories,
+                            onCategoryClick = { onNavigateToCategory(it.name) }
+                        )
+                        Spacer(modifier = Modifier.height(22.dp))
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            item(key = "offers_header") {
+                Column {
+                    HomeSectionHeader(
+                        title = stringResource(R.string.home_offers_section),
+                        actionLabel = stringResource(R.string.home_see_all),
+                        onActionClick = onNavigateToNews
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
 
-            HomeSectionHeader(title = stringResource(R.string.home_explore_section))
-            Spacer(modifier = Modifier.height(8.dp))
-
-            when {
-                uiState.isLoading && uiState.categories.isEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(160.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = SancarlinaPrimary)
+            item(key = "offers_content") {
+                when {
+                    uiState.isLoading && uiState.banners.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                    uiState.banners.isEmpty() -> {
+                        HomeEmptySection(
+                            message = stringResource(R.string.home_banners_empty),
+                            icon = Icons.Outlined.Newspaper
+                        )
+                    }
+                    else -> {
+                        HomeBannerCarousel(
+                            banners = uiState.banners,
+                            onBannerClick = { banner ->
+                                banner.id.takeIf { it.isNotBlank() }?.let(onNavigateToDetail)
+                            }
+                        )
                     }
                 }
-                uiState.categories.isEmpty() -> {
-                    HomeEmptySection(
-                        message = stringResource(R.string.home_categories_empty),
-                        icon = Icons.Outlined.Category
-                    )
+            }
+
+            item(key = "explore_header") {
+                Column {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HomeSectionHeader(title = stringResource(R.string.home_explore_section))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-                else -> {
-                    HomeCategoryGrid(
-                        categories = uiState.categories,
-                        onCategoryClick = { onNavigateToCategory(it.name) }
-                    )
+            }
+
+            item(key = "explore_content") {
+                when {
+                    uiState.isLoading && uiState.categories.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(160.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                    uiState.categories.isEmpty() -> {
+                        HomeEmptySection(
+                            message = stringResource(R.string.home_categories_empty),
+                            icon = Icons.Outlined.Category
+                        )
+                    }
+                    else -> {
+                        HomeCategoryGrid(
+                            categories = uiState.categories,
+                            onCategoryClick = { onNavigateToCategory(it.name) }
+                        )
+                    }
                 }
             }
 
             uiState.nearbyProduct?.let { product ->
-            Spacer(modifier = Modifier.height(20.dp))
-                HomeSectionHeader(title = stringResource(R.string.home_featured_section))
-                Spacer(modifier = Modifier.height(8.dp))
-                HomeFeaturedProductCard(
-                    product = product,
-                    onClick = { onNavigateToDetail(product.id) }
-                )
+                item(key = "featured_product") {
+                    Column {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        HomeSectionHeader(title = stringResource(R.string.home_featured_section))
+                        Spacer(modifier = Modifier.height(8.dp))
+                        HomeFeaturedProductCard(
+                            product = product,
+                            onClick = { onNavigateToDetail(product.id) }
+                        )
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

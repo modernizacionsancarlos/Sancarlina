@@ -1,8 +1,8 @@
 package com.sancarlina.app.ui.features.map
 
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabColorSchemeParams
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,8 +22,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,10 +34,12 @@ import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.features.map.components.CommerceInfoCard
+import com.sancarlina.app.ui.features.map.components.CommerceActionPanel
 import com.sancarlina.app.ui.features.map.components.CommerceProfileHero
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.CommerceProfileViewModel
-import com.sancarlina.app.utils.Logger
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
 
 @Composable
 fun CommerceProfileContent(
@@ -45,12 +47,15 @@ fun CommerceProfileContent(
     viewModel: CommerceProfileViewModel,
     onBack: () -> Unit,
     onNavigateToProduct: (String) -> Unit,
+    onNavigateToForm: (String) -> Unit = {},
     onNavigateToReviews: (String) -> Unit = {},
-    onNavigateToRate: (String) -> Unit = {}
+    onNavigateToRate: (String) -> Unit = {},
+    isInRoute: Boolean = false,
+    onToggleRoute: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-
+    var distanceKm by remember(commerceId) { mutableStateOf<Float?>(null) }
     LaunchedEffect(commerceId) {
         viewModel.loadCommerce(commerceId)
     }
@@ -58,7 +63,7 @@ fun CommerceProfileContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when {
             uiState.isLoading -> {
@@ -66,7 +71,7 @@ fun CommerceProfileContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.error != null || uiState.tenant == null -> {
@@ -77,6 +82,23 @@ fun CommerceProfileContent(
             }
             else -> {
                 val tenant = uiState.tenant!!
+                LaunchedEffect(tenant.id, tenant.latitude, tenant.longitude) {
+                    val hasPermission =
+                        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    val lat = tenant.latitude
+                    val lng = tenant.longitude
+                    if (hasPermission && lat != null && lng != null) {
+                        LocationServices.getFusedLocationProviderClient(context).lastLocation
+                            .addOnSuccessListener { location ->
+                                if (location != null) {
+                                    val result = FloatArray(1)
+                                    Location.distanceBetween(location.latitude, location.longitude, lat, lng, result)
+                                    distanceKm = result[0] / 1000f
+                                }
+                            }
+                    }
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -92,7 +114,20 @@ fun CommerceProfileContent(
                     ) {
                         CommerceInfoCard(
                             tenant = tenant,
+                            distanceKm = distanceKm,
                             onRatingClick = { onNavigateToReviews(tenant.id) }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        CommerceActionPanel(
+                            tenant = tenant,
+                            isInRoute = isInRoute,
+                            onTrack = viewModel::trackAction,
+                            onToggleRoute = {
+                                viewModel.trackAction("add_to_route")
+                                onToggleRoute(tenant.id)
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -113,14 +148,12 @@ fun CommerceProfileContent(
                                 text = stringResource(R.string.commerce_forms_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Medium,
-                                color = SancarlinaOnSurface,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
                             uiState.forms.forEach { form ->
                                 FormItem(form = form) {
-                                    val url = form.submitUrl
-                                        ?: "https://gondolasancarlina.web.app/formulario/${form.id}"
-                                    openUrl(context, url)
+                                    onNavigateToForm(form.id)
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
@@ -174,7 +207,7 @@ private fun CommerceProductsSection(@Suppress("UNUSED_PARAMETER") onNavigateToPr
             text = stringResource(R.string.commerce_products_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Medium,
-            color = SancarlinaOnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(12.dp))
         Row(
@@ -184,14 +217,14 @@ private fun CommerceProductsSection(@Suppress("UNUSED_PARAMETER") onNavigateToPr
             Icon(
                 Icons.Default.Inventory2,
                 contentDescription = null,
-                tint = SancarlinaOutline,
+                tint = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(28.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = stringResource(R.string.commerce_products_empty),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -217,13 +250,13 @@ private fun CommerceProfileErrorState(message: String, onBack: () -> Unit) {
                     Icons.Default.Store,
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
-                    tint = SancarlinaSecondary.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             }
@@ -237,7 +270,7 @@ fun FormItem(form: FormSchema, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        color = SancarlinaSurfaceContainerLow,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
@@ -247,7 +280,7 @@ fun FormItem(form: FormSchema, onClick: () -> Unit) {
             Icon(
                 Icons.AutoMirrored.Filled.Assignment,
                 contentDescription = null,
-                tint = SancarlinaSecondary,
+                tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -255,29 +288,15 @@ fun FormItem(form: FormSchema, onClick: () -> Unit) {
                 text = form.title,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaOnSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
             Icon(
                 Icons.AutoMirrored.Filled.OpenInNew,
                 contentDescription = null,
-                tint = SancarlinaOutline,
+                tint = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(18.dp)
             )
         }
-    }
-}
-
-private fun openUrl(context: android.content.Context, url: String) {
-    try {
-        val colorParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(android.graphics.Color.parseColor("#476500"))
-            .build()
-        val intent = CustomTabsIntent.Builder()
-            .setDefaultColorSchemeParams(colorParams)
-            .build()
-        intent.launchUrl(context, Uri.parse(url))
-    } catch (e: Exception) {
-        Logger.e("Error opening URL: ${e.message}")
     }
 }

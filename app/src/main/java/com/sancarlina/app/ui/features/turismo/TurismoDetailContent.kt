@@ -56,14 +56,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaOutlineVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLowest
-import com.sancarlina.app.ui.theme.SancarlinaTertiary
 import com.sancarlina.app.viewmodel.TurismoDetailViewModel
 
 @Composable
@@ -78,7 +70,7 @@ fun TurismoDetailContent(
 
     LaunchedEffect(pointId) { viewModel.loadPointDetails(pointId) }
 
-    Scaffold(containerColor = SancarlinaBackground) { innerPadding ->
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { innerPadding ->
         when {
             isLoading -> Box(
                 modifier = Modifier
@@ -86,7 +78,7 @@ fun TurismoDetailContent(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = SancarlinaPrimary)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
 
             pointState == null -> Column(
@@ -101,16 +93,16 @@ fun TurismoDetailContent(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
-                    tint = SancarlinaOutlineVariant
+                    tint = MaterialTheme.colorScheme.outlineVariant
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "No pudimos encontrar este punto turístico",
                     style = MaterialTheme.typography.titleMedium,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Button(onClick = onBack, colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)) {
+                Button(onClick = onBack, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
                     Text("Volver")
                 }
             }
@@ -172,7 +164,7 @@ fun TurismoDetailContent(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Volver",
-                                tint = SancarlinaPrimary
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                         if (point.rating > 0) {
@@ -190,7 +182,7 @@ fun TurismoDetailContent(
                                     Icon(
                                         imageVector = Icons.Default.Star,
                                         contentDescription = null,
-                                        tint = SancarlinaTertiary,
+                                        tint = MaterialTheme.colorScheme.tertiary,
                                         modifier = Modifier.size(17.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -213,7 +205,7 @@ fun TurismoDetailContent(
                             text = point.name,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.ExtraBold,
-                            color = SancarlinaOnSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         if (point.location.isNotBlank()) {
                             Row(
@@ -223,14 +215,14 @@ fun TurismoDetailContent(
                                 Icon(
                                     imageVector = Icons.Default.Place,
                                     contentDescription = null,
-                                    tint = SancarlinaPrimary,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(
                                     text = point.location,
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = SancarlinaOnSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -256,12 +248,12 @@ fun TurismoDetailContent(
                             text = point.description,
                             style = MaterialTheme.typography.bodyLarge,
                             lineHeight = 25.sp,
-                            color = SancarlinaOnSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(top = 8.dp)
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
-                        HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.45f))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
                         Spacer(modifier = Modifier.height(22.dp))
 
                         Text(
@@ -275,7 +267,7 @@ fun TurismoDetailContent(
                                 .padding(top = 10.dp)
                                 .then(if (hasMap) Modifier.clickable(onClick = openMap) else Modifier),
                             shape = RoundedCornerShape(20.dp),
-                            color = SancarlinaSurfaceContainerLow
+                            color = MaterialTheme.colorScheme.surfaceContainerLow
                         ) {
                             Column(
                                 modifier = Modifier.padding(18.dp),
@@ -283,12 +275,12 @@ fun TurismoDetailContent(
                             ) {
                                 Surface(
                                     shape = CircleShape,
-                                    color = SancarlinaPrimary.copy(alpha = 0.14f)
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Map,
                                         contentDescription = null,
-                                        tint = SancarlinaPrimary,
+                                        tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(14.dp)
                                     )
                                 }
@@ -302,7 +294,7 @@ fun TurismoDetailContent(
                                     Text(
                                         text = "Tocá para abrir el mapa",
                                         style = MaterialTheme.typography.labelMedium,
-                                        color = SancarlinaPrimary,
+                                        color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(top = 3.dp)
                                     )
                                 }
@@ -321,10 +313,10 @@ fun TurismoDetailContent(
                                     .fillMaxWidth()
                                     .padding(top = 10.dp),
                                 shape = RoundedCornerShape(20.dp),
-                                color = SancarlinaSurfaceContainerLowest,
+                                color = MaterialTheme.colorScheme.surfaceContainerLowest,
                                 border = androidx.compose.foundation.BorderStroke(
                                     1.dp,
-                                    SancarlinaOutlineVariant.copy(alpha = 0.5f)
+                                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                                 )
                             ) {
                                 Column(
@@ -361,7 +353,7 @@ fun TurismoDetailContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(54.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                                 shape = CircleShape
                             ) {
                                 Icon(Icons.Default.Map, contentDescription = null)
@@ -380,15 +372,15 @@ fun TurismoDetailContent(
 private fun DetailChip(icon: ImageVector, text: String) {
     Surface(
         shape = CircleShape,
-        color = SancarlinaPrimary.copy(alpha = 0.12f)
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 11.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp))
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text(text, style = MaterialTheme.typography.labelMedium, color = SancarlinaPrimary)
+            Text(text, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         }
     }
 }
@@ -406,17 +398,17 @@ private fun TourismInfoRow(
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(shape = CircleShape, color = SancarlinaPrimary.copy(alpha = 0.12f)) {
+        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(9.dp)
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
         Column {
-            Text(label, style = MaterialTheme.typography.labelMedium, color = SancarlinaOnSurfaceVariant)
+            Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
         }
     }

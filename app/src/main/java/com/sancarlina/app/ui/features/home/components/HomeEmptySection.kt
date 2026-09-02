@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.components.SancarlinaCard
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
 
 @Composable
 fun HomeEmptySection(
@@ -29,15 +28,15 @@ fun HomeEmptySection(
                 androidx.compose.material3.Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = SancarlinaOnSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
             Text(
                 text = message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

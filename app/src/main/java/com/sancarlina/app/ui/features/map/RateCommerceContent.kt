@@ -1,10 +1,13 @@
 package com.sancarlina.app.ui.features.map
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.*
@@ -12,63 +15,85 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.R
-import com.sancarlina.app.ui.components.SancarlinaCard
-import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.components.SancarlinaTextField
 import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.viewmodel.RateCommerceViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun RateCommerceContent(
     commerceId: String,
+    viewModel: RateCommerceViewModel,
     onBack: () -> Unit
 ) {
     var rating by remember { mutableIntStateOf(0) }
     var comment by remember { mutableStateOf("") }
-    val scrollState = rememberScrollState()
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(uiState.submitted) {
+        if (uiState.submitted) {
+            delay(1100)
+            onBack()
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        SancarlinaTopBar(
-            title = "Calificar Comercio",
-            onBack = onBack
-        )
+        SancarlinaTopBar(title = "Calificar comercio", onBack = onBack)
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .verticalScroll(rememberScrollState())
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(22.dp)
         ) {
+            if (uiState.submitted) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(72.dp)
+                )
+                Text(
+                    text = "¡Gracias por compartir tu experiencia!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "La reseña quedó en revisión para cuidar la calidad de la comunidad.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+                return@Column
+            }
+
             Text(
                 text = "¿Cómo fue tu visita?",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium,
-                color = SancarlinaOnSurface,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 repeat(5) { index ->
                     val starIndex = index + 1
-                    IconButton(onClick = { rating = starIndex }, modifier = Modifier.size(48.dp)) {
+                    IconButton(onClick = { rating = starIndex }, modifier = Modifier.size(52.dp)) {
                         Icon(
                             imageVector = if (starIndex <= rating) Icons.Default.Star else Icons.Default.StarOutline,
-                            contentDescription = null,
-                            tint = if (starIndex <= rating) Color(0xFFF2B32A) else SancarlinaOutlineVariant,
+                            contentDescription = "$starIndex estrellas",
+                            tint = if (starIndex <= rating) Color(0xFFF2B32A) else MaterialTheme.colorScheme.outlineVariant,
                             modifier = Modifier.size(40.dp)
                         )
                     }
@@ -76,42 +101,69 @@ fun RateCommerceContent(
             }
 
             Text(
-                text = if (rating == 0) "Toca una estrella para calificar" else "$rating de 5 estrellas",
+                text = if (rating == 0) "Elegí una puntuación" else "$rating de 5 estrellas",
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Detalles de la experiencia",
+                    text = "Contanos tu experiencia",
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = SancarlinaOnSurface,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
                 SancarlinaTextField(
                     value = comment,
-                    onValueChange = { comment = it },
-                    placeholder = "Cuéntanos tu experiencia...",
+                    onValueChange = { if (it.length <= 1000) comment = it },
+                    placeholder = "¿Qué te gustó? ¿Qué debería saber otro visitante?",
                     singleLine = false,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp)
                 )
+                Text(
+                    text = "${comment.length}/1000",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(top = 4.dp)
+                )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            uiState.error?.let { message ->
+                Surface(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = SancarlinaCardShape,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(14.dp)
+                    )
+                }
+            }
 
             Button(
-                onClick = onBack,
-                enabled = rating > 0,
+                onClick = { viewModel.submit(commerceId, rating, comment) },
+                enabled = rating > 0 && !uiState.isSubmitting,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 shape = SancarlinaButtonShape
             ) {
-                Text("Enviar calificación", fontWeight = FontWeight.SemiBold)
+                if (uiState.isSubmitting) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        strokeWidth = 2.dp,
+                        color = Color.White
+                    )
+                } else {
+                    Text("Enviar reseña", fontWeight = FontWeight.Bold)
+                }
             }
         }
     }

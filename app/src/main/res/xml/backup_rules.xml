@@ -7,4 +7,6 @@
 <full-backup-content>
     <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
     <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+    <exclude domain="database" path="offline_forms.db" />
+    <exclude domain="file" path="offline_form_attachments/" />
 </full-backup-content>

@@ -2,26 +2,21 @@ package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sancarlina.app.BuildConfig
+import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.TenantsRepository
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
-import com.sancarlina.app.R
+import com.sancarlina.app.data.repository.DiscoveryPreferencesRepository
 import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withTimeoutOrNull
 
 class HomeViewModel(
-    private val tenantsRepository: TenantsRepository
+    private val tenantsRepository: TenantsRepository,
+    private val discoveryPreferencesRepository: DiscoveryPreferencesRepository
 ) : ViewModel() {
-
-    private val firestore = FirebaseFirestore.getInstance()
-    
     // Estado inicial vacío; datos reales desde Firestore (2B-4.1)
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -34,84 +29,77 @@ class HomeViewModel(
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            try {
-                // 1. Fetch Tenants con timeout
-                val tenants = withTimeoutOrNull(5000) { tenantsRepository.getActiveTenants() } ?: emptyList()
-                _uiState.update { it.copy(tenants = tenants) }
+            combine(
+                tenantsRepository.observeActiveTenants(),
+                discoveryPreferencesRepository.interests
+            ) { tenants, interests -> tenants to interests }
+                .collect { (rawTenants, interests) ->
+                try {
+                    val tenants = rawTenants.sortedByDescending { tenant ->
+                        if (interests.any { interest -> tenant.matchesInterest(interest) }) 1 else 0
+                    }
+                    val categories = tenants.asSequence()
+                        .map { it.industry.trim() }
+                        .filter { it.isNotBlank() }
+                        .distinctBy { it.lowercase() }
+                        .sortedBy { it.lowercase() }
+                        .map { CategoryItem(name = it) }
+                        .toList()
 
-                // 2. Fetch Banners
-                val bannerSnapshot = withTimeoutOrNull(5000) { firestore.collection("banners").get().await() }
-                val banners = if (bannerSnapshot != null && !bannerSnapshot.isEmpty) {
-                    bannerSnapshot.documents.map { doc ->
-                        BannerItem(
-                            id = doc.id,
-                            title = doc.getString("title") ?: "",
-                            subtitle = doc.getString("subtitle") ?: "",
-                            imageUrl = doc.getString("imageUrl") ?: "",
-                            content = doc.getString("content") ?: "",
-                            date = doc.getString("date") ?: "",
-                            tag = doc.getString("tag") ?: "",
-                            authorName = doc.getString("authorName") ?: "",
-                            authorRole = doc.getString("authorRole") ?: "",
-                            authorImageUrl = doc.getString("authorImageUrl") ?: "",
-                            readingTime = doc.getString("readingTime") ?: "3 min de lectura"
+                    val highlighted = tenants
+                        .filter { it.displayImageUrl().isNotBlank() }
+                        .take(5)
+                        .map { tenant ->
+                            BannerItem(
+                                id = tenant.id,
+                                title = tenant.industry.ifBlank { "Conocé San Carlos" },
+                                subtitle = tenant.name,
+                                imageUrl = tenant.displayImageUrl(),
+                                content = tenant.description,
+                                tag = tenant.industry
+                            )
+                        }
+
+                    val featured = tenants.firstOrNull()?.let { tenant ->
+                        ProductItem(
+                            id = tenant.id,
+                            name = tenant.name,
+                            brand = tenant.industry,
+                            phone = tenant.contactPhone,
+                            imageUrl = tenant.displayImageUrl()
                         )
                     }
-                } else {
-                    emptyList()
-                }
 
-                // 3. Fetch Categories
-                val categorySnapshot = withTimeoutOrNull(5000) { firestore.collection("categories").orderBy("order").get().await() }
-                val categories = if (categorySnapshot != null && !categorySnapshot.isEmpty) {
-                    categorySnapshot.documents.map { doc ->
-                        CategoryItem(
-                            name = doc.getString("name") ?: "",
-                            iconUrl = doc.getString("iconUrl") ?: ""
+                    _uiState.update {
+                        it.copy(
+                            tenants = tenants,
+                            banners = highlighted,
+                            categories = categories,
+                            nearbyProduct = featured,
+                            isLoading = false
                         )
                     }
-                } else {
-                    emptyList()
-                }
-
-                // 4. Fetch Featured Product (Nearby)
-                val productSnapshot = withTimeoutOrNull(5000) {
-                    firestore.collection("products")
-                        .whereEqualTo("featured", true)
-                        .limit(1)
-                        .get()
-                        .await()
-                }
-                    
-                val productDoc = productSnapshot?.documents?.firstOrNull()
-                val nearbyProduct = if (productDoc != null) {
-                    ProductItem(
-                        id = productDoc.id,
-                        name = productDoc.getString("name") ?: "",
-                        brand = productDoc.getString("brand") ?: "",
-                        price = productDoc.getString("price") ?: "",
-                        phone = productDoc.getString("phone") ?: ""
-                    )
-                } else null
-
-                _uiState.update {
-                    it.copy(
-                        banners = banners,
-                        categories = categories,
-                        nearbyProduct = nearbyProduct,
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                Logger.e("Error loading home data", e)
-                _uiState.update {
-                    it.copy(
-                        banners = emptyList(),
-                        categories = emptyList(),
-                        isLoading = false
-                    )
+                } catch (e: Exception) {
+                    Logger.e("Error mapping home data", e)
+                    _uiState.update { it.copy(isLoading = false) }
                 }
             }
         }
+    }
+
+    private fun com.sancarlina.app.data.models.Tenant.matchesInterest(interest: String): Boolean {
+        val content = listOf(name, industry, description, services.joinToString(" "))
+            .joinToString(" ")
+            .lowercase()
+        val aliases = when (interest) {
+            "vino" -> listOf("vino", "bodega", "vitivin")
+            "gastronomía" -> listOf("gastronom", "restaurante", "comida", "café")
+            "naturaleza" -> listOf("naturaleza", "montaña", "paisaje", "rural")
+            "aventura" -> listOf("aventura", "trekking", "rafting", "cabalgata")
+            "cultura" -> listOf("cultura", "museo", "historia", "artesanía")
+            "familia" -> listOf("familia", "niños", "familiar")
+            else -> listOf(interest)
+        }
+        return aliases.any(content::contains)
     }
 }

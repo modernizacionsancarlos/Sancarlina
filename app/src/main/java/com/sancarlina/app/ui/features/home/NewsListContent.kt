@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.home
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -39,7 +41,7 @@ fun NewsListContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = "Revista",
@@ -53,7 +55,7 @@ fun NewsListContent(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = SancarlinaPrimary)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             LazyColumn(
@@ -74,16 +76,16 @@ fun NewsListContent(
                             text = "Revista",
                             style = MaterialTheme.typography.displayMedium,
                             fontWeight = FontWeight.Bold,
-                            color = SancarlinaPrimary
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Historias, novedades y la cultura de la tierra, directo a tu mesa.",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = SancarlinaOnSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.4f))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
                     }
                 }
 
@@ -98,7 +100,7 @@ fun NewsListContent(
                             Text(
                                 text = "No hay novedades disponibles por el momento.",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = SancarlinaOnSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -122,14 +124,14 @@ fun NewsListContent(
                         Icon(
                             imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
-                            tint = SancarlinaOutline.copy(alpha = 0.6f),
+                            tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
                             modifier = Modifier.size(36.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Has llegado al final de las novedades por hoy.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = SancarlinaOnSurfaceVariant.copy(alpha = 0.7f),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(48.dp))
@@ -160,7 +162,7 @@ fun NewsArticleItem(
                 .fillMaxWidth()
                 .aspectRatio(1.25f) // 4:5 vertical/square aspect ratio typical on mobile
                 .clip(RoundedCornerShape(32.dp))
-                .background(SancarlinaSurfaceContainerHigh)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
         ) {
             if (item.imageUrl.isNotEmpty()) {
                 AsyncImage(
@@ -183,7 +185,7 @@ fun NewsArticleItem(
                 text = displayTag.uppercase(),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaSecondary,
+                color = MaterialTheme.colorScheme.secondary,
                 letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified // matches tracking-widest
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -191,13 +193,13 @@ fun NewsArticleItem(
                 modifier = Modifier
                     .size(4.dp)
                     .clip(CircleShape)
-                    .background(SancarlinaOutlineVariant)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = displayDate,
                 style = MaterialTheme.typography.labelLarge,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -208,7 +210,7 @@ fun NewsArticleItem(
             text = item.title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = SancarlinaOnSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 4.dp)
@@ -220,7 +222,7 @@ fun NewsArticleItem(
         Text(
             text = item.subtitle,
             style = MaterialTheme.typography.bodyLarge,
-            color = SancarlinaOnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 4.dp)
@@ -233,11 +235,11 @@ fun NewsArticleItem(
             onClick = onClick,
             shape = RoundedCornerShape(24.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = SancarlinaSecondary
+                contentColor = MaterialTheme.colorScheme.secondary
             ),
             border = androidx.compose.foundation.BorderStroke(
                 width = 1.dp,
-                color = SancarlinaSecondary.copy(alpha = 0.3f)
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
             ),
             modifier = Modifier.align(Alignment.Start)
         ) {

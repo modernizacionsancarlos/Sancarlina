@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import com.sancarlina.app.ui.theme.SancarlinaChipShape
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun SancarlinaTextField(
@@ -46,11 +45,11 @@ fun SancarlinaTextField(
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            focusedIndicatorColor = SancarlinaPrimary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
             unfocusedIndicatorColor = MaterialTheme.colorScheme.outlineVariant,
             errorIndicatorColor = MaterialTheme.colorScheme.error,
-            focusedLabelColor = SancarlinaPrimary,
-            cursorColor = SancarlinaPrimary
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.primary
         )
     )
 }

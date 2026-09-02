@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "compare:rules": "node scripts/compare-firestore-rules.js",
-    "test:rules": "firebase emulators:exec --only firestore \"npm run test:rules:only\"",
+    "test:rules": "firebase emulators:exec --only firestore,storage \"npm run test:rules:only\"",
     "test:rules:only": "jest rules-tests --runInBand",
+    "test:rules:firestore": "firebase emulators:exec --only firestore \"jest rules-tests/firestore.rules.test.js --runInBand\"",
+    "test:rules:storage": "firebase emulators:exec --only storage \"jest rules-tests/storage.rules.test.js --runInBand\"",
     "preview:stitch": "npx --yes http-server docs/stitch -p 8765 -c-1 --cors"
   },
   "devDependencies": {

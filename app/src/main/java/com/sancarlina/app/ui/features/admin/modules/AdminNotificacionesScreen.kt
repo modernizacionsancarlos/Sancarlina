@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,7 +42,7 @@ fun AdminNotificacionesScreen(
         floatingActionButton = {
             AdminAddFab(label = "Nueva notificación", onClick = { showDialog = true })
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -63,7 +65,7 @@ fun AdminNotificacionesScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.notifications.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -104,8 +106,8 @@ private fun NotificationAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -118,14 +120,14 @@ private fun NotificationAdminItem(
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = null,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = notification.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = notification.message, style = MaterialTheme.typography.bodySmall, color = SancarlinaOnSurfaceVariant)
-                Text(text = "Destinatario: ${notification.target}", style = MaterialTheme.typography.labelSmall, color = SancarlinaPrimary)
+                Text(text = notification.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(text = "Destinatario: ${notification.target}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = onDelete) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
@@ -164,7 +166,7 @@ private fun NewNotificationDialog(
                         onSend(title, message, target)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) { Text("Enviar Alerta") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }

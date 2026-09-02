@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,9 +11,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.sancarlina.app.data.models.FormField
 import com.sancarlina.app.data.models.FormSchema
 import com.sancarlina.app.data.models.FormTemplate
@@ -30,6 +38,7 @@ import com.sancarlina.app.ui.components.SancarlinaTextField
 import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
 import com.sancarlina.app.ui.features.admin.components.AdminScreenTopBar
 import com.sancarlina.app.ui.features.admin.components.AdminStatusPill
+import com.sancarlina.app.ui.features.forms.FormAnswerPresentation
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.admin.AdminFormulariosViewModel
 
@@ -37,41 +46,63 @@ import com.sancarlina.app.viewmodel.admin.AdminFormulariosViewModel
 @Composable
 fun AdminFormulariosScreen(
     viewModel: AdminFormulariosViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onStartRegistration: () -> Unit,
+    onViewPending: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val tabTitles = listOf("Dashboard", "Plantillas", "Editor", "Respuestas", "Aceptaciones")
+    val tabTitles = listOf("Resumen", "Plantillas", "Editor", "Respuestas", "Aprobación")
 
     Scaffold(
         topBar = {
             Column {
-                AdminScreenTopBar(title = "Administrar Formularios", onBack = onBack)
-                TabRow(
+                AdminScreenTopBar(
+                    title = "Formularios",
+                    onBack = onBack,
+                    actions = {
+                        IconButton(onClick = onViewPending) {
+                            Icon(Icons.Default.CloudSync, contentDescription = "Ver envíos guardados")
+                        }
+                    }
+                )
+                PrimaryScrollableTabRow(
                     selectedTabIndex = uiState.selectedTab,
-                    containerColor = SancarlinaBackground,
-                    contentColor = SancarlinaPrimary
+                    edgePadding = 12.dp,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.primary
                 ) {
                     tabTitles.forEachIndexed { index, title ->
                         Tab(
                             selected = uiState.selectedTab == index,
                             onClick = { viewModel.setTab(index) },
-                            text = { Text(title, style = MaterialTheme.typography.labelSmall) }
+                            text = { Text(title, style = MaterialTheme.typography.labelLarge, maxLines = 1) }
                         )
                     }
                 }
             }
         },
-        containerColor = SancarlinaBackground
+        floatingActionButton = {
+            if (uiState.selectedTab == 0) {
+                ExtendedFloatingActionButton(
+                    onClick = onStartRegistration,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White,
+                    icon = { Icon(Icons.AutoMirrored.Filled.Assignment, contentDescription = null) },
+                    text = { Text("Responder formulario", fontWeight = FontWeight.Bold) }
+                )
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(horizontal = 14.dp, vertical = 12.dp)
         ) {
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else {
                 when (uiState.selectedTab) {
@@ -119,18 +150,20 @@ private fun DashboardTab(
     Column(modifier = Modifier.fillMaxSize()) {
         val publicCount = uiState.schemas.count { it.isPublic }
         val pendingCount = uiState.submissions.count { it.status == "pending" }
-        Row(
+        LazyRow(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            AdminMetricCard("Total", uiState.schemas.size.toString(), Modifier.weight(1f))
-            AdminMetricCard("Publicados", publicCount.toString(), Modifier.weight(1f), emphasized = true)
-            AdminMetricCard(
-                "Pendientes",
-                pendingCount.toString(),
-                Modifier.weight(1f),
-                alert = pendingCount > 0
-            )
+            item { AdminMetricCard("Total", uiState.schemas.size.toString(), Modifier.width(132.dp)) }
+            item { AdminMetricCard("Publicados", publicCount.toString(), Modifier.width(150.dp), emphasized = true) }
+            item {
+                AdminMetricCard(
+                    "Pendientes",
+                    pendingCount.toString(),
+                    Modifier.width(150.dp),
+                    alert = pendingCount > 0
+                )
+            }
         }
 
         if (pendingCount > 0) {
@@ -172,16 +205,16 @@ private fun DashboardTab(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { viewModel.toggleViewMode() }) {
                     Icon(
-                        imageVector = if (uiState.isGridView) Icons.Default.ViewList else Icons.Default.GridView,
+                        imageVector = if (uiState.isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                         contentDescription = "Cambiar vista",
-                        tint = SancarlinaPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
                 IconButton(onClick = { viewModel.toggleSortDirection() }) {
                     Icon(
-                        imageVector = if (uiState.sortDirection == "asc") Icons.Default.SortByAlpha else Icons.Default.Sort,
+                        imageVector = if (uiState.sortDirection == "asc") Icons.Default.SortByAlpha else Icons.AutoMirrored.Filled.Sort,
                         contentDescription = "Cambiar orden",
-                        tint = SancarlinaPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -190,11 +223,11 @@ private fun DashboardTab(
                 onClick = {
                     viewModel.selectSchemaForEditor(FormSchema(title = "Nuevo Formulario"))
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Crear Esquema")
+                Text("Nuevo formulario")
             }
         }
 
@@ -205,14 +238,17 @@ private fun DashboardTab(
                 Text("No hay formularios creados aún.")
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 96.dp)
+            ) {
                 groupedSchemas.forEach { (groupHeader, schemaGroup) ->
                     item {
                         Text(
                             text = groupHeader,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = SancarlinaPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     }
@@ -266,86 +302,86 @@ private fun FormSchemaCard(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AdminStatusPill(
-                    text = if (schema.isPublic) "Publicado" else "Borrador",
-                    active = schema.isPublic
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = schema.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = onEdit) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
+            Row(verticalAlignment = Alignment.Top) {
+                Column(modifier = Modifier.weight(1f)) {
+                    AdminStatusPill(
+                        text = if (schema.isPublic) "Publicado" else "Borrador",
+                        active = schema.isPublic
+                    )
+                    Text(
+                        text = schema.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
-                IconButton(onClick = onDelete) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
+                FilledTonalIconButton(onClick = onEdit) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar formulario", tint = MaterialTheme.colorScheme.primary)
+                }
+                Spacer(Modifier.width(4.dp))
+                FilledTonalIconButton(
+                    onClick = onDelete,
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar formulario")
                 }
             }
             if (schema.description.isNotBlank()) {
                 Text(
                     text = schema.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOnSurfaceVariant
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Toggles
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Switch(
-                        checked = schema.isPublic,
-                        onCheckedChange = onTogglePublic
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Público", style = MaterialTheme.typography.labelSmall)
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Switch(
-                        checked = schema.acceptsResponses,
-                        onCheckedChange = onToggleAccepts
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Recepción", style = MaterialTheme.typography.labelSmall)
+            Surface(shape = RoundedCornerShape(14.dp), color = MaterialTheme.colorScheme.surfaceContainerLow) {
+                Column(Modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Column(Modifier.weight(1f)) {
+                            Text("Visible en la aplicación", fontWeight = FontWeight.SemiBold)
+                            Text("Los usuarios habilitados pueden encontrarlo", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Switch(checked = schema.isPublic, onCheckedChange = onTogglePublic)
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Column(Modifier.weight(1f)) {
+                            Text("Recibir respuestas", fontWeight = FontWeight.SemiBold)
+                            Text("Permite iniciar y enviar este formulario", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Switch(checked = schema.acceptsResponses, onCheckedChange = onToggleAccepts)
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Acciones Rápidas (Vista previa y Ver Respuestas)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedButton(onClick = onLivePreview) {
-                    Icon(imageVector = Icons.Default.Visibility, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Vista Previa")
-                }
+            OutlinedButton(onClick = onLivePreview, modifier = Modifier.fillMaxWidth()) {
+                Icon(imageVector = Icons.Default.Visibility, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Ver formulario")
+            }
 
-                if (submissionCount > 0) {
-                    Button(
-                        onClick = onViewSubmissions,
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
-                    ) {
-                        Icon(imageVector = Icons.Default.Inbox, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Ver respuestas ($submissionCount)")
-                    }
+            if (submissionCount > 0) {
+                Button(
+                    onClick = onViewSubmissions,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) {
+                    Icon(imageVector = Icons.Default.Inbox, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Revisar $submissionCount respuesta(s)", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -374,7 +410,7 @@ private fun FormLivePreviewDialog(
                     Column {
                         Text(text = "${index + 1}. ${field.label} ${if (field.required) "*" else ""}", fontWeight = FontWeight.Bold)
                         field.helpText?.let {
-                            Text(text = it, style = MaterialTheme.typography.labelSmall, color = SancarlinaOnSurfaceVariant)
+                            Text(text = it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         OutlinedTextField(
                             value = "",
@@ -388,7 +424,7 @@ private fun FormLivePreviewDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)) {
+            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
                 Text("Cerrar Vista Previa")
             }
         }
@@ -402,42 +438,128 @@ private fun SchemaSubmissionsDialog(
     onDismiss: () -> Unit,
     onUpdateStatus: (String, String) -> Unit
 ) {
-    AlertDialog(
+    Dialog(
         onDismissRequest = onDismiss,
-        title = { Text("Respuestas (${submissions.size}): ${schema.title}", fontWeight = FontWeight.Bold) },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                submissions.forEach { submission ->
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                        modifier = Modifier.fillMaxWidth()
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.94f)
+                .fillMaxHeight(0.92f),
+            shape = RoundedCornerShape(24.dp),
+            color = MaterialTheme.colorScheme.background,
+            tonalElevation = 4.dp
+        ) {
+            Column(Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Respuestas recibidas", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        Text(schema.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
+                        Text("${submissions.size} registro(s)", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, contentDescription = "Cerrar") }
+                }
+                Spacer(Modifier.height(12.dp))
+                if (submissions.isEmpty()) {
+                    Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text("Todavía no hay respuestas para este formulario.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(text = "ID: ${submission.id.take(8)} | Estado: ${submission.status}", fontWeight = FontWeight.Bold)
-                            submission.data.forEach { (k, v) ->
-                                Text(text = "$k: $v", style = MaterialTheme.typography.bodySmall, maxLines = 1)
-                            }
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                TextButton(onClick = { onUpdateStatus(submission.id, "approved") }) { Text("Aprobar") }
-                                TextButton(onClick = { onUpdateStatus(submission.id, "rejected") }) { Text("Rechazar") }
-                            }
+                        items(submissions, key = { it.id }) { submission ->
+                            SubmissionReviewCard(
+                                schema = schema,
+                                submission = submission,
+                                onUpdateStatus = onUpdateStatus
+                            )
                         }
                     }
                 }
-            }
-        },
-        confirmButton = {
-            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)) {
-                Text("Cerrar")
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) { Text("Cerrar", fontWeight = FontWeight.Bold) }
             }
         }
-    )
+    }
+}
+
+@Composable
+private fun SubmissionReviewCard(
+    schema: FormSchema?,
+    submission: SubmissionAdmin,
+    onUpdateStatus: (String, String) -> Unit,
+    showActions: Boolean = true,
+    maxAnswers: Int = Int.MAX_VALUE
+) {
+    val answers = FormAnswerPresentation.answers(schema, submission.data).take(maxAnswers)
+    val statusColor = when (submission.status) {
+        "approved", "published" -> MaterialTheme.colorScheme.primary
+        "rejected" -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.tertiary
+    }
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(shape = SancarlinaChipShape, color = statusColor.copy(alpha = 0.12f)) {
+                    Text(
+                        FormAnswerPresentation.statusLabel(submission.status),
+                        color = statusColor,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp)
+                    )
+                }
+                Spacer(Modifier.weight(1f))
+                submission.created_at?.let { timestamp ->
+                    Text(
+                        java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT)
+                            .format(timestamp.toDate()),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            if (answers.isEmpty()) {
+                Text("Sin datos visibles.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            } else {
+                answers.forEachIndexed { index, answer ->
+                    Text(answer.label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(answer.value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+                    if (index < answers.lastIndex) HorizontalDivider(Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
+                }
+            }
+            if (showActions) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = { onUpdateStatus(submission.id, "approved") },
+                        enabled = submission.status != "approved",
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ) { Text("Aprobar") }
+                    OutlinedButton(
+                        onClick = { onUpdateStatus(submission.id, "rejected") },
+                        enabled = submission.status != "rejected",
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                    ) { Text("Rechazar") }
+                }
+            }
+        }
+    }
 }
 
 // --- TAB 1: PLANTILLAS ---
@@ -450,7 +572,7 @@ private fun PlantillasTab(
         items(uiState.templates, key = { it.id }) { template ->
             Card(
                 shape = SancarlinaCardShape,
-                colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -461,17 +583,17 @@ private fun PlantillasTab(
                     Icon(
                         imageVector = Icons.Default.Description,
                         contentDescription = null,
-                        tint = SancarlinaPrimary,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(32.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(text = template.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Text(text = template.description, style = MaterialTheme.typography.bodySmall, color = SancarlinaOnSurfaceVariant)
+                        Text(text = template.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Button(
                         onClick = { viewModel.createNewSchemaFromTemplate(template) },
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
                         Text("Usar")
                     }
@@ -499,7 +621,7 @@ private fun EditorTab(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Editor de Esquema", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = SancarlinaPrimary)
+        Text("Editor de Esquema", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
 
         SancarlinaTextField(
             value = title,
@@ -635,7 +757,7 @@ private fun AddFieldDialog(
                         onFieldAdded(newField)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) { Text("Agregar") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
@@ -653,53 +775,21 @@ private fun RespuestasTab(
             Text("No hay respuestas recibidas.")
         }
     } else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(uiState.submissions, key = { it.id }) { submission ->
-                Card(
-                    shape = SancarlinaCardShape,
-                    colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = submission.form_title.ifBlank { "Envío ${submission.id.take(8)}" },
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Surface(
-                                shape = SancarlinaChipShape,
-                                color = when (submission.status) {
-                                    "approved" -> Color(0xFF4CAF50).copy(alpha = 0.15f)
-                                    "rejected" -> Color.Red.copy(alpha = 0.15f)
-                                    else -> SancarlinaPrimary.copy(alpha = 0.15f)
-                                }
-                            ) {
-                                Text(
-                                    text = submission.status.uppercase(),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "ID: ${submission.id}", style = MaterialTheme.typography.labelSmall, color = SancarlinaOnSurfaceVariant)
-                        Text(text = "Campos enviados: ${submission.data.size}", style = MaterialTheme.typography.bodySmall)
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            OutlinedButton(onClick = { viewModel.updateSubmissionStatus(submission.id, "approved") }) {
-                                Text("Aprobar")
-                            }
-                            OutlinedButton(onClick = { viewModel.updateSubmissionStatus(submission.id, "rejected") }) {
-                                Text("Rechazar")
-                            }
-                        }
-                    }
+                val schema = uiState.schemas.firstOrNull { it.id == submission.form_id }
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        submission.form_title.ifBlank { schema?.title ?: "Respuesta de formulario" },
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    SubmissionReviewCard(
+                        schema = schema,
+                        submission = submission,
+                        onUpdateStatus = viewModel::updateSubmissionStatus,
+                        maxAnswers = 5
+                    )
                 }
             }
         }
@@ -721,26 +811,20 @@ private fun AceptacionesTab(
     } else {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(pendingApproved, key = { it.id }) { submission ->
-                Card(
-                    shape = SancarlinaCardShape,
-                    colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = submission.form_title.ifBlank { "Solicitud Comercio" }, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        submission.data.forEach { (k, v) ->
-                            Text(text = "$k: $v", style = MaterialTheme.typography.bodySmall, maxLines = 1)
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        SancarlinaPrimaryButton(
-                            text = "Aceptar y Publicar en Comercios",
-                            onClick = {
-                                viewModel.publishSubmissionToTenant(submission) {}
-                            }
-                        )
-                    }
+                val schema = uiState.schemas.firstOrNull { it.id == submission.form_id }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(submission.form_title.ifBlank { "Solicitud de comercio" }, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    SubmissionReviewCard(
+                        schema = schema,
+                        submission = submission,
+                        onUpdateStatus = viewModel::updateSubmissionStatus,
+                        showActions = false,
+                        maxAnswers = 6
+                    )
+                    SancarlinaPrimaryButton(
+                        text = "Aprobar y publicar comercio",
+                        onClick = { viewModel.publishSubmissionToTenant(submission) {} }
+                    )
                 }
             }
         }

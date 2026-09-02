@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.theme.SancarlinaButtonShape
-import com.sancarlina.app.ui.theme.SancarlinaOnSecondary
 
 @Composable
 fun ProductActionBar(
@@ -36,7 +35,7 @@ fun ProductActionBar(
             shape = SancarlinaButtonShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = SancarlinaOnSecondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
                 disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {

@@ -9,11 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.sancarlina.app.ui.components.SancarlinaElevatedCard
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.ui.theme.SancarlinaCardShape
 import com.sancarlina.app.viewmodel.ProductItem
 
 @Composable
@@ -30,19 +32,30 @@ fun HomeFeaturedProductCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Outlined.StarOutline,
-                contentDescription = null,
-                tint = SancarlinaPrimary,
-                modifier = Modifier.size(40.dp)
-            )
+            if (product.imageUrl.isNotBlank()) {
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .size(84.dp)
+                        .clip(SancarlinaCardShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.StarOutline,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 if (product.brand.isNotBlank()) {
                     Text(
                         text = product.brand,
                         style = MaterialTheme.typography.labelMedium,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Text(
@@ -55,7 +68,7 @@ fun HomeFeaturedProductCard(
                     Text(
                         text = product.price,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }

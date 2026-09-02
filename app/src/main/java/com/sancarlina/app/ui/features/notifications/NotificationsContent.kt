@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.notifications
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,21 +19,23 @@ import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.features.notifications.components.NotificationItemCard
 import com.sancarlina.app.ui.features.notifications.components.NotificationsEmptyState
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
+import com.sancarlina.app.viewmodel.NotificationsViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.Alignment
 
 @Composable
 fun NotificationsContent(
+    viewModel: NotificationsViewModel = viewModel(),
     onBack: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
-    // Sin backend de notificaciones: lista vacía en runtime (no mocks en release).
-    val notifications = remember { emptyList<SancarlinaNotification>() }
+    val uiState by viewModel.uiState.collectAsState()
+    val notifications = uiState.notifications
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.notifications_title),
@@ -40,13 +45,17 @@ fun NotificationsContent(
                     Icon(
                         Icons.Default.Settings,
                         stringResource(R.string.cd_settings),
-                        tint = SancarlinaPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         )
 
-        if (notifications.isEmpty()) {
+        if (uiState.isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        } else if (notifications.isEmpty()) {
             NotificationsEmptyState()
         } else {
             LazyColumn(
@@ -62,7 +71,7 @@ fun NotificationsContent(
 }
 
 data class SancarlinaNotification(
-    val id: Int,
+    val id: String,
     val title: String,
     val body: String,
     val time: String,

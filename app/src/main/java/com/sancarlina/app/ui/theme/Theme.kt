@@ -50,8 +50,42 @@ private val LightColorScheme = lightColorScheme(
     onErrorContainer = SancarlinaOnErrorContainer
 )
 
-// Dark scheme: misma paleta Stitch por ahora (app prioriza light brand)
-private val DarkColorScheme = LightColorScheme
+private val DarkColorScheme = darkColorScheme(
+    primary = SancarlinaDarkPrimary,
+    onPrimary = SancarlinaDarkOnPrimary,
+    primaryContainer = SancarlinaDarkPrimaryContainer,
+    onPrimaryContainer = SancarlinaDarkOnPrimaryContainer,
+    inversePrimary = SancarlinaDarkInversePrimary,
+    secondary = SancarlinaDarkSecondary,
+    onSecondary = SancarlinaDarkOnSecondary,
+    secondaryContainer = SancarlinaDarkSecondaryContainer,
+    onSecondaryContainer = SancarlinaDarkOnSecondaryContainer,
+    tertiary = SancarlinaDarkTertiary,
+    onTertiary = SancarlinaDarkOnTertiary,
+    tertiaryContainer = SancarlinaDarkTertiaryContainer,
+    onTertiaryContainer = SancarlinaDarkOnTertiaryContainer,
+    background = SancarlinaDarkBackground,
+    onBackground = SancarlinaDarkOnBackground,
+    surface = SancarlinaDarkSurface,
+    onSurface = SancarlinaDarkOnSurface,
+    surfaceDim = SancarlinaDarkSurfaceDim,
+    surfaceBright = SancarlinaDarkSurfaceBright,
+    surfaceContainerLowest = SancarlinaDarkSurfaceContainerLowest,
+    surfaceContainerLow = SancarlinaDarkSurfaceContainerLow,
+    surfaceContainer = SancarlinaDarkSurfaceContainer,
+    surfaceContainerHigh = SancarlinaDarkSurfaceContainerHigh,
+    surfaceContainerHighest = SancarlinaDarkSurfaceContainerHighest,
+    surfaceVariant = SancarlinaDarkSurfaceVariant,
+    onSurfaceVariant = SancarlinaDarkOnSurfaceVariant,
+    inverseSurface = SancarlinaDarkInverseSurface,
+    inverseOnSurface = SancarlinaDarkInverseOnSurface,
+    outline = SancarlinaDarkOutline,
+    outlineVariant = SancarlinaDarkOutlineVariant,
+    error = SancarlinaDarkError,
+    onError = SancarlinaDarkOnError,
+    errorContainer = SancarlinaDarkErrorContainer,
+    onErrorContainer = SancarlinaDarkOnErrorContainer
+)
 
 @Composable
 fun SancarlinaTheme(

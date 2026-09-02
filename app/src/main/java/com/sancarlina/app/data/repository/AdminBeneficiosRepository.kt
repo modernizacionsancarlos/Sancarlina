@@ -1,6 +1,7 @@
 package com.sancarlina.app.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.sancarlina.app.data.remote.FirestoreCollections
 import kotlinx.coroutines.tasks.await
 
@@ -41,7 +42,7 @@ class AdminBeneficiosRepository(
                 "industry" to benefit.industry,
                 "active" to benefit.active
             )
-            docRef.set(data).await()
+            docRef.set(data, SetOptions.merge()).await()
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)

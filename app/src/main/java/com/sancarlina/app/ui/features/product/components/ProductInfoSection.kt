@@ -51,14 +51,14 @@ fun ProductInfoSection(
             text = product.name,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold,
-            color = SancarlinaOnBackground
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         if (product.location.isNotBlank()) {
             Text(
                 text = product.location,
                 style = MaterialTheme.typography.bodyLarge,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
@@ -68,27 +68,27 @@ fun ProductInfoSection(
                 text = product.price,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),
-            color = SancarlinaOutlineVariant.copy(alpha = 0.3f)
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
         )
 
         Text(
             text = stringResource(R.string.product_description_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Medium,
-            color = SancarlinaOnBackground
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = product.description.ifBlank { stringResource(R.string.product_description_empty) },
             style = MaterialTheme.typography.bodyLarge,
-            color = SancarlinaOnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         if (product.galleryImages.isNotEmpty()) {
@@ -97,7 +97,7 @@ fun ProductInfoSection(
                 text = stringResource(R.string.product_gallery_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
-                color = SancarlinaOnBackground
+                color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

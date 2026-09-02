@@ -32,15 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.ui.theme.SancarlinaCardShape
-import com.sancarlina.app.ui.theme.SancarlinaErrorContainer
-import com.sancarlina.app.ui.theme.SancarlinaOnErrorContainer
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaOutlineVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLowest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +47,7 @@ fun AdminScreenTopBar(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -65,15 +57,15 @@ fun AdminScreenTopBar(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Volver",
-                    tint = SancarlinaPrimary
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
         actions = actions,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = SancarlinaBackground,
-            navigationIconContentColor = SancarlinaPrimary,
-            actionIconContentColor = SancarlinaPrimary
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            navigationIconContentColor = MaterialTheme.colorScheme.primary,
+            actionIconContentColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -87,12 +79,12 @@ fun AdminMetricCard(
     alert: Boolean = false
 ) {
     val containerColor = when {
-        alert -> SancarlinaErrorContainer.copy(alpha = 0.55f)
-        emphasized -> SancarlinaPrimary
-        else -> SancarlinaSurfaceContainerLow
+        alert -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.55f)
+        emphasized -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.surfaceContainerLow
     }
     val contentColor = when {
-        alert -> SancarlinaOnErrorContainer
+        alert -> MaterialTheme.colorScheme.onErrorContainer
         emphasized -> Color.White
         else -> MaterialTheme.colorScheme.onSurface
     }
@@ -101,7 +93,7 @@ fun AdminMetricCard(
         modifier = modifier,
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor),
-        border = if (emphasized) null else BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.25f)),
+        border = if (emphasized) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)),
         elevation = CardDefaults.cardElevation(defaultElevation = if (emphasized) 3.dp else 0.dp)
     ) {
         Column(
@@ -140,24 +132,24 @@ fun AdminSearchField(
             Text(
                 text = placeholder,
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = SancarlinaOnSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         singleLine = true,
         shape = CircleShape,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = SancarlinaSurfaceContainerLowest,
-            unfocusedContainerColor = SancarlinaSurfaceContainerLowest,
-            focusedBorderColor = SancarlinaPrimary,
-            unfocusedBorderColor = SancarlinaOutlineVariant,
-            cursorColor = SancarlinaPrimary
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+            cursorColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -168,7 +160,7 @@ fun AdminStatusPill(
     active: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val color = if (active) SancarlinaPrimary else MaterialTheme.colorScheme.error
+    val color = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
     Surface(
         modifier = modifier,
         shape = CircleShape,
@@ -191,7 +183,7 @@ fun AdminAddFab(
 ) {
     ExtendedFloatingActionButton(
         onClick = onClick,
-        containerColor = SancarlinaPrimary,
+        containerColor = MaterialTheme.colorScheme.primary,
         contentColor = Color.White,
         icon = { Icon(imageVector = Icons.Default.Add, contentDescription = null) },
         text = { Text(text = label, fontWeight = FontWeight.Bold) }
@@ -206,8 +198,8 @@ fun AdminListCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.28f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.28f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Box(modifier = Modifier.padding(16.dp)) {

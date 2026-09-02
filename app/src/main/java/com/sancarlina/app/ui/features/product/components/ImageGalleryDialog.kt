@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.product.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.theme.SancarlinaPrimaryFixed
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceVariant
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -57,7 +57,7 @@ fun ImageGalleryDialog(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                var scale by remember { mutableStateOf(1f) }
+                var scale by remember { mutableFloatStateOf(1f) }
 
                 Box(
                     modifier = Modifier
@@ -107,7 +107,7 @@ fun ImageGalleryDialog(
                     Text(
                         text = "${pagerState.currentPage + 1} de ${images.size}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SancarlinaSurfaceVariant
+                        color = MaterialTheme.colorScheme.surfaceVariant
                     )
                 }
 
@@ -146,7 +146,7 @@ fun ImageGalleryDialog(
                             .width(if (isSelected) 24.dp else 8.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isSelected) SancarlinaPrimaryFixed else Color.White.copy(alpha = 0.4f)
+                                if (isSelected) MaterialTheme.colorScheme.primaryFixed else Color.White.copy(alpha = 0.4f)
                             )
                     )
                 }

@@ -50,7 +50,21 @@ service cloud.firestore {
     match /Submissions/{docId} {
       allow create: if isSignedIn()
         && request.resource.data.created_by == request.auth.uid;
-      allow read, update, delete: if isAdmin();
+      allow get: if isAdmin()
+        || (isSignedIn() && (
+          !exists(/databases/$(database)/documents/Submissions/$(docId))
+          || resource.data.created_by == request.auth.uid
+        ));
+      allow list: if isAdmin();
+      allow update: if isAdmin()
+        || (isSignedIn()
+          && resource.data.created_by == request.auth.uid
+          && request.resource.data.created_by == request.auth.uid
+          && request.resource.data.client_submission_id == docId
+          && request.resource.data.form_id == resource.data.form_id
+          && request.resource.data.created_at == resource.data.created_at
+          && request.resource.data.status == 'pending');
+      allow delete: if isAdmin();
     }
 
     // --- Catálogo: lectura pública, escritura admin ---
@@ -98,6 +112,31 @@ service cloud.firestore {
     match /Notifications/{id} {
       allow read: if isSignedIn();
       allow write: if isAdmin();
+    }
+    match /DeviceTokens/{id} {
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+    }
+    match /Reviews/{id} {
+      allow read: if isAdmin()
+        || resource.data.status == 'approved'
+        || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if false;
+      allow update, delete: if isAdmin();
+    }
+    match /Itineraries/{userId} {
+      allow read, create, update, delete: if isOwner(userId);
+    }
+    match /ConversionEvents/{id} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
     }
     match /superAdmins/{id} {
       allow read, write: if isAdmin();

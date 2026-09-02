@@ -19,9 +19,11 @@ class PrefsManager(context: Context) {
     )
 
     private val oldPrefs: SharedPreferences = context.getSharedPreferences("sancarlina_prefs", Context.MODE_PRIVATE)
+    private val legacyGuidePrefs: SharedPreferences = context.getSharedPreferences("gondolapp_prefs", Context.MODE_PRIVATE)
 
     init {
         migrateIfNeeded()
+        migrateLegacyGuideIfNeeded()
     }
 
     private fun migrateIfNeeded() {
@@ -41,12 +43,21 @@ class PrefsManager(context: Context) {
         }
     }
 
+    private fun migrateLegacyGuideIfNeeded() {
+        if (
+            !encryptedPrefs.contains(KEY_ONBOARDING_COMPLETED) &&
+            legacyGuidePrefs.getBoolean(KEY_LEGACY_COACHMARKS_SEEN, false)
+        ) {
+            encryptedPrefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, true).apply()
+        }
+    }
+
     fun setOnboardingCompleted(completed: Boolean) {
-        encryptedPrefs.edit().putBoolean("onboarding_completed", completed).apply()
+        encryptedPrefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, completed).apply()
     }
 
     fun isOnboardingCompleted(): Boolean {
-        return encryptedPrefs.getBoolean("onboarding_completed", false)
+        return encryptedPrefs.getBoolean(KEY_ONBOARDING_COMPLETED, false)
     }
 
     fun setGuideCompleted(completed: Boolean) {
@@ -56,6 +67,9 @@ class PrefsManager(context: Context) {
     fun isGuideCompleted(): Boolean {
         return encryptedPrefs.getBoolean("guide_completed", false)
     }
-    
-    // Add more methods for other sensitive data as needed
+
+    private companion object {
+        const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+        const val KEY_LEGACY_COACHMARKS_SEEN = "seen_coachmarks"
+    }
 }

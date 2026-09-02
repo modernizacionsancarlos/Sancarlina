@@ -8,11 +8,11 @@ import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.UserRepository
 import com.sancarlina.app.data.repository.TenantsRepository
 import com.sancarlina.app.data.repository.AreasRepository
-import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 data class FavoritesUiState(
@@ -30,6 +30,7 @@ class FavoritesViewModel(
 
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
+    private var syncJob: kotlinx.coroutines.Job? = null
 
     init {
         loadFavorites()
@@ -44,26 +45,16 @@ class FavoritesViewModel(
 
         _uiState.update { it.copy(isLoading = true, error = null) }
 
-        viewModelScope.launch {
-            try {
-                // 1. Fetch user's favorite tenant IDs
-                val favIds = userRepository.getFavoriteTenantIds(uid)
-                
-                if (favIds.isEmpty()) {
-                    _uiState.update { it.copy(favorites = emptyList(), isLoading = false) }
-                    return@launch
-                }
-
-                // 2. Fetch active tenants & areas
-                val activeTenants = tenantsRepository.getActiveTenants()
-                val areas = areasRepository.getAreas()
-
-                // 3. Map matching tenants to CommerceMarker
-                val favMarkers = activeTenants.filter { it.id in favIds }.mapNotNull { tenant ->
-                    try {
-                        val coords = tenant.geoCoordinates.split(",")
-                        val lat = coords.getOrNull(0)?.toDoubleOrNull() ?: return@mapNotNull null
-                        val lng = coords.getOrNull(1)?.toDoubleOrNull() ?: return@mapNotNull null
+        syncJob?.cancel()
+        syncJob = viewModelScope.launch {
+            combine(
+                userRepository.observeFavoriteTenantIds(uid),
+                tenantsRepository.observeActiveTenants(),
+                areasRepository.getAreasFlow()
+            ) { favIds, activeTenants, areas ->
+                activeTenants.filter { it.id in favIds }.map { tenant ->
+                    val lat = tenant.latitude ?: 0.0
+                    val lng = tenant.longitude ?: 0.0
                         val areaName = areas.find { it.id == tenant.areaId }?.name ?: "General"
                         
                         CommerceMarker(
@@ -72,20 +63,14 @@ class FavoritesViewModel(
                             locationName = areaName,
                             position = LatLng(lat, lng),
                             category = tenant.industry,
-                            phone = tenant.contactEmail,
+                            phone = tenant.contactPhone,
                             imageUrl = tenant.displayImageUrl(),
                             rating = tenant.rating.toFloat(),
                             distance = "GondolApp"
                         )
-                    } catch (e: Exception) {
-                        null
-                    }
                 }
-
+            }.collect { favMarkers ->
                 _uiState.update { it.copy(favorites = favMarkers, isLoading = false) }
-            } catch (e: Exception) {
-                Logger.e("Error loading favorites", e)
-                _uiState.update { it.copy(error = "No se pudieron cargar tus favoritos", isLoading = false) }
             }
         }
     }

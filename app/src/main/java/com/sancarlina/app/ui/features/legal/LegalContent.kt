@@ -30,7 +30,7 @@ fun LegalContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.legal_title),
@@ -48,7 +48,7 @@ fun LegalContent(onBack: () -> Unit) {
                     text = stringResource(R.string.legal_terms_heading),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -62,7 +62,7 @@ fun LegalContent(onBack: () -> Unit) {
                         "Política de Privacidad\n\n" +
                         "Sus datos personales están protegidos bajo la Ley de Protección de Datos Personales. La Municipalidad solo utilizará su información para mejorar la experiencia de usuario y el envío de notificaciones oficiales previamente autorizadas.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 24.sp
                 )
             }
@@ -75,7 +75,7 @@ fun LegalContent(onBack: () -> Unit) {
             ) {
                 Text(
                     stringResource(R.string.legal_open_privacy_online),
-                    color = SancarlinaPrimary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -85,7 +85,7 @@ fun LegalContent(onBack: () -> Unit) {
             Text(
                 text = "Versión ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
                 style = MaterialTheme.typography.labelSmall,
-                color = SancarlinaOutline,
+                color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 

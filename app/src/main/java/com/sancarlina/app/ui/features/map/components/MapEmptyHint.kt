@@ -14,8 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaCard
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaOutline
 
 @Composable
 fun MapEmptyHint(modifier: Modifier = Modifier) {
@@ -27,14 +25,14 @@ fun MapEmptyHint(modifier: Modifier = Modifier) {
             Icon(
                 Icons.Default.Map,
                 contentDescription = null,
-                tint = SancarlinaOutline,
+                tint = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(28.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = stringResource(R.string.map_empty_hint),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start
             )
         }

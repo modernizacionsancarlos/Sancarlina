@@ -9,8 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun HomeSectionHeader(
@@ -27,15 +25,15 @@ fun HomeSectionHeader(
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Medium,
-            color = SancarlinaOnSurface
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
         )
         if (actionLabel != null && onActionClick != null) {
             Text(
                 text = actionLabel,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = SancarlinaPrimary,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .clickable(onClick = onActionClick)

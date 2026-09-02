@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -10,9 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaOnBackground
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,12 +32,12 @@ fun AdminModulePlaceholderScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SancarlinaBackground,
-                    titleContentColor = SancarlinaOnBackground
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
                 )
             )
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -50,7 +49,7 @@ fun AdminModulePlaceholderScreen(
                 Icon(
                     imageVector = Icons.Default.Construction,
                     contentDescription = null,
-                    tint = SancarlinaPrimary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -58,7 +57,7 @@ fun AdminModulePlaceholderScreen(
                     text = "Módulo de $title",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

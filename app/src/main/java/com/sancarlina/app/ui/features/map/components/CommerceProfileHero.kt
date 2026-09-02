@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceVariant
 
 @Composable
 fun CommerceProfileHero(
@@ -38,7 +37,7 @@ fun CommerceProfileHero(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(SancarlinaSurfaceVariant),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

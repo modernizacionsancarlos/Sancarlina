@@ -36,6 +36,11 @@ class AdminFormulariosViewModel(
 
     init {
         refreshAllData()
+        viewModelScope.launch {
+            repository.observeAllSubmissions().collect { submissions ->
+                _uiState.update { it.copy(submissions = submissions, isLoading = false) }
+            }
+        }
     }
 
     fun setTab(tabIndex: Int) {

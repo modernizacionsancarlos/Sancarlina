@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.support
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,7 +45,7 @@ fun InstitutionalInfoContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.institutional_title),
@@ -68,7 +70,7 @@ fun InstitutionalInfoContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(SancarlinaPrimary.copy(alpha = 0.08f), CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f), CircleShape)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.ic_sancarlina_logo),
@@ -81,14 +83,14 @@ fun InstitutionalInfoContent(
                 text = "Municipalidad de San Carlos",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = stringResource(R.string.institutional_modernizacion),
                 style = MaterialTheme.typography.titleMedium,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -104,13 +106,13 @@ fun InstitutionalInfoContent(
                     Surface(
                         modifier = Modifier.size(44.dp),
                         shape = CircleShape,
-                        color = SancarlinaPrimary.copy(alpha = 0.12f)
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
                                 imageVector = Icons.Default.AssuredWorkload,
                                 contentDescription = null,
-                                tint = SancarlinaPrimary,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -121,13 +123,13 @@ fun InstitutionalInfoContent(
                             text = stringResource(R.string.institutional_mision_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.SemiBold,
-                            color = SancarlinaPrimary
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.institutional_mision_body),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = SancarlinaOnSurface,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15f
                         )
                     }
@@ -146,7 +148,7 @@ fun InstitutionalInfoContent(
                 Icon(
                     imageVector = Icons.Default.Groups,
                     contentDescription = null,
-                    tint = SancarlinaPrimary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -154,7 +156,7 @@ fun InstitutionalInfoContent(
                     text = stringResource(R.string.institutional_team_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -210,7 +212,7 @@ fun InstitutionalInfoContent(
                 text = stringResource(R.string.institutional_connect_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaOnSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -255,7 +257,7 @@ fun TeamMemberCard(
     Card(
         modifier = modifier,
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLow)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         Column(
             modifier = Modifier
@@ -280,14 +282,14 @@ fun TeamMemberCard(
                 text = member.name,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = SancarlinaOnSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = member.role,
                 style = MaterialTheme.typography.bodySmall,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
         }
@@ -305,14 +307,14 @@ fun SocialIcon(
             .size(52.dp)
             .clickable(onClick = onClick),
         shape = CircleShape,
-        color = SancarlinaSurfaceContainerLowest,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shadowElevation = 2.dp
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
         }

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.auth.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,17 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
 
 @Composable
 fun AuthLogoHeader(
-    onBack: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBack: (() -> Unit)? = null
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = SancarlinaSurfaceContainerLow
+        color = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Box(
             modifier = Modifier
@@ -39,7 +39,7 @@ fun AuthLogoHeader(
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         stringResource(R.string.cd_back),
-                        tint = SancarlinaPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }

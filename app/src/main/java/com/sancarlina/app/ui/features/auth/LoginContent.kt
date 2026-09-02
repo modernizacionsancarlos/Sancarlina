@@ -45,7 +45,7 @@ fun LoginContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         AuthLogoHeader()
 
@@ -62,12 +62,12 @@ fun LoginContent(
                 text = stringResource(R.string.login_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaPrimary
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = stringResource(R.string.login_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
@@ -99,7 +99,7 @@ fun LoginContent(
                 ) {
                     Text(
                         stringResource(R.string.login_forgot),
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -112,7 +112,7 @@ fun LoginContent(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            color = SancarlinaPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -139,13 +139,13 @@ fun LoginContent(
                     modifier = Modifier.padding(vertical = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = SancarlinaOutlineVariant)
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
                     Text(
                         "o",
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = SancarlinaOutlineVariant)
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
                 }
 
                 SancarlinaSecondaryButton(
@@ -159,12 +159,12 @@ fun LoginContent(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = stringResource(R.string.login_no_account),
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 TextButton(onClick = onNavigateToRegister) {
                     Text(
                         stringResource(R.string.login_register),
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -179,7 +179,7 @@ fun LoginContent(
                 Text(
                     text = "Acceso administración",
                     style = MaterialTheme.typography.labelMedium,
-                    color = SancarlinaOnSurfaceVariant.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             }
 

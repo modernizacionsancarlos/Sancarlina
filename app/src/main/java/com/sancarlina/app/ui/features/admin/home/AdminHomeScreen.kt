@@ -18,15 +18,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -54,21 +57,15 @@ import com.sancarlina.app.R
 import com.sancarlina.app.navigation.Screen
 import com.sancarlina.app.ui.components.LiveClockGreeting
 import com.sancarlina.app.ui.features.admin.components.AdminMetricCard
-import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.ui.theme.SancarlinaCardShape
-import com.sancarlina.app.ui.theme.SancarlinaError
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaOutlineVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLowest
 import com.sancarlina.app.viewmodel.AdminHomeViewModel
 
 data class AdminModuleItem(
     val title: String,
     val description: String,
     val icon: ImageVector,
-    val route: String
+    val route: String,
+    val accent: Color
 )
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -80,15 +77,18 @@ fun AdminHomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val stats = uiState.stats
-    val modules = remember {
+    val colorScheme = MaterialTheme.colorScheme
+    val modules = remember(colorScheme) {
         listOf(
-            AdminModuleItem("Comercios", "Gestión de comercios", Icons.Default.Store, Screen.AdminComercios.route),
-            AdminModuleItem("Zonas", "Distritos y áreas", Icons.Default.Map, Screen.AdminZonas.route),
-            AdminModuleItem("Beneficios", "Catálogo de canjes", Icons.Default.CardGiftcard, Screen.AdminBeneficios.route),
-            AdminModuleItem("Usuarios", "Perfiles y puntos", Icons.Default.Group, Screen.AdminUsuarios.route),
-            AdminModuleItem("Formularios", "Esquemas dinámicos", Icons.Default.Description, Screen.AdminFormularios.route),
-            AdminModuleItem("Notificaciones", "Alertas municipales", Icons.Default.Notifications, Screen.AdminNotificaciones.route),
-            AdminModuleItem("Administradores", "Accesos del sistema", Icons.Default.Security, Screen.AdminAdministradores.route)
+            AdminModuleItem("Registro en calle", "Cargar formularios", Icons.AutoMirrored.Filled.Assignment, Screen.FieldRegistration.route, colorScheme.secondary),
+            AdminModuleItem("Comercios", "Gestión de comercios", Icons.Default.Store, Screen.AdminComercios.route, colorScheme.primary),
+            AdminModuleItem("Zonas", "Distritos y áreas", Icons.Default.Map, Screen.AdminZonas.route, colorScheme.tertiary),
+            AdminModuleItem("Beneficios", "Catálogo de canjes", Icons.Default.CardGiftcard, Screen.AdminBeneficios.route, colorScheme.tertiary),
+            AdminModuleItem("Usuarios", "Perfiles y puntos", Icons.Default.Group, Screen.AdminUsuarios.route, colorScheme.secondary),
+            AdminModuleItem("Formularios", "Esquemas dinámicos", Icons.Default.Description, Screen.AdminFormularios.route, colorScheme.primary),
+            AdminModuleItem("Notificaciones", "Alertas municipales", Icons.Default.Notifications, Screen.AdminNotificaciones.route, colorScheme.tertiary),
+            AdminModuleItem("Reseñas", "Moderación ciudadana", Icons.Default.RateReview, Screen.AdminReviews.route, colorScheme.primary),
+            AdminModuleItem("Administradores", "Accesos del sistema", Icons.Default.Security, Screen.AdminAdministradores.route, colorScheme.secondary)
         )
     }
 
@@ -109,14 +109,14 @@ fun AdminHomeScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Salir del panel",
-                            tint = SancarlinaError
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = SancarlinaBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -125,13 +125,29 @@ fun AdminHomeScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
-            LiveClockGreeting()
-            Text(
-                text = "Panel de gestión municipal",
-                style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Column(Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
+                    Text(
+                        text = "PANEL MUNICIPAL",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    LiveClockGreeting()
+                    Text(
+                        text = "Gestión, formularios y operativos en un solo lugar",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(18.dp))
 
@@ -142,7 +158,7 @@ fun AdminHomeScreen(
                         .height(136.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else {
                 Row(
@@ -185,7 +201,7 @@ fun AdminHomeScreen(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    color = SancarlinaError
+                    color = MaterialTheme.colorScheme.error
                 ) {
                     Row(
                         modifier = Modifier.padding(14.dp),
@@ -252,8 +268,8 @@ private fun ModuleCard(
         onClick = onClick,
         modifier = modifier.height(128.dp),
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.45f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
@@ -266,13 +282,13 @@ private fun ModuleCard(
             Surface(
                 modifier = Modifier.size(42.dp),
                 shape = CircleShape,
-                color = SancarlinaPrimary
+                color = item.accent.copy(alpha = 0.14f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = item.icon,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = item.accent,
                         modifier = Modifier.size(22.dp)
                     )
                 }
@@ -288,7 +304,7 @@ private fun ModuleCard(
             Text(
                 text = item.description,
                 style = MaterialTheme.typography.labelSmall,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

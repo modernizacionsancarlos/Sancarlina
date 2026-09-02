@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,7 +47,7 @@ fun AdminAdministradoresScreen(
         floatingActionButton = {
             AdminAddFab(label = "Nuevo administrador", onClick = { showDialog = true })
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -96,7 +98,7 @@ fun AdminAdministradoresScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.superAdmins.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -139,8 +141,8 @@ private fun SuperAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -153,13 +155,13 @@ private fun SuperAdminItem(
             Icon(
                 imageVector = Icons.Default.Security,
                 contentDescription = null,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = admin.email, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = "UID: ${admin.uid}", style = MaterialTheme.typography.labelSmall, color = SancarlinaOnSurfaceVariant)
+                Text(text = "UID: ${admin.uid}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     text = if (admin.active) "Cuenta Activa" else "Cuenta Suspendida",
                     style = MaterialTheme.typography.labelSmall,
@@ -219,7 +221,7 @@ private fun NewSuperAdminDialog(
                         onConfirm(email, password, userName)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) { Text("Crear Administrador") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }

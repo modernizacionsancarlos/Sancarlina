@@ -39,7 +39,7 @@ fun SearchContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaSurface)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         // Search Header (Pill shaped directly on cream background, matching mockup)
         Box(
@@ -51,7 +51,7 @@ fun SearchContent(
             OutlinedTextField(
                 value = uiState.query,
                 onValueChange = { viewModel.onQueryChange(it) },
-                placeholder = { Text("Buscar en Sancarlina...", color = SancarlinaOutline) },
+                placeholder = { Text("Buscar en Sancarlina...", color = MaterialTheme.colorScheme.outline) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -61,29 +61,29 @@ fun SearchContent(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Volver",
-                            tint = SancarlinaPrimary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
                 trailingIcon = {
                     if (uiState.query.isNotEmpty()) {
                         IconButton(onClick = { viewModel.onQueryChange("") }) {
-                            Icon(Icons.Default.Close, stringResource(R.string.cd_close), tint = SancarlinaOutline)
+                            Icon(Icons.Default.Close, stringResource(R.string.cd_close), tint = MaterialTheme.colorScheme.outline)
                         }
                     } else {
                         Icon(
                             imageVector = Icons.Default.Mic,
                             contentDescription = "Búsqueda por voz",
-                            tint = SancarlinaOutline
+                            tint = MaterialTheme.colorScheme.outline
                         )
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
-                    focusedBorderColor = SancarlinaPrimary,
-                    unfocusedBorderColor = SancarlinaPrimary,
-                    cursorColor = SancarlinaPrimary
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 singleLine = true
             )
@@ -99,7 +99,7 @@ fun SearchContent(
                 Text(
                     "BÚSQUEDAS SUGERIDAS",
                     style = MaterialTheme.typography.labelLarge,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     letterSpacing = 1.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -114,21 +114,21 @@ fun SearchContent(
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                                 .clickable { viewModel.onQueryChange(category) },
-                            color = SancarlinaSurfaceContainer,
+                            color = MaterialTheme.colorScheme.surfaceContainer,
                             shape = RoundedCornerShape(20.dp)
                         ) {
                             Text(
                                 text = category,
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = SancarlinaOnSurface
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
                 }
             } else if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.results.isEmpty() && uiState.query.length >= 2) {
                 // No results
@@ -137,17 +137,17 @@ fun SearchContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(Icons.Default.SearchOff, null, modifier = Modifier.size(64.dp), tint = SancarlinaOutlineVariant)
+                    Icon(Icons.Default.SearchOff, null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         "No encontramos resultados",
                         style = MaterialTheme.typography.titleMedium,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         "Intenta con otras palabras clave",
                         style = MaterialTheme.typography.bodySmall,
-                        color = SancarlinaOutline
+                        color = MaterialTheme.colorScheme.outline
                     )
                 }
             } else {
@@ -174,7 +174,7 @@ fun SearchResultItem(result: SearchResult, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        color = SancarlinaSurfaceContainerLowest,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
@@ -183,12 +183,12 @@ fun SearchResultItem(result: SearchResult, onClick: () -> Unit) {
         ) {
             val icon = if (result.type == "PRODUCT") Icons.Default.Inventory2 else Icons.Default.Storefront
             Surface(
-                color = SancarlinaPrimary.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                 shape = CircleShape,
                 modifier = Modifier.size(48.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(icon, null, tint = SancarlinaPrimary, modifier = Modifier.size(24.dp))
+                    Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -197,16 +197,16 @@ fun SearchResultItem(result: SearchResult, onClick: () -> Unit) {
                     text = result.name,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = result.category,
                     style = MaterialTheme.typography.labelMedium,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Icon(Icons.Default.ChevronRight, null, tint = SancarlinaOutlineVariant)
+            Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }

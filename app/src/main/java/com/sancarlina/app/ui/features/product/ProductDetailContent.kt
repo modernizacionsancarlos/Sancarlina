@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.product
 
+import androidx.compose.material3.MaterialTheme
+
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -43,7 +45,7 @@ fun ProductDetailContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when {
             uiState.isLoading -> {
@@ -51,7 +53,7 @@ fun ProductDetailContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.notFound -> {
@@ -92,7 +94,7 @@ internal fun ProductDetailBody(
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(y = (-24).dp),
-                color = SancarlinaSurfaceContainerLowest,
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
                 shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
                 shadowElevation = 6.dp
             ) {
@@ -140,20 +142,20 @@ fun ProductNotFoundState(onBack: () -> Unit) {
                     Icons.Default.Inventory2,
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
-                    tint = SancarlinaSecondary.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(R.string.product_not_found_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(R.string.product_not_found_message),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                 )

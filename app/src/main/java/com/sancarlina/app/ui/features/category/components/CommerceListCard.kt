@@ -3,6 +3,7 @@ package com.sancarlina.app.ui.features.category.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
@@ -38,9 +39,10 @@ fun CommerceListCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = SancarlinaCardShape,
-        color = SancarlinaSurfaceContainerLowest,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shadowElevation = 3.dp,
-        tonalElevation = 1.dp
+        tonalElevation = 1.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -59,7 +61,7 @@ fun CommerceListCard(
                 Surface(
                     modifier = Modifier.size(96.dp),
                     shape = RoundedCornerShape(16.dp),
-                    color = SancarlinaSurfaceContainerHigh
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh
                 ) {}
             }
 
@@ -68,11 +70,25 @@ fun CommerceListCard(
                     .weight(1f)
                     .padding(start = 16.dp, end = 4.dp)
             ) {
+                Surface(
+                    shape = androidx.compose.foundation.shape.CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.72f)
+                ) {
+                    Text(
+                        text = commerce.category.ifBlank { "Comercio" },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+                        maxLines = 1
+                    )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = commerce.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -85,14 +101,14 @@ fun CommerceListCard(
                         Icon(
                             Icons.Default.LocationOn,
                             contentDescription = null,
-                            tint = SancarlinaOutline,
+                            tint = MaterialTheme.colorScheme.outline,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = commerce.locationName,
                             style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaOnSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -114,14 +130,14 @@ fun CommerceListCard(
                         text = commerce.rating.toString(),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     if (commerce.distance.isNotBlank()) {
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = commerce.distance,
                             style = MaterialTheme.typography.labelSmall,
-                            color = SancarlinaOutline
+                            color = MaterialTheme.colorScheme.outline
                         )
                     }
                 }
@@ -131,7 +147,7 @@ fun CommerceListCard(
                 Icon(
                     Icons.Default.FavoriteBorder,
                     stringResource(R.string.cd_favorite),
-                    tint = SancarlinaSecondary
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         }

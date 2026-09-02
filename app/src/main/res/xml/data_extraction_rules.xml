@@ -8,9 +8,13 @@
     <cloud-backup>
         <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
         <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+        <exclude domain="database" path="offline_forms.db" />
+        <exclude domain="file" path="offline_form_attachments/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
         <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+        <exclude domain="database" path="offline_forms.db" />
+        <exclude domain="file" path="offline_form_attachments/" />
     </device-transfer>
 </data-extraction-rules>

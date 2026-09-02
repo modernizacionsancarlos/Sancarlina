@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.theme.SancarlinaChipShape
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 import com.sancarlina.app.ui.theme.SancarlinaTheme
 
 @Composable
@@ -70,8 +69,8 @@ fun SancarlinaFilterChip(
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
             selected = selected,
-            borderColor = SancarlinaPrimary.copy(alpha = 0.3f),
-            selectedBorderColor = SancarlinaPrimary
+            borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+            selectedBorderColor = MaterialTheme.colorScheme.primary
         )
     )
 }

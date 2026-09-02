@@ -185,7 +185,7 @@ describe('T10 — Crear submission con otro UID', () => {
   });
 });
 
-describe('T11 — Leer Submissions como ciudadano sin role', () => {
+describe('T11 — Leer únicamente Submissions propias sin role', () => {
   beforeEach(async () => {
     // Semilla sin reglas: solo admin puede escribir Submissions en producción.
     await testEnv.withSecurityRulesDisabled(async (context) => {
@@ -196,9 +196,55 @@ describe('T11 — Leer Submissions como ciudadano sin role', () => {
     });
   });
 
-  test('get Submissions sin claim role → denegado sin error de evaluación', async () => {
+  test('get Submission propia sin role → permitido para reintento idempotente', async () => {
     const db = citizenNoRole(TEST_UID).firestore();
+    await assertSucceeds(getDoc(doc(db, 'Submissions', 'test_submission_1')));
+  });
+
+  test('get Submission ajena sin role → denegado', async () => {
+    const db = citizenNoRole(OTHER_UID).firestore();
     await assertFails(getDoc(doc(db, 'Submissions', 'test_submission_1')));
+  });
+
+  test('get missing submission id is allowed for idempotent create decision', async () => {
+    const db = citizenNoRole(TEST_UID).firestore();
+    await assertSucceeds(getDoc(doc(db, 'Submissions', 'new_client_submission_id')));
+  });
+});
+
+describe('T11b — Editar una Submission propia sin duplicarla', () => {
+  const submissionId = 'submission_editable_123';
+
+  beforeEach(async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), 'Submissions', submissionId), {
+        ...VALID_SUBMISSION,
+        client_submission_id: submissionId,
+        client_updated_at: 1234567890,
+        status: 'pending',
+      });
+    });
+  });
+
+  test('propietario actualiza respuestas manteniendo identidad y estado pendiente → permitido', async () => {
+    const db = citizenNoRole(TEST_UID).firestore();
+    await assertSucceeds(
+      updateDoc(doc(db, 'Submissions', submissionId), {
+        nombre: 'Respuesta corregida',
+        client_updated_at: 1234567999,
+        status: 'pending',
+      })
+    );
+  });
+
+  test('propietario intenta aprobar su propia respuesta → denegado', async () => {
+    const db = citizenNoRole(TEST_UID).firestore();
+    await assertFails(updateDoc(doc(db, 'Submissions', submissionId), { status: 'approved' }));
+  });
+
+  test('otro usuario intenta editar la respuesta → denegado', async () => {
+    const db = citizenNoRole(OTHER_UID).firestore();
+    await assertFails(updateDoc(doc(db, 'Submissions', submissionId), { nombre: 'Intrusión' }));
   });
 });
 

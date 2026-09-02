@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.map
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,8 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarHalf
+import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import coil.compose.AsyncImage
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.*
@@ -38,7 +42,13 @@ fun UserReviewsContent(
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var selectedFilter by remember { mutableStateOf("all") } // all, recent, top, photos
+    var selectedFilter by remember { mutableStateOf("recent") }
+    val visibleReviews = remember(uiState.reviews, selectedFilter) {
+        when (selectedFilter) {
+            "top" -> uiState.reviews.sortedByDescending { it.rating }
+            else -> uiState.reviews
+        }
+    }
 
     LaunchedEffect(commerceId) {
         viewModel.loadReviews(commerceId)
@@ -47,7 +57,7 @@ fun UserReviewsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.reviews_title),
@@ -57,18 +67,21 @@ fun UserReviewsContent(
         when {
             uiState.isLoading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.error != null -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = uiState.error!!, color = SancarlinaError)
+                    Text(text = uiState.error!!, color = MaterialTheme.colorScheme.error)
                 }
             }
             else -> {
-                val tenant = uiState.tenant
-                val rating = tenant?.rating ?: 4.8
-                val reviewsCount = tenant?.reviewsCount ?: 124
+                val reviewsCount = uiState.reviews.size
+                val rating = if (reviewsCount > 0) {
+                    uiState.reviews.map { it.rating }.average()
+                } else {
+                    0.0
+                }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -89,10 +102,10 @@ fun UserReviewsContent(
                                     modifier = Modifier.width(100.dp)
                                 ) {
                                     Text(
-                                        text = String.format("%.1f", rating),
+                                        text = if (reviewsCount > 0) String.format(Locale.getDefault(), "%.1f", rating) else "—",
                                         fontSize = 44.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = SancarlinaPrimary,
+                                        color = MaterialTheme.colorScheme.primary,
                                         lineHeight = 48.sp
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
@@ -101,7 +114,7 @@ fun UserReviewsContent(
                                     Text(
                                         text = stringResource(R.string.reviews_summary_based_on, reviewsCount),
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = SancarlinaOnSurfaceVariant,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -111,11 +124,12 @@ fun UserReviewsContent(
                                     modifier = Modifier.weight(1f),
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    RatingDistributionRow(stars = 5, percentage = 0.85f)
-                                    RatingDistributionRow(stars = 4, percentage = 0.10f)
-                                    RatingDistributionRow(stars = 3, percentage = 0.03f)
-                                    RatingDistributionRow(stars = 2, percentage = 0.01f)
-                                    RatingDistributionRow(stars = 1, percentage = 0.01f)
+                                    (5 downTo 1).forEach { stars ->
+                                        val percentage = if (reviewsCount == 0) 0f else {
+                                            uiState.reviews.count { it.rating == stars }.toFloat() / reviewsCount
+                                        }
+                                        RatingDistributionRow(stars = stars, percentage = percentage)
+                                    }
                                 }
                             }
                         }
@@ -131,18 +145,13 @@ fun UserReviewsContent(
                         ) {
                             SancarlinaFilterChip(
                                 label = stringResource(id = R.string.reviews_filter_recent),
-                                selected = selectedFilter == "all" || selectedFilter == "recent",
+                                selected = selectedFilter == "recent",
                                 onClick = { selectedFilter = "recent" }
                             )
                             SancarlinaFilterChip(
                                 label = stringResource(id = R.string.reviews_filter_top),
                                 selected = selectedFilter == "top",
                                 onClick = { selectedFilter = "top" }
-                            )
-                            SancarlinaFilterChip(
-                                label = stringResource(id = R.string.reviews_filter_photos),
-                                selected = selectedFilter == "photos",
-                                onClick = { selectedFilter = "photos" }
                             )
                         }
                     }
@@ -161,13 +170,13 @@ fun UserReviewsContent(
                                     Surface(
                                         modifier = Modifier.size(64.dp),
                                         shape = CircleShape,
-                                        color = SancarlinaPrimary.copy(alpha = 0.08f)
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
                                     ) {
                                         Box(contentAlignment = Alignment.Center) {
                                             Icon(
                                                 imageVector = Icons.Default.RateReview,
                                                 contentDescription = null,
-                                                tint = SancarlinaPrimary,
+                                                tint = MaterialTheme.colorScheme.primary,
                                                 modifier = Modifier.size(32.dp)
                                             )
                                         }
@@ -177,13 +186,13 @@ fun UserReviewsContent(
                                         text = stringResource(R.string.reviews_empty_title),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = SancarlinaOnSurface
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = stringResource(R.string.reviews_empty_message),
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = SancarlinaOnSurfaceVariant,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier.padding(horizontal = 24.dp)
                                     )
@@ -191,17 +200,8 @@ fun UserReviewsContent(
                             }
                         }
                     } else {
-                        items(uiState.reviews) { review ->
+                        items(visibleReviews, key = { it.id }) { review ->
                             ReviewItemCard(review = review)
-                        }
-
-                        item {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            SancarlinaPrimaryButton(
-                                text = stringResource(R.string.reviews_load_more),
-                                onClick = { /* Paginar en backend si existiese */ },
-                                modifier = Modifier.fillMaxWidth()
-                            )
                         }
                     }
                 }
@@ -222,7 +222,7 @@ fun RatingStars(rating: Double) {
         repeat(5) { index ->
             val icon = when {
                 index < filledStars -> Icons.Default.Star
-                index == filledStars && hasHalf -> Icons.Default.StarHalf
+                index == filledStars && hasHalf -> Icons.AutoMirrored.Filled.StarHalf
                 else -> Icons.Default.StarOutline
             }
             Icon(
@@ -245,17 +245,17 @@ fun RatingDistributionRow(stars: Int, percentage: Float) {
             text = stars.toString(),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Medium,
-            color = SancarlinaOnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(8.dp)
         )
         LinearProgressIndicator(
-            progress = percentage,
+            progress = { percentage },
             modifier = Modifier
                 .weight(1f)
                 .height(8.dp)
                 .clip(RoundedCornerShape(4.dp)),
-            color = SancarlinaPrimary,
-            trackColor = SancarlinaOutlineVariant.copy(alpha = 0.25f)
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
         )
     }
 }
@@ -284,14 +284,14 @@ fun ReviewItemCard(review: UserReview) {
                     Surface(
                         modifier = Modifier.size(40.dp),
                         shape = CircleShape,
-                        color = SancarlinaPrimaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Text(
                                 text = review.userInitials.ifBlank { "U" },
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = SancarlinaOnPrimaryContainer
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     }
@@ -300,16 +300,27 @@ fun ReviewItemCard(review: UserReview) {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = review.userName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = review.userName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        if (review.verifiedVisit) {
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Icon(
+                                imageVector = Icons.Default.Verified,
+                                contentDescription = "Visita verificada",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(17.dp)
+                            )
+                        }
+                    }
                     Text(
                         text = review.timeAgo,
                         style = MaterialTheme.typography.bodySmall,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -321,7 +332,7 @@ fun ReviewItemCard(review: UserReview) {
             Text(
                 text = review.text,
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.15f
             )
         }

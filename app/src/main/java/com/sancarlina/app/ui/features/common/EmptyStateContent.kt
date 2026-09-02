@@ -31,7 +31,7 @@ fun EmptyStateContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -42,7 +42,7 @@ fun EmptyStateContent(
             ) {
                 Surface(
                     modifier = Modifier.size(96.dp),
-                    color = SancarlinaSurfaceContainer,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = CircleShape
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -50,7 +50,7 @@ fun EmptyStateContent(
                             imageVector = icon,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp),
-                            tint = SancarlinaOutline
+                            tint = MaterialTheme.colorScheme.outline
                         )
                     }
                 }
@@ -61,7 +61,7 @@ fun EmptyStateContent(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -70,7 +70,7 @@ fun EmptyStateContent(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 

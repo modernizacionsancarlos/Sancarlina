@@ -13,7 +13,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,17 +38,17 @@ fun SancarlinaTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Volver",
-                        tint = SancarlinaPrimary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         },
         actions = actions,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = SancarlinaPrimary,
-            actionIconContentColor = SancarlinaPrimary
+            navigationIconContentColor = MaterialTheme.colorScheme.primary,
+            actionIconContentColor = MaterialTheme.colorScheme.primary
         )
     )
 }

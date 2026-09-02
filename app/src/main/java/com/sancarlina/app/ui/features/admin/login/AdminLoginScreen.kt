@@ -51,13 +51,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaErrorContainer
-import com.sancarlina.app.ui.theme.SancarlinaOnErrorContainer
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaOutlineVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainerLow
 import com.sancarlina.app.viewmodel.AdminAuthViewModel
 
 @Composable
@@ -70,7 +63,7 @@ fun AdminLoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Scaffold(containerColor = SancarlinaBackground) { innerPadding ->
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,8 +94,8 @@ fun AdminLoginScreen(
 
             Surface(
                 shape = CircleShape,
-                color = SancarlinaSurfaceContainerLow,
-                border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant)
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Text(
                     text = "Administración municipal",
@@ -122,7 +115,7 @@ fun AdminLoginScreen(
             Text(
                 text = "Ingresá tus credenciales para acceder a la gestión municipal.",
                 style = MaterialTheme.typography.bodyLarge,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 10.dp, start = 14.dp, end = 14.dp)
             )
@@ -139,9 +132,9 @@ fun AdminLoginScreen(
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = SancarlinaSurfaceContainerLow,
-                    unfocusedContainerColor = SancarlinaSurfaceContainerLow,
-                    focusedBorderColor = SancarlinaPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Transparent
                 )
             )
@@ -159,9 +152,9 @@ fun AdminLoginScreen(
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = SancarlinaSurfaceContainerLow,
-                    unfocusedContainerColor = SancarlinaSurfaceContainerLow,
-                    focusedBorderColor = SancarlinaPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Transparent
                 )
             )
@@ -175,7 +168,7 @@ fun AdminLoginScreen(
                         .height(56.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary, modifier = Modifier.size(30.dp))
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(30.dp))
                 }
             } else {
                 Button(
@@ -184,7 +177,7 @@ fun AdminLoginScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Ingresar al panel", fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.size(8.dp))
@@ -197,11 +190,11 @@ fun AdminLoginScreen(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
-                    color = SancarlinaErrorContainer
+                    color = MaterialTheme.colorScheme.errorContainer
                 ) {
                     Text(
                         text = uiState.error.orEmpty(),
-                        color = SancarlinaOnErrorContainer,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(14.dp)
@@ -214,7 +207,7 @@ fun AdminLoginScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
-                color = SancarlinaErrorContainer.copy(alpha = 0.48f)
+                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.48f)
             ) {
                 androidx.compose.foundation.layout.Row(
                     modifier = Modifier.padding(14.dp),
@@ -224,13 +217,13 @@ fun AdminLoginScreen(
                     Icon(
                         imageVector = Icons.Default.Security,
                         contentDescription = null,
-                        tint = SancarlinaOnErrorContainer,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
                         text = "Acceso restringido para personal autorizado de la Municipalidad. El uso indebido será sancionado.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = SancarlinaOnErrorContainer
+                        color = MaterialTheme.colorScheme.onErrorContainer
                     )
                 }
             }
@@ -240,7 +233,7 @@ fun AdminLoginScreen(
             TextButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.size(6.dp))
-                Text("Volver a la app", color = SancarlinaOnSurfaceVariant)
+                Text("Volver a la app", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
             Spacer(modifier = Modifier.height(24.dp))

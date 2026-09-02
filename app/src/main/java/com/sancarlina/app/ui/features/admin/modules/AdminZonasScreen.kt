@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,7 +47,7 @@ fun AdminZonasScreen(
                     IconButton(
                         onClick = { viewModel.ensureSuggestedAreas() }
                     ) {
-                        Icon(imageVector = Icons.Default.AutoFixHigh, contentDescription = "Cargar sugeridas", tint = SancarlinaPrimary)
+                        Icon(imageVector = Icons.Default.AutoFixHigh, contentDescription = "Cargar sugeridas", tint = MaterialTheme.colorScheme.primary)
                     }
                 }
             )
@@ -59,7 +61,7 @@ fun AdminZonasScreen(
                 }
             )
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -85,13 +87,13 @@ fun AdminZonasScreen(
 
             uiState.successMessage?.let { msg ->
                 Surface(
-                    color = SancarlinaPrimary.copy(alpha = 0.15f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     shape = SancarlinaChipShape,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 ) {
                     Text(
                         text = msg,
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(12.dp),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
@@ -101,7 +103,7 @@ fun AdminZonasScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.areas.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -110,7 +112,7 @@ fun AdminZonasScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(
                             onClick = { viewModel.ensureSuggestedAreas() },
-                            colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(imageVector = Icons.Default.AutoFixHigh, contentDescription = null)
                             Spacer(modifier = Modifier.width(6.dp))
@@ -161,8 +163,8 @@ private fun AreaAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -175,7 +177,7 @@ private fun AreaAdminItem(
             Icon(
                 imageVector = Icons.Default.Map,
                 contentDescription = null,
-                tint = SancarlinaPrimary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -189,12 +191,12 @@ private fun AreaAdminItem(
                     Spacer(modifier = Modifier.width(6.dp))
                     Surface(
                         shape = SancarlinaChipShape,
-                        color = if (area.category == "thematic") SancarlinaSecondary.copy(alpha = 0.15f) else SancarlinaPrimary.copy(alpha = 0.15f)
+                        color = if (area.category == "thematic") MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                     ) {
                         Text(
                             text = if (area.category == "thematic") "Temática" else "Geográfica",
                             style = MaterialTheme.typography.labelSmall,
-                            color = if (area.category == "thematic") SancarlinaSecondary else SancarlinaPrimary,
+                            color = if (area.category == "thematic") MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
@@ -208,17 +210,17 @@ private fun AreaAdminItem(
                     Text(
                         text = area.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Text(
                     text = "Orden: ${area.order} | Slug: ${area.slug}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButton(onClick = onEdit) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = SancarlinaPrimary)
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = onDelete) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
@@ -302,7 +304,7 @@ private fun AreaEditorDialog(
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Guardar")
             }

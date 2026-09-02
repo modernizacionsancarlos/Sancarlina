@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.favorites
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,11 +19,9 @@ import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaTopBar
 import com.sancarlina.app.ui.features.category.components.CommerceCard
 import com.sancarlina.app.ui.features.favorites.components.FavoritesEmptyState
-import com.sancarlina.app.ui.theme.SancarlinaBackground
 import com.sancarlina.app.viewmodel.CommerceMarker
 import com.sancarlina.app.viewmodel.FavoritesViewModel
 import androidx.compose.material3.CircularProgressIndicator
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun FavoritesContent(
@@ -38,7 +38,7 @@ fun FavoritesContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.favorites_title),
@@ -51,7 +51,7 @@ fun FavoritesContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.favorites.isEmpty() -> {

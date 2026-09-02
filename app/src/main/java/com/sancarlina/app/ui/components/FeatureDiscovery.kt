@@ -19,9 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sancarlina.app.R
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaPrimaryFixedDim
 
 data class GuideStep(
     val title: String,
@@ -84,7 +81,7 @@ fun QuickGuide(onFinish: () -> Unit) {
                         text = step.title,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -92,7 +89,7 @@ fun QuickGuide(onFinish: () -> Unit) {
                         text = step.description,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
-                        color = SancarlinaOnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -103,7 +100,7 @@ fun QuickGuide(onFinish: () -> Unit) {
                                     .size(8.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (index == currentStep) SancarlinaPrimaryFixedDim else Color.LightGray
+                                        if (index == currentStep) MaterialTheme.colorScheme.primaryFixedDim else Color.LightGray
                                     )
                             )
                             if (index < steps.size - 1) Spacer(modifier = Modifier.width(8.dp))
@@ -119,7 +116,7 @@ fun QuickGuide(onFinish: () -> Unit) {
                             stringResource(R.string.guide_continue).uppercase()
                         },
                         style = MaterialTheme.typography.labelSmall,
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold
                     )
                 }

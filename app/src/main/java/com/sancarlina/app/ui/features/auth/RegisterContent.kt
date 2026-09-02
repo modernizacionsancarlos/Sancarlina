@@ -42,7 +42,7 @@ fun RegisterContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         AuthLogoHeader(onBack = onBack)
 
@@ -59,12 +59,12 @@ fun RegisterContent(
                 text = stringResource(R.string.register_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaPrimary
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = stringResource(R.string.register_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
@@ -118,7 +118,7 @@ fun RegisterContent(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            color = SancarlinaPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -149,12 +149,12 @@ fun RegisterContent(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = stringResource(R.string.register_has_account),
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 TextButton(onClick = onBack) {
                     Text(
                         stringResource(R.string.register_login),
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold
                     )
                 }

@@ -7,6 +7,10 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class com.sancarlina.app.data.models.** { *; }
+# Algunos DTO de Firestore viven en repository; conservarlos evita fallos exclusivos
+# de Release si una pantalla o dependencia vuelve a usar deserialización reflectiva.
+-keep class com.sancarlina.app.data.repository.Area { *; }
+-keep class com.sancarlina.app.data.repository.Benefit { *; }
 
 # 2. ViewModels y Estados
 # Asegura que las data classes usadas para el estado de la UI no sean eliminadas.

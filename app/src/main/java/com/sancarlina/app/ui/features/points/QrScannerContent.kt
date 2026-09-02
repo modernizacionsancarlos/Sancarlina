@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.points
 
+import androidx.compose.material3.MaterialTheme
+
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -129,7 +131,7 @@ fun QrScannerContent(
                 color = Color.Black.copy(alpha = 0.5f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -217,7 +219,7 @@ fun ScannerFrame() {
             Box(
                 modifier = Modifier
                     .size(260.dp)
-                    .border(3.dp, SancarlinaPrimaryFixedDim, RoundedCornerShape(28.dp))
+                    .border(3.dp, MaterialTheme.colorScheme.primaryFixedDim, RoundedCornerShape(28.dp))
                     .clip(RoundedCornerShape(28.dp))
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -243,7 +245,7 @@ fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         SancarlinaCard(modifier = Modifier.padding(24.dp)) {
@@ -255,14 +257,14 @@ fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
             ) {
                 Surface(
                     modifier = Modifier.size(96.dp),
-                    color = SancarlinaPrimary.copy(alpha = 0.12f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
                     shape = CircleShape
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = SancarlinaPrimary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(64.dp)
                         )
                     }
@@ -271,7 +273,7 @@ fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
                 Text(
                     text = stringResource(R.string.qr_success_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center
                 )
@@ -279,7 +281,7 @@ fun SuccessOverlay(points: Int, onFinish: () -> Unit) {
                 Text(
                     text = stringResource(R.string.qr_success_message, points),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(32.dp))

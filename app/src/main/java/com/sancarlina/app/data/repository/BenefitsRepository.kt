@@ -2,6 +2,9 @@ package com.sancarlina.app.data.repository
 
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 data class Benefit(
@@ -31,5 +34,24 @@ class BenefitsRepository(
         } catch (e: Exception) {
             emptyList()
         }
+    }
+
+    fun observeActiveBenefits(): Flow<List<Benefit>> = callbackFlow {
+        val listener = firestore.collection(FirestoreCollections.BENEFITS)
+            .whereEqualTo("active", true)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+                val benefits = snapshot?.documents?.mapNotNull { doc ->
+                    try {
+                        doc.toObject(Benefit::class.java)?.copy(id = doc.id)
+                    } catch (_: Exception) {
+                        null
+                    }
+                }.orEmpty()
+                trySend(benefits)
+            }
+        awaitClose { listener.remove() }
     }
 }

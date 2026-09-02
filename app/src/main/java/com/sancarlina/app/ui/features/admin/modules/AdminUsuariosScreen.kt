@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.admin.modules
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,7 +41,7 @@ fun AdminUsuariosScreen(
         topBar = {
             AdminScreenTopBar(title = "Gestión de Usuarios", onBack = onBack)
         },
-        containerColor = SancarlinaBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -74,7 +76,7 @@ fun AdminUsuariosScreen(
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else if (uiState.filteredUsers.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -122,8 +124,8 @@ private fun UserAdminItem(
 ) {
     Card(
         shape = SancarlinaCardShape,
-        colors = CardDefaults.cardColors(containerColor = SancarlinaSurfaceContainerLowest),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SancarlinaOutlineVariant.copy(alpha = 0.35f)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -136,7 +138,7 @@ private fun UserAdminItem(
             Icon(
                 imageVector = if (user.role == "admin") Icons.Default.AdminPanelSettings else Icons.Default.Person,
                 contentDescription = null,
-                tint = if (user.role == "admin") SancarlinaPrimary else Color.Gray,
+                tint = if (user.role == "admin") MaterialTheme.colorScheme.primary else Color.Gray,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -149,12 +151,12 @@ private fun UserAdminItem(
                 Text(
                     text = user.email,
                     style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "Puntos: ${if (user.points_balance > 0) user.points_balance else user.points} | Rol: ${user.role}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = SancarlinaPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 AdminStatusPill(
@@ -163,13 +165,13 @@ private fun UserAdminItem(
                 )
             }
             IconButton(onClick = onResetPassword) {
-                Icon(imageVector = Icons.Default.LockReset, contentDescription = "Blanquear Clave", tint = SancarlinaPrimary)
+                Icon(imageVector = Icons.Default.LockReset, contentDescription = "Blanquear Clave", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = onToggleAdmin) {
                 Icon(
                     imageVector = Icons.Default.Security,
                     contentDescription = "Rol Admin",
-                    tint = if (user.role == "admin") SancarlinaPrimary else Color.Gray
+                    tint = if (user.role == "admin") MaterialTheme.colorScheme.primary else Color.Gray
                 )
             }
         }
@@ -207,7 +209,7 @@ private fun ResetPasswordDialog(
                         onConfirm(newPassword)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Restablecer")
             }

@@ -40,7 +40,7 @@ fun PointsHistoryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.points_history_title),
@@ -53,7 +53,7 @@ fun PointsHistoryContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.movements.isEmpty() -> {
@@ -70,7 +70,7 @@ fun PointsHistoryContent(
                             text = "Actividad reciente",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = SancarlinaOnSurface,
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
                         )
                     }
@@ -88,7 +88,7 @@ fun PointsHistoryContent(
 fun MovementCard(movement: PointMovement) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = SancarlinaSurfaceContainerLowest,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = SancarlinaCardShape,
         shadowElevation = 2.dp
     ) {
@@ -100,9 +100,9 @@ fun MovementCard(movement: PointMovement) {
                 modifier = Modifier.size(48.dp),
                 shape = CircleShape,
                 color = if (movement.isEarned) {
-                    SancarlinaPrimary.copy(alpha = 0.12f)
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
                 } else {
-                    SancarlinaSecondary.copy(alpha = 0.12f)
+                    MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f)
                 }
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -113,7 +113,7 @@ fun MovementCard(movement: PointMovement) {
                             Icons.Default.RemoveCircleOutline
                         },
                         contentDescription = null,
-                        tint = if (movement.isEarned) SancarlinaPrimary else SancarlinaSecondary,
+                        tint = if (movement.isEarned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -126,12 +126,12 @@ fun MovementCard(movement: PointMovement) {
                     text = movement.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = movement.date,
                     style = MaterialTheme.typography.labelSmall,
-                    color = SancarlinaOutline
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
 
@@ -139,7 +139,7 @@ fun MovementCard(movement: PointMovement) {
                 text = "${if (movement.amount > 0) "+" else ""}${movement.amount}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (movement.isEarned) SancarlinaPrimary else SancarlinaSecondary
+                color = if (movement.isEarned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
     }

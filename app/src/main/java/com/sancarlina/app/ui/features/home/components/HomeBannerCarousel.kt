@@ -5,29 +5,32 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.viewmodel.BannerItem
 
 @Composable
 fun HomeBannerCarousel(
     banners: List<BannerItem>,
+    onBannerClick: (BannerItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardWidth = LocalConfiguration.current.screenWidthDp.dp - 32.dp
-    LazyRow(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 4.dp)
-    ) {
-        itemsIndexed(banners, key = { index, banner ->
-            "${index}_${banner.title}_${banner.imageUrl}"
-        }) { index, banner ->
-            HomeHeroCard(
-                banner = banner,
-                badgeIndex = index,
-                modifier = Modifier.width(cardWidth)
-            )
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val cardWidth = (maxWidth * 0.82f).coerceAtMost(340.dp)
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(bottom = 4.dp)
+        ) {
+            itemsIndexed(banners, key = { index, banner ->
+                "${index}_${banner.title}_${banner.imageUrl}"
+            }) { index, banner ->
+                HomeHeroCard(
+                    banner = banner,
+                    badgeIndex = index,
+                    onClick = { onBannerClick(banner) },
+                    modifier = Modifier.width(cardWidth)
+                )
+            }
         }
     }
 }

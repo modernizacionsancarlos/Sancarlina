@@ -11,9 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +21,7 @@ import com.sancarlina.app.viewmodel.*
 import com.sancarlina.app.ui.features.auth.ForgotPasswordContent
 import com.sancarlina.app.ui.features.auth.LoginContent
 import com.sancarlina.app.ui.features.auth.OnboardingContent
+import com.sancarlina.app.ui.features.auth.OnboardingDestination
 import com.sancarlina.app.ui.features.auth.RegisterContent
 import com.sancarlina.app.ui.features.category.CategoryListContent
 import com.sancarlina.app.ui.features.common.SuccessContent
@@ -30,9 +30,11 @@ import com.sancarlina.app.ui.features.emprendimiento.EmprendimientoContent
 import com.sancarlina.app.ui.features.favorites.FavoritesContent
 import com.sancarlina.app.ui.features.profile.ProfileContent
 import com.sancarlina.app.ui.features.profile.EditProfileContent
+import com.sancarlina.app.ui.features.profile.DiscoveryPreferencesContent
 import com.sancarlina.app.ui.features.home.HomeContent
 import com.sancarlina.app.ui.features.turismo.TurismoContent
 import com.sancarlina.app.ui.features.turismo.TurismoDetailContent
+import com.sancarlina.app.ui.features.turismo.ItineraryContent
 import com.sancarlina.app.ui.features.map.MapContent
 import com.sancarlina.app.ui.features.home.SearchContent
 import com.sancarlina.app.ui.features.home.NewsDetailContent
@@ -57,6 +59,10 @@ import com.sancarlina.app.ui.features.admin.modules.*
 import com.sancarlina.app.viewmodel.admin.*
 import com.sancarlina.app.ui.features.forms.PublicFormContent
 import com.sancarlina.app.ui.features.forms.PublicFormViewModel
+import com.sancarlina.app.ui.features.forms.PendingSubmissionsContent
+import com.sancarlina.app.ui.features.forms.PendingSubmissionsViewModel
+import com.sancarlina.app.ui.features.forms.FieldRegistrationContent
+import com.sancarlina.app.ui.features.forms.FieldRegistrationViewModel
 import com.sancarlina.app.R
 import com.sancarlina.app.utils.BrowserUtils
 import com.sancarlina.app.utils.ViewModelFactory
@@ -65,6 +71,7 @@ import com.sancarlina.app.utils.ViewModelFactory
 fun SancarlinaNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    showOnboardingOnStart: Boolean = false,
     onOnboardingFinished: () -> Unit = {},
     onOpenDrawer: () -> Unit = {}
 ) {
@@ -103,10 +110,10 @@ fun SancarlinaNavGraph(
         navController = navController,
         startDestination = Screen.SplashScreen.route,
         modifier = modifier,
-        enterTransition = { fadeIn(animationSpec = tween(250)) },
-        exitTransition = { fadeOut(animationSpec = tween(250)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(250)) },
-        popExitTransition = { fadeOut(animationSpec = tween(250)) }
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
     ) {
         composable(Screen.SplashScreen.route) {
             val splashViewModel: SplashViewModel = viewModel(factory = factory)
@@ -123,8 +130,13 @@ fun SancarlinaNavGraph(
             LaunchedEffect(isReady, timeoutFinished) {
                 android.util.Log.d("GondolApp", "SplashState: isReady=$isReady, timeoutFinished=$timeoutFinished")
                 if (isReady && timeoutFinished) {
-                    android.util.Log.i("GondolApp", "Navigating to Home from Splash")
-                    navController.navigate(Screen.Home.route) {
+                    val destination = if (showOnboardingOnStart) {
+                        Screen.Onboarding.route
+                    } else {
+                        Screen.Home.route
+                    }
+                    android.util.Log.i("GondolApp", "Navigating to $destination from Splash")
+                    navController.navigate(destination) {
                         popUpTo(Screen.SplashScreen.route) { inclusive = true }
                     }
                 }
@@ -134,8 +146,8 @@ fun SancarlinaNavGraph(
             val homeViewModel: HomeViewModel = viewModel(factory = factory)
             HomeContent(
                 viewModel = homeViewModel,
-                onNavigateToDetail = { productId ->
-                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                onNavigateToDetail = { tenantId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(tenantId))
                 },
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route)
@@ -149,20 +161,24 @@ fun SancarlinaNavGraph(
                 },
                 onOpenDrawer = onOpenDrawer,
                 onNavigateToSearch = { navController.navigate(Screen.Search.route) },
-                onNavigateToNews = { navController.navigate(Screen.NewsList.route) }
+                onNavigateToNews = { navController.navigate(Screen.CategoryList.createRoute("Todos")) }
             )
         }
         composable(Screen.BodegasTab.route) {
+            val categoryViewModel: com.sancarlina.app.ui.features.category.CategoryListViewModel = viewModel(factory = factory)
             CategoryListContent(
                 categoryId = "BODEGAS",
+                viewModel = categoryViewModel,
                 onBack = { navController.popBackStack() },
-                onNavigateToDetail = { productId ->
-                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                onNavigateToDetail = { tenantId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(tenantId))
                 }
             )
         }
         composable(Screen.Search.route) {
+            val searchViewModel: com.sancarlina.app.ui.features.home.SearchViewModel = viewModel(factory = factory)
             SearchContent(
+                viewModel = searchViewModel,
                 onBack = { navController.popBackStack() },
                 onNavigateToProduct = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
@@ -174,19 +190,24 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.CategoryList.route) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
+            val categoryViewModel: com.sancarlina.app.ui.features.category.CategoryListViewModel = viewModel(factory = factory)
             CategoryListContent(
                 categoryId = categoryId,
+                viewModel = categoryViewModel,
                 onBack = { navController.popBackStack() },
-                onNavigateToDetail = { productId ->
-                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                onNavigateToDetail = { tenantId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(tenantId))
                 }
             )
         }
         composable(Screen.Turismo.route) {
             val turismoViewModel: TurismoViewModel = viewModel(factory = factory)
+            val itineraryViewModel: ItineraryViewModel = viewModel(factory = factory)
             TurismoContent(
                 viewModel = turismoViewModel,
+                itineraryViewModel = itineraryViewModel,
                 onOpenDrawer = onOpenDrawer,
+                onNavigateToItinerary = { navController.navigate(Screen.Itinerary.route) },
                 onNavigateToPoint = { pointId ->
                     navController.navigate(Screen.TurismoDetail.createRoute(pointId))
                 }
@@ -220,9 +241,13 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.Onboarding.route) {
             OnboardingContent(
-                onFinish = {
+                onFinish = { destination ->
                     onOnboardingFinished()
-                    navController.navigate(Screen.Home.route) {
+                    val targetRoute = when (destination) {
+                        OnboardingDestination.Home -> Screen.Home.route
+                        OnboardingDestination.Login -> Screen.Login.route
+                    }
+                    navController.navigate(targetRoute) {
                         popUpTo(Screen.Onboarding.route) { inclusive = true }
                     }
                 }
@@ -278,11 +303,20 @@ fun SancarlinaNavGraph(
                 onNavigateToEmprendimiento = { navController.navigate(Screen.Emprendimiento.route) },
                 onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) },
                 onNavigateToSupport = { navController.navigate(Screen.Support.route) },
-                onNavigateToHistory = { navController.navigate(Screen.PointsHistory.route) }
+                onNavigateToHistory = { navController.navigate(Screen.PointsHistory.route) },
+                onNavigateToItinerary = { navController.navigate(Screen.Itinerary.route) },
+                onNavigateToInterests = { navController.navigate(Screen.DiscoveryPreferences.route) },
+                onNavigateToAdminLogin = { navController.navigate(Screen.AdminLogin.route) },
+                onNavigateToAdminPanel = { navController.navigate(Screen.AdminHome.route) },
+                onNavigateToFieldRegistration = { navController.navigate(Screen.FieldRegistration.route) },
+                onNavigateToFormSubmissions = { navController.navigate(Screen.PendingForms.route) }
             )
         }
         composable(Screen.PointsHistory.route) {
             PointsHistoryContent(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.DiscoveryPreferences.route) {
+            DiscoveryPreferencesContent(onBack = { navController.popBackStack() })
         }
         composable(Screen.EditProfile.route) {
             EditProfileContent(
@@ -302,7 +336,9 @@ fun SancarlinaNavGraph(
             })
         }
         composable(Screen.Notifications.route) {
+            val notificationsViewModel: NotificationsViewModel = viewModel(factory = factory)
             NotificationsContent(
+                viewModel = notificationsViewModel,
                 onBack = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(Screen.NotificationSettings.route) }
             )
@@ -333,16 +369,20 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.Favorites.route) {
+            val favoritesViewModel: FavoritesViewModel = viewModel(factory = factory)
             FavoritesContent(
+                viewModel = favoritesViewModel,
                 onBack = { navController.popBackStack() },
-                onNavigateToDetail = { productId ->
-                    navController.navigate(Screen.ProductDetail.createRoute(productId))
+                onNavigateToDetail = { tenantId ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(tenantId))
                 }
             )
         }
         composable(Screen.CommerceProfile.route) { backStackEntry ->
             val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
             val commerceProfileViewModel: CommerceProfileViewModel = viewModel(factory = factory)
+            val itineraryViewModel: ItineraryViewModel = viewModel(factory = factory)
+            val itineraryState by itineraryViewModel.uiState.collectAsState()
             
             CommerceProfileContent(
                 commerceId = commerceId,
@@ -351,19 +391,36 @@ fun SancarlinaNavGraph(
                 onNavigateToProduct = { productId ->
                     navController.navigate(Screen.ProductDetail.createRoute(productId))
                 },
+                onNavigateToForm = { formId ->
+                    navController.navigate(Screen.PublicForm.createRoute(formId))
+                },
                 onNavigateToReviews = { id ->
                     navController.navigate(Screen.UserReviews.createRoute(id))
                 },
                 onNavigateToRate = { id ->
                     navController.navigate(Screen.RateCommerce.createRoute(id))
-                }
+                },
+                isInRoute = commerceId in itineraryState.selectedIds,
+                onToggleRoute = itineraryViewModel::toggle
             )
         }
         composable(Screen.RateCommerce.route) { backStackEntry ->
             val commerceId = backStackEntry.arguments?.getString("commerceId") ?: ""
+            val rateCommerceViewModel: RateCommerceViewModel = viewModel(factory = factory)
             RateCommerceContent(
                 commerceId = commerceId,
+                viewModel = rateCommerceViewModel,
                 onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Itinerary.route) {
+            val itineraryViewModel: ItineraryViewModel = viewModel(factory = factory)
+            ItineraryContent(
+                viewModel = itineraryViewModel,
+                onBack = { navController.popBackStack() },
+                onNavigateToPoint = { id ->
+                    navController.navigate(Screen.CommerceProfile.createRoute(id))
+                }
             )
         }
         composable(Screen.UserReviews.route) { backStackEntry ->
@@ -412,16 +469,40 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.PublicForm.route) { backStackEntry ->
             val formId = backStackEntry.arguments?.getString("formId") ?: ""
+            val submissionId = backStackEntry.arguments?.getString("submissionId")
             val publicFormViewModel: PublicFormViewModel = viewModel(factory = factory)
             PublicFormContent(
                 formId = formId,
+                submissionIdToEdit = submissionId,
                 viewModel = publicFormViewModel,
                 onBack = { navController.popBackStack() },
-                onSuccess = { submissionId ->
-                    navController.navigate(Screen.Success.route) {
-                        popUpTo(Screen.Home.route)
+                onViewPending = {
+                    navController.navigate(Screen.PendingForms.route) {
+                        popUpTo(Screen.PublicForm.route) { inclusive = true }
                     }
                 }
+            )
+        }
+        composable(Screen.PendingForms.route) {
+            val pendingViewModel: PendingSubmissionsViewModel = viewModel(factory = factory)
+            PendingSubmissionsContent(
+                viewModel = pendingViewModel,
+                onBack = { navController.popBackStack() },
+                onEditSubmission = { formId, submissionId ->
+                    navController.navigate(Screen.PublicForm.createRoute(formId, submissionId))
+                }
+            )
+        }
+        composable(Screen.FieldRegistration.route) {
+            val fieldViewModel: FieldRegistrationViewModel = viewModel(factory = factory)
+            FieldRegistrationContent(
+                viewModel = fieldViewModel,
+                onBack = { navController.popBackStack() },
+                onStartForm = { formId -> navController.navigate(Screen.PublicForm.createRoute(formId)) },
+                onEditSubmission = { formId, submissionId ->
+                    navController.navigate(Screen.PublicForm.createRoute(formId, submissionId))
+                },
+                onViewAllSubmissions = { navController.navigate(Screen.PendingForms.route) }
             )
         }
         composable(Screen.Offline.route) {
@@ -477,11 +558,20 @@ fun SancarlinaNavGraph(
         }
         composable(Screen.AdminFormularios.route) {
             val vm: AdminFormulariosViewModel = viewModel(factory = factory)
-            AdminFormulariosScreen(viewModel = vm, onBack = { navController.popBackStack() })
+            AdminFormulariosScreen(
+                viewModel = vm,
+                onBack = { navController.popBackStack() },
+                onStartRegistration = { navController.navigate(Screen.FieldRegistration.route) },
+                onViewPending = { navController.navigate(Screen.PendingForms.route) }
+            )
         }
         composable(Screen.AdminNotificaciones.route) {
             val vm: AdminNotificacionesViewModel = viewModel(factory = factory)
             AdminNotificacionesScreen(viewModel = vm, onBack = { navController.popBackStack() })
+        }
+        composable(Screen.AdminReviews.route) {
+            val vm: AdminReviewsViewModel = viewModel(factory = factory)
+            AdminReviewsScreen(viewModel = vm, onBack = { navController.popBackStack() })
         }
         composable(Screen.AdminAdministradores.route) {
             val vm: AdminAdministradoresViewModel = viewModel(factory = factory)

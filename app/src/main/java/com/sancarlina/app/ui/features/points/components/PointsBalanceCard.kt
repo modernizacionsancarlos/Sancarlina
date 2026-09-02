@@ -7,6 +7,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,24 +21,32 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 
 @Composable
 fun PointsBalanceCard(
     balance: Int,
     modifier: Modifier = Modifier
 ) {
+    val progress by animateFloatAsState(
+        targetValue = ((balance % 1000) / 1000f).coerceIn(0f, 1f),
+        animationSpec = tween(900),
+        label = "pointsProgress"
+    )
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = SancarlinaPrimary,
+        color = MaterialTheme.colorScheme.primary,
         contentColor = Color.White,
         shape = SancarlinaCardShape,
         shadowElevation = 6.dp
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, Color(0xFF4F5D27), MaterialTheme.colorScheme.secondary.copy(alpha = 0.82f))))) {
             Icon(
                 imageVector = Icons.Default.Stars,
                 contentDescription = null,
-                tint = SancarlinaPrimaryFixed.copy(alpha = 0.16f),
+                tint = MaterialTheme.colorScheme.primaryFixed.copy(alpha = 0.16f),
                 modifier = Modifier
                     .size(148.dp)
                     .align(Alignment.CenterEnd)
@@ -81,7 +90,7 @@ fun PointsBalanceCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             LinearProgressIndicator(
-                progress = { ((balance % 1000) / 1000f).coerceIn(0f, 1f) },
+                progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(7.dp)

@@ -1,11 +1,15 @@
 package com.sancarlina.app.ui.features.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +26,13 @@ import com.sancarlina.app.viewmodel.BannerItem
 fun HomeHeroCard(
     banner: BannerItem,
     modifier: Modifier = Modifier,
-    badgeIndex: Int = 0
+    badgeIndex: Int = 0,
+    onClick: () -> Unit = {}
 ) {
     val badgeColor = when (badgeIndex % 3) {
-        1 -> SancarlinaSecondary
-        2 -> SancarlinaTertiary
-        else -> SancarlinaPrimary
+        1 -> MaterialTheme.colorScheme.secondary
+        2 -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.primary
     }
     val badgeText = when {
         banner.title.isNotBlank() -> banner.title
@@ -37,10 +42,11 @@ fun HomeHeroCard(
 
     Surface(
         modifier = modifier
-            .height(196.dp),
+            .height(238.dp)
+            .clickable(enabled = banner.id.isNotBlank(), onClick = onClick),
         shape = SancarlinaCardShape,
         shadowElevation = 4.dp,
-        color = SancarlinaSurfaceContainerLow
+        color = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (banner.imageUrl.isNotBlank()) {
@@ -54,7 +60,7 @@ fun HomeHeroCard(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(SancarlinaSurfaceContainerHigh)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 )
             }
             Box(
@@ -93,8 +99,24 @@ fun HomeHeroCard(
                         text = headline,
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraBold,
+                        maxLines = 2
                     )
+                }
+                banner.content.takeIf { it.isNotBlank() }?.let { description ->
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.96f),
+                        maxLines = 2
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Ver lugar", color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, null, tint = Color.White, modifier = Modifier.size(18.dp))
                 }
             }
         }

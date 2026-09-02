@@ -51,7 +51,7 @@ fun SplashContent(onTimeout: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -76,14 +76,14 @@ fun SplashContent(onTimeout: () -> Unit) {
 
             CircularProgressIndicator(
                 modifier = Modifier.size(40.dp),
-                color = SancarlinaPrimary,
-                trackColor = SancarlinaPrimary.copy(alpha = 0.2f),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                 strokeWidth = 4.dp
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.splash_loading).uppercase(),
-                color = SancarlinaOnSurfaceVariant.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium
             )

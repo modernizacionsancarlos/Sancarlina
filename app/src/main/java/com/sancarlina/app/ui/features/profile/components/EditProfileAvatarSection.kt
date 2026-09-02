@@ -18,8 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
-import com.sancarlina.app.ui.theme.SancarlinaSurfaceContainer
 
 @Composable
 fun EditProfileAvatarSection(
@@ -44,7 +42,7 @@ fun EditProfileAvatarSection(
             Surface(
                 modifier = Modifier.size(104.dp),
                 shape = CircleShape,
-                color = SancarlinaSurfaceContainer
+                color = MaterialTheme.colorScheme.surfaceContainer
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     val initials = fullName.split(" ")
@@ -55,7 +53,7 @@ fun EditProfileAvatarSection(
                         Text(
                             text = initials,
                             style = MaterialTheme.typography.headlineLarge,
-                            color = SancarlinaPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     } else {
@@ -63,7 +61,7 @@ fun EditProfileAvatarSection(
                             Icons.Default.Person,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp),
-                            tint = SancarlinaPrimary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -72,7 +70,7 @@ fun EditProfileAvatarSection(
         Surface(
             modifier = Modifier.size(32.dp),
             shape = CircleShape,
-            color = SancarlinaPrimary,
+            color = MaterialTheme.colorScheme.primary,
             shadowElevation = 2.dp
         ) {
             Box(contentAlignment = Alignment.Center) {

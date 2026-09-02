@@ -1,9 +1,13 @@
 package com.sancarlina.app.ui.features.map.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
+import androidx.compose.foundation.BorderStroke
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.CommerceMarker
 
@@ -25,13 +30,14 @@ import com.sancarlina.app.viewmodel.CommerceMarker
 fun MapTenantBottomSheetCard(
     marker: CommerceMarker,
     onDismiss: () -> Unit,
-    onNavigate: () -> Unit
+    onNavigate: () -> Unit,
+    onDirections: () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = SancarlinaSurface,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = SancarlinaSheetShape,
-        dragHandle = { BottomSheetDefaults.DragHandle(color = SancarlinaOutlineVariant) }
+        dragHandle = { BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outlineVariant) }
     ) {
         Column(
             modifier = Modifier
@@ -53,7 +59,7 @@ fun MapTenantBottomSheetCard(
                     Surface(
                         modifier = Modifier.size(80.dp),
                         shape = RoundedCornerShape(16.dp),
-                        color = SancarlinaSurfaceContainerHigh
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh
                     ) {}
                 }
                 Spacer(modifier = Modifier.width(16.dp))
@@ -62,13 +68,13 @@ fun MapTenantBottomSheetCard(
                         text = marker.name,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = SancarlinaOnSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     if (marker.locationName.isNotBlank()) {
                         Text(
                             text = marker.locationName,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = SancarlinaOnSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Row(
@@ -81,14 +87,14 @@ fun MapTenantBottomSheetCard(
                             text = marker.rating.toString(),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Medium,
-                            color = SancarlinaOnSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         if (marker.distance.isNotBlank()) {
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = marker.distance,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = SancarlinaOutline
+                                color = MaterialTheme.colorScheme.outline
                             )
                         }
                     }
@@ -97,10 +103,28 @@ fun MapTenantBottomSheetCard(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SancarlinaPrimaryButton(
-                text = stringResource(R.string.map_view_commerce),
-                onClick = onNavigate
-            )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                OutlinedButton(
+                    onClick = onDirections,
+                    modifier = Modifier.weight(1f).height(52.dp),
+                    shape = RoundedCornerShape(15.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                ) {
+                    Icon(Icons.Default.Directions, contentDescription = null)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Cómo llegar", maxLines = 1)
+                }
+                Button(
+                    onClick = onNavigate,
+                    modifier = Modifier.weight(1f).height(52.dp),
+                    shape = RoundedCornerShape(15.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) {
+                    Text("Ver lugar", maxLines = 1)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                }
+            }
         }
     }
 }

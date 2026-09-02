@@ -1,7 +1,9 @@
 package com.sancarlina.app.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.DocumentSnapshot
 import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -16,13 +18,45 @@ data class Area(
     val category: String = "geographic", // "geographic" | "thematic"
     val icon: String = "",
     val active: Boolean = true
-)
+) {
+    companion object {
+        /** Mapeo explícito: no depende de reflexión y es seguro con R8 en Release. */
+        fun fromMap(id: String, data: Map<String, Any?>): Area {
+            fun value(vararg keys: String): Any? = keys.firstNotNullOfOrNull { data[it] }
+            fun text(vararg keys: String): String = value(*keys)?.toString()?.trim().orEmpty()
+            fun integer(vararg keys: String): Int = when (val raw = value(*keys)) {
+                is Number -> raw.toInt()
+                is String -> raw.toIntOrNull() ?: 0
+                else -> 0
+            }
+            fun boolean(default: Boolean, vararg keys: String): Boolean = when (val raw = value(*keys)) {
+                is Boolean -> raw
+                is Number -> raw.toInt() != 0
+                is String -> when {
+                    raw.equals("true", ignoreCase = true) || raw == "1" -> true
+                    raw.equals("false", ignoreCase = true) || raw == "0" -> false
+                    else -> default
+                }
+                else -> default
+            }
+
+            return Area(
+                id = id,
+                name = text("name", "title"),
+                slug = text("slug"),
+                description = text("description"),
+                order = integer("order", "position"),
+                category = text("category", "type").ifBlank { "geographic" },
+                icon = text("icon", "iconName", "icon_name"),
+                active = boolean(true, "active", "isActive", "is_active")
+            )
+        }
+    }
+}
 
 class AreasRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
-    private var cachedAreas: List<Area>? = null
-
     val suggestedAreas = listOf(
         // Geográficas (1–7)
         Area(id = "area_centro", name = "Centro / Villa San Carlos", slug = "centro", description = "Centro cívico y comercial principal de San Carlos", order = 1, category = "geographic", icon = "location_city", active = true),
@@ -44,15 +78,10 @@ class AreasRepository(
     )
 
     suspend fun getAreas(): List<Area> {
-        cachedAreas?.let { return it }
-
         return try {
             val snapshot = firestore.collection(FirestoreCollections.AREAS).get().await()
-            val areas = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Area::class.java)?.copy(id = doc.id)
-            }.sortedBy { it.order }
+            val areas = snapshot.documents.mapNotNull(::mapArea).sortedBy { it.order }
 
-            cachedAreas = areas
             areas
         } catch (e: Exception) {
             emptyList()
@@ -63,16 +92,25 @@ class AreasRepository(
         val listener = firestore.collection(FirestoreCollections.AREAS)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    trySend(emptyList())
                     return@addSnapshotListener
                 }
-                val areas = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(Area::class.java)?.copy(id = doc.id)
-                }?.sortedBy { it.order } ?: emptyList()
+                val areas = try {
+                    snapshot?.documents?.mapNotNull(::mapArea)?.sortedBy { it.order }.orEmpty()
+                } catch (exception: Exception) {
+                    Logger.e("Error mapping areas snapshot", exception)
+                    emptyList()
+                }
 
                 trySend(areas)
             }
         awaitClose { listener.remove() }
+    }
+
+    private fun mapArea(document: DocumentSnapshot): Area? = try {
+        Area.fromMap(document.id, document.data.orEmpty())
+    } catch (exception: Exception) {
+        Logger.e("Error mapping area ${document.id}", exception)
+        null
     }
 
     /**
@@ -102,7 +140,6 @@ class AreasRepository(
                     addedCount++
                 }
             }
-            cachedAreas = null
             Result.success(addedCount)
         } catch (e: Exception) {
             Result.failure(e)

@@ -1,10 +1,13 @@
 package com.sancarlina.app.ui.features.points
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ConfirmationNumber
 import androidx.compose.material3.*
@@ -29,6 +32,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import androidx.compose.foundation.BorderStroke
 
 @Composable
 fun BenefitsContent(
@@ -47,26 +54,26 @@ fun BenefitsContent(
                 Text(
                     text = "¿Confirmás el canje?",
                     fontWeight = FontWeight.Bold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
             text = {
                 Text(
                     text = "Vas a canjear ${benefit.cost} puntos por:\n\"${benefit.title}\" en ${benefit.brand}.",
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             confirmButton = {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                 } else {
                     Button(
                         onClick = { viewModel.redeemBenefit() },
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         shape = SancarlinaChipShape
                     ) {
                         Text("Canjear", color = Color.White)
@@ -77,11 +84,11 @@ fun BenefitsContent(
                 TextButton(
                     onClick = { viewModel.cancelBenefitSelection() }
                 ) {
-                    Text("Cancelar", color = SancarlinaPrimary)
+                    Text("Cancelar", color = MaterialTheme.colorScheme.primary)
                 }
             },
             shape = SancarlinaCardShape,
-            containerColor = SancarlinaSurfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         )
     }
 
@@ -98,7 +105,7 @@ fun BenefitsContent(
                     Text(
                         text = "¡Canje Exitoso!",
                         fontWeight = FontWeight.Bold,
-                        color = SancarlinaPrimary,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -113,14 +120,14 @@ fun BenefitsContent(
                     Text(
                         text = "Presentá este código en el comercio para recibir tu beneficio:",
                         textAlign = TextAlign.Center,
-                        color = SancarlinaOnSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
                     
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Surface(
-                        color = SancarlinaSecondary.copy(alpha = 0.1f),
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
                         shape = SancarlinaCardShape,
                         modifier = Modifier.padding(8.dp)
                     ) {
@@ -128,7 +135,7 @@ fun BenefitsContent(
                             text = voucherCode,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = SancarlinaSecondary,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
                             letterSpacing = 1.5.sp
                         )
@@ -140,13 +147,13 @@ fun BenefitsContent(
                         modifier = Modifier
                             .size(140.dp)
                             .background(Color.White, shape = SancarlinaCardShape)
-                            .drawMockQr(color = SancarlinaOnSurface),
+                            .drawMockQr(color = MaterialTheme.colorScheme.onSurface),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.ConfirmationNumber,
                             contentDescription = null,
-                            tint = SancarlinaPrimary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -159,7 +166,7 @@ fun BenefitsContent(
                 ) {
                     Button(
                         onClick = { viewModel.dismissModal() },
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         shape = SancarlinaChipShape,
                         modifier = Modifier.fillMaxWidth(0.8f)
                     ) {
@@ -168,7 +175,7 @@ fun BenefitsContent(
                 }
             },
             shape = SancarlinaCardShape,
-            containerColor = SancarlinaSurfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         )
     }
 
@@ -186,25 +193,25 @@ fun BenefitsContent(
             text = {
                 Text(
                     text = errorMessage,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             confirmButton = {
                 TextButton(
                     onClick = { viewModel.clearError() }
                 ) {
-                    Text("Aceptar", color = SancarlinaPrimary)
+                    Text("Aceptar", color = MaterialTheme.colorScheme.primary)
                 }
             },
             shape = SancarlinaCardShape,
-            containerColor = SancarlinaSurfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         )
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -221,7 +228,7 @@ fun BenefitsContent(
             text = stringResource(R.string.points_benefits_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
-            color = SancarlinaOnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -232,7 +239,7 @@ fun BenefitsContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.benefits.isEmpty() -> {
@@ -240,7 +247,7 @@ fun BenefitsContent(
                     Text(
                         text = stringResource(R.string.points_benefits_empty),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SancarlinaOnSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -264,21 +271,31 @@ fun BenefitsContent(
 fun BenefitCard(benefit: BenefitItem, onRedeemClick: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = SancarlinaSurfaceContainerLowest,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = SancarlinaCardShape,
-        shadowElevation = 3.dp
+        shadowElevation = 3.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(56.dp),
-                color = SancarlinaSecondary.copy(alpha = 0.1f),
-                shape = CircleShape
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.ConfirmationNumber, null, tint = SancarlinaSecondary)
+            if (benefit.imageUrl.isNotBlank()) {
+                AsyncImage(
+                    model = benefit.imageUrl,
+                    contentDescription = benefit.title,
+                    modifier = Modifier.size(64.dp).clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    modifier = Modifier.size(64.dp),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(Icons.Default.ConfirmationNumber, null, tint = MaterialTheme.colorScheme.secondary)
+                    }
                 }
             }
 
@@ -289,19 +306,29 @@ fun BenefitCard(benefit: BenefitItem, onRedeemClick: () -> Unit) {
                     text = benefit.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+                if (benefit.brand.isNotBlank()) {
+                    Text(
+                        text = benefit.brand,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1
+                    )
+                }
                 Text(
                     text = "${benefit.cost} puntos",
                     style = MaterialTheme.typography.labelLarge,
-                    color = SancarlinaPrimary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium
                 )
             }
 
             OutlinedButton(
                 onClick = onRedeemClick,
-                shape = SancarlinaChipShape
+                shape = RoundedCornerShape(13.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.secondary)
             ) {
                 Text("Canjear", style = MaterialTheme.typography.labelMedium)
             }

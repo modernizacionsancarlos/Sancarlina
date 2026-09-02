@@ -2,8 +2,8 @@ package com.sancarlina.app.ui.features.map.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Accessible
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,14 +21,12 @@ import com.sancarlina.app.R
 import com.sancarlina.app.data.models.Tenant
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaChip
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun CommerceInfoCard(
     tenant: Tenant,
     modifier: Modifier = Modifier,
+    distanceKm: Float? = null,
     onRatingClick: () -> Unit = {}
 ) {
     SancarlinaCard(modifier = modifier) {
@@ -36,7 +34,7 @@ fun CommerceInfoCard(
             text = tenant.name,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.SemiBold,
-            color = SancarlinaOnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         if (tenant.industry.isNotBlank()) {
@@ -45,14 +43,14 @@ fun CommerceInfoCard(
                 Icon(
                     Icons.Default.Category,
                     contentDescription = null,
-                    tint = SancarlinaPrimary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = tenant.industry,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -74,9 +72,61 @@ fun CommerceInfoCard(
                 Text(
                     text = "${tenant.rating}$reviewsSuffix",
                     style = MaterialTheme.typography.labelLarge,
-                    color = SancarlinaPrimary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
                 )
+            }
+        }
+
+        val facts = buildList {
+            tenant.openNow?.let { open ->
+                add(Triple(Icons.Default.Schedule, if (open) "Abierto ahora" else "Cerrado ahora", open))
+            }
+            if (tenant.schedule.isNotBlank()) add(Triple(Icons.Default.AccessTime, tenant.schedule, true))
+            distanceKm?.let { add(Triple(Icons.Default.NearMe, String.format(java.util.Locale.US, "%.1f km", it), true)) }
+            tenant.priceFrom?.let { price ->
+                val label = if (price == 0.0) "Sin costo" else "Desde " + java.text.NumberFormat
+                    .getCurrencyInstance(java.util.Locale.forLanguageTag("es-AR"))
+                    .format(price)
+                add(Triple(Icons.Default.Payments, label, true))
+            }
+            if (tenant.durationLabel.isNotBlank()) add(Triple(Icons.Default.Timer, tenant.durationLabel, true))
+            if (tenant.available) add(Triple(Icons.Default.EventAvailable, "Disponibilidad informada", true))
+            if (tenant.accessible) add(Triple(Icons.AutoMirrored.Filled.Accessible, "Accesible", true))
+            tenant.pointsMultiplier?.takeIf { it > 1 }?.let {
+                add(Triple(Icons.Default.Stars, String.format(java.util.Locale.US, "%.1fx puntos", it), true))
+            }
+        }
+
+        if (facts.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(14.dp))
+            facts.forEach { (icon, label, positive) ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = if (positive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(7.dp))
+                    Text(
+                        label,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (positive) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+
+        if (tenant.address.isNotBlank()) {
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.LocationOn, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(7.dp))
+                Text(tenant.address, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
@@ -94,13 +144,33 @@ fun CommerceInfoCard(
             text = stringResource(R.string.commerce_about_title),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
-            color = SancarlinaOnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = tenant.description.ifBlank { stringResource(R.string.commerce_about_empty) },
             style = MaterialTheme.typography.bodyLarge,
-            color = SancarlinaOnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        if (tenant.services.isNotEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            Text("Servicios", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            tenant.services.take(8).forEach { service ->
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 5.dp)) {
+                    Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(17.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text(service, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+        }
+
+        if (tenant.accessibilityInfo.isNotEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            Text("Accesibilidad", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            tenant.accessibilityInfo.forEach { item ->
+                Text("• $item", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }

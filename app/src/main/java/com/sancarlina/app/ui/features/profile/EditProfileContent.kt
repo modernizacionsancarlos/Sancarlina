@@ -47,7 +47,7 @@ fun EditProfileContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.edit_profile_title),
@@ -56,7 +56,7 @@ fun EditProfileContent(
 
         if (uiState.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = SancarlinaPrimary)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             uiState.error?.takeIf { !uiState.showDeletePasswordDialog }?.let { message ->
@@ -64,7 +64,7 @@ fun EditProfileContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    color = SancarlinaSecondary.copy(alpha = 0.1f),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Row(
@@ -74,11 +74,11 @@ fun EditProfileContent(
                         Text(
                             text = message,
                             modifier = Modifier.weight(1f),
-                            color = SancarlinaSecondary,
+                            color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.bodySmall
                         )
                         TextButton(onClick = { viewModel.clearError() }) {
-                            Text("Cerrar", color = SancarlinaPrimary)
+                            Text("Cerrar", color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -119,7 +119,7 @@ fun EditProfileContent(
                 Spacer(modifier = Modifier.height(40.dp))
 
                 if (uiState.isSaving) {
-                    CircularProgressIndicator(color = SancarlinaPrimary)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 } else {
                     SancarlinaPrimaryButton(
                         text = stringResource(R.string.edit_profile_save),
@@ -132,7 +132,7 @@ fun EditProfileContent(
                 TextButton(onClick = { viewModel.setShowDeleteDialog(true) }) {
                     Text(
                         stringResource(R.string.edit_profile_delete),
-                        color = SancarlinaSecondary,
+                        color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -148,19 +148,19 @@ fun EditProfileContent(
             confirmButton = {
                 Button(
                     onClick = { viewModel.proceedToDeletePassword() },
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Text("CONTINUAR")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.setShowDeleteDialog(false) }) {
-                    Text("CANCELAR", color = SancarlinaOutline)
+                    Text("CANCELAR", color = MaterialTheme.colorScheme.outline)
                 }
             },
             title = { Text("¿Eliminar cuenta?") },
             text = { Text("Esta acción es irreversible y perderás todos tus datos y puntos.") },
-            containerColor = SancarlinaSurface,
+            containerColor = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(28.dp)
         )
     }
@@ -176,7 +176,7 @@ fun EditProfileContent(
                 Button(
                     onClick = { viewModel.deleteAccount { onLogout() } },
                     enabled = !uiState.isDeletingAccount && uiState.deletePassword.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaSecondary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     if (uiState.isDeletingAccount) {
                         CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
@@ -190,7 +190,7 @@ fun EditProfileContent(
                     onClick = { viewModel.setShowDeletePasswordDialog(false) },
                     enabled = !uiState.isDeletingAccount
                 ) {
-                    Text("CANCELAR", color = SancarlinaOutline)
+                    Text("CANCELAR", color = MaterialTheme.colorScheme.outline)
                 }
             },
             title = { Text("Confirmá tu contraseña") },
@@ -213,11 +213,11 @@ fun EditProfileContent(
                     )
                     uiState.error?.let { message ->
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(message, color = SancarlinaSecondary, style = MaterialTheme.typography.bodySmall)
+                        Text(message, color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)
                     }
                 }
             },
-            containerColor = SancarlinaSurface,
+            containerColor = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(28.dp)
         )
     }

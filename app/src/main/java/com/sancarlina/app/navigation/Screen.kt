@@ -2,6 +2,7 @@ package com.sancarlina.app.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector? = null) {
@@ -26,6 +27,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Emprendimiento : Screen("sumar_emprendimiento", "Sumar Emprendimiento")
     object Notifications : Screen("notifications", "Notificaciones")
     object NotificationSettings : Screen("notification_settings", "Ajustes de Alertas")
+    object DiscoveryPreferences : Screen("discovery_preferences", "Mis intereses")
     object Success : Screen("success", "Éxito")
     object Support : Screen("support", "Soporte")
     object Search : Screen("search", "Búsqueda")
@@ -35,6 +37,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     }
     object Legal : Screen("legal", "Legal")
     object PointsHistory : Screen("points_history", "Historial")
+    object Itinerary : Screen("itinerary", "Mi recorrido", Icons.Default.Route)
     object InstitutionalInfo : Screen("institutional_info", "Institucional")
     object TurismoDetail : Screen("turismo_detail/{pointId}", "Detalle Turismo") {
         fun createRoute(pointId: String) = "turismo_detail/$pointId"
@@ -56,9 +59,12 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
         fun createRoute(commerceId: String) = "commerce_reviews/$commerceId"
     }
     object ServiciosSello : Screen("servicios_sello", "Servicios")
-    object PublicForm : Screen("formulario/{formId}", "Formulario Público") {
-        fun createRoute(formId: String) = "formulario/$formId"
+    object PublicForm : Screen("formulario/{formId}?submissionId={submissionId}", "Formulario Público") {
+        fun createRoute(formId: String, submissionId: String? = null) =
+            "formulario/$formId" + submissionId?.let { "?submissionId=$it" }.orEmpty()
     }
+    object PendingForms : Screen("formularios_pendientes", "Envíos de formularios", Icons.Default.CloudSync)
+    object FieldRegistration : Screen("registro_en_calle", "Registro en calle", Icons.AutoMirrored.Filled.Assignment)
 
     // Admin Panel Screens
     object AdminLogin : Screen("admin_login", "Acceso Administración")
@@ -69,6 +75,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object AdminUsuarios : Screen("admin_usuarios", "Usuarios", Icons.Default.Group)
     object AdminFormularios : Screen("admin_formularios", "Formularios", Icons.Default.Description)
     object AdminNotificaciones : Screen("admin_notificaciones", "Notificaciones", Icons.Default.Notifications)
+    object AdminReviews : Screen("admin_reviews", "Reseñas", Icons.Default.RateReview)
     object AdminAdministradores : Screen("admin_administradores", "Administradores", Icons.Default.Security)
 }
 

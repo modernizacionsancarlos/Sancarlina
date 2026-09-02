@@ -8,8 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.sancarlina.app.R
 
-// Headlines: Be Vietnam Pro — Body/labels: Manrope (DESIGN.md)
-// Sin TTF locales en el repo; fallback temporal hasta UI-STITCH-1+fonts.
+// Headlines: Be Vietnam Pro — Body/labels: Manrope (DESIGN_SYSTEM.md)
 val BeVietnamPro = FontFamily(Font(R.font.be_vietnam_pro, FontWeight.Normal))
 val Manrope = FontFamily(Font(R.font.manrope, FontWeight.Normal))
 
@@ -23,38 +22,38 @@ val Typography = Typography(
     ),
     headlineLarge = TextStyle(
         fontFamily = BeVietnamPro,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 28.sp,
-        lineHeight = 34.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+        lineHeight = 36.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = BeVietnamPro,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 32.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = BeVietnamPro,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 28.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
+        fontFamily = BeVietnamPro,
+        fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp
     ),
     titleMedium = TextStyle(
-        fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
+        fontFamily = BeVietnamPro,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
     titleSmall = TextStyle(
-        fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
+        fontFamily = BeVietnamPro,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
@@ -76,8 +75,8 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
+        fontSize = 13.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.4.sp
     ),
     labelLarge = TextStyle(
@@ -90,15 +89,15 @@ val Typography = Typography(
     labelMedium = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
+        fontSize = 13.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.5.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
+        fontSize = 12.sp,
+        lineHeight = 17.sp,
         letterSpacing = 0.5.sp
     )
 )

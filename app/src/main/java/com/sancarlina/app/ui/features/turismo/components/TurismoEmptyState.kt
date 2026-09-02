@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaCard
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 @Composable
 fun TurismoEmptyState(modifier: Modifier = Modifier) {
     Column(
@@ -37,14 +36,14 @@ fun TurismoEmptyState(modifier: Modifier = Modifier) {
                 Surface(
                     modifier = Modifier.size(72.dp),
                     shape = CircleShape,
-                    color = SancarlinaPrimary.copy(alpha = 0.12f)
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             Icons.Default.Explore,
                             contentDescription = null,
                             modifier = Modifier.size(40.dp),
-                            tint = SancarlinaPrimary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -53,7 +52,7 @@ fun TurismoEmptyState(modifier: Modifier = Modifier) {
                     text = stringResource(R.string.turismo_empty_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaPrimary,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
                 Text(

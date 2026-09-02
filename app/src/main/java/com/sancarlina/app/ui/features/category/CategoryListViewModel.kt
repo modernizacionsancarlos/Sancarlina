@@ -2,51 +2,59 @@ package com.sancarlina.app.ui.features.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sancarlina.app.BuildConfig
+import com.sancarlina.app.data.models.displayImageUrl
+import com.sancarlina.app.data.repository.AreasRepository
+import com.sancarlina.app.data.repository.TenantsRepository
 import com.sancarlina.app.viewmodel.CommerceMarker
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
+import java.text.Normalizer
 
-class CategoryListViewModel : ViewModel() {
+class CategoryListViewModel(
+    private val tenantsRepository: TenantsRepository,
+    private val areasRepository: AreasRepository
+) : ViewModel() {
 
-    private val firestore = FirebaseFirestore.getInstance()
     private val _uiState = MutableStateFlow(CategoryListUiState())
     val uiState: StateFlow<CategoryListUiState> = _uiState.asStateFlow()
+    private var loadJob: kotlinx.coroutines.Job? = null
 
     fun loadCategory(categoryId: String) {
         if (categoryId.isBlank()) return
 
         _uiState.update { it.copy(isLoading = true, categoryName = categoryId.uppercase(), hasLoadError = false) }
 
-        viewModelScope.launch {
-            try {
-                val result = firestore.collection("commerces")
-                    .whereEqualTo("category", categoryId)
-                    .get()
-                    .await()
-
-                val commerceList = result.documents.map { doc ->
-                    val pos = doc.getGeoPoint("position")
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            combine(
+                tenantsRepository.observeActiveTenants(),
+                areasRepository.getAreasFlow()
+            ) { tenants, areas ->
+                val areaNames = areas.associate { it.id to it.name }
+                tenants.filter { tenant ->
+                    categoryId.equals("Todos", ignoreCase = true) ||
+                        categoriesMatch(tenant.industry, categoryId)
+                }.mapNotNull { tenant ->
+                    val lat = tenant.latitude ?: return@mapNotNull null
+                    val lng = tenant.longitude ?: return@mapNotNull null
                     CommerceMarker(
-                        id = doc.id,
-                        name = doc.getString("name") ?: "",
-                        locationName = doc.getString("locationName") ?: "",
-                        position = LatLng(pos?.latitude ?: 0.0, pos?.longitude ?: 0.0),
-                        category = doc.getString("category") ?: "",
-                        phone = doc.getString("phone") ?: "",
-                        imageUrl = doc.getString("imageUrl") ?: "",
-                        rating = (doc.getDouble("rating") ?: 5.0).toFloat(),
-                        distance = doc.getString("distance") ?: "A 1.5 km de vos"
+                        id = tenant.id,
+                        name = tenant.name,
+                        locationName = areaNames[tenant.areaId] ?: tenant.address.ifBlank { "San Carlos" },
+                        position = LatLng(lat, lng),
+                        category = tenant.industry,
+                        phone = tenant.contactPhone,
+                        imageUrl = tenant.displayImageUrl(),
+                        rating = tenant.rating.toFloat(),
+                        distance = "GondolApp"
                     )
                 }
-
+            }.collect { commerceList ->
                 if (commerceList.isEmpty()) {
                     showEmptyCategory()
                 } else {
@@ -61,19 +69,19 @@ class CategoryListViewModel : ViewModel() {
                         )
                     }
                 }
-            } catch (e: Exception) {
-                Logger.e("Error loading category commerces", e)
-                _uiState.update {
-                    it.copy(
-                        commerces = emptyList(),
-                        filteredCommerces = emptyList(),
-                        locations = listOf("Todas"),
-                        isLoading = false,
-                        hasLoadError = true
-                    )
-                }
             }
         }
+    }
+
+    private fun categoriesMatch(industry: String, requested: String): Boolean {
+        fun normalized(value: String): String = Normalizer.normalize(value, Normalizer.Form.NFD)
+            .replace("\\p{M}+".toRegex(), "")
+            .lowercase()
+            .replace("[^a-z0-9]".toRegex(), "")
+            .removeSuffix("s")
+        val left = normalized(industry)
+        val right = normalized(requested)
+        return left == right || left.contains(right) || right.contains(left)
     }
 
     private fun showEmptyCategory() {

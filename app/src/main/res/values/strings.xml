@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">GondolApp</string>
-    <string name="home_explore_section">Explorar Sancarlina</string>
+    <string name="home_explore_section">Explorá por categoría</string>
     <string name="home_welcome_title">Bienvenido</string>
     <string name="home_welcome_subtitle">Descubrí comercios, productos y experiencias de San Carlos de Cuyo.</string>
-    <string name="home_search_hint">¿Qué estás buscando?</string>
-    <string name="home_offers_section">Ofertas y Novedades</string>
+    <string name="home_search_hint">¿Qué querés descubrir hoy?</string>
+    <string name="home_offers_section">Recomendado para vos</string>
     <string name="home_see_all">Ver todo</string>
     <string name="home_banners_empty">No hay novedades por ahora. Volvé a consultar más tarde.</string>
     <string name="news_detail_title">Novedad</string>
@@ -12,7 +12,7 @@
     <string name="news_detail_unavailable_message">Esta sección estará disponible próximamente.</string>
     <string name="news_detail_back">Volver</string>
     <string name="home_categories_empty">Las categorías se cargarán cuando estén disponibles.</string>
-    <string name="home_featured_section">Destacado cerca tuyo</string>
+    <string name="home_featured_section">También puede interesarte</string>
     <!-- Reemplazar antes de publicar en Play Console -->
     <string name="privacy_policy_url">https://gondolapp.web.app/politica-de-privacidad</string>
     <string name="legal_open_privacy_online">Ver política completa en línea</string>
@@ -91,6 +91,25 @@
     <string name="splash_loading">Cargando…</string>
     <string name="onboarding_next">Siguiente</string>
     <string name="onboarding_start">Comenzar</string>
+    <string name="onboarding_skip">Omitir</string>
+    <string name="onboarding_step_progress">Paso %1$d de %2$d</string>
+    <string name="onboarding_explore">Empezar a explorar</string>
+    <string name="onboarding_login">Ya tengo una cuenta</string>
+    <string name="onboarding_discover_eyebrow">DESCUBRÍ</string>
+    <string name="onboarding_discover_title">Todo San Carlos, en un solo lugar</string>
+    <string name="onboarding_discover_description">Encontrá comercios, productos y experiencias locales sin necesidad de crear una cuenta.</string>
+    <string name="onboarding_discover_action_one">Buscá por rubro</string>
+    <string name="onboarding_discover_action_two">Conocé propuestas</string>
+    <string name="onboarding_map_eyebrow">UBICATE</string>
+    <string name="onboarding_map_title">Encontrá lugares y llegá sin vueltas</string>
+    <string name="onboarding_map_description">Usá el mapa para ver qué hay cerca, abrir cada perfil y elegir cómo llegar.</string>
+    <string name="onboarding_map_action_one">Mirá qué hay cerca</string>
+    <string name="onboarding_map_action_two">Elegí cómo llegar</string>
+    <string name="onboarding_points_eyebrow">APROVECHÁ</string>
+    <string name="onboarding_points_title">Comprá local y sumá beneficios</string>
+    <string name="onboarding_points_description">Si iniciás sesión, podés escanear el QR del comercio, sumar puntos y consultar tus canjes.</string>
+    <string name="onboarding_points_action_one">Escaneá el QR</string>
+    <string name="onboarding_points_action_two">Revisá tus puntos</string>
     <string name="login_title">Bienvenido</string>
     <string name="login_subtitle">Ingresá tus datos para continuar</string>
     <string name="login_email_label">Email</string>
@@ -139,6 +158,9 @@
     <string name="notifications_empty_message">Cuando haya novedades o alertas, las vas a ver acá.</string>
     <string name="notification_settings_title">Ajustes de alertas</string>
     <string name="notification_settings_intro">Personalizá qué notificaciones querés recibir en tu dispositivo.</string>
+    <string name="notification_permission_title">Permití las notificaciones</string>
+    <string name="notification_permission_message">Activá el permiso cuando quieras recibir estos avisos.</string>
+    <string name="notification_permission_cta">Permitir</string>
     <string name="notification_toggle_points">Puntos y beneficios</string>
     <string name="notification_toggle_points_sub">Nuevos canjes y puntos sumados</string>
     <string name="notification_toggle_news">Novedades municipales</string>

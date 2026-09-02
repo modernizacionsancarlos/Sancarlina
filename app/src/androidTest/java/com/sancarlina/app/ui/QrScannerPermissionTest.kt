@@ -32,7 +32,7 @@ class QrScannerPermissionTest {
         composeTestRule.onNodeWithText(
             "Necesitamos permiso de cámara para escanear el código QR."
         ).assertExists()
-        composeTestRule.onNodeWithText("CONCEDER PERMISO").assertExists()
+        composeTestRule.onNodeWithText("Conceder permiso").assertExists()
         composeTestRule.onNodeWithTag("qr_grant_permission").assertExists()
     }
 }

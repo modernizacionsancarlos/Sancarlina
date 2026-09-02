@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.updates
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,24 +26,24 @@ import com.sancarlina.app.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatesContent(onBack: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize().background(SancarlinaSurface)) {
+    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = SancarlinaSurfaceContainerLow
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
                 Row(
                     modifier = Modifier.statusBarsPadding().padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = SancarlinaPrimary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back), tint = MaterialTheme.colorScheme.primary)
                     }
                     Text(
                         text = "Historial de Versiones",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = SancarlinaOnSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -55,7 +57,7 @@ fun UpdatesContent(onBack: () -> Unit) {
                 // Current Version Hero
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    color = SancarlinaSurfaceContainerLowest,
+                    color = MaterialTheme.colorScheme.surfaceContainerLowest,
                     shape = RoundedCornerShape(24.dp),
                     shadowElevation = 2.dp
                 ) {
@@ -64,17 +66,17 @@ fun UpdatesContent(onBack: () -> Unit) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Surface(
-                            color = SancarlinaPrimary.copy(alpha = 0.1f),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                             shape = CircleShape,
                             modifier = Modifier.size(64.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Icon(Icons.Default.Verified, null, tint = SancarlinaPrimary, modifier = Modifier.size(32.dp))
+                                Icon(Icons.Default.Verified, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
                             }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "App Actualizada", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = SancarlinaOnSurface)
-                        Text(text = "Versión actual: v8.1.0", style = MaterialTheme.typography.bodyMedium, color = SancarlinaOnSurfaceVariant)
+                        Text(text = "App Actualizada", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                        Text(text = "Versión actual: v8.1.0", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
 
@@ -84,7 +86,7 @@ fun UpdatesContent(onBack: () -> Unit) {
                     text = "Novedades recientes",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -106,7 +108,7 @@ fun UpdatesContent(onBack: () -> Unit) {
                 Button(
                     onClick = { },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(28.dp)
                 ) {
                     Icon(Icons.Default.Sync, null)
@@ -130,19 +132,19 @@ fun VersionUpdateItem(version: String, date: String, changes: List<String>) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = version, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = SancarlinaPrimary)
-                Text(text = date, style = MaterialTheme.typography.labelSmall, color = SancarlinaOutline)
+                Text(text = version, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                Text(text = date, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
             }
             Spacer(modifier = Modifier.height(8.dp))
             changes.forEach { change ->
                 Row(modifier = Modifier.padding(vertical = 2.dp)) {
-                    Icon(Icons.Default.Check, null, tint = SancarlinaPrimary, modifier = Modifier.size(16.dp).padding(top = 2.dp))
+                    Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp).padding(top = 2.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = change, style = MaterialTheme.typography.bodySmall, color = SancarlinaOnSurfaceVariant)
+                    Text(text = change, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(color = SancarlinaOutlineVariant.copy(alpha = 0.3f))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.common
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.sancarlina.app.ui.theme.SancarlinaAccent
 
 @Composable
 fun ConnectionErrorDialog(
@@ -81,7 +82,7 @@ fun ConnectionErrorDialog(
                     Button(
                         onClick = onRetry,
                         modifier = Modifier.fillMaxWidth().height(52.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaAccent),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                         shape = RoundedCornerShape(26.dp)
                     ) {
                         Text("REINTENTAR", fontWeight = FontWeight.Bold)

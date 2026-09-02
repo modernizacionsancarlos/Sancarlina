@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,9 +30,10 @@ fun SancarlinaCard(
         SancarlinaClickableCard(modifier = modifier, onClick = onClick, content = content)
     } else {
         Surface(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
             shape = SancarlinaCardShape,
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            color = MaterialTheme.colorScheme.surfaceContainerLowest,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             tonalElevation = 1.dp,
             shadowElevation = 2.dp
         ) {
@@ -47,9 +51,10 @@ private fun SancarlinaClickableCard(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
         shape = SancarlinaCardShape,
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         tonalElevation = 1.dp,
         shadowElevation = 2.dp
     ) {
@@ -67,23 +72,25 @@ fun SancarlinaElevatedCard(
     if (onClick != null) {
         Card(
             onClick = onClick,
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
             shape = SancarlinaCardShape,
             colors = CardDefaults.elevatedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
             ),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(modifier = Modifier.padding(16.dp), content = content)
         }
     } else {
         Card(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
             shape = SancarlinaCardShape,
             colors = CardDefaults.elevatedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
             ),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(modifier = Modifier.padding(16.dp), content = content)
         }

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.home
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -54,14 +56,14 @@ fun NewsDetailContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = SancarlinaPrimary)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             newsItem?.let { item ->
@@ -74,12 +76,12 @@ fun NewsDetailContent(
                     Text(
                         text = "Novedad no encontrada",
                         style = MaterialTheme.typography.titleLarge,
-                        color = SancarlinaOnSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = onBack,
-                        colors = ButtonDefaults.buttonColors(containerColor = SancarlinaPrimary)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
                         Text("Volver")
                     }
@@ -130,7 +132,7 @@ private fun NewsDetailBody(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(440.dp)
-                    .background(SancarlinaSurfaceContainerHigh)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             ) {
                 if (item.imageUrl.isNotEmpty()) {
                     AsyncImage(
@@ -167,7 +169,7 @@ private fun NewsDetailBody(
                 ) {
                     // Category Tag
                     Surface(
-                        color = SancarlinaPrimary.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
                         shape = RoundedCornerShape(24.dp)
                     ) {
                         Text(
@@ -189,29 +191,29 @@ private fun NewsDetailBody(
                         Icon(
                             imageVector = Icons.Default.CalendarToday,
                             contentDescription = null,
-                            tint = SancarlinaSurfaceContainerLow,
+                            tint = MaterialTheme.colorScheme.surfaceContainerLow,
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
                             text = displayDate,
                             style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaSurfaceContainerLow
+                            color = MaterialTheme.colorScheme.surfaceContainerLow
                         )
                         Text(
                             text = "•",
                             style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaSurfaceContainerLow
+                            color = MaterialTheme.colorScheme.surfaceContainerLow
                         )
                         Icon(
                             imageVector = Icons.Default.AccessTime,
                             contentDescription = null,
-                            tint = SancarlinaSurfaceContainerLow,
+                            tint = MaterialTheme.colorScheme.surfaceContainerLow,
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
                             text = item.readingTime,
                             style = MaterialTheme.typography.labelMedium,
-                            color = SancarlinaSurfaceContainerLow
+                            color = MaterialTheme.colorScheme.surfaceContainerLow
                         )
                     }
 
@@ -237,7 +239,7 @@ private fun NewsDetailBody(
                             modifier = Modifier
                                 .size(44.dp)
                                 .clip(CircleShape)
-                                .background(SancarlinaPrimaryFixed)
+                                .background(MaterialTheme.colorScheme.primaryFixed)
                         ) {
                             if (item.authorImageUrl.isNotEmpty()) {
                                 AsyncImage(
@@ -254,7 +256,7 @@ private fun NewsDetailBody(
                                 ) {
                                     Text(
                                         text = displayAuthorName.take(1).uppercase(),
-                                        color = SancarlinaOnPrimaryFixed,
+                                        color = MaterialTheme.colorScheme.onPrimaryFixed,
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleMedium
                                     )
@@ -268,7 +270,7 @@ private fun NewsDetailBody(
                             Text(
                                 text = buildAnnotatedString {
                                     append("Por ")
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = SancarlinaPrimaryFixed)) {
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primaryFixed)) {
                                         append(displayAuthorName)
                                     }
                                 },
@@ -278,7 +280,7 @@ private fun NewsDetailBody(
                             Text(
                                 text = displayAuthorRole,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = SancarlinaSurfaceContainerLow.copy(alpha = 0.8f)
+                                color = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.8f)
                             )
                         }
                     }
@@ -291,7 +293,7 @@ private fun NewsDetailBody(
                     .fillMaxWidth()
                     .offset(y = (-16).dp),
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                color = SancarlinaBackground,
+                color = MaterialTheme.colorScheme.background,
                 tonalElevation = 1.dp
             ) {
                 Column(
@@ -310,7 +312,7 @@ private fun NewsDetailBody(
                                     text = paragraph,
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = SancarlinaPrimary,
+                                    color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
                             }
@@ -321,11 +323,11 @@ private fun NewsDetailBody(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(
-                                            color = SancarlinaSecondaryFixed.copy(alpha = 0.2f),
+                                            color = MaterialTheme.colorScheme.secondaryFixed.copy(alpha = 0.2f),
                                             shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                                         )
                                         .padding(vertical = 16.dp, horizontal = 20.dp)
-                                        .drawBorderLeft(3.dp, SancarlinaSecondary)
+                                        .drawBorderLeft(3.dp, MaterialTheme.colorScheme.secondary)
                                 ) {
                                     val quoteText = if (paragraph.startsWith("\"")) paragraph else {
                                         // If it's a quote with author, format beautifully
@@ -346,7 +348,7 @@ private fun NewsDetailBody(
                                             fontStyle = FontStyle.Italic,
                                             lineHeight = 28.sp
                                         ),
-                                        color = SancarlinaOnSurface
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     authorText?.let {
                                         Spacer(modifier = Modifier.height(8.dp))
@@ -354,7 +356,7 @@ private fun NewsDetailBody(
                                             text = it,
                                             style = MaterialTheme.typography.labelLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = SancarlinaSecondary
+                                            color = MaterialTheme.colorScheme.secondary
                                         )
                                     }
                                 }
@@ -374,7 +376,7 @@ private fun NewsDetailBody(
                                         style = SpanStyle(
                                             fontSize = 36.sp,
                                             fontWeight = FontWeight.Black,
-                                            color = SancarlinaSecondary
+                                            color = MaterialTheme.colorScheme.secondary
                                         )
                                     ) {
                                         append(firstLetter)
@@ -388,7 +390,7 @@ private fun NewsDetailBody(
                                         lineHeight = 26.sp,
                                         letterSpacing = 0.25.sp
                                     ),
-                                    color = SancarlinaOnSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                             // Regular body paragraph
@@ -400,7 +402,7 @@ private fun NewsDetailBody(
                                         lineHeight = 26.sp,
                                         letterSpacing = 0.25.sp
                                     ),
-                                    color = SancarlinaOnSurface
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }

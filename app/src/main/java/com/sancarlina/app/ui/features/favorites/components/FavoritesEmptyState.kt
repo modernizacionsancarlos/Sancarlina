@@ -16,9 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaSecondary
 
 @Composable
 fun FavoritesEmptyState(
@@ -43,20 +40,20 @@ fun FavoritesEmptyState(
                     Icons.Default.Favorite,
                     contentDescription = null,
                     modifier = Modifier.size(56.dp),
-                    tint = SancarlinaSecondary.copy(alpha = 0.45f)
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.45f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(R.string.favorites_empty_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(R.string.favorites_empty_message),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp, bottom = 20.dp)
                 )

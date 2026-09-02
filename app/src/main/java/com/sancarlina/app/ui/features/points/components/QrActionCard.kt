@@ -3,7 +3,7 @@ package com.sancarlina.app.ui.features.points.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,19 +28,19 @@ fun QrActionCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onScanClick),
-        color = SancarlinaPrimaryContainer,
-        contentColor = SancarlinaOnPrimaryContainer,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         shape = RoundedCornerShape(18.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(shape = RoundedCornerShape(14.dp), color = SancarlinaOnPrimaryContainer.copy(alpha = 0.14f)) {
+            Surface(shape = RoundedCornerShape(14.dp), color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.14f)) {
                 Icon(
                     imageVector = Icons.Default.QrCodeScanner,
                     contentDescription = stringResource(R.string.cd_open_qr),
-                    tint = SancarlinaOnPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.padding(12.dp).size(28.dp)
                 )
             }
@@ -54,10 +54,10 @@ fun QrActionCard(
                 Text(
                     text = stringResource(R.string.points_scan_hint),
                     style = MaterialTheme.typography.bodySmall,
-                    color = SancarlinaOnPrimaryContainer.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                 )
             }
-            Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(22.dp))
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(22.dp))
         }
     }
 }

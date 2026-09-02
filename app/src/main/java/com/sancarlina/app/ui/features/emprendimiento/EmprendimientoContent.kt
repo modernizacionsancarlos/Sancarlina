@@ -15,8 +15,6 @@ import com.sancarlina.app.ui.components.SancarlinaElevatedCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.components.SancarlinaTextField
 import com.sancarlina.app.ui.components.SancarlinaTopBar
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
 
 @Composable
 fun EmprendimientoContent(onBack: () -> Unit) {
@@ -27,7 +25,7 @@ fun EmprendimientoContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.emprendimiento_title),
@@ -44,7 +42,7 @@ fun EmprendimientoContent(onBack: () -> Unit) {
             Text(
                 stringResource(R.string.emprendimiento_intro),
                 style = MaterialTheme.typography.bodyMedium,
-                color = SancarlinaOnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             SancarlinaElevatedCard {

@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.servicios
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -32,7 +34,7 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SancarlinaBackground)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         SancarlinaTopBar(
             title = stringResource(R.string.servicios_title),
@@ -76,10 +78,10 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
                         Surface(
                             modifier = Modifier.size(48.dp),
                             shape = CircleShape,
-                            color = SancarlinaSecondary.copy(alpha = 0.12f)
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Icon(Icons.Default.WorkspacePremium, null, tint = SancarlinaSecondary)
+                                Icon(Icons.Default.WorkspacePremium, null, tint = MaterialTheme.colorScheme.secondary)
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -93,7 +95,7 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
                     Text(
                         stringResource(R.string.servicios_guarantee_body),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = SancarlinaOnSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 24.sp
                     )
                 }
@@ -104,7 +106,7 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
                     stringResource(R.string.servicios_categories),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -127,13 +129,13 @@ fun ServiciosSelloContent(onBack: () -> Unit) {
 fun ServiceBadge(name: String, icon: ImageVector, modifier: Modifier = Modifier) {
     SancarlinaCard(modifier = modifier) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, contentDescription = null, tint = SancarlinaPrimary, modifier = Modifier.size(32.dp))
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = name,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = SancarlinaOnSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

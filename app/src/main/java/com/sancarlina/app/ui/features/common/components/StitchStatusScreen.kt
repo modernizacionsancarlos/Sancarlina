@@ -18,10 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
-import com.sancarlina.app.ui.theme.SancarlinaBackground
-import com.sancarlina.app.ui.theme.SancarlinaOnSurface
-import com.sancarlina.app.ui.theme.SancarlinaOnSurfaceVariant
-import com.sancarlina.app.ui.theme.SancarlinaPrimary
 
 @Composable
 fun StitchStatusScreen(
@@ -31,13 +27,13 @@ fun StitchStatusScreen(
     buttonText: String,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    iconTint: Color = SancarlinaPrimary,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
     buttonTestTag: String? = null
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(SancarlinaBackground),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         SancarlinaCard(modifier = Modifier.padding(24.dp)) {
@@ -66,7 +62,7 @@ fun StitchStatusScreen(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = SancarlinaOnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -75,7 +71,7 @@ fun StitchStatusScreen(
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = SancarlinaOnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
