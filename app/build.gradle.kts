@@ -4,23 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
-}
-
-// Maps SDK: la key se lee de local.properties (MAPS_API_KEY). No commitear local.properties.
-// Seguridad real en Google Cloud Console → Credentials: restringir por app Android
-// (package com.sancarlina.app + SHA-1 upload/release/Play App Signing) y API "Maps SDK for Android".
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { localProperties.load(it) }
-}
-val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")?.trim().orEmpty()
-if (mapsApiKey.isEmpty()) {
-    throw GradleException(
-        "MAPS_API_KEY no está definida en local.properties. " +
-                "Agregá la línea MAPS_API_KEY=<tu-key> en la raíz del proyecto. " +
-                "Restringí la key en Google Cloud Console (Android app, com.sancarlina.app, SHA-1, Maps SDK for Android)."
-    )
+    alias(libs.plugins.secrets)
 }
 
 android {
@@ -35,10 +19,15 @@ android {
         versionName = "8.8.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {
+        create("debugConfig") {
+            storeFile = file("${rootDir}/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
         create("release") {
             val properties = Properties()
             val propertiesFile = project.rootProject.file("keystore.properties")
@@ -53,6 +42,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debugConfig")
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -79,6 +71,11 @@ android {
         compose = true
         buildConfig = true
     }
+}
+
+secrets {
+    propertiesFileName = ".env"
+    defaultPropertiesFileName = ".env.example"
 }
 
 dependencies {

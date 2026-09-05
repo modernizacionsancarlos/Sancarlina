@@ -25,6 +25,7 @@ keystore.properties
 *.jks
 *.keystore
 secrets.properties
+.env
 
 # Log files
 *.log
