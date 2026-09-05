@@ -76,6 +76,7 @@ fun MainScaffold(
     val isMainView = bottomNavItems.any { it.route == currentDestination } || currentDestination == Screen.Search.route
     val isHomeDestination = currentDestination == Screen.Home.route
     var isOffline by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentDestination, app) {
         currentDestination?.let { app?.container?.analytics?.logScreen(it) }
@@ -266,6 +267,32 @@ fun MainScaffold(
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
 
                     Text(
+                        text = "APARIENCIA",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(start = 24.dp, bottom = 8.dp),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                    val themeController = LocalThemeController.current
+                    val currentThemeName = when (themeController.currentTheme) {
+                        AppTheme.LIGHT -> "Claro"
+                        AppTheme.DARK -> "Oscuro"
+                        AppTheme.SYSTEM -> "Sistema"
+                    }
+                    DrawerItem(
+                        label = "Tema ($currentThemeName)",
+                        icon = if (themeController.isDark) Icons.Default.DarkMode else Icons.Default.LightMode,
+                        selected = false,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            showThemeDialog = true
+                        }
+                    )
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
+
+                    Text(
                         text = "INFORMACIÓN",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
@@ -450,6 +477,11 @@ fun MainScaffold(
                 }
             }
 
+            if (showThemeDialog) {
+                ThemeSelectionDialog(
+                    onDismissRequest = { showThemeDialog = false }
+                )
+            }
         }
     }
 }

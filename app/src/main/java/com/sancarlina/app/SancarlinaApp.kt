@@ -24,13 +24,13 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
         return ImageLoader.Builder(this)
             .memoryCache {
                 MemoryCache.Builder(this)
-                    .maxSizePercent(0.25) // 25% de la memoria ram disponible para caché de imágenes
+                    .maxSizePercent(0.30) // 30% de la memoria ram disponible para caché de imágenes
                     .build()
             }
             .diskCache {
                 DiskCache.Builder()
                     .directory(this.cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.02) // 2% del almacenamiento para caché de disco
+                    .maxSizeBytes(150L * 1024 * 1024) // 150 MB dedicados a caché de imágenes
                     .build()
             }
             // Evita una demora visual extra al mostrar una imagen ya disponible en caché.
@@ -53,6 +53,10 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
         try {
             container = AppContainer(applicationContext)
             android.util.Log.i("GondolApp", "SancarlinaApp: Contenedor de dependencias inicializado.")
+            // Precarga agresiva de datos e imágenes en segundo plano para acceso instantáneo
+            applicationScope.launch {
+                com.sancarlina.app.data.cache.AppPreloader.preloadAll(applicationContext, container)
+            }
             applicationScope.launch {
                 BuiltinFormTemplates.ALL_TEMPLATES.forEach { template ->
                     container.offlineFormsStore.cacheSchema(template.schema)

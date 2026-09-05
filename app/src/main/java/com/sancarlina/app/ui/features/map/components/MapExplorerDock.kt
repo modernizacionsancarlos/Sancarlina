@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -60,7 +61,7 @@ fun MapExplorerDock(
                     Text("Explorá cerca tuyo", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     AnimatedContent(
                         targetState = markers.size,
-                        transitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
+                        transitionSpec = { fadeIn(tween(2)) togetherWith fadeOut(tween(2)) using SizeTransform(clip = false) },
                         label = "mapResultCount"
                     ) { count ->
                         Text(

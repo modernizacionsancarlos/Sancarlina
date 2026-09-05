@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -110,10 +113,10 @@ fun SancarlinaNavGraph(
         navController = navController,
         startDestination = Screen.SplashScreen.route,
         modifier = modifier,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None }
+        enterTransition = { fadeIn(animationSpec = tween(durationMillis = 2)) },
+        exitTransition = { fadeOut(animationSpec = tween(durationMillis = 2)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(durationMillis = 2)) },
+        popExitTransition = { fadeOut(animationSpec = tween(durationMillis = 2)) }
     ) {
         composable(Screen.SplashScreen.route) {
             val splashViewModel: SplashViewModel = viewModel(factory = factory)

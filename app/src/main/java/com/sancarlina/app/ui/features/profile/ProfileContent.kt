@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.components.SancarlinaSecondaryButton
+import com.sancarlina.app.ui.components.ThemeSelectionDialog
 import com.sancarlina.app.ui.features.profile.components.ProfileActionCard
 import com.sancarlina.app.ui.features.profile.components.ProfileHeroCard
 import com.sancarlina.app.ui.theme.*
@@ -171,6 +172,28 @@ fun ProfileContent(
             onNavigateToInterests,
             supportingText = "Personalizá lugares y experiencias recomendadas"
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        ProfileSectionTitle("Apariencia")
+        Spacer(modifier = Modifier.height(8.dp))
+        val themeController = LocalThemeController.current
+        val themeSubtitle = when (themeController.currentTheme) {
+            AppTheme.LIGHT -> "Modo Claro (Predeterminado)"
+            AppTheme.DARK -> "Modo Oscuro"
+            AppTheme.SYSTEM -> "Seguir al sistema"
+        }
+        var showProfileThemeDialog by remember { mutableStateOf(false) }
+        ProfileActionCard(
+            icon = if (themeController.isDark) Icons.Default.DarkMode else Icons.Default.LightMode,
+            title = "Tema de la aplicación",
+            supportingText = "Actualmente: $themeSubtitle",
+            onClick = { showProfileThemeDialog = true }
+        )
+        if (showProfileThemeDialog) {
+            ThemeSelectionDialog(
+                onDismissRequest = { showProfileThemeDialog = false }
+            )
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
         ProfileSectionTitle(stringResource(R.string.profile_section_community))
         Spacer(modifier = Modifier.height(8.dp))

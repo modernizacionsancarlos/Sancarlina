@@ -9,6 +9,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -87,9 +88,23 @@ private val DarkColorScheme = darkColorScheme(
     onErrorContainer = SancarlinaDarkOnErrorContainer
 )
 
+class ThemeController(
+    val currentTheme: AppTheme,
+    val isDark: Boolean,
+    val setTheme: (AppTheme) -> Unit
+)
+
+val LocalThemeController = staticCompositionLocalOf {
+    ThemeController(
+        currentTheme = AppTheme.LIGHT,
+        isDark = false,
+        setTheme = {}
+    )
+}
+
 @Composable
 fun SancarlinaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

@@ -2,8 +2,10 @@ package com.sancarlina.app.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
+import com.sancarlina.app.data.cache.AppCache
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.sancarlina.app.utils.Logger
+import com.sancarlina.app.utils.RateLimiter
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -77,30 +79,44 @@ class AreasRepository(
         Area(id = "area_eventos", name = "Eventos y Fiestas", slug = "eventos-fiestas", description = "Festivales, ferias y festejos departamentales", order = 15, category = "thematic", icon = "event", active = true)
     )
 
-    suspend fun getAreas(): List<Area> {
+    suspend fun getAreas(forceRefresh: Boolean = false): List<Area> {
+        if (!forceRefresh && AppCache.isAreasCacheValid()) {
+            AppCache.getAreas()?.let { return it }
+        }
+
+        if (!RateLimiter.isWindowAllowed("fetch_areas", 12, 10_000L)) {
+            return AppCache.getAreas() ?: suggestedAreas
+        }
+
         return try {
             val snapshot = firestore.collection(FirestoreCollections.AREAS).get().await()
             val areas = snapshot.documents.mapNotNull(::mapArea).sortedBy { it.order }
-
-            areas
+            val resolvedAreas = if (areas.isNotEmpty()) areas else suggestedAreas
+            AppCache.setAreas(resolvedAreas)
+            resolvedAreas
         } catch (e: Exception) {
-            emptyList()
+            AppCache.getAreas() ?: suggestedAreas
         }
     }
 
     fun getAreasFlow(): Flow<List<Area>> = callbackFlow {
+        // Emitir inmediatamente para carga instantánea
+        val initialAreas = AppCache.getAreas() ?: suggestedAreas
+        trySend(initialAreas)
+
         val listener = firestore.collection(FirestoreCollections.AREAS)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     return@addSnapshotListener
                 }
                 val areas = try {
-                    snapshot?.documents?.mapNotNull(::mapArea)?.sortedBy { it.order }.orEmpty()
+                    val list = snapshot?.documents?.mapNotNull(::mapArea)?.sortedBy { it.order }.orEmpty()
+                    if (list.isNotEmpty()) list else suggestedAreas
                 } catch (exception: Exception) {
                     Logger.e("Error mapping areas snapshot", exception)
-                    emptyList()
+                    initialAreas
                 }
-
+                AppCache.setAreas(areas)
                 trySend(areas)
             }
         awaitClose { listener.remove() }

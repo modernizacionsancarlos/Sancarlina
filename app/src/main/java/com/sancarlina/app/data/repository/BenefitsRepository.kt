@@ -1,7 +1,9 @@
 package com.sancarlina.app.data.repository
 
+import com.sancarlina.app.data.cache.AppCache
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sancarlina.app.utils.RateLimiter
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -21,22 +23,37 @@ data class Benefit(
 class BenefitsRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
-    suspend fun getActiveBenefits(): List<Benefit> {
+    suspend fun getActiveBenefits(forceRefresh: Boolean = false): List<Benefit> {
+        if (!forceRefresh && AppCache.isBenefitsCacheValid()) {
+            AppCache.getBenefits()?.let { return it }
+        }
+
+        if (!RateLimiter.isWindowAllowed("fetch_benefits", 12, 10_000L)) {
+            return AppCache.getBenefits().orEmpty()
+        }
+
         return try {
             val snapshot = firestore.collection(FirestoreCollections.BENEFITS)
                 .whereEqualTo("active", true)
                 .get()
                 .await()
             
-            snapshot.documents.mapNotNull { doc ->
+            val benefits = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(Benefit::class.java)?.copy(id = doc.id)
             }
+            if (benefits.isNotEmpty()) {
+                AppCache.setBenefits(benefits)
+            }
+            benefits
         } catch (e: Exception) {
-            emptyList()
+            AppCache.getBenefits().orEmpty()
         }
     }
 
     fun observeActiveBenefits(): Flow<List<Benefit>> = callbackFlow {
+        // Emitir inmediatamente del caché
+        AppCache.getBenefits()?.takeIf { it.isNotEmpty() }?.let { trySend(it) }
+
         val listener = firestore.collection(FirestoreCollections.BENEFITS)
             .whereEqualTo("active", true)
             .addSnapshotListener { snapshot, error ->
@@ -50,6 +67,9 @@ class BenefitsRepository(
                         null
                     }
                 }.orEmpty()
+                if (benefits.isNotEmpty()) {
+                    AppCache.setBenefits(benefits)
+                }
                 trySend(benefits)
             }
         awaitClose { listener.remove() }

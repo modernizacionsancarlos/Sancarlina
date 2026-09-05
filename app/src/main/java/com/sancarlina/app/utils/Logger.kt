@@ -23,4 +23,10 @@ object Logger {
             Log.i(TAG, message)
         }
     }
+
+    fun w(message: String) {
+        if (BuildConfig.DEBUG) {
+            Log.w(TAG, message)
+        }
+    }
 }

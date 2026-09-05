@@ -2,6 +2,7 @@ package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sancarlina.app.data.cache.AppCache
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.TenantsRepository
 import com.sancarlina.app.data.repository.DiscoveryPreferencesRepository
@@ -17,8 +18,8 @@ class HomeViewModel(
     private val tenantsRepository: TenantsRepository,
     private val discoveryPreferencesRepository: DiscoveryPreferencesRepository
 ) : ViewModel() {
-    // Estado inicial vacío; datos reales desde Firestore (2B-4.1)
-    private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
+    // Si los datos ya fueron precargados por AppPreloader en el splash, no mostrar spinner
+    private val _uiState = MutableStateFlow(HomeUiState(isLoading = AppCache.getTenants().isNullOrEmpty()))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -26,7 +27,9 @@ class HomeViewModel(
     }
 
     private fun loadHomeData() {
-        _uiState.update { it.copy(isLoading = true) }
+        if (AppCache.getTenants().isNullOrEmpty()) {
+            _uiState.update { it.copy(isLoading = true) }
+        }
 
         viewModelScope.launch {
             combine(

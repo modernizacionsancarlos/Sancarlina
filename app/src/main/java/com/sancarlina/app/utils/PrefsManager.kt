@@ -68,8 +68,18 @@ class PrefsManager(context: Context) {
         return encryptedPrefs.getBoolean("guide_completed", false)
     }
 
+    fun setAppTheme(theme: com.sancarlina.app.ui.theme.AppTheme) {
+        encryptedPrefs.edit().putString(KEY_APP_THEME, theme.storageKey).apply()
+    }
+
+    fun getAppTheme(): com.sancarlina.app.ui.theme.AppTheme {
+        val key = encryptedPrefs.getString(KEY_APP_THEME, com.sancarlina.app.ui.theme.AppTheme.LIGHT.storageKey)
+        return com.sancarlina.app.ui.theme.AppTheme.fromKey(key)
+    }
+
     private companion object {
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         const val KEY_LEGACY_COACHMARKS_SEEN = "seen_coachmarks"
+        const val KEY_APP_THEME = "app_theme_mode"
     }
 }

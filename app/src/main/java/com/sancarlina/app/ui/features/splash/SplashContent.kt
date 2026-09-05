@@ -44,7 +44,7 @@ fun SplashContent(onTimeout: () -> Unit) {
     )
 
     LaunchedEffect(Unit) {
-        delay(2500)
+        delay(400)
         onTimeout()
     }
 

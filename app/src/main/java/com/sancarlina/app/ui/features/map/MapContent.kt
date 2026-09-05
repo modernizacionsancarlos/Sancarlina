@@ -104,7 +104,7 @@ fun MapContent(
                         .tilt(45f)
                         .build()
                 ),
-                1000
+                2
             )
         }
     }
@@ -277,7 +277,7 @@ fun MapContent(
             ) {
                 Column {
                     IconButton(onClick = {
-                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn(), 260) }
+                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn(), 2) }
                     }) {
                         Icon(Icons.Default.Add, "Acercar mapa", tint = MaterialTheme.colorScheme.onSurface)
                     }
@@ -286,7 +286,7 @@ fun MapContent(
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     IconButton(onClick = {
-                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut(), 260) }
+                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut(), 2) }
                     }) {
                         Icon(Icons.Default.Remove, "Alejar mapa", tint = MaterialTheme.colorScheme.onSurface)
                     }
@@ -335,7 +335,7 @@ fun MapContent(
                     scope.launch {
                         cameraPositionState.animate(
                             CameraUpdateFactory.newLatLngZoom(marker.position, 16.5f),
-                            650
+                            2
                         )
                     }
                 },
