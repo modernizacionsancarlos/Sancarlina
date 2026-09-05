@@ -95,6 +95,47 @@ data class Tenant(
                 else -> null
             }
 
+            fun extractUrl(vararg keys: String): String {
+                val raw = value(*keys) ?: return ""
+                val extracted = when (raw) {
+                    is String -> raw.trim()
+                    is Map<*, *> -> (raw["url"] ?: raw["downloadURL"] ?: raw["src"] ?: raw["uri"] ?: raw["link"])?.toString()?.trim().orEmpty()
+                    is List<*> -> {
+                        val first = raw.firstOrNull()
+                        when (first) {
+                            is String -> first.trim()
+                            is Map<*, *> -> (first["url"] ?: first["downloadURL"] ?: first["src"] ?: first["uri"] ?: first["link"])?.toString()?.trim().orEmpty()
+                            else -> first?.toString()?.trim().orEmpty()
+                        }
+                    }
+                    else -> raw.toString().trim()
+                }
+                if (extracted.startsWith("{") && extracted.contains("url=")) {
+                    val match = Regex("url=([^,}]+)").find(extracted)
+                    if (match != null) return match.groupValues[1].trim()
+                }
+                return extracted
+            }
+
+            fun extractUrlList(vararg keys: String): List<String> {
+                val raw = value(*keys) ?: return emptyList()
+                return when (raw) {
+                    is List<*> -> raw.mapNotNull { item ->
+                        when (item) {
+                            is String -> item.trim().takeIf(String::isNotBlank)
+                            is Map<*, *> -> (item["url"] ?: item["downloadURL"] ?: item["src"] ?: item["uri"] ?: item["link"])?.toString()?.trim()?.takeIf(String::isNotBlank)
+                            else -> item?.toString()?.trim()?.takeIf(String::isNotBlank)
+                        }
+                    }
+                    is String -> if (raw.isNotBlank()) listOf(raw.trim()) else emptyList()
+                    is Map<*, *> -> {
+                        val u = (raw["url"] ?: raw["downloadURL"] ?: raw["src"] ?: raw["uri"] ?: raw["link"])?.toString()?.trim()
+                        if (!u.isNullOrBlank()) listOf(u) else emptyList()
+                    }
+                    else -> emptyList()
+                }
+            }
+
             val rawCoordinates = value("geo_coordinates", "geoCoordinates", "position", "coordinates")
             val coordinates = when (rawCoordinates) {
                 is GeoPoint -> "${rawCoordinates.latitude},${rawCoordinates.longitude}"
@@ -113,27 +154,27 @@ data class Tenant(
 
             return Tenant(
                 id = id,
-                name = text("name", "title"),
-                industry = text("industry", "category", "type"),
-                status = text("status").ifBlank { "active" },
+                name = text("name", "title", "nombre"),
+                industry = text("industry", "category", "type", "rubro", "categoria"),
+                status = text("status", "estado").ifBlank { "active" },
                 geoCoordinates = coordinates,
                 areaId = text("area_id", "areaId", "area"),
-                coverUrl = text("cover_url", "coverUrl"),
-                description = text("short_description", "description", "about", "bio"),
-                contactEmail = text("contact_email", "contactEmail", "email"),
-                contactPhone = text("contact_phone", "contactPhone", "phone", "phone_number", "contact_phone_number"),
-                address = text("address", "location", "locality", "city", "zone"),
-                gallery = strings("gallery", "gallery_urls", "images"),
-                imageUrl = text("image_url", "imageUrl"),
-                photoUrl = text("photo_url", "photoUrl"),
-                logoUrl = text("logo_url", "logoUrl"),
-                schedule = text("schedule", "opening_hours", "hours"),
-                website = text("website", "web", "site_url"),
+                coverUrl = extractUrl("cover_url", "coverUrl", "cover", "cover_image", "coverImage", "portada", "portada_url", "banner", "banner_url", "header_image", "headerImage"),
+                description = text("short_description", "description", "about", "bio", "descripcion"),
+                contactEmail = text("contact_email", "contactEmail", "email", "correo"),
+                contactPhone = text("contact_phone", "contactPhone", "phone", "phone_number", "contact_phone_number", "telefono"),
+                address = text("address", "location", "locality", "city", "zone", "direccion"),
+                gallery = extractUrlList("gallery", "gallery_urls", "images", "imagenes", "photos", "fotos", "pictures"),
+                imageUrl = extractUrl("image_url", "imageUrl", "image", "imagen", "imagen_url", "picture_url", "picture", "img", "url"),
+                photoUrl = extractUrl("photo_url", "photoUrl", "photo", "foto", "foto_url", "avatar", "thumbnail"),
+                logoUrl = extractUrl("logo_url", "logoUrl", "logo", "icon", "icono"),
+                schedule = text("schedule", "opening_hours", "hours", "horarios"),
+                website = text("website", "web", "site_url", "sitio_web"),
                 whatsapp = text("whatsapp", "whatsapp_number", "contact_whatsapp"),
-                services = strings("services", "products", "catalog", "offerings"),
+                services = strings("services", "products", "catalog", "offerings", "servicios", "productos"),
                 accessibilityInfo = strings("accessibility", "accessibility_info"),
                 durationLabel = text("duration", "duration_label", "estimated_duration"),
-                priceFrom = number("price_from", "price", "starting_price", "cost")?.toDouble(),
+                priceFrom = number("price_from", "price", "starting_price", "cost", "precio")?.toDouble(),
                 openNow = boolean("open_now", "is_open", "openNow")
                     ?: when (text("open_status", "status_today").lowercase()) {
                         "open", "abierto" -> true
@@ -154,5 +195,33 @@ data class Tenant(
 }
 
 fun Tenant.displayImageUrl(): String {
-    return coverUrl.ifBlank { imageUrl }.ifBlank { photoUrl }.ifBlank { logoUrl }
+    val candidate = coverUrl.ifBlank { imageUrl }
+        .ifBlank { photoUrl }
+        .ifBlank { gallery.firstOrNull { it.isNotBlank() }.orEmpty() }
+        .ifBlank { logoUrl }
+        .trim()
+
+    if (candidate.isNotBlank() && (candidate.startsWith("http://") || candidate.startsWith("https://") || candidate.startsWith("data:image/") || candidate.startsWith("content://"))) {
+        return candidate
+    }
+
+    return fallbackSanCarlosImage(industry)
+}
+
+fun fallbackSanCarlosImage(industry: String): String {
+    val ind = industry.lowercase()
+    return when {
+        ind.contains("vino") || ind.contains("bodega") || ind.contains("vitivin") ->
+            "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80"
+        ind.contains("gastronom") || ind.contains("restauran") || ind.contains("comida") || ind.contains("caf") || ind.contains("bar") ->
+            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80"
+        ind.contains("turismo") || ind.contains("aventura") || ind.contains("trekking") || ind.contains("excurs") || ind.contains("paisaje") || ind.contains("montaña") ->
+            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80"
+        ind.contains("artesan") || ind.contains("comercio") || ind.contains("local") || ind.contains("tienda") || ind.contains("ceram") ->
+            "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80"
+        ind.contains("hosped") || ind.contains("hotel") || ind.contains("cabaña") || ind.contains("posada") ->
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
+        else ->
+            "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80"
+    }
 }

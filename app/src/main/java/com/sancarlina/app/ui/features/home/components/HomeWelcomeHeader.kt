@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.home.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,14 +56,17 @@ fun HomeDiscoveryHero(
     val count = banners.size
     val pagerState = rememberPagerState(pageCount = { if (count > 0) count else 1 })
 
-    // Slide automático de locales (bodegas, comercios, turismo) con cambio instantáneo
+    // Slide automático de locales (bodegas, comercios, turismo) con ritmo pausado y deslizamiento suave
     LaunchedEffect(pagerState, count) {
         if (count > 1) {
             while (true) {
-                delay(3500)
+                delay(6000)
                 if (!pagerState.isScrollInProgress) {
                     val nextPage = (pagerState.currentPage + 1) % count
-                    pagerState.scrollToPage(nextPage) // 0ms / instantáneo
+                    pagerState.animateScrollToPage(
+                        page = nextPage,
+                        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
+                    )
                 }
             }
         }

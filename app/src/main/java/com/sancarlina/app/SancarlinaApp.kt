@@ -9,6 +9,8 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,21 +23,29 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun newImageLoader(): ImageLoader {
+        val okHttpClient = OkHttpClient.Builder()
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .retryOnConnectionFailure(true)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .build()
+
         return ImageLoader.Builder(this)
+            .okHttpClient(okHttpClient)
             .memoryCache {
                 MemoryCache.Builder(this)
-                    .maxSizePercent(0.30) // 30% de la memoria ram disponible para caché de imágenes
+                    .maxSizePercent(0.25)
                     .build()
             }
             .diskCache {
                 DiskCache.Builder()
                     .directory(this.cacheDir.resolve("image_cache"))
-                    .maxSizeBytes(150L * 1024 * 1024) // 150 MB dedicados a caché de imágenes
+                    .maxSizePercent(0.04)
                     .build()
             }
-            // Evita una demora visual extra al mostrar una imagen ya disponible en caché.
-            .crossfade(false)
-            .allowHardware(true)
+            .crossfade(true)
+            .allowHardware(false) // Fundamental: evita que los hardware bitmaps se rendericen en blanco en emuladores
             .build()
     }
 
@@ -53,10 +63,6 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
         try {
             container = AppContainer(applicationContext)
             android.util.Log.i("GondolApp", "SancarlinaApp: Contenedor de dependencias inicializado.")
-            // Precarga agresiva de datos e imágenes en segundo plano para acceso instantáneo
-            applicationScope.launch {
-                com.sancarlina.app.data.cache.AppPreloader.preloadAll(applicationContext, container)
-            }
             applicationScope.launch {
                 BuiltinFormTemplates.ALL_TEMPLATES.forEach { template ->
                     container.offlineFormsStore.cacheSchema(template.schema)

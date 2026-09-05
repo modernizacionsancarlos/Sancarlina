@@ -1,5 +1,7 @@
 package com.sancarlina.app.ui.features.home.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -26,14 +28,17 @@ fun HomeBannerCarousel(
     val count = banners.size
     val pagerState = rememberPagerState(pageCount = { count })
 
-    // Slide automático de locales para "Recomendado para vos" con cambio instantáneo (0ms)
+    // Slide automático de locales para "Recomendado para vos" a ritmo equilibrado
     LaunchedEffect(pagerState, count) {
         if (count > 1) {
             while (true) {
-                delay(3200)
+                delay(5500)
                 if (!pagerState.isScrollInProgress) {
                     val nextPage = (pagerState.currentPage + 1) % count
-                    pagerState.scrollToPage(nextPage) // 0ms / instantáneo
+                    pagerState.animateScrollToPage(
+                        page = nextPage,
+                        animationSpec = tween(durationMillis = 550, easing = FastOutSlowInEasing)
+                    )
                 }
             }
         }
