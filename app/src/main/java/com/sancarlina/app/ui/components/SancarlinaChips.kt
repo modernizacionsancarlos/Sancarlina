@@ -1,5 +1,6 @@
 package com.sancarlina.app.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -12,6 +13,7 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sancarlina.app.ui.theme.SancarlinaChipShape
@@ -26,22 +28,31 @@ fun SancarlinaChip(
 ) {
     SuggestionChip(
         onClick = onClick,
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold
+            )
+        },
         modifier = modifier,
         shape = SancarlinaChipShape,
         colors = SuggestionChipDefaults.suggestionChipColors(
             containerColor = if (selected) {
                 MaterialTheme.colorScheme.primaryContainer
             } else {
-                MaterialTheme.colorScheme.surfaceContainerHigh
+                MaterialTheme.colorScheme.surface
             },
             labelColor = if (selected) {
                 MaterialTheme.colorScheme.onPrimaryContainer
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MaterialTheme.colorScheme.onSurface
             }
         ),
-        border = null
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+        )
     )
 }
 
@@ -56,20 +67,26 @@ fun SancarlinaFilterChip(
     FilterChip(
         selected = selected,
         onClick = onClick,
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold
+            )
+        },
         leadingIcon = leadingIcon,
         modifier = modifier,
         shape = SancarlinaChipShape,
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
             selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+            containerColor = MaterialTheme.colorScheme.surface,
+            labelColor = MaterialTheme.colorScheme.onSurface
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
             selected = selected,
-            borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+            borderColor = MaterialTheme.colorScheme.outlineVariant,
             selectedBorderColor = MaterialTheme.colorScheme.primary
         )
     )

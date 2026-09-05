@@ -153,7 +153,8 @@ fun HomeSearchBar(
                 .clickable(onClick = onClick),
             shape = CircleShape,
             color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 5.dp
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)),
+            shadowElevation = 4.dp
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 18.dp),
@@ -162,13 +163,13 @@ fun HomeSearchBar(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(R.string.cd_search),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(28.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = stringResource(R.string.home_search_hint),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
                 )
@@ -182,7 +183,8 @@ fun HomeSearchBar(
             shape = CircleShape,
             color = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary,
-            shadowElevation = 5.dp
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)),
+            shadowElevation = 4.dp
         ) {
             Icon(
                 imageVector = Icons.Default.FilterList,

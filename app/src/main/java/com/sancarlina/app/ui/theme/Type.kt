@@ -47,15 +47,15 @@ val Typography = Typography(
     titleMedium = TextStyle(
         fontFamily = BeVietnamPro,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
+        fontSize = 17.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
     titleSmall = TextStyle(
         fontFamily = BeVietnamPro,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
+        fontSize = 15.sp,
+        lineHeight = 21.sp,
         letterSpacing = 0.1.sp
     ),
     bodyLarge = TextStyle(
@@ -63,41 +63,41 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.2.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.25.sp
+        fontSize = 14.5.sp,
+        lineHeight = 21.sp,
+        letterSpacing = 0.2.sp
     ),
     bodySmall = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
         lineHeight = 18.sp,
-        letterSpacing = 0.4.sp
+        letterSpacing = 0.3.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.1.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 15.sp,
+        lineHeight = 22.sp,
+        letterSpacing = 0.2.sp
     ),
     labelMedium = TextStyle(
         fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
-        fontSize = 13.sp,
-        lineHeight = 18.sp,
-        letterSpacing = 0.5.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 13.5.sp,
+        lineHeight = 19.sp,
+        letterSpacing = 0.3.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Manrope,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
         lineHeight = 17.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.4.sp
     )
 )

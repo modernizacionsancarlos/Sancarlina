@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -262,15 +263,15 @@ fun MainScaffold(
                         onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.ServiciosSello.route) }
                     )
 
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
 
                     Text(
                         text = "INFORMACIÓN",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.outline,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(start = 24.dp, bottom = 8.dp),
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified
+                        letterSpacing = 1.sp
                     )
                     DrawerItem(
                         label = "Ayuda y Soporte",
@@ -297,7 +298,7 @@ fun MainScaffold(
                         onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Legal.route) }
                     )
                     
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
 
                     if (currentUserEmail != null) {
                         DrawerItem(
@@ -491,6 +492,7 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
             .navigationBarsPadding(),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = SancarlinaBottomBarShape,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
         tonalElevation = 1.dp,
         shadowElevation = 10.dp
     ) {
@@ -582,7 +584,7 @@ fun GondolappBottomBar(navController: NavHostController, currentDestination: Str
                             text = screen.title,
                             style = MaterialTheme.typography.labelMedium,
                             color = contentColor,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
                             maxLines = 1
                         )
                         Spacer(modifier = Modifier.height(3.dp))

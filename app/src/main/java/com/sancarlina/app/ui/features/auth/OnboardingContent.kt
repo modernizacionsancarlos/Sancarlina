@@ -30,6 +30,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.theme.*
 import kotlinx.coroutines.launch
@@ -150,7 +151,7 @@ private fun OnboardingHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = GondolDimens.ScreenPadding, end = 8.dp, top = 8.dp),
+            .padding(start = GondolDimens.ScreenPadding, end = 8.dp, top = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -158,16 +159,16 @@ private fun OnboardingHeader(
             painter = painterResource(R.drawable.ic_sancarlina_logo),
             contentDescription = stringResource(R.string.app_name),
             modifier = Modifier
-                .width(132.dp)
-                .heightIn(max = 36.dp)
+                .width(136.dp)
+                .heightIn(max = 40.dp)
         )
 
         TextButton(onClick = onSkip) {
             Text(
                 text = stringResource(R.string.onboarding_skip),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -180,18 +181,20 @@ private fun OnboardingHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = GondolDimens.ScreenPadding, vertical = 8.dp)
+            .padding(horizontal = GondolDimens.ScreenPadding, vertical = 10.dp)
             .semantics { contentDescription = progressDescription },
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         repeat(pageCount) { index ->
+            val isCurrent = index == currentPage
+            val isPassed = index < currentPage
             Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(4.dp)
+                    .weight(if (isCurrent) 1.5f else 1f)
+                    .height(6.dp)
                     .clip(CircleShape)
                     .background(
-                        if (index <= currentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+                        if (isCurrent || isPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
                     )
             )
         }
@@ -211,7 +214,7 @@ private fun OnboardingPageContent(page: OnboardingPage) {
                 .verticalScroll(rememberScrollState())
                 .padding(
                     horizontal = if (maxWidth >= 600.dp) GondolDimens.TabletScreenPadding else GondolDimens.ScreenPadding,
-                    vertical = if (compact) 8.dp else 20.dp
+                    vertical = if (compact) 8.dp else 16.dp
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -224,19 +227,20 @@ private fun OnboardingPageContent(page: OnboardingPage) {
                     .height(if (compact) 190.dp else 250.dp)
             )
 
-            Spacer(modifier = Modifier.height(if (compact) 16.dp else 28.dp))
+            Spacer(modifier = Modifier.height(if (compact) 16.dp else 24.dp))
 
             Text(
-                text = page.eyebrow,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
+                text = page.eyebrow.uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 1.2.sp,
                 color = page.accent
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = page.title,
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(max = 520.dp)
@@ -247,6 +251,7 @@ private fun OnboardingPageContent(page: OnboardingPage) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
+                lineHeight = 24.sp,
                 modifier = Modifier.widthIn(max = 520.dp)
             )
         }
@@ -261,7 +266,8 @@ private fun OnboardingIllustration(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(GondolDimens.ImmersiveCardRadius),
-        color = MaterialTheme.colorScheme.surfaceContainerLow
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -332,10 +338,11 @@ private fun OnboardingCapability(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.heightIn(min = 48.dp),
+        modifier = modifier.heightIn(min = 52.dp),
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
@@ -346,13 +353,13 @@ private fun OnboardingCapability(
                 imageVector = icon,
                 contentDescription = null,
                 tint = accent,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(22.dp)
             )
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
                 maxLines = 2
             )
         }
@@ -371,7 +378,7 @@ private fun OnboardingFooter(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = GondolDimens.ScreenPadding, vertical = 12.dp),
+            .padding(horizontal = GondolDimens.ScreenPadding, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
@@ -379,12 +386,16 @@ private fun OnboardingFooter(
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 520.dp)
-                .heightIn(min = 52.dp)
+                .heightIn(min = 54.dp)
                 .testTag("onboarding_primary_action"),
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 3.dp,
+                pressedElevation = 6.dp
             )
         ) {
             Text(
@@ -393,8 +404,10 @@ private fun OnboardingFooter(
                 } else {
                     stringResource(R.string.onboarding_next)
                 },
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.25.sp
+                )
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
@@ -406,13 +419,15 @@ private fun OnboardingFooter(
         if (isLastPage) {
             TextButton(
                 onClick = onLogin,
-                modifier = Modifier.testTag("onboarding_login_action")
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .testTag("onboarding_login_action")
             ) {
                 Text(
                     text = stringResource(R.string.onboarding_login),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
             }
         } else {
@@ -422,8 +437,9 @@ private fun OnboardingFooter(
                     currentPage + 1,
                     pageCount
                 ),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(vertical = 12.dp)
             )
         }
