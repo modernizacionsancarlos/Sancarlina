@@ -2,7 +2,6 @@ package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sancarlina.app.data.cache.AppCache
 import com.sancarlina.app.data.models.displayImageUrl
 import com.sancarlina.app.data.repository.TenantsRepository
 import com.sancarlina.app.data.repository.DiscoveryPreferencesRepository
@@ -18,8 +17,8 @@ class HomeViewModel(
     private val tenantsRepository: TenantsRepository,
     private val discoveryPreferencesRepository: DiscoveryPreferencesRepository
 ) : ViewModel() {
-    // Si los datos ya fueron precargados por AppPreloader en el splash, no mostrar spinner
-    private val _uiState = MutableStateFlow(HomeUiState(isLoading = AppCache.getTenants().isNullOrEmpty()))
+    // Estado inicial vacío; datos reales desde Firestore (2B-4.1)
+    private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -27,9 +26,7 @@ class HomeViewModel(
     }
 
     private fun loadHomeData() {
-        if (AppCache.getTenants().isNullOrEmpty()) {
-            _uiState.update { it.copy(isLoading = true) }
-        }
+        _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
             combine(
@@ -50,16 +47,14 @@ class HomeViewModel(
                         .toList()
 
                     val highlighted = tenants
-                        .filter { it.displayImageUrl().isNotBlank() }
-                        .take(5)
                         .map { tenant ->
                             BannerItem(
                                 id = tenant.id,
-                                title = tenant.industry.ifBlank { "Conocé San Carlos" },
+                                title = tenant.industry.ifBlank { "San Carlos" },
                                 subtitle = tenant.name,
                                 imageUrl = tenant.displayImageUrl(),
-                                content = tenant.description,
-                                tag = tenant.industry
+                                content = tenant.description.ifBlank { "Descubrí más sobre ${tenant.name} en San Carlos." },
+                                tag = tenant.industry.ifBlank { "Comercio" }
                             )
                         }
 

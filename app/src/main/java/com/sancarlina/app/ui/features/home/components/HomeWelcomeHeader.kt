@@ -36,34 +36,47 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.style.TextOverflow
+import kotlinx.coroutines.delay
 import com.sancarlina.app.R
 import com.sancarlina.app.ui.theme.GondolDimens
 import com.sancarlina.app.viewmodel.BannerItem
 
 @Composable
 fun HomeDiscoveryHero(
-    banner: BannerItem?,
-    onClick: () -> Unit,
+    banners: List<BannerItem>,
+    onBannerClick: (BannerItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val count = banners.size
+    val pagerState = rememberPagerState(pageCount = { if (count > 0) count else 1 })
+
+    // Slide automático de locales (bodegas, comercios, turismo) con cambio instantáneo
+    LaunchedEffect(pagerState, count) {
+        if (count > 1) {
+            while (true) {
+                delay(3500)
+                if (!pagerState.isScrollInProgress) {
+                    val nextPage = (pagerState.currentPage + 1) % count
+                    pagerState.scrollToPage(nextPage) // 0ms / instantáneo
+                }
+            }
+        }
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(310.dp)
-            .clickable(enabled = !banner?.id.isNullOrBlank(), onClick = onClick),
+            .height(310.dp),
         shape = RoundedCornerShape(0.dp, 0.dp, GondolDimens.ImmersiveCardRadius, GondolDimens.ImmersiveCardRadius),
         shadowElevation = 5.dp,
         color = MaterialTheme.colorScheme.primary
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (!banner?.imageUrl.isNullOrBlank()) {
-                AsyncImage(
-                    model = banner?.imageUrl,
-                    contentDescription = banner?.subtitle?.ifBlank { banner.title },
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
+        if (count == 0) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -73,66 +86,180 @@ fun HomeDiscoveryHero(
                             )
                         )
                 )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 0.04f),
-                                Color.Black.copy(alpha = 0.18f),
-                                Color.Black.copy(alpha = 0.82f)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Black.copy(alpha = 0.04f),
+                                    Color.Black.copy(alpha = 0.18f),
+                                    Color.Black.copy(alpha = 0.82f)
+                                )
                             )
                         )
-                    )
-            )
-
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(horizontal = 22.dp, vertical = 22.dp)
-                    .widthIn(max = 560.dp)
-            ) {
-                Text(
-                    text = "Descubrí San Carlos",
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 38.sp, lineHeight = 42.sp),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Bodegas, sabores y experiencias cerca tuyo.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.94f)
-                )
-                Spacer(modifier = Modifier.height(14.dp))
-                Surface(
-                    color = Color.Black.copy(alpha = 0.42f),
-                    contentColor = Color.White,
-                    shape = CircleShape
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(horizontal = 22.dp, vertical = 22.dp)
+                        .widthIn(max = 560.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Text(
+                        text = "Descubrí San Carlos",
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 38.sp, lineHeight = 42.sp),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Bodegas, sabores y experiencias cerca tuyo.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White.copy(alpha = 0.94f)
+                    )
+                }
+            }
+        } else {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                val banner = banners[page]
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(enabled = banner.id.isNotBlank()) { onBannerClick(banner) }
+                ) {
+                    if (banner.imageUrl.isNotBlank()) {
+                        AsyncImage(
+                            model = banner.imageUrl,
+                            contentDescription = banner.subtitle.ifBlank { banner.title },
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+                                    )
+                                )
+                        )
+                    }
+
+                    // Gradiente de contraste para legibilidad perfecta
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Black.copy(alpha = 0.06f),
+                                        Color.Black.copy(alpha = 0.28f),
+                                        Color.Black.copy(alpha = 0.86f)
+                                    )
+                                )
+                            )
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(horizontal = 22.dp, vertical = 20.dp)
+                            .widthIn(max = 560.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = null,
-                            modifier = Modifier.size(19.dp)
-                        )
-                        Spacer(modifier = Modifier.width(7.dp))
                         Text(
-                            text = "Valle de Uco · Mendoza",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = Color.White
+                            text = "Descubrí San Carlos",
+                            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 36.sp, lineHeight = 40.sp),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
                         )
+                        if (banner.subtitle.isNotBlank()) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = banner.subtitle,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = banner.content.ifBlank { "Bodegas, sabores y experiencias cerca tuyo." },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.92f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                color = Color.Black.copy(alpha = 0.45f),
+                                contentColor = Color.White,
+                                shape = CircleShape
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.LocationOn,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = if (banner.tag.isNotBlank()) "${banner.tag} · San Carlos" else "Valle de Uco · Mendoza",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+
+                            if (count > 1) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    val visibleDots = count.coerceAtMost(7)
+                                    repeat(visibleDots) { dotIdx ->
+                                        val isSelected = (pagerState.currentPage % visibleDots) == dotIdx
+                                        Box(
+                                            modifier = Modifier
+                                                .size(if (isSelected) 8.dp else 4.dp)
+                                                .clip(CircleShape)
+                                                .background(if (isSelected) Color.White else Color.White.copy(alpha = 0.40f))
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun HomeDiscoveryHero(
+    banner: BannerItem?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    HomeDiscoveryHero(
+        banners = listOfNotNull(banner),
+        onBannerClick = { onClick() },
+        modifier = modifier
+    )
 }
 
 @Composable

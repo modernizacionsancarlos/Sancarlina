@@ -74,12 +74,11 @@ internal fun HomeContentBody(
                 .widthIn(max = 960.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp)
         ) {
-            val heroBanner = uiState.banners.firstOrNull()
             item(key = "discovery_hero") {
                 HomeDiscoveryHero(
-                    banner = heroBanner,
-                    onClick = {
-                        heroBanner?.id?.takeIf { it.isNotBlank() }?.let(onNavigateToDetail)
+                    banners = uiState.banners,
+                    onBannerClick = { banner ->
+                        banner.id.takeIf { it.isNotBlank() }?.let(onNavigateToDetail)
                     }
                 )
             }

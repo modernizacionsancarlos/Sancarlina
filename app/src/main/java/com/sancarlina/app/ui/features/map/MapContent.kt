@@ -96,15 +96,14 @@ fun MapContent(
 
     fun animateToLocation(location: Location) {
         scope.launch {
-            cameraPositionState.animate(
+            cameraPositionState.move(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.builder()
                         .target(LatLng(location.latitude, location.longitude))
                         .zoom(if (hasFinePermission) 17f else 15f)
                         .tilt(45f)
                         .build()
-                ),
-                2
+                )
             )
         }
     }
@@ -277,7 +276,7 @@ fun MapContent(
             ) {
                 Column {
                     IconButton(onClick = {
-                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn(), 2) }
+                        scope.launch { cameraPositionState.move(CameraUpdateFactory.zoomIn()) }
                     }) {
                         Icon(Icons.Default.Add, "Acercar mapa", tint = MaterialTheme.colorScheme.onSurface)
                     }
@@ -286,7 +285,7 @@ fun MapContent(
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     IconButton(onClick = {
-                        scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut(), 2) }
+                        scope.launch { cameraPositionState.move(CameraUpdateFactory.zoomOut()) }
                     }) {
                         Icon(Icons.Default.Remove, "Alejar mapa", tint = MaterialTheme.colorScheme.onSurface)
                     }
@@ -333,9 +332,8 @@ fun MapContent(
                 onSelect = { marker ->
                     viewModel.onMarkerClick(marker)
                     scope.launch {
-                        cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(marker.position, 16.5f),
-                            2
+                        cameraPositionState.move(
+                            CameraUpdateFactory.newLatLngZoom(marker.position, 16.5f)
                         )
                     }
                 },

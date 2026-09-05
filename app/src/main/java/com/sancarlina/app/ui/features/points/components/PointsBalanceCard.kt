@@ -23,7 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.snap
 
 @Composable
 fun PointsBalanceCard(
@@ -32,7 +32,7 @@ fun PointsBalanceCard(
 ) {
     val progress by animateFloatAsState(
         targetValue = ((balance % 1000) / 1000f).coerceIn(0f, 1f),
-        animationSpec = tween(900),
+        animationSpec = snap(),
         label = "pointsProgress"
     )
     Surface(

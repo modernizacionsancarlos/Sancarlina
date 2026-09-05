@@ -30,7 +30,7 @@ fun SancarlinaCard(
         SancarlinaClickableCard(modifier = modifier, onClick = onClick, content = content)
     } else {
         Surface(
-            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
+            modifier = modifier.fillMaxWidth(),
             shape = SancarlinaCardShape,
             color = MaterialTheme.colorScheme.surfaceContainerLowest,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
@@ -51,7 +51,7 @@ private fun SancarlinaClickableCard(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
+        modifier = modifier.fillMaxWidth(),
         shape = SancarlinaCardShape,
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
@@ -72,7 +72,7 @@ fun SancarlinaElevatedCard(
     if (onClick != null) {
         Card(
             onClick = onClick,
-            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
+            modifier = modifier.fillMaxWidth(),
             shape = SancarlinaCardShape,
             colors = CardDefaults.elevatedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
@@ -84,7 +84,7 @@ fun SancarlinaElevatedCard(
         }
     } else {
         Card(
-            modifier = modifier.fillMaxWidth().animateContentSize(animationSpec = spring()),
+            modifier = modifier.fillMaxWidth(),
             shape = SancarlinaCardShape,
             colors = CardDefaults.elevatedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
