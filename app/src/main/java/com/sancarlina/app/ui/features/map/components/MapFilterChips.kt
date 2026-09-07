@@ -13,15 +13,24 @@ fun MapFilterChips(
     categories: List<String>,
     selectedCategory: String,
     onCategorySelected: (String) -> Unit,
+    onlyOpenNow: Boolean,
+    onOpenNowToggled: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (categories.size <= 1) return
+    if (categories.isEmpty()) return
 
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(0.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        item {
+            SancarlinaFilterChip(
+                label = "Abierto ahora",
+                selected = onlyOpenNow,
+                onClick = { onOpenNowToggled(!onlyOpenNow) }
+            )
+        }
         items(categories) { category ->
             SancarlinaFilterChip(
                 label = category,

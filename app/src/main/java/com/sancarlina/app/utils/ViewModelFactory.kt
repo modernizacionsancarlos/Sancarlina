@@ -48,7 +48,8 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
                     container.userRepository,
                     container.tenantsRepository,
                     container.formsRepository,
-                    container.engagementRepository
+                    container.engagementRepository,
+                    container.offlineGuideStore
                 ) as T
             }
             modelClass.isAssignableFrom(FavoritesViewModel::class.java) -> {

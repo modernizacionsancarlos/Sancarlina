@@ -251,12 +251,14 @@ fun MapContent(
                 ).count { it }
             )
 
-            if (uiState.markers.isNotEmpty() && uiState.categories.size > 1) {
+            if (uiState.markers.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 MapFilterChips(
-                    categories = uiState.categories,
+                    categories = if (uiState.categories.size > 1) uiState.categories else emptyList(),
                     selectedCategory = uiState.selectedCategory,
-                    onCategorySelected = viewModel::onCategorySelected
+                    onCategorySelected = viewModel::onCategorySelected,
+                    onlyOpenNow = uiState.onlyOpenNow,
+                    onOpenNowToggled = viewModel::onOpenNowToggled
                 )
             }
         }

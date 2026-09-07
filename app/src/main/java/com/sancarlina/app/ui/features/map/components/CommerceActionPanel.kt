@@ -31,8 +31,10 @@ private data class CommerceAction(
 fun CommerceActionPanel(
     tenant: Tenant,
     isInRoute: Boolean,
+    isSavedOffline: Boolean,
     onTrack: (String) -> Unit,
-    onToggleRoute: () -> Unit
+    onToggleRoute: () -> Unit,
+    onToggleOffline: () -> Unit
 ) {
     val context = LocalContext.current
     fun open(uri: String) {
@@ -59,7 +61,8 @@ fun CommerceActionPanel(
         }
         val whatsappDigits = tenant.whatsapp.filter(Char::isDigit)
         if (whatsappDigits.isNotBlank()) {
-            add(CommerceAction("WhatsApp", Icons.AutoMirrored.Filled.Chat, "whatsapp") { open("https://wa.me/$whatsappDigits") })
+            val message = Uri.encode("Hola ${tenant.name}, los vi en Sancarlina y quería consultar por ")
+            add(CommerceAction("WhatsApp", Icons.AutoMirrored.Filled.Chat, "whatsapp") { open("https://wa.me/$whatsappDigits?text=$message") })
         }
         if (tenant.website.isNotBlank()) {
             val url = if (tenant.website.startsWith("http")) tenant.website else "https://${tenant.website}"
@@ -90,6 +93,14 @@ fun CommerceActionPanel(
                 if (isInRoute) Icons.Default.CheckCircle else Icons.Default.Route,
                 "add_to_route",
                 onToggleRoute
+            )
+        )
+        add(
+            CommerceAction(
+                if (isSavedOffline) "Guardado" else "Offline",
+                if (isSavedOffline) Icons.Default.CloudDone else Icons.Default.CloudDownload,
+                "toggle_offline",
+                onToggleOffline
             )
         )
     }

@@ -37,6 +37,7 @@ class AppContainer(private val context: Context) {
     }
     val analytics: AppAnalytics by lazy { AppAnalytics(context) }
     val offlineFormsStore: OfflineFormsStore by lazy { OfflineFormsStore(context) }
+    val offlineGuideStore: com.sancarlina.app.data.local.OfflineGuideStore by lazy { com.sancarlina.app.data.local.OfflineGuideStore(context) }
     val addressGeocoder: AndroidAddressGeocoder by lazy { AndroidAddressGeocoder(context) }
 
     val tenantsRepository: TenantsRepository by lazy {

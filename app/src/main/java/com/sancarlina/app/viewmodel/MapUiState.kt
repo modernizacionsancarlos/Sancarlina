@@ -10,6 +10,7 @@ data class MapUiState(
     val selectedCategory: String = "Todos",
     val selectedLocation: String = "Todas",
     val onlyWithSello: Boolean = false,
+    val onlyOpenNow: Boolean = false,
     val selectedMarker: CommerceMarker? = null,
     val isBottomSheetVisible: Boolean = false,
     val isFilterPanelVisible: Boolean = false,
@@ -26,5 +27,6 @@ data class CommerceMarker(
     val phone: String = "",
     val imageUrl: String = "",
     val rating: Float = 5f,
+    val openNow: Boolean = false,
     val distance: String = "A 1.5 km de vos"
 )

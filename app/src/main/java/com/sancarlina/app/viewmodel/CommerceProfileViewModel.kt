@@ -22,6 +22,7 @@ data class CommerceProfileUiState(
     val tenant: Tenant? = null,
     val forms: List<FormSchema> = emptyList(),
     val isFavorite: Boolean = false,
+    val isSavedOffline: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -31,7 +32,8 @@ class CommerceProfileViewModel(
     private val userRepository: UserRepository,
     private val tenantsRepository: TenantsRepository,
     private val formsRepository: FormsRepository,
-    private val engagementRepository: EngagementRepository
+    private val engagementRepository: EngagementRepository,
+    private val offlineGuideStore: com.sancarlina.app.data.local.OfflineGuideStore
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CommerceProfileUiState())
@@ -54,26 +56,38 @@ class CommerceProfileViewModel(
             combine(
                 tenantsRepository.observeTenant(commerceId),
                 formsRepository.observeFormsByTenant(commerceId),
-                favoriteIdsFlow
-            ) { tenant, allForms, favoriteTenantIds ->
-                Triple(
+                favoriteIdsFlow,
+                offlineGuideStore.observeIsSaved(commerceId)
+            ) { tenant, allForms, favoriteTenantIds, isSavedOffline ->
+                listOf(
                     tenant,
                     allForms.filter { form ->
                         form.isPublic && form.acceptsResponses && form.status != "archived"
                     },
-                    favoriteTenantIds.contains(commerceId)
+                    favoriteTenantIds.contains(commerceId),
+                    isSavedOffline
                 )
-            }.collect { (tenant, filteredForms, isFav) ->
+            }.collect { values ->
+                val tenant = values[0] as? Tenant
+                val filteredForms = values[1] as? List<FormSchema> ?: emptyList()
+                val isFav = values[2] as? Boolean ?: false
+                val isSavedOffline = values[3] as? Boolean ?: false
                 _uiState.update { 
                     it.copy(
                         tenant = tenant,
                         forms = filteredForms,
                         isFavorite = isFav,
+                        isSavedOffline = isSavedOffline,
                         isLoading = false
                     )
                 }
             }
         }
+    }
+
+    fun toggleOffline() {
+        val tenant = _uiState.value.tenant ?: return
+        offlineGuideStore.toggleSaved(tenant)
     }
 
     fun toggleFavorite() {

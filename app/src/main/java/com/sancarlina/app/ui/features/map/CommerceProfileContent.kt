@@ -123,10 +123,15 @@ fun CommerceProfileContent(
                         CommerceActionPanel(
                             tenant = tenant,
                             isInRoute = isInRoute,
+                            isSavedOffline = uiState.isSavedOffline,
                             onTrack = viewModel::trackAction,
                             onToggleRoute = {
                                 viewModel.trackAction("add_to_route")
                                 onToggleRoute(tenant.id)
+                            },
+                            onToggleOffline = {
+                                viewModel.trackAction("toggle_offline")
+                                viewModel.toggleOffline()
                             }
                         )
 

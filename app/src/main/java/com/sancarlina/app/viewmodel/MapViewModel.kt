@@ -48,6 +48,7 @@ class MapViewModel(
                             phone = tenant.contactPhone,
                             imageUrl = tenant.displayImageUrl(),
                             rating = tenant.rating.toFloat(),
+                            openNow = tenant.openNow ?: false,
                             distance = "GondolApp"
                         )
                     } catch (e: Exception) {
@@ -116,6 +117,13 @@ class MapViewModel(
         }
     }
 
+    fun onOpenNowToggled(enabled: Boolean) {
+        _uiState.update { state ->
+            val updatedState = state.copy(onlyOpenNow = enabled)
+            updatedState.copy(filteredMarkers = applyFilters(updatedState))
+        }
+    }
+
     private fun applyFilters(state: MapUiState): List<CommerceMarker> {
         return state.markers.filter { marker ->
             val categoryMatch = state.selectedCategory == "Todos" || marker.category.equals(state.selectedCategory, ignoreCase = true)
@@ -125,7 +133,8 @@ class MapViewModel(
                 marker.category.contains(state.searchQuery, ignoreCase = true) ||
                 marker.locationName.contains(state.searchQuery, ignoreCase = true)
             val selloMatch = !state.onlyWithSello
-            categoryMatch && locationMatch && queryMatch && selloMatch
+            val openNowMatch = !state.onlyOpenNow || marker.openNow
+            categoryMatch && locationMatch && queryMatch && selloMatch && openNowMatch
         }
     }
 
@@ -139,6 +148,7 @@ class MapViewModel(
                 selectedCategory = "Todos",
                 selectedLocation = "Todas",
                 onlyWithSello = false,
+                onlyOpenNow = false,
                 searchQuery = ""
             )
             updatedState.copy(filteredMarkers = updatedState.markers)
