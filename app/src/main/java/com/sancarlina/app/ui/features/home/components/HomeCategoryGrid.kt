@@ -36,39 +36,41 @@ fun HomeCategoryChips(
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(horizontal = 1.dp, vertical = 3.dp)
+        contentPadding = PaddingValues(horizontal = 2.dp, vertical = 4.dp)
     ) {
-        items(categories.take(6), key = { "quick_${it.name}" }) { category ->
+        items(categories.take(8), key = { "quick_${it.name}" }) { category ->
             Surface(
                 modifier = Modifier
-                    .heightIn(min = 48.dp)
+                    .heightIn(min = 50.dp)
                     .clickable { onCategoryClick(category) },
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceContainerLow,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                shadowElevation = 2.dp
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                shadowElevation = 3.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(start = 7.dp, end = 15.dp, top = 6.dp, bottom = 6.dp),
+                    modifier = Modifier.padding(start = 6.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Surface(
-                        modifier = Modifier.size(36.dp),
+                        modifier = Modifier.size(38.dp),
                         shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.primary
                     ) {
-                        Icon(
-                            imageVector = categoryIconFor(category.name),
-                            contentDescription = null,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = categoryIconFor(category.name),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
-                    Spacer(modifier = Modifier.width(9.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = category.name.formatCategoryLabel(),
                         style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
                     )

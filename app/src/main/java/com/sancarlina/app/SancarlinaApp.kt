@@ -70,9 +70,13 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
             }
             FormSyncScheduler.enqueue(this)
             FormSyncScheduler.ensurePeriodicSync(this)
-            applicationScope.launch { container.pushPreferencesRepository.initialize() }
+            applicationScope.launch {
+                runCatching { container.pushPreferencesRepository.initialize() }
+            }
             container.auth.addAuthStateListener {
-                applicationScope.launch { container.pushPreferencesRepository.registerCurrentToken() }
+                applicationScope.launch {
+                    runCatching { container.pushPreferencesRepository.registerCurrentToken() }
+                }
                 FormSyncScheduler.enqueue(this)
             }
         } catch (e: Exception) {

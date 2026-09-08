@@ -75,9 +75,9 @@ fun HomeDiscoveryHero(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(310.dp),
-        shape = RoundedCornerShape(0.dp, 0.dp, GondolDimens.ImmersiveCardRadius, GondolDimens.ImmersiveCardRadius),
-        shadowElevation = 5.dp,
+            .height(290.dp),
+        shape = RoundedCornerShape(26.dp),
+        shadowElevation = 8.dp,
         color = MaterialTheme.colorScheme.primary
     ) {
         if (count == 0) {
@@ -87,7 +87,11 @@ fun HomeDiscoveryHero(
                         .fillMaxSize()
                         .background(
                             Brush.linearGradient(
-                                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+                                listOf(
+                                    Color(0xFF1E2B11),
+                                    Color(0xFF384E1F),
+                                    Color(0xFF5A7532)
+                                )
                             )
                         )
                 )
@@ -97,9 +101,9 @@ fun HomeDiscoveryHero(
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(
-                                    Color.Black.copy(alpha = 0.04f),
-                                    Color.Black.copy(alpha = 0.18f),
-                                    Color.Black.copy(alpha = 0.82f)
+                                    Color.Black.copy(alpha = 0.05f),
+                                    Color.Black.copy(alpha = 0.25f),
+                                    Color.Black.copy(alpha = 0.85f)
                                 )
                             )
                         )
@@ -110,17 +114,32 @@ fun HomeDiscoveryHero(
                         .padding(horizontal = 22.dp, vertical = 22.dp)
                         .widthIn(max = 560.dp)
                 ) {
-                    Text(
-                        text = "Descubrí San Carlos",
-                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 38.sp, lineHeight = 42.sp),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Surface(
+                        color = Color(0xFFD4AF37).copy(alpha = 0.25f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFD4AF37).copy(alpha = 0.6f)),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(
+                            text = "VALLE DE UCO · MENDOZA",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFE5C158),
+                            letterSpacing = 1.sp,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Bodegas, sabores y experiencias cerca tuyo.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White.copy(alpha = 0.94f)
+                        text = "Descubrí San Carlos",
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 32.sp, lineHeight = 36.sp),
+                        color = Color.White,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Bodegas, gastronomía y experiencias locales.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.90f)
                     )
                 }
             }
@@ -284,27 +303,43 @@ fun HomeSearchBar(
                 .height(62.dp)
                 .clickable(onClick = onClick),
             shape = CircleShape,
-            color = MaterialTheme.colorScheme.surface,
-            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)),
-            shadowElevation = 4.dp
+            color = MaterialTheme.colorScheme.surfaceContainerLowest,
+            border = androidx.compose.foundation.BorderStroke(1.2.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)),
+            shadowElevation = 6.dp
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 18.dp),
+                modifier = Modifier.padding(horizontal = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = stringResource(R.string.cd_search),
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(28.dp)
-                )
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(38.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(R.string.cd_search),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = stringResource(R.string.home_search_hint),
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1
-                )
+                Column {
+                    Text(
+                        text = "Buscar en San Carlos...",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = "Bodegas, restaurantes, artesanías",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1
+                    )
+                }
             }
         }
 
@@ -313,16 +348,17 @@ fun HomeSearchBar(
                 .size(62.dp)
                 .clickable(onClick = onFilterClick),
             shape = CircleShape,
-            color = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary,
-            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)),
-            shadowElevation = 4.dp
+            color = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            shadowElevation = 6.dp
         ) {
-            Icon(
-                imageVector = Icons.Default.FilterList,
-                contentDescription = "Filtros",
-                modifier = Modifier.padding(18.dp)
-            )
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = Icons.Default.FilterList,
+                    contentDescription = "Filtros",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }

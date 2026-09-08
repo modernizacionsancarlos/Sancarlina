@@ -15,6 +15,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Stars
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -518,118 +527,185 @@ private fun DrawerItem(
 
 @Composable
 fun GondolappBottomBar(navController: NavHostController, currentDestination: String?) {
-    Surface(
+    val isMapSelected = currentDestination == Screen.Map.route
+    val mapScale by animateFloatAsState(
+        targetValue = if (isMapSelected) 1.08f else 1.0f,
+        label = "map_scale"
+    )
+    val mapIndicatorWidth by animateDpAsState(
+        targetValue = if (isMapSelected) 22.dp else 0.dp,
+        label = "map_indicator_width"
+    )
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .navigationBarsPadding(),
-        color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        shape = SancarlinaBottomBarShape,
-        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
-        tonalElevation = 1.dp,
-        shadowElevation = 10.dp
+            .testTag("gondolapp_bottom_bar"),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        Row(
+        // Surface for the navigation bar anchored at bottom, with 12.dp top padding for headroom
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(GondolDimens.BottomBarHeight)
-                .padding(horizontal = 4.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(top = 12.dp),
+            color = MaterialTheme.colorScheme.surfaceContainerLowest,
+            shape = SancarlinaBottomBarShape,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
+            tonalElevation = 3.dp,
+            shadowElevation = 8.dp
         ) {
-            bottomNavItems.forEach { screen ->
-                val isSelected = currentDestination == screen.route ||
-                    (screen == Screen.Home && currentDestination == Screen.Search.route)
-                if (screen == Screen.Map) {
-                    val mapOffset = if (isSelected) (-13).dp else (-9).dp
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .offset(y = mapOffset)
-                            .clip(RoundedCornerShape(28.dp))
-                            .clickable {
-                                if (!isSelected) {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(Screen.Home.route) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .height(66.dp)
+                    .padding(horizontal = 6.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                bottomNavItems.forEach { screen ->
+                    if (screen == Screen.Map) {
+                        // Empty slot reserving space for the elevated center Map button
+                        Spacer(modifier = Modifier.weight(1.1f))
+                    } else {
+                        val isSelected = currentDestination == screen.route ||
+                            (screen == Screen.Home && currentDestination == Screen.Search.route)
+
+                        val tabScale by animateFloatAsState(
+                            targetValue = if (isSelected) 1.05f else 1.0f,
+                            label = "tab_scale"
+                        )
+                        val contentColor by animateColorAsState(
+                            targetValue = if (isSelected) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.82f)
+                            },
+                            label = "tab_color"
+                        )
+                        val indicatorWidth by animateDpAsState(
+                            targetValue = if (isSelected) 22.dp else 0.dp,
+                            label = "tab_indicator_width"
+                        )
+
+                        val resolvedIcon: ImageVector = when (screen) {
+                            Screen.Home -> if (isSelected) Icons.Filled.Home else Icons.Outlined.Home
+                            Screen.Turismo -> if (isSelected) Icons.Filled.Explore else Icons.Outlined.Explore
+                            Screen.Points -> if (isSelected) Icons.Filled.Stars else Icons.Outlined.Stars
+                            Screen.Profile -> if (isSelected) Icons.Filled.Person else Icons.Outlined.Person
+                            else -> screen.icon ?: Icons.Default.Circle
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(16.dp))
+                                .clickable {
+                                    if (!isSelected) {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(Screen.Home.route) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     }
                                 }
-                            }
-                            .padding(vertical = 2.dp)
-                    ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            shadowElevation = 8.dp,
-                            modifier = Modifier.size(58.dp)
+                                .testTag("nav_tab_${screen.route}")
+                                .padding(vertical = 4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Map,
+                                imageVector = resolvedIcon,
                                 contentDescription = screen.title,
-                                modifier = Modifier.padding(15.dp)
+                                tint = contentColor,
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .scale(tabScale)
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            Text(
+                                text = screen.title,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = contentColor,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                maxLines = 1
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            Box(
+                                modifier = Modifier
+                                    .width(indicatorWidth)
+                                    .height(2.5.dp)
+                                    .clip(CircleShape)
+                                    .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
                             )
                         }
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = screen.title,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1
-                        )
-                    }
-                } else {
-                    val contentColor = if (isSelected) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
-                    val indicatorWidth = if (isSelected) 24.dp else 0.dp
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(20.dp))
-                            .clickable {
-                                if (!isSelected) {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(Screen.Home.route) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            }
-                            .padding(vertical = 8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            screen.icon ?: Icons.Default.Circle,
-                            screen.title,
-                            tint = contentColor,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = screen.title,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = contentColor,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
-                            maxLines = 1
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Box(
-                            modifier = Modifier
-                                .width(indicatorWidth)
-                                .height(3.dp)
-                                .clip(CircleShape)
-                                .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
-                        )
                     }
                 }
             }
+        }
+
+        // Elevated Center Map Button
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(bottom = 6.dp)
+                .offset(y = (-11).dp)
+                .clip(RoundedCornerShape(24.dp))
+                .clickable {
+                    if (!isMapSelected) {
+                        navController.navigate(Screen.Map.route) {
+                            popUpTo(Screen.Home.route) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+                .testTag("nav_tab_map")
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = if (isMapSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                contentColor = if (isMapSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                border = BorderStroke(
+                    3.dp,
+                    MaterialTheme.colorScheme.surfaceContainerLowest
+                ),
+                shadowElevation = if (isMapSelected) 8.dp else 4.dp,
+                modifier = Modifier
+                    .size(50.dp)
+                    .scale(mapScale)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Map,
+                        contentDescription = Screen.Map.title,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = Screen.Map.title,
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isMapSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = if (isMapSelected) FontWeight.ExtraBold else FontWeight.SemiBold,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Box(
+                modifier = Modifier
+                    .width(mapIndicatorWidth)
+                    .height(2.5.dp)
+                    .clip(CircleShape)
+                    .background(if (isMapSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+            )
         }
     }
 }

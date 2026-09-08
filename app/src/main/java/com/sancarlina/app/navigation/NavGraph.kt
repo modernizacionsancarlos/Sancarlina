@@ -13,9 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -113,12 +115,18 @@ fun SancarlinaNavGraph(
         navController = navController,
         startDestination = Screen.SplashScreen.route,
         modifier = modifier,
-        enterTransition = { fadeIn(animationSpec = tween(durationMillis = 2)) },
-        exitTransition = { fadeOut(animationSpec = tween(durationMillis = 2)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(durationMillis = 2)) },
-        popExitTransition = { fadeOut(animationSpec = tween(durationMillis = 2)) }
+        enterTransition = { fadeIn(animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)) },
+        exitTransition = { fadeOut(animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)) },
+        popExitTransition = { fadeOut(animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing)) }
     ) {
-        composable(Screen.SplashScreen.route) {
+        composable(
+            route = Screen.SplashScreen.route,
+            exitTransition = {
+                fadeOut(animationSpec = tween(400, easing = FastOutSlowInEasing)) +
+                scaleOut(targetScale = 1.04f, animationSpec = tween(400, easing = FastOutSlowInEasing))
+            }
+        ) {
             val splashViewModel: SplashViewModel = viewModel(factory = factory)
             val isReady by splashViewModel.isReady.collectAsState()
             var timeoutFinished by remember { mutableStateOf(false) }

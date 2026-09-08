@@ -98,8 +98,25 @@ internal fun HomeContentBody(
                             categories = uiState.categories,
                             onCategoryClick = { onNavigateToCategory(it.name) }
                         )
-                        Spacer(modifier = Modifier.height(22.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
+                }
+            }
+
+            item(key = "curated_routes_header") {
+                Column {
+                    HomeSectionHeader(
+                        title = "Circuitos Imperdibles",
+                        actionLabel = "Explorar",
+                        onActionClick = onNavigateToSearch
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    HomeCuratedRoutes(
+                        onRouteClick = { query ->
+                            onNavigateToCategory(query)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(22.dp))
                 }
             }
 
@@ -110,7 +127,7 @@ internal fun HomeContentBody(
                         actionLabel = stringResource(R.string.home_see_all),
                         onActionClick = onNavigateToNews
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
 
@@ -145,9 +162,9 @@ internal fun HomeContentBody(
 
             item(key = "explore_header") {
                 Column {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     HomeSectionHeader(title = stringResource(R.string.home_explore_section))
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
 
@@ -181,9 +198,9 @@ internal fun HomeContentBody(
             uiState.nearbyProduct?.let { product ->
                 item(key = "featured_product") {
                     Column {
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
                         HomeSectionHeader(title = stringResource(R.string.home_featured_section))
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         HomeFeaturedProductCard(
                             product = product,
                             onClick = { onNavigateToDetail(product.id) }
