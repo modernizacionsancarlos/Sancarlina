@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sancarlina.app.ui.components.SancarlinaCard
 import com.sancarlina.app.ui.components.SancarlinaPrimaryButton
 import com.sancarlina.app.ui.theme.*
+import com.sancarlina.app.utils.Logger
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executors
@@ -76,11 +77,12 @@ fun QrScannerContent(
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         if (hasCameraPermission) {
             uiState.successPoints?.let { points ->
-                SuccessOverlay(points, onBack)
+                SuccessOverlay(points, onSuccess)
             } ?: run {
-                CameraPreviewWrapper { qrData ->
-                    viewModel.processQrCode(qrData, onSuccess)
-                }
+                CameraPreviewWrapper(
+                    onQrDetected = viewModel::processQrCode,
+                    onCameraError = viewModel::showCameraError
+                )
                 
                 // Scanning UI Overlay
                 ScannerFrame()
@@ -136,44 +138,70 @@ fun QrScannerContent(
             }
         }
     }
+
+    uiState.error?.let { message ->
+        AlertDialog(
+            onDismissRequest = viewModel::clearError,
+            title = { Text("No se pudo procesar el código") },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = viewModel::clearError) {
+                    Text("Volver a intentar")
+                }
+            }
+        )
+    }
 }
 
 @Composable
-fun CameraPreviewWrapper(onQrDetected: (String) -> Unit) {
+fun CameraPreviewWrapper(
+    onQrDetected: (String) -> Unit,
+    onCameraError: () -> Unit = {}
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+    val barcodeScanner = remember { BarcodeScanning.getClient() }
+
+    DisposableEffect(cameraExecutor, barcodeScanner) {
+        onDispose {
+            cameraExecutor.shutdown()
+            barcodeScanner.close()
+            if (cameraProviderFuture.isDone) {
+                runCatching { cameraProviderFuture.get().unbindAll() }
+            }
+        }
+    }
     
     AndroidView(
         factory = { ctx ->
             val previewView = PreviewView(ctx)
             val executor = ContextCompat.getMainExecutor(ctx)
             cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
-                val preview = Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
+                runCatching {
+                    val cameraProvider = cameraProviderFuture.get()
+                    val preview = Preview.Builder().build().also {
+                        it.setSurfaceProvider(previewView.surfaceProvider)
+                    }
+                    val imageAnalysis = ImageAnalysis.Builder()
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build()
 
-                val barcodeScanner = BarcodeScanning.getClient()
-                val imageAnalysis = ImageAnalysis.Builder()
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .build()
+                    imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                        processImageProxy(barcodeScanner, imageProxy, onQrDetected)
+                    }
 
-                imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
-                    processImageProxy(barcodeScanner, imageProxy, onQrDetected)
-                }
-
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-                try {
                     cameraProvider.unbindAll()
                     cameraProvider.bindToLifecycle(
                         lifecycleOwner,
-                        cameraSelector,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
                         preview,
                         imageAnalysis
                     )
-                } catch (_: Exception) {
+                }.onFailure { exception ->
+                    Logger.e("Camera initialization failed", exception)
+                    onCameraError()
                 }
             }, executor)
             previewView

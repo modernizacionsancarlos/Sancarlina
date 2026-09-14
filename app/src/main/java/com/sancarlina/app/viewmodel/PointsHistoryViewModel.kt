@@ -29,7 +29,7 @@ class PointsHistoryViewModel(
         loadMovements()
     }
 
-    fun loadMovements() {
+    private fun loadMovements() {
         val uid = auth.currentUser?.uid
         if (uid == null) {
             _uiState.update { it.copy(error = "Iniciá sesión para ver tu historial", movements = emptyList(), isLoading = false) }

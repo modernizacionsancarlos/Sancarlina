@@ -11,7 +11,12 @@ const {
 } = require('@firebase/rules-unit-testing');
 const {
   doc,
+  collection,
   getDoc,
+  getDocs,
+  query,
+  limit,
+  where,
   setDoc,
   updateDoc,
 } = require('firebase/firestore');
@@ -88,6 +93,98 @@ describe('T1 — Catálogo público tenants', () => {
   test('get tenants/test sin auth → permitido', async () => {
     const db = unauth().firestore();
     await assertSucceeds(getDoc(doc(db, 'tenants', 'test')));
+  });
+
+  test('list tenants sin límite → denegado', async () => {
+    const db = unauth().firestore();
+    await assertFails(getDocs(collection(db, 'tenants')));
+  });
+
+  test('list tenants con límite seguro → permitido', async () => {
+    const db = unauth().firestore();
+    await assertSucceeds(getDocs(query(collection(db, 'tenants'), limit(500))));
+  });
+
+  test('list tenants por encima del máximo → denegado', async () => {
+    const db = unauth().firestore();
+    await assertFails(getDocs(query(collection(db, 'tenants'), limit(501))));
+  });
+});
+
+describe('T1b — Señal de invalidación de caché', () => {
+  test('get public_catalog sin auth → permitido', async () => {
+    const db = unauth().firestore();
+    await assertSucceeds(getDoc(doc(db, 'app_metadata', 'public_catalog')));
+  });
+
+  test('ciudadano no puede alterar versiones', async () => {
+    const db = citizenNoRole(TEST_UID).firestore();
+    await assertFails(setDoc(doc(db, 'app_metadata', 'public_catalog'), { tenantsVersion: 1 }));
+  });
+
+  test('admin puede alterar versiones', async () => {
+    const db = user(ADMIN_UID, { role: 'admin' }).firestore();
+    await assertSucceeds(setDoc(doc(db, 'app_metadata', 'public_catalog'), { tenantsVersion: 1 }));
+  });
+});
+
+describe('T1c — Historial de puntos propio y acotado', () => {
+  beforeEach(async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(
+        doc(context.firestore(), 'userProfiles', TEST_UID, 'points_history', 'movement_1'),
+        { amount: 10, timestamp: 1 }
+      );
+    });
+  });
+
+  test('dueño puede listar su historial con límite', async () => {
+    const db = user(TEST_UID).firestore();
+    const history = collection(db, 'userProfiles', TEST_UID, 'points_history');
+    await assertSucceeds(getDocs(query(history, limit(50))));
+  });
+
+  test('historial sin límite → denegado', async () => {
+    const db = user(TEST_UID).firestore();
+    await assertFails(getDocs(collection(db, 'userProfiles', TEST_UID, 'points_history')));
+  });
+
+  test('otro usuario no puede leer el historial', async () => {
+    const db = user(OTHER_UID).firestore();
+    await assertFails(
+      getDoc(doc(db, 'userProfiles', TEST_UID, 'points_history', 'movement_1'))
+    );
+  });
+});
+
+describe('T1d — Notificaciones por destinatario', () => {
+  beforeEach(async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), 'Notifications', 'all_1'), { target: 'all' });
+      await setDoc(doc(context.firestore(), 'Notifications', 'own_1'), { target: TEST_UID });
+      await setDoc(doc(context.firestore(), 'Notifications', 'other_1'), { target: OTHER_UID });
+    });
+  });
+
+  test('usuario lista sólo notificaciones globales y propias con límite', async () => {
+    const db = user(TEST_UID).firestore();
+    const notifications = collection(db, 'Notifications');
+    await assertSucceeds(
+      getDocs(query(notifications, where('target', 'in', ['all', TEST_UID]), limit(50)))
+    );
+  });
+
+  test('usuario no puede leer una notificación ajena', async () => {
+    const db = user(TEST_UID).firestore();
+    await assertFails(getDoc(doc(db, 'Notifications', 'other_1')));
+  });
+
+  test('usuario no puede listar notificaciones sin límite', async () => {
+    const db = user(TEST_UID).firestore();
+    const notifications = collection(db, 'Notifications');
+    await assertFails(
+      getDocs(query(notifications, where('target', 'in', ['all', TEST_UID])))
+    );
   });
 });
 

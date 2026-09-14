@@ -27,6 +27,10 @@ service cloud.firestore {
       return hasRole('admin');
     }
 
+    function hasQueryLimit(maximum) {
+      return request.query.limit != null && request.query.limit <= maximum;
+    }
+
     // --- userProfiles: perfil ciudadano (Android UserRepository, EditProfileViewModel) ---
     match /userProfiles/{userId} {
       allow read: if isOwner(userId);
@@ -38,7 +42,8 @@ service cloud.firestore {
         && request.resource.data.points_balance == 0;
 
       // Update perfil: solo campos básicos; bloquear puntos/rol (EditProfileViewModel.kt:72-76)
-      allow update: if isOwner(userId)
+      allow update: if resource != null
+        && isOwner(userId)
         && !request.resource.data.diff(resource.data).affectedKeys()
             .hasAny(['role', 'points', 'points_balance', 'uid']);
 
@@ -46,88 +51,129 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    // Historial contable: lectura propia y acotada. Las escrituras quedan exclusivamente
+    // en Cloud Functions/Admin SDK para que el cliente no pueda fabricar movimientos.
+    match /userProfiles/{userId}/points_history/{movementId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId) && hasQueryLimit(50);
+      allow write: if false;
+    }
+
     // --- Submissions: create autenticado (SubmissionsRepository.kt:22-23) ---
     match /Submissions/{docId} {
       allow create: if isSignedIn()
-        && request.resource.data.created_by == request.auth.uid;
+        && request.resource.data.get('created_by', '') == request.auth.uid;
       allow get: if isAdmin()
         || (isSignedIn() && (
           !exists(/databases/$(database)/documents/Submissions/$(docId))
-          || resource.data.created_by == request.auth.uid
+          || resource.data.get('created_by', '') == request.auth.uid
         ));
       allow list: if isAdmin();
-      allow update: if isAdmin()
+      allow update: if resource != null
+        && (isAdmin()
         || (isSignedIn()
-          && resource.data.created_by == request.auth.uid
-          && request.resource.data.created_by == request.auth.uid
-          && request.resource.data.client_submission_id == docId
-          && request.resource.data.form_id == resource.data.form_id
-          && request.resource.data.created_at == resource.data.created_at
-          && request.resource.data.status == 'pending');
+          && resource.data.get('created_by', '') == request.auth.uid
+          && request.resource.data.get('created_by', '') == request.auth.uid
+          && request.resource.data.get('client_submission_id', '') == docId
+          && request.resource.data.get('form_id', '') == resource.data.get('form_id', '')
+          && request.resource.data.get('created_at', 0) == resource.data.get('created_at', 0)
+          && request.resource.data.get('status', '') == 'pending'));
       allow delete: if isAdmin();
     }
 
     // --- Catálogo: lectura pública, escritura admin ---
     match /tenants/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(500);
       allow write: if isAdmin();
     }
     match /areas/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(100);
       allow write: if isAdmin();
     }
     match /benefits/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(100);
       allow write: if isAdmin();
     }
     match /FormSchemas/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(100);
       allow write: if isAdmin();
     }
     match /banners/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(50);
       allow write: if isAdmin();
     }
     match /categories/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(100);
       allow write: if isAdmin();
     }
     match /commerces/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(500);
       allow write: if isAdmin();
     }
     match /products/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(200);
       allow write: if isAdmin();
     }
     match /turismo_points/{id} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isAdmin() || hasQueryLimit(200);
       allow write: if isAdmin();
+    }
+    // Una señal pequeña invalida la caché local sin mantener escuchas sobre colecciones completas.
+    match /app_metadata/{id} {
+      allow read: if id == 'public_catalog';
+      allow write: if id == 'public_catalog' && isAdmin();
     }
 
     // --- Admin-only (web panel) ---
+    // Historial de auditoría: solo se agrega, nunca se modifica ni se borra.
+    // AdminRepository.logAdminAction escribe desde el panel, por eso create
+    // sigue habilitado, pero el registro debe declarar al autor real y una vez
+    // escrito queda fijo. Un historial editable no sirve como evidencia.
     match /AuditLogs/{id} {
-      allow read, write: if isAdmin();
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && request.resource.data.get('user_id', '') == request.auth.uid;
+      allow update, delete: if false;
     }
     match /Notifications/{id} {
-      allow read: if isSignedIn();
+      allow get: if isAdmin()
+        || (isSignedIn()
+          && resource.data.get('target', 'all') in ['all', request.auth.uid]);
+      allow list: if isAdmin()
+        || (isSignedIn()
+          && hasQueryLimit(50)
+          && resource.data.get('target', 'all') in ['all', request.auth.uid]);
       allow write: if isAdmin();
     }
     match /DeviceTokens/{id} {
       allow read: if isAdmin()
-        || (isSignedIn() && resource.data.userId == request.auth.uid);
+        || (isSignedIn() && resource.data.get('userId', '') == request.auth.uid);
       allow create: if isSignedIn()
-        && request.resource.data.userId == request.auth.uid;
+        && request.resource.data.get('userId', '') == request.auth.uid;
       allow update: if isSignedIn()
-        && resource.data.userId == request.auth.uid
-        && request.resource.data.userId == request.auth.uid;
+        && resource.data.get('userId', '') == request.auth.uid
+        && request.resource.data.get('userId', '') == request.auth.uid;
       allow delete: if isSignedIn()
-        && resource.data.userId == request.auth.uid;
+        && resource.data.get('userId', '') == request.auth.uid;
     }
     match /Reviews/{id} {
-      allow read: if isAdmin()
-        || resource.data.status == 'approved'
-        || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow get: if isAdmin()
+        || resource.data.get('status', '') == 'approved'
+        || (isSignedIn() && resource.data.get('userId', '') == request.auth.uid);
+      allow list: if isAdmin()
+        || (hasQueryLimit(20) && (
+          resource.data.get('status', '') == 'approved'
+          || (isSignedIn() && resource.data.get('userId', '') == request.auth.uid)
+        ));
       allow create: if false;
       allow update, delete: if isAdmin();
     }
@@ -138,8 +184,13 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create, update, delete: if false;
     }
+    // El alta y la baja de administradores pasan exclusivamente por la Cloud
+    // Function adminSetSuperAdmin, que usa el Admin SDK y deja registro en
+    // AuditLogs. Si el cliente pudiera escribir aquí, un administrador podría
+    // promover a otro sin que quedara rastro de quién lo hizo.
     match /superAdmins/{id} {
-      allow read, write: if isAdmin();
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     // Denegar todo lo no definido explícitamente

@@ -1,0 +1,13 @@
+package com.sancarlina.app
+
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+
+object AppCheckInitializer {
+    fun install() {
+        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )
+    }
+}
+

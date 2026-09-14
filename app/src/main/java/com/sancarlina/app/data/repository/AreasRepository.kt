@@ -2,13 +2,25 @@ package com.sancarlina.app.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Source
 import com.sancarlina.app.data.cache.AppCache
+import com.sancarlina.app.data.cache.CacheDataset
+import com.sancarlina.app.data.cache.CacheMetadataStore
+import com.sancarlina.app.data.cache.DataAccessMetrics
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.sancarlina.app.utils.Logger
-import com.sancarlina.app.utils.RateLimiter
-import kotlinx.coroutines.channels.awaitClose
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 
 data class Area(
@@ -57,8 +69,16 @@ data class Area(
 }
 
 class AreasRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val cacheMetadata: CacheMetadataStore? = null,
+    private val invalidation: CatalogInvalidationRepository? = null,
+    private val repositoryScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
+    private val dataset = CacheDataset.AREAS
+    private val refreshMutex = Mutex()
+    private val lastRefreshAttempt = AtomicLong(0L)
+    private val started = AtomicBoolean(false)
+    private val hasCatalogSnapshot = AtomicBoolean(AppCache.getAreas() != null)
     val suggestedAreas = listOf(
         // Geográficas (1–7)
         Area(id = "area_centro", name = "Centro / Villa San Carlos", slug = "centro", description = "Centro cívico y comercial principal de San Carlos", order = 1, category = "geographic", icon = "location_city", active = true),
@@ -79,47 +99,85 @@ class AreasRepository(
         Area(id = "area_eventos", name = "Eventos y Fiestas", slug = "eventos-fiestas", description = "Festivales, ferias y festejos departamentales", order = 15, category = "thematic", icon = "event", active = true)
     )
 
+    private val areas = MutableStateFlow(AppCache.getAreas() ?: suggestedAreas)
+
     suspend fun getAreas(forceRefresh: Boolean = false): List<Area> {
-        if (!forceRefresh && AppCache.isAreasCacheValid()) {
-            AppCache.getAreas()?.let { return it }
-        }
+        ensureStarted()
+        if (AppCache.getAreas() == null) loadFromLocalCache()
+        refreshIfNeeded(force = forceRefresh)
+        return areas.value
+    }
 
-        if (!RateLimiter.isWindowAllowed("fetch_areas", 12, 10_000L)) {
-            return AppCache.getAreas() ?: suggestedAreas
-        }
+    fun getAreasFlow(): Flow<List<Area>> {
+        ensureStarted()
+        return areas
+    }
 
-        return try {
-            val snapshot = firestore.collection(FirestoreCollections.AREAS).get().await()
-            val areas = snapshot.documents.mapNotNull(::mapArea).sortedBy { it.order }
-            val resolvedAreas = if (areas.isNotEmpty()) areas else suggestedAreas
-            AppCache.setAreas(resolvedAreas)
-            resolvedAreas
-        } catch (e: Exception) {
-            AppCache.getAreas() ?: suggestedAreas
+    fun onAppForegrounded() {
+        if (started.get()) repositoryScope.launch { refreshIfNeeded() }
+    }
+
+    private fun ensureStarted() {
+        if (!started.compareAndSet(false, true)) return
+        repositoryScope.launch {
+            loadFromLocalCache()
+            refreshIfNeeded()
+            invalidation?.versions
+                ?.map { it.versionFor(dataset) }
+                ?.distinctUntilChanged()
+                ?.collect { remoteVersion ->
+                    if (remoteVersion > (cacheMetadata?.version(dataset) ?: 0L)) {
+                        refreshIfNeeded(force = true, targetVersion = remoteVersion)
+                    }
+                }
         }
     }
 
-    fun getAreasFlow(): Flow<List<Area>> = callbackFlow {
-        // Emitir inmediatamente para carga instantánea
-        val initialAreas = AppCache.getAreas() ?: suggestedAreas
-        trySend(initialAreas)
-
-        val listener = firestore.collection(FirestoreCollections.AREAS)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
-                val areas = try {
-                    val list = snapshot?.documents?.mapNotNull(::mapArea)?.sortedBy { it.order }.orEmpty()
-                    if (list.isNotEmpty()) list else suggestedAreas
-                } catch (exception: Exception) {
-                    Logger.e("Error mapping areas snapshot", exception)
-                    initialAreas
-                }
-                AppCache.setAreas(areas)
-                trySend(areas)
+    private suspend fun loadFromLocalCache() {
+        runCatching {
+            DataAccessMetrics.recordCacheQuery(dataset.storageKey)
+            firestore.collection(FirestoreCollections.AREAS)
+                .limit(MAX_CATALOG_AREAS)
+                .get(Source.CACHE)
+                .await()
+        }.onSuccess { snapshot ->
+            if (!snapshot.isEmpty) {
+                hasCatalogSnapshot.set(true)
+                updateCache(snapshot.documents.mapNotNull(::mapArea))
             }
-        awaitClose { listener.remove() }
+        }
+    }
+
+    private suspend fun refreshIfNeeded(force: Boolean = false, targetVersion: Long? = null) {
+        refreshMutex.withLock {
+            if (!force && hasCatalogSnapshot.get() && cacheMetadata?.isStale(dataset) == false) return
+            val now = System.currentTimeMillis()
+            if (!force && now - lastRefreshAttempt.get() < REFRESH_RETRY_BACKOFF_MILLIS) return
+            lastRefreshAttempt.set(now)
+            runCatching {
+                firestore.collection(FirestoreCollections.AREAS)
+                    .limit(MAX_CATALOG_AREAS)
+                    .get(Source.SERVER)
+                    .await()
+            }.onSuccess { snapshot ->
+                hasCatalogSnapshot.set(true)
+                updateCache(snapshot.documents.mapNotNull(::mapArea))
+                DataAccessMetrics.recordServerResult(dataset.storageKey, snapshot.size())
+                val version = targetVersion
+                    ?: invalidation?.versions?.value?.versionFor(dataset)
+                    ?: cacheMetadata?.version(dataset)
+                    ?: 0L
+                cacheMetadata?.markSynced(dataset, version)
+            }.onFailure { exception ->
+                Logger.e("Error refreshing areas; se conserva la caché", exception)
+            }
+        }
+    }
+
+    private fun updateCache(remoteAreas: List<Area>) {
+        val resolved = remoteAreas.sortedBy { it.order }.ifEmpty { suggestedAreas }
+        AppCache.setAreas(resolved)
+        areas.value = resolved
     }
 
     private fun mapArea(document: DocumentSnapshot): Area? = try {
@@ -134,7 +192,7 @@ class AreasRepository(
      */
     suspend fun ensureSuggestedAreas(): Result<Int> {
         return try {
-            val currentAreas = getAreas()
+            val currentAreas = getAreas(forceRefresh = true)
             val existingIds = currentAreas.map { it.id }.toSet()
             var addedCount = 0
 
@@ -160,5 +218,10 @@ class AreasRepository(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private companion object {
+        const val MAX_CATALOG_AREAS = 100L
+        const val REFRESH_RETRY_BACKOFF_MILLIS = 60_000L
     }
 }

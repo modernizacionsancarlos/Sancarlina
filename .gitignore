@@ -52,3 +52,14 @@ Thumbs.db
 # Firestore Rules tests (npm)
 node_modules/
 coverage/
+
+# Volcados y artefactos de análisis (se regeneran, no se versionan)
+app_structure.txt
+app_analysis.txt
+firestore-debug.log
+firebase-debug.log
+ui-debug.log
+/tmp/
+/output/
+.firebase-emulators/
+.codex-remote-attachments/

@@ -296,7 +296,10 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.QrScanner.route) {
+            val qrScannerViewModel: com.sancarlina.app.ui.features.points.QrScannerViewModel =
+                viewModel(factory = factory)
             QrScannerContent(
+                viewModel = qrScannerViewModel,
                 onBack = { navController.popBackStack() },
                 onSuccess = { 
                     navController.popBackStack() 
@@ -324,7 +327,11 @@ fun SancarlinaNavGraph(
             )
         }
         composable(Screen.PointsHistory.route) {
-            PointsHistoryContent(onBack = { navController.popBackStack() })
+            val pointsHistoryViewModel: PointsHistoryViewModel = viewModel(factory = factory)
+            PointsHistoryContent(
+                viewModel = pointsHistoryViewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
         composable(Screen.DiscoveryPreferences.route) {
             DiscoveryPreferencesContent(onBack = { navController.popBackStack() })

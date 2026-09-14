@@ -9,6 +9,9 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.sancarlina.app.analytics.Telemetry
+import com.sancarlina.app.data.cache.AppPreloader
+import com.sancarlina.app.data.remote.AppRemoteConfig
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +44,7 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
             .diskCache {
                 DiskCache.Builder()
                     .directory(this.cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.04)
+                    .maxSizeBytes(150L * 1024L * 1024L)
                     .build()
             }
             .crossfade(true)
@@ -60,7 +63,12 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         android.util.Log.i("GondolApp", "SancarlinaApp: Iniciando aplicación...")
+        // Se instala antes que cualquier otra cosa para capturar los fallos de arranque.
+        runCatching { Telemetry.install() }
+            .onFailure { android.util.Log.e("GondolApp", "No se pudo inicializar la telemetría", it) }
         try {
+            runCatching { AppCheckInitializer.install() }
+                .onFailure { android.util.Log.e("GondolApp", "No se pudo inicializar App Check", it) }
             container = AppContainer(applicationContext)
             android.util.Log.i("GondolApp", "SancarlinaApp: Contenedor de dependencias inicializado.")
             applicationScope.launch {
@@ -73,7 +81,9 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
             applicationScope.launch {
                 runCatching { container.pushPreferencesRepository.initialize() }
             }
-            container.auth.addAuthStateListener {
+            applicationScope.launch { AppRemoteConfig.refresh() }
+            container.auth.addAuthStateListener { auth ->
+                Telemetry.setUser(auth.currentUser?.uid)
                 applicationScope.launch {
                     runCatching { container.pushPreferencesRepository.registerCurrentToken() }
                 }
@@ -81,16 +91,29 @@ class SancarlinaApp : Application(), ImageLoaderFactory {
             }
         } catch (e: Exception) {
             android.util.Log.e("GondolApp", "SancarlinaApp: ERROR al inicializar AppContainer", e)
+            Telemetry.recordHandled(e, context = "AppContainer.init")
         }
         
         // Rastreador de estado de la aplicación (Primer plano / Segundo plano)
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
                 isAppInForeground = true
+                if (::container.isInitialized) {
+                    container.catalogInvalidationRepository.start()
+                    container.tenantsRepository.onAppForegrounded()
+                    container.areasRepository.onAppForegrounded()
+                    container.benefitsRepository.onAppForegrounded()
+                    applicationScope.launch {
+                        AppPreloader.preloadAll(applicationContext, container)
+                    }
+                }
             }
 
             override fun onStop(owner: LifecycleOwner) {
                 isAppInForeground = false
+                if (::container.isInitialized) {
+                    container.catalogInvalidationRepository.stop()
+                }
             }
         })
     }

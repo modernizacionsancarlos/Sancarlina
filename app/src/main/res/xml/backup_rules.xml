@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
    Reglas de backup automático (Android 11 y anteriores).
-   Excluye preferencias locales sensibles (cifradas y legacy).
+
+   Se excluye todo almacenamiento local que contenga datos del ciudadano,
+   credenciales cifradas, identificadores de dispositivo o caché. Restaurar
+   cualquiera de estos archivos en otro dispositivo produce, según el caso,
+   fuga de datos personales, notificaciones enrutadas al aparato equivocado o
+   un catálogo obsoleto que la app cree vigente.
+
    Ver: https://developer.android.com/guide/topics/data/autobackup
 -->
 <full-backup-content>
+    <!-- Preferencias cifradas con la clave maestra del dispositivo de origen. -->
     <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
+    <!-- Preferencias heredadas sin cifrar, aún leídas por PrefsManager. -->
     <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+    <exclude domain="sharedpref" path="gondolapp_prefs.xml" />
+    <!-- Token de FCM y suscripciones a temas: son propios de cada instalación. -->
+    <exclude domain="sharedpref" path="push_preferences.xml" />
+    <!-- Intereses e itinerario del ciudadano. -->
+    <exclude domain="sharedpref" path="discovery_preferences.xml" />
+    <exclude domain="sharedpref" path="gondolapp_itinerary.xml" />
+    <!-- Versiones de caché del catálogo: restaurarlas oculta datos nuevos. -->
+    <exclude domain="sharedpref" path="catalog_cache_metadata.xml" />
+    <!-- Formularios pendientes de envío y sus adjuntos. -->
     <exclude domain="database" path="offline_forms.db" />
     <exclude domain="file" path="offline_form_attachments/" />
 </full-backup-content>

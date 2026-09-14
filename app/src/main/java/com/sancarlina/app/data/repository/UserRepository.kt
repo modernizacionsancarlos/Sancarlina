@@ -6,15 +6,20 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
+import com.sancarlina.app.data.cache.DataAccessMetrics
 import com.sancarlina.app.data.models.PointMovement
+import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
 
 data class UserProfileData(
     val userName: String = "Usuario",
@@ -36,8 +41,10 @@ data class RegistrationAccess(
 }
 
 class UserRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val repositoryScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
+    private val profileFlows = ConcurrentHashMap<String, Flow<UserProfileData?>>()
     suspend fun syncUserProfile(uid: String, email: String?, name: String? = null) {
         val userDoc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid)
         val docSnapshot = userDoc.get().await()
@@ -70,12 +77,13 @@ class UserRepository(
         }
     }
 
-    fun observeUserProfile(uid: String): Flow<UserProfileData?> = callbackFlow {
-        if (uid.isBlank()) {
-            trySend(null)
-            close()
-            return@callbackFlow
-        }
+    fun observeUserProfile(uid: String): Flow<UserProfileData?> {
+        if (uid.isBlank()) return flowOf(null)
+        return profileFlows.getOrPut(uid) { createUserProfileFlow(uid) }
+    }
+
+    private fun createUserProfileFlow(uid: String): Flow<UserProfileData?> = callbackFlow {
+        DataAccessMetrics.recordListenerStart("user_profile")
         val listener = firestore.collection(FirestoreCollections.USER_PROFILES)
             .document(uid)
             .addSnapshotListener { doc, error ->
@@ -114,9 +122,13 @@ class UserRepository(
                         assignedFormIds = assignedForms?.mapNotNull { it?.toString() }.orEmpty()
                     )
                 )
-            }
+        }
         awaitClose { listener.remove() }
-    }
+    }.shareIn(
+        scope = repositoryScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000L),
+        replay = 1
+    )
 
     fun observeUserBalance(uid: String): Flow<Int> =
         observeUserProfile(uid).map { it?.pointsBalance ?: 0 }
@@ -144,16 +156,6 @@ class UserRepository(
         } catch (_: Exception) {
             RegistrationAccess()
         }
-    }
-
-    suspend fun updateUserBalance(uid: String, newBalance: Int) {
-        val userDoc = firestore.collection(FirestoreCollections.USER_PROFILES).document(uid)
-        userDoc.update(
-            mapOf(
-                "points_balance" to newBalance,
-                "points" to newBalance
-            )
-        ).await()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -193,23 +195,6 @@ class UserRepository(
         }.await()
     }
 
-    suspend fun addPointMovement(uid: String, title: String, amount: Int, isEarned: Boolean) {
-        val historyCollection = firestore.collection(FirestoreCollections.USER_PROFILES)
-            .document(uid)
-            .collection("points_history")
-        
-        val dateString = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
-            
-        val movementData = mapOf(
-            "title" to title,
-            "amount" to amount,
-            "isEarned" to isEarned,
-            "date" to dateString,
-            "timestamp" to FieldValue.serverTimestamp()
-        )
-        historyCollection.add(movementData).await()
-    }
-
     @Suppress("UNCHECKED_CAST")
     suspend fun getPointMovements(uid: String): List<PointMovement> {
         return try {
@@ -217,6 +202,7 @@ class UserRepository(
                 .document(uid)
                 .collection("points_history")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(50)
                 .get()
                 .await()
                 
@@ -239,10 +225,12 @@ class UserRepository(
     }
 
     fun observePointMovements(uid: String): Flow<List<PointMovement>> = callbackFlow {
+        DataAccessMetrics.recordListenerStart("points_history")
         val listener = firestore.collection(FirestoreCollections.USER_PROFILES)
             .document(uid)
             .collection("points_history")
             .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(50)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     return@addSnapshotListener

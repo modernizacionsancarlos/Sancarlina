@@ -12,6 +12,10 @@ import com.sancarlina.app.analytics.AppAnalytics
 import com.google.firebase.storage.FirebaseStorage
 import com.sancarlina.app.data.local.OfflineFormsStore
 import com.sancarlina.app.utils.AndroidAddressGeocoder
+import com.sancarlina.app.data.cache.CacheMetadataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /**
  * Contenedor de dependencias para la aplicación.
@@ -19,15 +23,18 @@ import com.sancarlina.app.utils.AndroidAddressGeocoder
  * reinicializar todo cada vez que se abren, mejorando drásticamente el rendimiento.
  */
 class AppContainer(private val context: Context) {
+    private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     val firestore: FirebaseFirestore by lazy {
         FirebaseFirestore.getInstance().apply {
             firestoreSettings = FirebaseFirestoreSettings.Builder()
                 .setLocalCacheSettings(
                     PersistentCacheSettings.newBuilder()
-                        .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                        .setSizeBytes(FIRESTORE_CACHE_BYTES)
                         .build()
                 )
                 .build()
+            runCatching { persistentCacheIndexManager?.enableIndexAutoCreation() }
         }
     }
     val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -39,25 +46,34 @@ class AppContainer(private val context: Context) {
     val offlineFormsStore: OfflineFormsStore by lazy { OfflineFormsStore(context) }
     val offlineGuideStore: com.sancarlina.app.data.local.OfflineGuideStore by lazy { com.sancarlina.app.data.local.OfflineGuideStore(context) }
     val addressGeocoder: AndroidAddressGeocoder by lazy { AndroidAddressGeocoder(context) }
+    val cacheMetadataStore: CacheMetadataStore by lazy { CacheMetadataStore(context) }
+    val catalogInvalidationRepository: CatalogInvalidationRepository by lazy {
+        CatalogInvalidationRepository(firestore)
+    }
 
     val tenantsRepository: TenantsRepository by lazy {
-        TenantsRepository(firestore)
+        TenantsRepository(firestore, cacheMetadataStore, catalogInvalidationRepository, repositoryScope)
     }
 
     val userRepository: UserRepository by lazy {
-        UserRepository(firestore)
+        UserRepository(firestore, repositoryScope)
     }
 
     val areasRepository: AreasRepository by lazy {
-        AreasRepository(firestore)
+        AreasRepository(firestore, cacheMetadataStore, catalogInvalidationRepository, repositoryScope)
     }
 
     val benefitsRepository: BenefitsRepository by lazy {
-        BenefitsRepository(firestore)
+        BenefitsRepository(firestore, cacheMetadataStore, catalogInvalidationRepository, repositoryScope)
     }
 
     val notificationsRepository: NotificationsRepository by lazy {
-        NotificationsRepository(firestore)
+        NotificationsRepository(
+            firestore,
+            cacheMetadataStore,
+            catalogInvalidationRepository,
+            repositoryScope
+        )
     }
 
     val reviewsRepository: ReviewsRepository by lazy {
@@ -89,7 +105,12 @@ class AppContainer(private val context: Context) {
     }
 
     val formsRepository: FormsRepository by lazy {
-        FormsRepository(firestore, offlineFormsStore)
+        FormsRepository(
+            firestore,
+            offlineFormsStore,
+            cacheMetadataStore,
+            catalogInvalidationRepository
+        )
     }
 
     val offlineSubmissionsRepository: OfflineSubmissionsRepository by lazy {
@@ -107,15 +128,15 @@ class AppContainer(private val context: Context) {
     }
 
     val adminComerciosRepository: AdminComerciosRepository by lazy {
-        AdminComerciosRepository(firestore)
+        AdminComerciosRepository(firestore, catalogInvalidationRepository)
     }
 
     val adminZonasRepository: AdminZonasRepository by lazy {
-        AdminZonasRepository(firestore)
+        AdminZonasRepository(firestore, catalogInvalidationRepository)
     }
 
     val adminBeneficiosRepository: AdminBeneficiosRepository by lazy {
-        AdminBeneficiosRepository(firestore)
+        AdminBeneficiosRepository(firestore, catalogInvalidationRepository)
     }
 
     val adminUsuariosRepository: AdminUsuariosRepository by lazy {
@@ -123,11 +144,11 @@ class AppContainer(private val context: Context) {
     }
 
     val adminFormulariosRepository: AdminFormulariosRepository by lazy {
-        AdminFormulariosRepository(firestore)
+        AdminFormulariosRepository(firestore, catalogInvalidationRepository)
     }
 
     val adminNotificacionesRepository: AdminNotificacionesRepository by lazy {
-        AdminNotificacionesRepository(firestore)
+        AdminNotificacionesRepository(firestore, catalogInvalidationRepository)
     }
 
     val adminReviewsRepository: AdminReviewsRepository by lazy {
@@ -136,5 +157,9 @@ class AppContainer(private val context: Context) {
 
     val adminAdministradoresRepository: AdminAdministradoresRepository by lazy {
         AdminAdministradoresRepository(firestore)
+    }
+
+    private companion object {
+        const val FIRESTORE_CACHE_BYTES = 200L * 1024L * 1024L
     }
 }

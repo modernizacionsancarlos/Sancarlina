@@ -8,6 +8,7 @@ import com.sancarlina.app.data.models.FormTemplate
 import com.sancarlina.app.data.models.Tenant
 import com.sancarlina.app.data.remote.FirestoreCollections
 import com.sancarlina.app.data.templates.BuiltinFormTemplates
+import com.sancarlina.app.data.cache.CacheDataset
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,8 @@ data class SubmissionAdmin(
 )
 
 class AdminFormulariosRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val invalidation: CatalogInvalidationRepository? = null
 ) {
 
     // --- FORM SCHEMAS ---
@@ -105,6 +107,7 @@ class AdminFormulariosRepository(
             )
 
             docRef.set(schemaData.filterValues { it != null }, SetOptions.merge()).await()
+            invalidation?.notifyChanged(CacheDataset.FORMS)
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
@@ -117,6 +120,7 @@ class AdminFormulariosRepository(
                 .document(schemaId)
                 .update("is_public", isPublic)
                 .await()
+            invalidation?.notifyChanged(CacheDataset.FORMS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -129,6 +133,7 @@ class AdminFormulariosRepository(
                 .document(schemaId)
                 .update("accepts_responses", acceptsResponses)
                 .await()
+            invalidation?.notifyChanged(CacheDataset.FORMS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -141,6 +146,7 @@ class AdminFormulariosRepository(
                 .document(schemaId)
                 .delete()
                 .await()
+            invalidation?.notifyChanged(CacheDataset.FORMS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -187,6 +193,7 @@ class AdminFormulariosRepository(
 
     fun observeAllSubmissions(): Flow<List<SubmissionAdmin>> = callbackFlow {
         val listener = firestore.collection(FirestoreCollections.SUBMISSIONS)
+            .limit(100)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -303,6 +310,7 @@ class AdminFormulariosRepository(
 
             val tenantRef = firestore.collection(FirestoreCollections.TENANTS).document()
             tenantRef.set(newTenantData).await()
+            invalidation?.notifyChanged(CacheDataset.TENANTS)
 
             // Marcar submission como aprobada
             updateSubmissionStatus(submission.id, "approved")

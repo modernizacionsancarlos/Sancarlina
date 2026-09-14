@@ -3,6 +3,7 @@ package com.sancarlina.app.data.repository
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.data.cache.CacheDataset
 import kotlinx.coroutines.tasks.await
 
 data class NotificationAdmin(
@@ -15,12 +16,14 @@ data class NotificationAdmin(
 )
 
 class AdminNotificacionesRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val invalidation: CatalogInvalidationRepository? = null
 ) {
 
     suspend fun getAllNotifications(): Result<List<NotificationAdmin>> {
         return try {
             val snapshot = firestore.collection(FirestoreCollections.NOTIFICATIONS)
+                .limit(100)
                 .get()
                 .await()
 
@@ -57,6 +60,7 @@ class AdminNotificacionesRepository(
                 "created_at" to Timestamp.now()
             )
             docRef.set(data).await()
+            invalidation?.notifyChanged(CacheDataset.NOTIFICATIONS)
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
@@ -69,6 +73,7 @@ class AdminNotificacionesRepository(
                 .document(id)
                 .delete()
                 .await()
+            invalidation?.notifyChanged(CacheDataset.NOTIFICATIONS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

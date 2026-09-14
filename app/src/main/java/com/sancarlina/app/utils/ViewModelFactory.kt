@@ -74,7 +74,11 @@ class ViewModelFactory(private val container: AppContainer) : ViewModelProvider.
                 SearchViewModel(container.tenantsRepository) as T
             }
             modelClass.isAssignableFrom(QrScannerViewModel::class.java) -> {
-                QrScannerViewModel() as T
+                QrScannerViewModel(
+                    container.auth,
+                    container.tenantsRepository,
+                    container.pointsRepository
+                ) as T
             }
             modelClass.isAssignableFrom(ReviewsViewModel::class.java) -> {
                 ReviewsViewModel(container.tenantsRepository, container.reviewsRepository) as T

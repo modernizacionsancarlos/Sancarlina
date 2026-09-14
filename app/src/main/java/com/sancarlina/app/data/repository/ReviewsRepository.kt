@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.data.cache.DataAccessMetrics
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -34,9 +35,11 @@ class ReviewsRepository(
             return@callbackFlow
         }
 
+        DataAccessMetrics.recordListenerStart("reviews")
         val registration = firestore.collection(FirestoreCollections.REVIEWS)
             .whereEqualTo("tenantId", tenantId)
             .whereEqualTo("status", "approved")
+            .limit(20)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)

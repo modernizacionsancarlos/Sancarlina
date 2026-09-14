@@ -46,3 +46,16 @@
 # 8. Native Symbols Support
 # Ayuda a que las herramientas de depuración identifiquen métodos nativos.
 -keepattributes SourceFile,LineNumberTable
+
+# 6. Crashlytics
+# Conserva el nombre de archivo y el número de línea para que los stack traces
+# de release sean legibles una vez aplicado el mapping de R8.
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+# Evita que R8 elimine las clases nativas de recolección de fallos.
+-keep class com.google.firebase.crashlytics.** { *; }
+-dontwarn com.google.firebase.crashlytics.**
+
+# 7. Firebase Performance Monitoring
+-keep class com.google.firebase.perf.** { *; }
+-dontwarn com.google.firebase.perf.**

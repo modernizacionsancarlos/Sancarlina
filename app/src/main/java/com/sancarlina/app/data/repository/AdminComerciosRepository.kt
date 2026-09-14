@@ -3,11 +3,13 @@ package com.sancarlina.app.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.sancarlina.app.data.models.Tenant
+import com.sancarlina.app.data.cache.CacheDataset
 import com.sancarlina.app.data.remote.FirestoreCollections
 import kotlinx.coroutines.tasks.await
 
 class AdminComerciosRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val invalidation: CatalogInvalidationRepository? = null
 ) {
 
     suspend fun getAllTenants(): Result<List<Tenant>> {
@@ -60,6 +62,7 @@ class AdminComerciosRepository(
             )
 
             docRef.set(tenantData.filterValues { it != null }, SetOptions.merge()).await()
+            invalidation?.notifyChanged(CacheDataset.TENANTS)
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
@@ -72,6 +75,7 @@ class AdminComerciosRepository(
                 .document(tenantId)
                 .update("status", newStatus)
                 .await()
+            invalidation?.notifyChanged(CacheDataset.TENANTS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -84,6 +88,7 @@ class AdminComerciosRepository(
                 .document(tenantId)
                 .delete()
                 .await()
+            invalidation?.notifyChanged(CacheDataset.TENANTS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

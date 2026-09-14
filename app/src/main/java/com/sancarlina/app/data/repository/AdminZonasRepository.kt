@@ -3,10 +3,12 @@ package com.sancarlina.app.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.data.cache.CacheDataset
 import kotlinx.coroutines.tasks.await
 
 class AdminZonasRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val invalidation: CatalogInvalidationRepository? = null
 ) {
     private val areasRepo = AreasRepository(firestore)
 
@@ -20,7 +22,9 @@ class AdminZonasRepository(
     }
 
     suspend fun ensureSuggestedAreas(): Result<Int> {
-        return areasRepo.ensureSuggestedAreas()
+        return areasRepo.ensureSuggestedAreas().also { result ->
+            if (result.getOrDefault(0) > 0) invalidation?.notifyChanged(CacheDataset.AREAS)
+        }
     }
 
     suspend fun saveArea(area: Area): Result<String> {
@@ -42,6 +46,7 @@ class AdminZonasRepository(
                 "active" to area.active
             )
             docRef.set(data, SetOptions.merge()).await()
+            invalidation?.notifyChanged(CacheDataset.AREAS)
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
@@ -54,6 +59,7 @@ class AdminZonasRepository(
                 .document(areaId)
                 .delete()
                 .await()
+            invalidation?.notifyChanged(CacheDataset.AREAS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

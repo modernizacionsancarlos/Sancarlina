@@ -15,6 +15,8 @@ object FirestoreCollections {
     const val BENEFITS = "benefits"
     const val SUPER_ADMINS = "superAdmins"
     const val FORM_TEMPLATES = "FormTemplates"
+    const val APP_METADATA = "app_metadata"
+    const val PUBLIC_CATALOG_METADATA = "public_catalog"
     
     const val DEFAULT_TENANT_ID = "tenant_sancarlos"
     const val FUNCTIONS_REGION = "southamerica-east1"

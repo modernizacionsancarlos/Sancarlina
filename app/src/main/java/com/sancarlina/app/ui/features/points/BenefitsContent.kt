@@ -26,16 +26,15 @@ import com.sancarlina.app.ui.features.points.components.PointsBalanceCard
 import com.sancarlina.app.ui.features.points.components.QrActionCard
 import com.sancarlina.app.ui.theme.*
 import com.sancarlina.app.viewmodel.BenefitItem
+import com.sancarlina.app.viewmodel.PointsUiState
 import com.sancarlina.app.viewmodel.PointsViewModel
 
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import coil.compose.AsyncImage
 import androidx.compose.foundation.BorderStroke
 
@@ -48,132 +47,51 @@ fun BenefitsContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Confirmation Dialog
+    // Detalle informativo. El saldo sólo puede cambiar mediante una operación validada en backend.
     uiState.selectedBenefit?.let { benefit ->
         AlertDialog(
-            onDismissRequest = { viewModel.cancelBenefitSelection() },
+            onDismissRequest = { viewModel.closeBenefitDetails() },
             title = {
                 Text(
-                    text = "¿Confirmás el canje?",
+                    text = benefit.title,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             },
             text = {
-                Text(
-                    text = "Vas a canjear ${benefit.cost} puntos por:\n\"${benefit.title}\" en ${benefit.brand}.",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            confirmButton = {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Button(
-                        onClick = { viewModel.redeemBenefit() },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = SancarlinaChipShape
-                    ) {
-                        Text("Canjear", color = Color.White)
-                    }
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { viewModel.cancelBenefitSelection() }
-                ) {
-                    Text("Cancelar", color = MaterialTheme.colorScheme.primary)
-                }
-            },
-            shape = SancarlinaCardShape,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        )
-    }
-
-    // Success Dialog with Voucher Code & Mock QR
-    if (uiState.showSuccessModal) {
-        val voucherCode = remember { "SC-VAL-${(1000..9999).random()}" }
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissModal() },
-            title = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "¡Canje Exitoso!",
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            },
-            text = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text(
-                        text = "Presentá este código en el comercio para recibir tu beneficio:",
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    Surface(
-                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
-                        shape = SancarlinaCardShape,
-                        modifier = Modifier.padding(8.dp)
-                    ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (benefit.brand.isNotBlank()) {
                         Text(
-                            text = voucherCode,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                            letterSpacing = 1.5.sp
+                            text = benefit.brand,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .background(Color.White, shape = SancarlinaCardShape)
-                            .drawMockQr(color = MaterialTheme.colorScheme.onSurface),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ConfirmationNumber,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
+                    if (benefit.description.isNotBlank()) {
+                        Text(
+                            text = benefit.description,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    Text(
+                        text = "Valor de referencia: ${benefit.cost} puntos.",
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "Consultá las condiciones en el comercio. Tu saldo sólo cambia cuando la operación es validada.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             },
             confirmButton = {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                Button(
+                    onClick = { viewModel.closeBenefitDetails() },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = SancarlinaChipShape
                 ) {
-                    Button(
-                        onClick = { viewModel.dismissModal() },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = SancarlinaChipShape,
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    ) {
-                        Text("Entendido", color = Color.White)
-                    }
+                    Text("Entendido", color = Color.White)
                 }
             },
             shape = SancarlinaCardShape,
@@ -181,35 +99,19 @@ fun BenefitsContent(
         )
     }
 
-    // Error Dialog
-    uiState.error?.let { errorMessage ->
-        AlertDialog(
-            onDismissRequest = { viewModel.clearError() },
-            title = {
-                Text(
-                    text = "Ocurrió un problema",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.error
-                )
-            },
-            text = {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = { viewModel.clearError() }
-                ) {
-                    Text("Aceptar", color = MaterialTheme.colorScheme.primary)
-                }
-            },
-            shape = SancarlinaCardShape,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        )
-    }
+    BenefitsListContent(
+        uiState = uiState,
+        onNavigateToScanner = onNavigateToScanner,
+        onBenefitClick = viewModel::onBenefitClick
+    )
+}
 
+@Composable
+internal fun BenefitsListContent(
+    uiState: PointsUiState,
+    onNavigateToScanner: () -> Unit,
+    onBenefitClick: (BenefitItem) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -217,7 +119,7 @@ fun BenefitsContent(
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item(key = "benefits_header") {
+        item(key = "points_screen_header") {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -231,7 +133,7 @@ fun BenefitsContent(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "Sumá puntos en cada compra y canjeá premios",
+                        text = "Sumá puntos y descubrí beneficios locales",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -292,13 +194,13 @@ fun BenefitsContent(
                     ) {
                         HowItWorksStep(number = "1", title = "Comprá local", desc = "En comercios adheridos")
                         HowItWorksStep(number = "2", title = "Escaneá QR", desc = "Sumá tus puntos al pagar")
-                        HowItWorksStep(number = "3", title = "Canjeá", desc = "Descuentos y regalos")
+                        HowItWorksStep(number = "3", title = "Consultá", desc = "Beneficios disponibles")
                     }
                 }
             }
         }
 
-        item(key = "benefits_header") {
+        item(key = "benefits_section_header") {
             Column {
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
@@ -308,6 +210,7 @@ fun BenefitsContent(
                 ) {
                     Text(
                         text = stringResource(R.string.points_benefits_title),
+                        modifier = Modifier.testTag("points_benefits_section"),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -350,8 +253,8 @@ fun BenefitsContent(
                 }
             }
             else -> {
-                items(uiState.benefits, key = { it.id }) { benefit ->
-                    BenefitCard(benefit = benefit, onRedeemClick = { viewModel.onBenefitClick(benefit) })
+                items(uiState.benefits, key = { "benefit_${it.id}" }) { benefit ->
+                    BenefitCard(benefit = benefit, onOpenClick = { onBenefitClick(benefit) })
                 }
             }
         }
@@ -397,7 +300,7 @@ private fun HowItWorksStep(number: String, title: String, desc: String) {
 }
 
 @Composable
-fun BenefitCard(benefit: BenefitItem, onRedeemClick: () -> Unit) {
+fun BenefitCard(benefit: BenefitItem, onOpenClick: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
@@ -481,7 +384,7 @@ fun BenefitCard(benefit: BenefitItem, onRedeemClick: () -> Unit) {
             Spacer(modifier = Modifier.width(10.dp))
 
             Button(
-                onClick = onRedeemClick,
+                onClick = onOpenClick,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -489,39 +392,8 @@ fun BenefitCard(benefit: BenefitItem, onRedeemClick: () -> Unit) {
                 ),
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
             ) {
-                Text("Canjear", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                Text("Ver", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             }
         }
-    }
-}
-
-// Custom Draw Modifier to render a premium mockup QR Code in canvas
-fun Modifier.drawMockQr(color: Color) = this.drawBehind {
-    val sizePx = size.width
-    val cellSize = sizePx / 10f
-    
-    // Finder pattern 1 (Top-Left)
-    drawRect(color = color, topLeft = Offset(0f, 0f), size = Size(cellSize * 3, cellSize * 3))
-    drawRect(color = Color.White, topLeft = Offset(cellSize, cellSize), size = Size(cellSize, cellSize))
-    
-    // Finder pattern 2 (Top-Right)
-    drawRect(color = color, topLeft = Offset(sizePx - cellSize * 3, 0f), size = Size(cellSize * 3, cellSize * 3))
-    drawRect(color = Color.White, topLeft = Offset(sizePx - cellSize * 2, cellSize), size = Size(cellSize, cellSize))
-    
-    // Finder pattern 3 (Bottom-Left)
-    drawRect(color = color, topLeft = Offset(0f, sizePx - cellSize * 3), size = Size(cellSize * 3, cellSize * 3))
-    drawRect(color = Color.White, topLeft = Offset(cellSize, sizePx - cellSize * 2), size = Size(cellSize, cellSize))
-    
-    // Random QR-like pixel clusters
-    val clusters = listOf(
-        4 to 4, 5 to 4, 4 to 5, 6 to 6, 7 to 5, 5 to 7, 7 to 7, 6 to 3, 3 to 6,
-        8 to 4, 4 to 8, 8 to 8, 9 to 6, 6 to 9, 8 to 7, 7 to 8, 9 to 9
-    )
-    for ((col, row) in clusters) {
-        drawRect(
-            color = color,
-            topLeft = Offset(col * cellSize, row * cellSize),
-            size = Size(cellSize, cellSize)
-        )
     }
 }

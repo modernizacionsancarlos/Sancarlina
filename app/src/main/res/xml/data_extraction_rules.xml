@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Reglas de extracción de datos (Android 12+): cloud backup y transferencia entre dispositivos.
-   Excluye preferencias locales sensibles (cifradas y legacy).
+   Reglas de extracción de datos (Android 12+): copia en la nube y
+   transferencia entre dispositivos.
+
+   Se aplica la misma exclusión en ambos canales. La transferencia directa
+   entre dispositivos es tan sensible como la copia en la nube: el token de
+   notificaciones y las preferencias cifradas no son válidos fuera del
+   dispositivo que los generó.
+
    Ver: https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
         <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+        <exclude domain="sharedpref" path="gondolapp_prefs.xml" />
+        <exclude domain="sharedpref" path="push_preferences.xml" />
+        <exclude domain="sharedpref" path="discovery_preferences.xml" />
+        <exclude domain="sharedpref" path="gondolapp_itinerary.xml" />
+        <exclude domain="sharedpref" path="catalog_cache_metadata.xml" />
         <exclude domain="database" path="offline_forms.db" />
         <exclude domain="file" path="offline_form_attachments/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="secure_sancarlina_prefs.xml" />
         <exclude domain="sharedpref" path="sancarlina_prefs.xml" />
+        <exclude domain="sharedpref" path="gondolapp_prefs.xml" />
+        <exclude domain="sharedpref" path="push_preferences.xml" />
+        <exclude domain="sharedpref" path="discovery_preferences.xml" />
+        <exclude domain="sharedpref" path="gondolapp_itinerary.xml" />
+        <exclude domain="sharedpref" path="catalog_cache_metadata.xml" />
         <exclude domain="database" path="offline_forms.db" />
         <exclude domain="file" path="offline_form_attachments/" />
     </device-transfer>

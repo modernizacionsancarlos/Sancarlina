@@ -27,7 +27,7 @@ class NewsListViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val snapshot = withTimeoutOrNull(5000) {
-                    firestore.collection("banners").get().await()
+                    firestore.collection("banners").limit(50).get().await()
                 }
 
                 val items = if (snapshot != null && !snapshot.isEmpty) {

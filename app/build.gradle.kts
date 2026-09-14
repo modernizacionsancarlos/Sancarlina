@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
     alias(libs.plugins.secrets)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.perf)
 }
 
 android {
@@ -15,8 +17,8 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 77
-        versionName = "8.8.3"
+        versionCode = 79
+        versionName = "8.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,6 +46,14 @@ android {
     buildTypes {
         debug {
             signingConfig = signingConfigs.getByName("debugConfig")
+            // Los builds de desarrollo no suben símbolos ni contaminan las métricas de producción.
+            configure<com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension> {
+                mappingFileUploadEnabled = false
+                nativeSymbolUploadEnabled = false
+            }
+            configure<com.google.firebase.perf.plugin.FirebasePerfExtension> {
+                setInstrumentationEnabled(false)
+            }
         }
         release {
             isMinifyEnabled = true
@@ -56,6 +66,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Sube el mapping de R8 para que los stack traces de release sean legibles.
+            // La subida de símbolos nativos queda apagada: la app no tiene código
+            // nativo propio y el paso solo agregaría un punto de fallo al build.
+            configure<com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+                nativeSymbolUploadEnabled = false
+            }
         }
     }
     packaging {
@@ -115,6 +132,12 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.functions)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.appcheck.playintegrity)
+    debugImplementation(libs.firebase.appcheck.debug)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.crashlytics.ndk)
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.config)
 
     implementation(libs.coil.compose)
     testImplementation(libs.junit)

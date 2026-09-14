@@ -1,15 +1,11 @@
 package com.sancarlina.app.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sancarlina.app.data.repository.AreasRepository
 import com.sancarlina.app.data.repository.TenantsRepository
-import com.sancarlina.app.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
 
 class SplashViewModel(
     private val tenantsRepository: TenantsRepository,
@@ -24,19 +20,10 @@ class SplashViewModel(
     }
 
     private fun prepareData() {
-        viewModelScope.launch {
-            try {
-                // Pre-fetch critical data with a timeout to avoid hanging the splash screen (max 5s)
-                withTimeoutOrNull(5000) {
-                    tenantsRepository.getActiveTenants()
-                    areasRepository.getAreas()
-                }
-            } catch (e: Exception) {
-                Logger.e("Splash data pre-fetch failed", e)
-            } finally {
-                // Always set to ready to allow entry even if fetch failed or timed out
-                _isReady.value = true
-            }
-        }
+        // Inicia la carga cache-first en segundo plano. La navegación no espera a la red:
+        // Home observa los mismos flujos y recibe la caché o la actualización cuando llegue.
+        tenantsRepository.observeActiveTenants()
+        areasRepository.getAreasFlow()
+        _isReady.value = true
     }
 }

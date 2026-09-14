@@ -3,10 +3,12 @@ package com.sancarlina.app.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.sancarlina.app.data.remote.FirestoreCollections
+import com.sancarlina.app.data.cache.CacheDataset
 import kotlinx.coroutines.tasks.await
 
 class AdminBeneficiosRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val invalidation: CatalogInvalidationRepository? = null
 ) {
 
     suspend fun getAllBenefits(): Result<List<Benefit>> {
@@ -43,6 +45,7 @@ class AdminBeneficiosRepository(
                 "active" to benefit.active
             )
             docRef.set(data, SetOptions.merge()).await()
+            invalidation?.notifyChanged(CacheDataset.BENEFITS)
             Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
@@ -55,6 +58,7 @@ class AdminBeneficiosRepository(
                 .document(benefitId)
                 .update("active", active)
                 .await()
+            invalidation?.notifyChanged(CacheDataset.BENEFITS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -67,6 +71,7 @@ class AdminBeneficiosRepository(
                 .document(benefitId)
                 .delete()
                 .await()
+            invalidation?.notifyChanged(CacheDataset.BENEFITS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
