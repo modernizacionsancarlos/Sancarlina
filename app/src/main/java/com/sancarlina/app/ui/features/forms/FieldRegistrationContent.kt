@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudSync
+import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
@@ -44,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,6 +64,7 @@ fun FieldRegistrationContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val pendingCount = uiState.submissions.count { it.status != SubmissionSyncStatus.SENT }
+    val errorCount = uiState.submissions.count { it.status == SubmissionSyncStatus.ERROR }
 
     Scaffold(
         topBar = { SancarlinaTopBar(title = "Registro en calle", onBack = onBack) },
@@ -136,6 +139,23 @@ fun FieldRegistrationContent(
                 }
             }
 
+            if (uiState.dataSaverBlocksBackground) {
+                item { DataSaverCard() }
+            }
+
+            if (errorCount > 0) {
+                item {
+                    UnsyncedAlertCard(
+                        count = errorCount,
+                        reason = uiState.submissions.firstOrNull {
+                            it.status == SubmissionSyncStatus.ERROR && !it.lastError.isNullOrBlank()
+                        }?.lastError,
+                        enabled = !uiState.isSyncing,
+                        onRetryAll = viewModel::retryAll
+                    )
+                }
+            }
+
             if (uiState.accessDenied || uiState.forms.isEmpty()) {
                 item {
                     EmptyAccessCard(uiState.error ?: "No hay formularios disponibles.") {
@@ -176,7 +196,11 @@ fun FieldRegistrationContent(
                     }
                 }
                 items(uiState.submissions.take(6), key = { it.localId }) { submission ->
-                    RecentSubmissionCard(submission, onEditSubmission)
+                    RecentSubmissionCard(
+                        submission = submission,
+                        onEdit = onEditSubmission,
+                        onRetry = { viewModel.retry(submission.localId) }
+                    )
                 }
             }
         }
@@ -194,27 +218,184 @@ private fun StatusSummaryCard(label: String, value: String, icon: androidx.compo
     }
 }
 
+/**
+ * Aviso del Ahorro de datos de Android.
+ *
+ * Con esa opción activa el envío manual funciona, pero el automático en segundo
+ * plano queda en pausa sobre datos móviles. Sin este aviso el registrador no tiene
+ * forma de descubrirlo: la app parece simplemente no subir nada fuera del Wi-Fi.
+ */
 @Composable
-private fun RecentSubmissionCard(submission: OfflineSubmission, onEdit: (String, String) -> Unit) {
+private fun DataSaverCard() {
+    val context = LocalContext.current
+    Card(
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.DataUsage,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+                Text(
+                    text = "El Ahorro de datos frena el envío",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+            Text(
+                text = "Con datos móviles los relevamientos no se envían solos. " +
+                    "Tocá Sincronizar ahora al terminar cada local, o conectate a Wi-Fi.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(top = 6.dp)
+            )
+            OutlinedButton(
+                onClick = {
+                    runCatching {
+                        context.startActivity(
+                            android.content.Intent(android.provider.Settings.ACTION_DATA_USAGE_SETTINGS)
+                                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+                    .heightIn(min = 46.dp)
+            ) {
+                Text("Abrir ajustes de datos", fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+/**
+ * Aviso de cabecera para los relevamientos que el servidor rechazó.
+ *
+ * Un fallo de sincronización en trabajo de campo tiene que interrumpir la lectura:
+ * el registrador da el relevamiento por guardado y sigue con el siguiente local, sin
+ * enterarse de que el dato nunca salió del teléfono.
+ */
+@Composable
+private fun UnsyncedAlertCard(
+    count: Int,
+    reason: String?,
+    enabled: Boolean,
+    onRetryAll: () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.Error,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
+                Text(
+                    text = if (count == 1) {
+                        "1 relevamiento no se envió"
+                    } else {
+                        "$count relevamientos no se enviaron"
+                    },
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+            Text(
+                text = "Los datos siguen guardados en este teléfono. No desinstales la app ni borres sus datos.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.padding(top = 6.dp)
+            )
+            if (!reason.isNullOrBlank()) {
+                Text(
+                    text = reason,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(top = 6.dp)
+                )
+            }
+            Button(
+                onClick = onRetryAll,
+                enabled = enabled,
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+                    .heightIn(min = 48.dp)
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = null)
+                Spacer(Modifier.size(8.dp))
+                Text("Reintentar el envío", fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecentSubmissionCard(
+    submission: OfflineSubmission,
+    onEdit: (String, String) -> Unit,
+    onRetry: () -> Unit
+) {
     val (label, color, icon) = when (submission.status) {
         SubmissionSyncStatus.SENT -> Triple("Enviado", MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
-        SubmissionSyncStatus.ERROR -> Triple("Error", MaterialTheme.colorScheme.error, Icons.Default.Error)
+        SubmissionSyncStatus.ERROR -> Triple("No se envió", MaterialTheme.colorScheme.error, Icons.Default.Error)
         SubmissionSyncStatus.SENDING -> Triple("Enviando", MaterialTheme.colorScheme.primary, Icons.Default.CloudSync)
-        SubmissionSyncStatus.PENDING -> Triple("Pendiente", MaterialTheme.colorScheme.tertiary, Icons.Default.Schedule)
+        SubmissionSyncStatus.PENDING -> Triple("Pendiente de envío", MaterialTheme.colorScheme.tertiary, Icons.Default.Schedule)
     }
     Card(shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest), modifier = Modifier.fillMaxWidth()) {
-        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Surface(shape = CircleShape, color = color.copy(alpha = 0.12f), modifier = Modifier.size(40.dp)) {
-                Box(contentAlignment = Alignment.Center) { Icon(icon, null, tint = color, modifier = Modifier.size(21.dp)) }
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(shape = CircleShape, color = color.copy(alpha = 0.12f), modifier = Modifier.size(40.dp)) {
+                    Box(contentAlignment = Alignment.Center) { Icon(icon, null, tint = color, modifier = Modifier.size(21.dp)) }
+                }
+                Column(Modifier.weight(1f).padding(horizontal = 10.dp)) {
+                    Text(submission.formTitle, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(label, style = MaterialTheme.typography.labelMedium, color = color)
+                }
+                androidx.compose.material3.IconButton(
+                    onClick = { onEdit(submission.formId, submission.localId) },
+                    enabled = submission.status != SubmissionSyncStatus.SENDING
+                ) { Icon(Icons.Default.Edit, contentDescription = "Editar registro", tint = MaterialTheme.colorScheme.primary) }
             }
-            Column(Modifier.weight(1f).padding(horizontal = 10.dp)) {
-                Text(submission.formTitle, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(label, style = MaterialTheme.typography.labelMedium, color = color)
+            submission.lastError?.takeIf { it.isNotBlank() }?.let { reason ->
+                Text(
+                    text = reason,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
-            androidx.compose.material3.IconButton(
-                onClick = { onEdit(submission.formId, submission.localId) },
-                enabled = submission.status != SubmissionSyncStatus.SENDING
-            ) { Icon(Icons.Default.Edit, contentDescription = "Editar registro", tint = MaterialTheme.colorScheme.primary) }
+            if (submission.status == SubmissionSyncStatus.ERROR) {
+                OutlinedButton(
+                    onClick = onRetry,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                        .heightIn(min = 44.dp)
+                ) {
+                    Icon(Icons.Default.Refresh, contentDescription = null)
+                    Spacer(Modifier.size(6.dp))
+                    Text("Reintentar")
+                }
+            }
         }
     }
 }

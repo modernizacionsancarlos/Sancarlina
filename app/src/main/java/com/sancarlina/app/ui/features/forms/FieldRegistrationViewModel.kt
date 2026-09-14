@@ -23,6 +23,8 @@ data class FieldRegistrationUiState(
     val role: String = "citizen",
     val accessDenied: Boolean = false,
     val isSyncing: Boolean = false,
+    /** El Ahorro de datos de Android mantiene en pausa el envío automático. */
+    val dataSaverBlocksBackground: Boolean = false,
     val message: String? = null,
     val error: String? = null
 )
@@ -95,6 +97,7 @@ class FieldRegistrationViewModel(
                         ?: forms.firstOrNull()?.id,
                     role = role,
                     accessDenied = false,
+                    dataSaverBlocksBackground = submissionsRepository.isBackgroundDataRestricted(),
                     error = if (forms.isEmpty()) "No tenés formularios habilitados para completar." else null
                 )
             }
@@ -105,14 +108,29 @@ class FieldRegistrationViewModel(
         _uiState.update { it.copy(selectedFormId = formId) }
     }
 
+    /** Devuelve un envío rechazado a la cola y lo reintenta de inmediato. */
+    fun retry(localId: String) {
+        submissionsRepository.retry(localId)
+        syncNow()
+    }
+
+    /** Reintenta todos los envíos que quedaron en error. */
+    fun retryAll() {
+        submissionsRepository.retryAll()
+        syncNow()
+    }
+
     fun syncNow() {
         if (_uiState.value.isSyncing) return
         viewModelScope.launch {
             _uiState.update { it.copy(isSyncing = true, message = null) }
-            if (!submissionsRepository.hasValidatedConnection()) {
+            if (!submissionsRepository.hasUsableConnection()) {
                 submissionsRepository.scheduleSync()
                 _uiState.update {
-                    it.copy(isSyncing = false, message = "Sin conexión. La sincronización automática quedó programada.")
+                    it.copy(
+                        isSyncing = false,
+                        message = "Sin conexión. Los relevamientos quedan guardados y se envían solos al recuperar señal."
+                    )
                 }
                 return@launch
             }
@@ -120,6 +138,7 @@ class FieldRegistrationViewModel(
             _uiState.update {
                 it.copy(
                     isSyncing = false,
+                    dataSaverBlocksBackground = submissionsRepository.isBackgroundDataRestricted(),
                     message = when {
                         result.sent > 0 && result.failed == 0 -> "Se enviaron ${result.sent} respuesta(s)."
                         result.sent > 0 -> "Se enviaron ${result.sent}; ${result.failed} requieren revisión."

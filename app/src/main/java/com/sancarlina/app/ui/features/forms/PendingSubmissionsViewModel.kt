@@ -41,8 +41,8 @@ class PendingSubmissionsViewModel(
 
     fun syncNow() {
         if (isSyncing.value) return
-        if (!repository.hasValidatedConnection()) {
-            message.value = "No hay una conexión a internet validada. Los envíos siguen guardados."
+        if (!repository.hasUsableConnection()) {
+            message.value = "Sin conexión. Los envíos siguen guardados y se suben solos al recuperar señal."
             repository.scheduleSync()
             return
         }
@@ -50,14 +50,23 @@ class PendingSubmissionsViewModel(
             isSyncing.value = true
             message.value = null
             val summary = repository.syncPending()
-            message.value = when {
-                summary.failed > 0 && summary.sent > 0 ->
-                    "Se enviaron ${summary.sent}; ${summary.failed} requieren otro intento."
-                summary.failed > 0 ->
-                    "No se pudieron sincronizar ${summary.failed} formularios. Revisá el detalle."
-                summary.sent > 0 ->
-                    "Se sincronizaron ${summary.sent} formularios."
-                else -> "No hay formularios pendientes para sincronizar."
+            // Con Ahorro de datos el envío manual funciona, pero el automático no.
+            // Decirlo evita que el registrador crea que la cola quedó al día.
+            val dataSaverNote = if (repository.isBackgroundDataRestricted()) {
+                " El Ahorro de datos está activado: mientras siga así, el envío automático solo ocurre con Wi-Fi."
+            } else {
+                ""
+            }
+            message.value = dataSaverNote.let { note ->
+                when {
+                    summary.failed > 0 && summary.sent > 0 ->
+                        "Se enviaron ${summary.sent}; ${summary.failed} requieren otro intento."
+                    summary.failed > 0 ->
+                        "No se pudieron sincronizar ${summary.failed} formularios. Revisá el detalle."
+                    summary.sent > 0 ->
+                        "Se sincronizaron ${summary.sent} formularios."
+                    else -> "No hay formularios pendientes para sincronizar."
+                } + note
             }
             isSyncing.value = false
         }

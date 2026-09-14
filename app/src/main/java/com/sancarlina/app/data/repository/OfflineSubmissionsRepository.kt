@@ -97,7 +97,7 @@ class OfflineSubmissionsRepository(
 
         FormSyncScheduler.enqueue(appContext)
 
-        if (hasValidatedConnection()) {
+        if (hasUsableConnection()) {
             syncSubmission(localId)
         }
 
@@ -148,7 +148,7 @@ class OfflineSubmissionsRepository(
         oldPaths.filterNot(replacementPaths::contains).forEach { File(it).delete() }
 
         FormSyncScheduler.enqueue(appContext)
-        if (hasValidatedConnection()) syncSubmission(localId)
+        if (hasUsableConnection()) syncSubmission(localId)
         return QueuedSubmissionResult(
             localId = localId,
             status = store.getSubmission(localId)?.status ?: SubmissionSyncStatus.PENDING
@@ -194,12 +194,39 @@ class OfflineSubmissionsRepository(
 
     fun scheduleSync() = FormSyncScheduler.enqueue(appContext)
 
-    fun hasValidatedConnection(): Boolean {
+    /**
+     * Indica si hay una red por la que valga la pena intentar el envío.
+     *
+     * Deliberadamente NO exige NET_CAPABILITY_VALIDATED. Android marca esa
+     * capacidad recién cuando una sonda contra sus servidores responde bien, y con
+     * señal móvil débil dentro de un local esa sonda falla o tarda aunque los datos
+     * funcionen. Exigirla hacía que la app se declarara sin conexión con el teléfono
+     * navegando, y los relevamientos quedaban sin intentar.
+     *
+     * Si la red resulta inservible, el intento falla y la cola lo reintenta: para
+     * eso existe la cola. Un intento fallido cuesta mucho menos que un envío que
+     * nunca se prueba.
+     */
+    fun hasUsableConnection(): Boolean {
         val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    /**
+     * true cuando el Ahorro de datos de Android está activo sobre una red medida.
+     *
+     * En ese estado la sincronización manual sigue funcionando, porque la app está
+     * en primer plano, pero el trabajo en segundo plano queda diferido hasta que
+     * aparezca una red no medida. Es lo que produce la impresión de que los
+     * relevamientos "solo suben con Wi-Fi".
+     */
+    fun isBackgroundDataRestricted(): Boolean {
+        val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.isActiveNetworkMetered &&
+            connectivityManager.restrictBackgroundStatus ==
+                ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED
     }
 
     private suspend fun syncSubmissionLocked(localId: String): SyncAttempt {
@@ -221,41 +248,7 @@ class OfflineSubmissionsRepository(
 
         store.markSending(localId)
         return try {
-            val attachmentValues = uploadAttachments(submission)
-            val document = firestore.collection(FirestoreCollections.SUBMISSIONS).document(localId)
-
-            val existing = withTimeout(REMOTE_OPERATION_TIMEOUT_MS) {
-                document.get(Source.SERVER).await()
-            }
-            val payload = submission.data.toMutableMap().apply {
-                putAll(attachmentValues)
-                put("form_id", submission.formId)
-                put("form_title", submission.formTitle)
-                put("created_by", submission.userId)
-                put("created_at", Timestamp(Date(submission.createdAt)))
-                put("client_updated_at", Timestamp(Date(submission.updatedAt)))
-                put("client_submission_id", submission.localId)
-                put("synced_at", FieldValue.serverTimestamp())
-                put("status", "pending")
-            }
-            if (existing.exists()) {
-                val existingOwner = existing.getString("created_by")
-                val existingClientId = existing.getString("client_submission_id")
-                if (existingOwner != submission.userId || existingClientId != localId) {
-                    throw PermanentSyncException("El identificador remoto está ocupado por otro envío.")
-                }
-                val remoteContentUpdatedAt = existing.getTimestamp("client_updated_at")?.toDate()?.time
-                if (remoteContentUpdatedAt == null || remoteContentUpdatedAt < submission.updatedAt) {
-                    withTimeout(REMOTE_OPERATION_TIMEOUT_MS) {
-                        document.set(payload).await()
-                    }
-                }
-            } else {
-                withTimeout(REMOTE_OPERATION_TIMEOUT_MS) {
-                    document.set(payload).await()
-                }
-            }
-
+            withFreshTokenRetry { pushSubmission(submission) }
             store.markSent(localId, localId)
             deleteLocalAttachmentFiles(localId)
             SyncAttempt.SENT
@@ -264,6 +257,87 @@ class OfflineSubmissionsRepository(
             store.markError(localId, message)
             if (isPermanent(error)) SyncAttempt.PERMANENT_FAILURE else SyncAttempt.TRANSIENT_FAILURE
         }
+    }
+
+    /**
+     * Sube los adjuntos y escribe el documento en Firestore.
+     *
+     * El id del documento es el UUID generado en el dispositivo, de modo que
+     * reenviar el mismo formulario nunca duplica un registro en el panel web.
+     */
+    private suspend fun pushSubmission(submission: OfflineSubmission) {
+        val localId = submission.localId
+        val attachmentValues = uploadAttachments(submission)
+        val document = firestore.collection(FirestoreCollections.SUBMISSIONS).document(localId)
+        val payload = submission.data.toMutableMap().apply {
+            putAll(attachmentValues)
+            put("form_id", submission.formId)
+            put("form_title", submission.formTitle)
+            put("created_by", submission.userId)
+            put("created_at", Timestamp(Date(submission.createdAt)))
+            put("client_updated_at", Timestamp(Date(submission.updatedAt)))
+            put("client_submission_id", submission.localId)
+            put("synced_at", FieldValue.serverTimestamp())
+            put("status", "pending")
+        }
+
+        // En el primer intento el documento no puede existir en el servidor: el id
+        // es un UUID recién generado. Leerlo cuesta una lectura facturada por envío
+        // y agrega un modo de falla propio, porque una regla de lectura restrictiva
+        // rechaza un documento inexistente y el envío queda marcado como error sin
+        // que se haya intentado escribir.
+        val remoteCopyMayExist = submission.remoteId != null || submission.attemptCount > 0
+        if (!remoteCopyMayExist) {
+            withTimeout(REMOTE_OPERATION_TIMEOUT_MS) { document.set(payload).await() }
+            return
+        }
+
+        val existing = withTimeout(REMOTE_OPERATION_TIMEOUT_MS) {
+            document.get(Source.SERVER).await()
+        }
+        if (!existing.exists()) {
+            withTimeout(REMOTE_OPERATION_TIMEOUT_MS) { document.set(payload).await() }
+            return
+        }
+
+        val existingOwner = existing.getString("created_by")
+        val existingClientId = existing.getString("client_submission_id")
+        if (existingOwner != submission.userId || existingClientId != localId) {
+            throw PermanentSyncException("El identificador remoto está ocupado por otro envío.")
+        }
+        val remoteContentUpdatedAt = existing.getTimestamp("client_updated_at")?.toDate()?.time
+        if (remoteContentUpdatedAt == null || remoteContentUpdatedAt < submission.updatedAt) {
+            withTimeout(REMOTE_OPERATION_TIMEOUT_MS) { document.set(payload).await() }
+        }
+    }
+
+    /**
+     * Ejecuta [block] y, si el servidor responde por falta de permisos, renueva el
+     * ID token y reintenta una sola vez.
+     *
+     * Los claims de rol se asignan desde Cloud Functions. Un registrador que inició
+     * sesión antes de recibir su claim arrastra un token sin permisos hasta que
+     * caduca, una hora después. Sin este reintento cada relevamiento cargado en ese
+     * intervalo se marca como error permanente y solo vuelve con acción manual.
+     */
+    private suspend fun <T> withFreshTokenRetry(block: suspend () -> T): T = try {
+        block()
+    } catch (error: Exception) {
+        val user = auth.currentUser
+        if (!isAuthorizationError(error) || user == null) throw error
+        runCatching { withTimeout(REMOTE_OPERATION_TIMEOUT_MS) { user.getIdToken(true).await() } }
+            .getOrElse { throw error }
+        block()
+    }
+
+    private fun isAuthorizationError(error: Exception): Boolean = when (error) {
+        is FirebaseFirestoreException ->
+            error.code == FirebaseFirestoreException.Code.PERMISSION_DENIED ||
+                error.code == FirebaseFirestoreException.Code.UNAUTHENTICATED
+        is StorageException ->
+            error.errorCode == StorageException.ERROR_NOT_AUTHENTICATED ||
+                error.errorCode == StorageException.ERROR_NOT_AUTHORIZED
+        else -> false
     }
 
     private suspend fun uploadAttachments(submission: OfflineSubmission): Map<String, Any> {
@@ -403,8 +477,11 @@ class OfflineSubmissionsRepository(
     private fun userFacingError(error: Exception): String = when (error) {
         is PermanentSyncException -> error.message.orEmpty()
         is FirebaseFirestoreException -> when (error.code) {
-            FirebaseFirestoreException.Code.PERMISSION_DENIED -> "Firebase rechazó el envío. Verificá la sesión y los permisos."
-            FirebaseFirestoreException.Code.UNAUTHENTICATED -> "La sesión venció. Iniciá sesión nuevamente."
+            FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                "El servidor rechazó el envío por permisos. El relevamiento sigue guardado. " +
+                    "Cerrá sesión, volvé a entrar y tocá Reintentar; si continúa, avisá al administrador."
+            FirebaseFirestoreException.Code.UNAUTHENTICATED ->
+                "La sesión venció. El relevamiento sigue guardado: iniciá sesión y tocá Reintentar."
             else -> error.localizedMessage ?: "No se pudo enviar la respuesta a Firestore."
         }
         is StorageException -> when (error.errorCode) {

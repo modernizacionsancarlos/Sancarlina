@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 /** Contrato mínimo para inyectar auth en LoginContent (prod + tests). */
 interface LoginAuthViewModel {
@@ -45,9 +46,18 @@ class AuthViewModel(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         auth.signInWithEmailAndPassword(sanitizedEmail, password)
-            .addOnSuccessListener {
-                _uiState.update { it.copy(isLoading = false) }
-                onSuccess()
+            .addOnSuccessListener { result ->
+                viewModelScope.launch {
+                    // Los claims de rol (registrador, admin) se asignan desde Cloud
+                    // Functions con setCustomUserClaims. Un ID token emitido antes de
+                    // esa asignación no los contiene, y Firestore rechaza las escrituras
+                    // hasta que el token se renueva solo, una hora más tarde. Forzar la
+                    // renovación acá evita que un registrador recién habilitado trabaje
+                    // toda una jornada sin poder subir nada.
+                    runCatching { result.user?.getIdToken(true)?.await() }
+                    _uiState.update { it.copy(isLoading = false) }
+                    onSuccess()
+                }
             }
             .addOnFailureListener { e ->
                 _uiState.update { it.copy(isLoading = false, error = e.localizedMessage) }
