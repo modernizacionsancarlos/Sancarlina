@@ -17,8 +17,8 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 79
-        versionName = "8.9.0"
+        versionCode = 80
+        versionName = "8.9.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
