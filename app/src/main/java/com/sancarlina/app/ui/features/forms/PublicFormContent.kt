@@ -7,6 +7,16 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import android.widget.Toast
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -794,6 +804,7 @@ internal fun RenderFormField(
             }
         }
         "image", "file", "attachment" -> {
+            val context = LocalContext.current
             val isImageField = field.type == "image"
             val pickerPolicy = attachmentPickerPolicy(field.maxImages)
             val maxImgs = pickerPolicy.selectionLimit
@@ -832,6 +843,60 @@ internal fun RenderFormField(
                 if (uri != null) {
                     onImagesChange(listOf(uri))
                 }
+            }
+
+            // La cámara escribe sobre un URI que se genera antes de lanzarla, así que
+            // hay que recordarlo hasta que el intent devuelve el resultado.
+            var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
+
+            val takePictureLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.TakePicture()
+            ) { captured ->
+                val uri = pendingCameraUri
+                pendingCameraUri = null
+                if (captured && uri != null) {
+                    onImagesChange((selectedImages + uri).takeLast(maxImgs))
+                }
+            }
+
+            fun launchCamera() {
+                runCatching { createCameraCaptureUri(context) }
+                    .onSuccess { uri ->
+                        pendingCameraUri = uri
+                        takePictureLauncher.launch(uri)
+                    }
+                    .onFailure {
+                        Toast.makeText(
+                            context,
+                            "No se pudo abrir la cámara. Probá con la galería.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+            }
+
+            // La app declara el permiso CAMERA para el escáner QR. Cuando un permiso
+            // está declarado en el manifiesto, Android exige que esté concedido para
+            // lanzar un intent de captura, incluso si la foto la toma otra app.
+            val cameraPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { granted ->
+                if (granted) {
+                    launchCamera()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Sin permiso de cámara. Podés elegir una foto de la galería.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            fun capturePhoto() {
+                val alreadyGranted = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+                if (alreadyGranted) launchCamera() else cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
 
             Column {
@@ -925,10 +990,24 @@ internal fun RenderFormField(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                if (selectedImages.size < maxImgs) {
-                    OutlinedButton(
-                        onClick = {
-                            if (isImageField) {
+                if (selectedImages.size < maxImgs && isImageField) {
+                    // En trabajo de campo la foto casi siempre se toma en el momento,
+                    // así que la cámara va primero y como acción principal.
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = { capturePhoto() },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(999.dp)
+                        ) {
+                            Icon(Icons.Default.PhotoCamera, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Tomar foto")
+                        }
+                        OutlinedButton(
+                            onClick = {
                                 if (multiple) {
                                     pickerLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -938,7 +1017,31 @@ internal fun RenderFormField(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                     )
                                 }
-                            } else if (multiple) {
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(999.dp)
+                        ) {
+                            Icon(Icons.Default.PhotoLibrary, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Galería")
+                        }
+                    }
+                    Text(
+                        text = if (existingAttachmentCount > 0 && selectedImages.isEmpty()) {
+                            "Reemplaza las foto(s) actuales"
+                        } else {
+                            "${selectedImages.size} de $maxImgs foto(s)"
+                        },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 6.dp)
+                    )
+                }
+
+                if (selectedImages.size < maxImgs && !isImageField) {
+                    OutlinedButton(
+                        onClick = {
+                            if (multiple) {
                                 filePickerLauncher.launch(arrayOf("*/*"))
                             } else {
                                 singleFilePickerLauncher.launch(arrayOf("*/*"))
@@ -948,14 +1051,12 @@ internal fun RenderFormField(
                         shape = RoundedCornerShape(999.dp)
                     ) {
                         Icon(
-                            imageVector = if (isImageField) Icons.Default.AddAPhoto else Icons.Default.AttachFile,
+                            imageVector = Icons.Default.AttachFile,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            if (isImageField) {
-                                if (existingAttachmentCount > 0 && selectedImages.isEmpty()) "Reemplazar foto(s)" else if (selectedImages.isEmpty()) "Seleccionar foto (0/$maxImgs)" else "Agregar fotos (${selectedImages.size}/$maxImgs)"
-                            } else {
+                            run {
                                 if (existingAttachmentCount > 0 && selectedImages.isEmpty()) "Reemplazar archivo(s)" else if (selectedImages.isEmpty()) "Seleccionar archivo (0/$maxImgs)" else "Agregar archivos (${selectedImages.size}/$maxImgs)"
                             }
                         )

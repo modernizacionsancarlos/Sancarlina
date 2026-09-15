@@ -95,6 +95,41 @@ secrets {
     defaultPropertiesFileName = ".env.example"
 }
 
+// Guarda de release: sin .env el plugin de secrets cae en .env.example y la app
+// se compila con la clave de ejemplo. El build no falla, pero el mapa queda
+// inutilizable y solo se descubre abriendo la app ya publicada. Esta tarea corta
+// el build de release antes de que eso llegue a Play.
+val verifyMapsApiKey = tasks.register("verifyMapsApiKey") {
+    group = "verification"
+    description = "Verifica que .env tenga una MAPS_API_KEY real antes de compilar release."
+    doLast {
+        val envFile = rootProject.file(".env")
+        val problem = if (!envFile.exists()) {
+            "Falta el archivo .env en la raíz del proyecto."
+        } else {
+            val envProperties = Properties()
+            envFile.inputStream().use { envProperties.load(it) }
+            val key = envProperties.getProperty("MAPS_API_KEY").orEmpty().trim()
+            when {
+                key.isEmpty() -> "MAPS_API_KEY está vacía en .env."
+                key.contains("YOUR_MAPS_API_KEY") || key.startsWith("PEGAR_AQUI") ->
+                    "MAPS_API_KEY todavía tiene el valor de ejemplo en .env."
+                else -> null
+            }
+        }
+        if (problem != null) {
+            throw GradleException(
+                "$problem El build de release quedaría con el mapa inutilizable. " +
+                    "Copiá la clave real de local.properties a .env antes de generar el Bundle."
+            )
+        }
+    }
+}
+
+tasks.matching { it.name == "preReleaseBuild" }.configureEach {
+    dependsOn(verifyMapsApiKey)
+}
+
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

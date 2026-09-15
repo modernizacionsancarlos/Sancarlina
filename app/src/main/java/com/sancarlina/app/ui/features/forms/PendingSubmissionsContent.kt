@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -77,8 +78,11 @@ fun PendingSubmissionsContent(
                 shape = RoundedCornerShape(14.dp)
             ) {
                 if (uiState.isSyncing) {
+                    // size() y no height(): con solo la altura fijada el indicador
+                    // conserva su ancho por defecto de 40.dp y se dibuja ovalado y
+                    // fuera del eje del botón.
                     CircularProgressIndicator(
-                        modifier = Modifier.height(20.dp),
+                        modifier = Modifier.size(18.dp),
                         strokeWidth = 2.dp,
                         color = MaterialTheme.colorScheme.onPrimary
                     )

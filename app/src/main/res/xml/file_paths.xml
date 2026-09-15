@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Rutas que FileProvider puede compartir con otras aplicaciones.
+
+    Solo se expone el subdirectorio camera/ de la caché: ahí escribe la foto la
+    aplicación de cámara del sistema, porque un intent de captura no puede
+    escribir en el almacenamiento privado de la app sin un content:// URI.
+
+    El archivo se copia al almacenamiento interno definitivo al adjuntarlo, así
+    que lo que queda en la caché es descartable.
+-->
+<paths>
+    <cache-path name="camera_captures" path="camera/" />
+</paths>

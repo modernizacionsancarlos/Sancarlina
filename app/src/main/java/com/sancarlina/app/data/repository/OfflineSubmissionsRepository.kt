@@ -1,6 +1,13 @@
 package com.sancarlina.app.data.repository
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -344,8 +351,26 @@ class OfflineSubmissionsRepository(
         val attachments = store.getAttachments(submission.localId)
         if (attachments.isEmpty()) return emptyMap()
 
-        val uploaded = attachments.map { attachment ->
-            if (!attachment.remoteUrl.isNullOrBlank()) {
+        // Los adjuntos se suben en paralelo. En serie, un relevamiento con tres
+        // fotos pagaba tres veces la latencia de subida más tres consultas de URL,
+        // y sobre datos móviles eso son decenas de segundos de espera.
+        val uploaded = coroutineScope {
+            attachments.map { attachment ->
+                async { uploadAttachment(submission, attachment) }
+            }.awaitAll()
+        }
+
+        return uploaded.groupBy { it.fieldId }.mapValues { (_, fieldAttachments) ->
+            val urls = fieldAttachments.sortedBy { it.position }.mapNotNull { it.remoteUrl }
+            if (urls.size == 1) urls.first() else urls
+        }
+    }
+
+    private suspend fun uploadAttachment(
+        submission: OfflineSubmission,
+        attachment: OfflineAttachment
+    ): OfflineAttachment {
+        return if (!attachment.remoteUrl.isNullOrBlank()) {
                 attachment
             } else {
                 val file = File(attachment.localPath)
@@ -372,12 +397,6 @@ class OfflineSubmissionsRepository(
                     throw error
                 }
             }
-        }
-
-        return uploaded.groupBy { it.fieldId }.mapValues { (_, fieldAttachments) ->
-            val urls = fieldAttachments.sortedBy { it.position }.mapNotNull { it.remoteUrl }
-            if (urls.size == 1) urls.first() else urls
-        }
     }
 
     private fun copyAttachments(
@@ -414,7 +433,8 @@ class OfflineSubmissionsRepository(
                     val localToken = UUID.randomUUID().toString().take(8)
                     val attachmentId = "$submissionId-$safeFieldId-$index-$localToken"
                     val target = File(targetDirectory, "${safeFieldId}_${index}_${localToken}_$safeName")
-                        val maxBytes = if (mimeType.startsWith("image/")) MAX_IMAGE_BYTES else MAX_FILE_BYTES
+                        val isImage = mimeType.startsWith("image/")
+                        val maxBytes = if (isImage) MAX_SOURCE_IMAGE_BYTES else MAX_FILE_BYTES
                         createdFiles += target
                         resolver.openInputStream(uri)?.use { input ->
                             FileOutputStream(target).use { output ->
@@ -427,7 +447,7 @@ class OfflineSubmissionsRepository(
                                 if (total > maxBytes) {
                                     throw IllegalArgumentException(
                                         if (mimeType.startsWith("image/")) {
-                                            "La imagen $displayName supera el límite de 5 MB."
+                                            "La imagen $displayName supera el límite de 25 MB."
                                         } else {
                                             "El archivo $displayName supera el límite de 10 MB."
                                         }
@@ -438,13 +458,23 @@ class OfflineSubmissionsRepository(
                             }
                         } ?: throw IllegalArgumentException("No se pudo leer el archivo $displayName.")
 
+                        // Una foto de cámara moderna ronda los 4 a 12 MB. Subirla entera
+                        // sobre datos móviles es la parte más lenta de la sincronización
+                        // y el servidor no necesita esa resolución. Reducirla acá deja
+                        // archivos de unos cientos de kilobytes.
+                        val storedMimeType = if (isImage && downscaleImageInPlace(target)) {
+                            "image/jpeg"
+                        } else {
+                            mimeType
+                        }
+
                         add(
                             OfflineAttachment(
                             id = attachmentId,
                             submissionId = submissionId,
                             fieldId = fieldId,
                             displayName = displayName,
-                            mimeType = mimeType,
+                            mimeType = storedMimeType,
                             localPath = target.absolutePath,
                             storagePath = "submissions/$userId/$submissionId/$safeFieldId/${index}_$safeName",
                             position = index,
@@ -460,6 +490,76 @@ class OfflineSubmissionsRepository(
             throw error
         }
     }
+
+    /**
+     * Reduce la imagen del archivo indicado y la reescribe como JPEG.
+     *
+     * Devuelve true cuando la reescribió. Ante cualquier problema devuelve false y
+     * deja el archivo original intacto: subir una foto grande es peor que subirla
+     * reducida, pero mucho mejor que perder el relevamiento.
+     */
+    private fun downscaleImageInPlace(file: File): Boolean = runCatching {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.absolutePath, bounds)
+        val largestSide = maxOf(bounds.outWidth, bounds.outHeight)
+        if (largestSide <= 0) return@runCatching false
+
+        var sampleSize = 1
+        while (largestSide / (sampleSize * 2) >= MAX_IMAGE_DIMENSION) {
+            sampleSize *= 2
+        }
+        val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+        val decoded = BitmapFactory.decodeFile(file.absolutePath, decodeOptions)
+            ?: return@runCatching false
+
+        val scale = MAX_IMAGE_DIMENSION.toFloat() / maxOf(decoded.width, decoded.height)
+        val scaled = if (scale < 1f) {
+            Bitmap.createScaledBitmap(
+                decoded,
+                (decoded.width * scale).toInt().coerceAtLeast(1),
+                (decoded.height * scale).toInt().coerceAtLeast(1),
+                true
+            )
+        } else {
+            decoded
+        }
+
+        // La cámara guarda la orientación en EXIF en lugar de rotar los píxeles.
+        // Al recomprimir se pierde ese dato, así que hay que aplicarlo antes.
+        val rotation = exifRotationDegrees(file)
+        val oriented = if (rotation != 0f) {
+            Bitmap.createBitmap(
+                scaled,
+                0,
+                0,
+                scaled.width,
+                scaled.height,
+                Matrix().apply { postRotate(rotation) },
+                true
+            )
+        } else {
+            scaled
+        }
+
+        FileOutputStream(file).use { output ->
+            oriented.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, output)
+        }
+        true
+    }.getOrDefault(false)
+
+    private fun exifRotationDegrees(file: File): Float = runCatching {
+        when (
+            ExifInterface(file.absolutePath).getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+        ) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+            else -> 0f
+        }
+    }.getOrDefault(0f)
 
     private fun deleteLocalAttachmentFiles(submissionId: String) {
         val directory = File(appContext.filesDir, "$ATTACHMENT_DIRECTORY/$submissionId")
@@ -512,7 +612,10 @@ class OfflineSubmissionsRepository(
 
     companion object {
         private const val ATTACHMENT_DIRECTORY = "offline_form_attachments"
-        private const val MAX_IMAGE_BYTES = 5L * 1024L * 1024L
+        // Tope de lectura, no de subida: la imagen se reduce antes de enviarse.
+        private const val MAX_SOURCE_IMAGE_BYTES = 25L * 1024L * 1024L
+        private const val MAX_IMAGE_DIMENSION = 1600
+        private const val IMAGE_QUALITY = 80
         private const val MAX_FILE_BYTES = 10L * 1024L * 1024L
         private const val REMOTE_OPERATION_TIMEOUT_MS = 60_000L
     }

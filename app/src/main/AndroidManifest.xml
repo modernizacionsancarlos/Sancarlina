@@ -45,6 +45,18 @@
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
 
+        <!-- Entrega a la cámara del sistema un content:// donde escribir la foto.
+             Sin esto, el intent de captura no puede devolver la imagen. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <service
             android:name=".notifications.GondolMessagingService"
             android:exported="false">

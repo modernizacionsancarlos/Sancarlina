@@ -50,8 +50,11 @@ de seguridad pendientes desde la 8.9.0.
 
 1. Crear `keystore.properties` en la raíz del proyecto, con ruta absoluta y barras
    normales. No se versiona.
-2. Crear `.env` en la raíz con la `MAPS_API_KEY` real. Sin ese archivo el plugin de
-   secrets cae en `.env.example` y el mapa queda inutilizable.
+2. Completar `.env` en la raíz con la `MAPS_API_KEY` real. El archivo ya existe con
+   un marcador de posición; la clave de esta máquina está en `local.properties`.
+   Sin ese valor el plugin de secrets inyecta la clave de ejemplo y el mapa queda
+   inutilizable. La tarea `verifyMapsApiKey` corta el build de release si el
+   marcador sigue en su lugar, así que el error aparece al compilar y no en Play.
 3. Verificar en Firestore que ningún `image_url` ni `cover_url` de `tenants` empiece
    con `http://`. El tráfico sin cifrar ahora está bloqueado y esas imágenes no
    cargarían.
