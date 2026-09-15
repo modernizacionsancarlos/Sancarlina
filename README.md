@@ -59,7 +59,7 @@ Ver [FIRESTORE-SCHEMA.md](FIRESTORE-SCHEMA.md).
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Tokens de color, tipografía y componentes |
 | [docs/SCREEN_MAPPING.md](docs/SCREEN_MAPPING.md) | Mapa de pantallas y rutas de navegación |
 | [docs/FIREBASE_COST_GUARDRAILS.md](docs/FIREBASE_COST_GUARDRAILS.md) | Límites de lectura y control de costos |
-| [docs/RELEASE_CHECKLIST_8.9.1.md](docs/RELEASE_CHECKLIST_8.9.1.md) | Checklist de publicación de la versión actual |
+| [docs/RELEASE_CHECKLIST_8.9.2.md](docs/RELEASE_CHECKLIST_8.9.2.md) | Checklist de publicación de la versión actual |
 | [docs/historial/](docs/historial/) | Informes de fases ya cerradas (referencia histórica) |
 
 ## Integración continua

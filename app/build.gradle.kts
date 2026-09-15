@@ -17,8 +17,8 @@ android {
         applicationId = "com.sancarlina.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 80
-        versionName = "8.9.1"
+        versionCode = 81
+        versionName = "8.9.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -126,8 +126,32 @@ val verifyMapsApiKey = tasks.register("verifyMapsApiKey") {
     }
 }
 
+// Guarda de versión: Play rechaza un Bundle cuyo versionCode ya fue subido, y lo
+// hace recién al final de la subida. Comprobarlo acá convierte diez minutos de
+// compilar, firmar y subir en un error inmediato.
+val verifyReleaseVersionCode = tasks.register("verifyReleaseVersionCode") {
+    group = "verification"
+    description = "Verifica que el versionCode no haya sido subido antes a Play."
+    val currentVersionCode = android.defaultConfig.versionCode
+    val ledger = rootProject.file("docs/PLAY_VERSION_CODES_USADOS.txt")
+    doLast {
+        if (currentVersionCode == null || !ledger.exists()) return@doLast
+        val usedCodes = ledger.readLines()
+            .mapNotNull { it.substringBefore("#").trim().toIntOrNull() }
+        if (currentVersionCode in usedCodes) {
+            val next = (usedCodes.max() + 1)
+            throw GradleException(
+                "El versionCode $currentVersionCode ya fue subido a Play. " +
+                    "Subilo a $next en app/build.gradle.kts antes de generar el Bundle. " +
+                    "Los códigos ya usados están en docs/PLAY_VERSION_CODES_USADOS.txt."
+            )
+        }
+    }
+}
+
 tasks.matching { it.name == "preReleaseBuild" }.configureEach {
     dependsOn(verifyMapsApiKey)
+    dependsOn(verifyReleaseVersionCode)
 }
 
 dependencies {

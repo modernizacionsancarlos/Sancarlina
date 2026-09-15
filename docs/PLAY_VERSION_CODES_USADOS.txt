@@ -1,0 +1,12 @@
+# Códigos de versión que Play ya tiene registrados para com.sancarlina.app
+#
+# Play rechaza un Bundle cuyo versionCode ya fue subido, aunque ese Bundle se
+# haya descartado sin publicar: el número queda quemado igual.
+#
+# La tarea verifyReleaseVersionCode corta el build de release si el versionCode
+# actual figura acá, así que el error aparece al compilar y no después de
+# esperar la subida a Play.
+#
+# Agregar el número apenas Play acepta la subida, con la fecha como comentario.
+79   # 8.9.0 — publicada
+80   # 8.9.1 — subida rechazada por duplicado; el número quedó quemado
